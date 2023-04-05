@@ -1,28 +1,41 @@
 import sys
-from iSWEEP import *
+import os
+from isweep import *
 
 # first arg: # replicates
 # second arg: # bootstraps
 # third arg: # diploids
 # fourth arg: param fixed (s, p, or Ne)
 # fifth arg: param fixed (s, p, or Ne)
-# sixth arg: output file prefix
-# seventh arg: example bins file
+# sixth arg: example bins file
+# seventh arg: output folder
+# eigth arg: output file prefix
 
-# change
-lst=[0.02,0.03,0.04,0.05,0.06] # selection coefficients
+folder=sys.argv[7]
+if not os.path.exists(folder):
+    os.mkdir(folder)
+
+# fixed parameter settings
+# change selection coefficients if interested
+# lst=[0.02,0.03,0.04,0.05,0.06] # selection coefficients
+lst=[0.02,0.03] # selection coefficients
+
+# input parameter settings
 p=float(sys.argv[4]) # allele freq
 Ne=read_Ne(sys.argv[5]) # demo history
-bn=read_bins(sys.argv[7])
+bn=read_bins(sys.argv[6])
 
+# input sim settings
 nreplicates=int(float(sys.argv[1]))
 nbootstraps=int(float(sys.argv[2]))
 nsamples=int(float(sys.argv[3]))
+
+# fixed sim settings
 ploidy=2
 msamples=ploidy*nsamples
 long_ibd=3.0
 N=msamples*(msamples-1)/2-msamples
-outfile=sys.argv[6]
+outfile=folder+'/'+sys.argv[8]
 
 # goodness of fit to length distribution
 bn.append(np.inf)
@@ -31,35 +44,43 @@ sinfs=[[] for k in range(len(lst))]
 for i in range(nreplicates):
     for k in range(len(lst)):
         s=lst[k]
-        out=simulate_ibd_from_selective_sweep(nsamples,
-                                              s,p,Ne,
-                                              long_ibd,
-                                              ploidy=ploidy)
+        out = simulate_ibd_isweep(
+            nsamples,
+            s,
+            p,
+            Ne,
+            long_ibd,
+            long_ibd,
+            ploidy=ploidy
+        )
         ibd=big_format_distribution(out[0][2],out[0][4])
         ibd=bin_ibd_segments(ibd,ab)
-        print(N)
-        se = minimize(chisquared_statistic_for_ibd_from_selective_sweep, 
-                      (0.01,), 
-                      args=(p,Ne,N,ibd,ab), 
-                      bounds=[(0,0.5)], 
-                      method='Nelder-Mead'
-                     ).x[0]
+        se = minimize_scalar(
+            chi2_isweep,
+            args=(p,Ne,N,ibd,ab),
+            bounds=(0,0.5),
+            method='bounded'
+        ).x
         sboot=[]
         for j in range(nbootstraps):
             print(lst[k],i,j)
-            out=simulate_ibd_from_selective_sweep(nsamples,
-                                                  se,p,Ne,
-                                                  long_ibd,
-                                                  ploidy=ploidy)
+            out = simulate_ibd_isweep(
+                nsamples,
+                s,
+                p,
+                Ne,
+                long_ibd,
+                long_ibd,
+                ploidy=ploidy
+            )
             ibd=big_format_distribution(out[0][2],out[0][4])
             ibd=np.array(bin_ibd_segments(ibd,ab))
-            print(N)
-            sj = minimize(chisquared_statistic_for_ibd_from_selective_sweep,
-                          (0.01,),
-                          args=(p,Ne,N,ibd,ab),
-                          method='Nelder-Mead',
-                          bounds=[(0,0.5)]
-                         ).x[0]
+            sj = minimize_scalar(
+                chi2_isweep,
+                args=(p,Ne,N,ibd,ab),
+                bounds=(0,0.5),
+                method='bounded'
+            ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
         sinf=['GOOD',s,se,sint[1],sint[0],sint[2]]
@@ -84,31 +105,41 @@ sinfs=[[] for k in range(len(lst))]
 for i in range(nreplicates):
     for k in range(len(lst)):
         s=lst[k]
-        out=simulate_ibd_from_selective_sweep(nsamples,
-                                              s,p,Ne,
-                                              long_ibd,
-                                              ploidy=2)
+        out = simulate_ibd_isweep(
+            nsamples,
+            s,
+            p,
+            Ne,
+            long_ibd,
+            long_ibd,
+            ploidy=ploidy
+        )
         ibd=out[0][0]
-        se = minimize(chisquared_statistic_for_ibd_from_selective_sweep,
-                      (0.01,),
-                      args=(p,Ne,N,(ibd,),ab),
-                      method='Nelder-Mead',
-                      bounds=[(0,0.5)]
-                     ).x[0]
+        se = minimize_scalar(
+            chi2_isweep,
+            args=(p,Ne,N,(ibd,),ab),
+            bounds=(0,0.5),
+            method='bounded'
+        ).x
         sboot=[]
         for j in range(nbootstraps):
             print(lst[k],i,j)
-            out=simulate_ibd_from_selective_sweep(nsamples,
-                                                  se,p,Ne,
-                                                  long_ibd,
-                                                  ploidy=2)
+            ibd = simulate_ibd_isweep(
+                nsamples,
+                se,
+                p,
+                Ne,
+                long_ibd,
+                long_ibd,
+                ploidy=ploidy
+            )
             ibd=out[0][0]
-            sj = minimize(chisquared_statistic_for_ibd_from_selective_sweep,
-                          (0.01,),
-                          args=(p,Ne,N,(ibd,),ab),
-                          method='Nelder-Mead',
-                          bounds=[(0,0.5)]
-                         ).x[0]
+            sj = minimize_scalar(
+                chi2_isweep,
+                args=(p,Ne,N,(ibd,),ab),
+                bounds=(0,0.5),
+                method='bounded'
+            ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
         sinf=['MOME',s,se,sint[1],sint[0],sint[2]]
