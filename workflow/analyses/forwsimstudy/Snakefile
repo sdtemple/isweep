@@ -1,0 +1,46 @@
+# iSWEEP simulation studies
+# Seth D. Temple, sdtemple@uw.edu
+
+configfile: 'simstudies.yaml' # change this for new yaml configs
+
+# setup macro folder
+import os
+macro=str(config['FOLDERS']['MACRO'])
+if not os.path.exists(macro):
+	os.mkdir(macro)
+
+# load in experiments, set up micro, simname folders
+import pandas as pd
+micro=str(config["FOLDERS"]["MICRO"])
+sims = pd.read_csv(micro, sep='\t', header=0)
+J = sims.shape[0]
+for j in range(J):
+	row = sims.loc[j,]
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)):
+		os.mkdir(macro+'/'+str(row.MICROEXP))
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME)):
+		os.mkdir(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME))
+sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
+sims = sims.set_index("SIMNAME", drop=False)
+
+include: 'rules/simulate.smk'
+include: 'rules/firstpass.smk'
+include: 'rules/secondpass.smk'
+include: 'rules/analysis.smk'
+include: 'rules/hooray.smk'
+
+### setup supporting files ###
+
+rule all:
+	input:
+		[f"{sim.FOLDER}/" for sim in sims.itertuples()],
+
+		[f"{sim.FOLDER}/removed" for sim in sims.itertuples()], # triggers a lot of garbage clean up
+
+		# triggers which method and centrality type to use
+		# should match rule remove in hooray.smk
+		[f"{sim.FOLDER}/hapibd.results.tsv" for sim in sims.itertuples()],
+
+		# triggers which method and centrality type to use
+		# should match rule remove in hooray.smk
+		# [f"{sim.FOLDER}/ibdends.results.tsv" for sim in sims.itertuples()],

@@ -1,0 +1,62 @@
+##### YOU DO THIS ANALYSIS AFTER THE PREP ANALYSIS !!! #####
+
+##### IMPORTANT FILE STRUCTURE SETUP #####
+
+### LOCATION FOR ANALYSIS FILES ###
+
+FOLDERS:
+  GENESET: '' # text file for selection ROIs; based on results of prep analysis
+  MACRO: '/projects/browning/brwnlab/seth/topmed/'
+  MICRO: 'vte/' # change this for each population analysis
+  VCFS: '/projects/browning/brwnlab/seth/vcf/' # these are big; leave where they are
+  VCFPREFIX: 'large.chr'
+  VCFSUFFIX: '.vcf.gz'
+
+### LOCAL SETUP OF SOFTWARE ###
+
+SOFTWARE:
+  HAPIBD: '../../jars/hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
+  IBDENDS: '../../jars/ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
+  FILTER: '../../jars/filter-lines.jar' # http://faculty.washington.edu/browning/
+
+##### FIXED PARAMETERS #####
+
+FIXED:
+  iNe: '.ne' # inferred demographic history *.ne
+  MAPS: /projects/browning/maps/decode.2019.b38/ # genetic maps folder
+  FIRSTCHR: '1' # first chromosome to analyze (FIRSTCHR <= LASTCHR)
+  LASTCHR: '22' # last chromosome to analyze (all between first, last analyzed)
+  PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
+  # SEXCHR: 'X' # alphabet letter for sex chromosome
+
+##### ANALYSIS OPTIONS #####
+
+### iSWEEP SOFTWARE ###
+# https://github.com/sdtemple/iSWEEP
+
+ISWEEPPARAMS: # read iSWEEP paper (prety please)
+  IBDCUTOFF: '3.0' # for method of moments estimation
+  NESUFFIX: '.ibdends.ne' # based on prep analysis
+  NBOOT: '1000' # num bootstraps; for uncertainty quantification
+  IBDCOMMK: '1' # for IBD community detection
+  OUTLIERSCALAR: '3' # for IBD community detection
+  SKLEARNK: '10' # for frequency estimation
+  RANDSTATE: '11081959' # David Temple's birthday
+
+### BROWNING SOFTWARE ###
+# contact sdtemple.github.io or Brian or Sharon Browning for help
+
+# ibd counts over windows
+FIRSTPASS:
+  GENOMEEND: '10' # in mega bp
+  BY: '10' # every 10 kilo bp
+  CUTOFF: '2.0' # ibd cM threshold for selection scan
+  TELOCUT: '1.0' # cutting cM at telomeres
+
+# short ibd calls
+THIRDHAP:
+  MINSEED: '0.5' # min-seed
+  MINEXT: '0.2' # min-extend
+  MINOUT: '1.0' # min-output
+  MINMAF: '0.10' # controls min-mac
+  MINMARK: '100' # min-markers

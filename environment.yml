@@ -1,0 +1,20 @@
+name: isweep
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.8
+  - snakemake
+  - numpy>=1.21
+  - pandas
+  - scipy>=1.7
+  - matplotlib
+  - seaborn
+  - msprime
+  - tskit
+  - tszip
+  - networkx
+  - scikit-learn
+  - jupyter
+  - notebook
