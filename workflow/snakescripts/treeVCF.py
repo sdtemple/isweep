@@ -5,7 +5,7 @@ Put mutations on tree sequence
 """
 
 import sys, os, subprocess, pyslim, msprime, tskit
-from iSWEEP import *
+from isweep import *
 
 mu=snakemake.config['FIXED']['MU']
 rho=snakemake.config['FIXED']['RHO']

@@ -3,8 +3,8 @@ wildcard_constraints:
 
 rule community:
     input:
-        ibdin='{macro}/{micro}/short.{method}.ibd.gz', # make this ibdhbd
-        vcfin='{macro}/{micro}/short.{method}.vcf.gz',
+        ibdin='{macro}/{micro}/small.{method}.ibd.gz',
+        vcfin='{macro}/{micro}/small.{method}.vcf.gz',
     params:
         header='0',
     output:

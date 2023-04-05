@@ -1,4 +1,4 @@
-from iSWEEP import *
+from isweep import *
 import pandas as pd
 import numpy as np
 import gzip

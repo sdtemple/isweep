@@ -1,5 +1,5 @@
 # setting up
-from iSWEEP import *
+from isweep import *
 short_ibd=snakemake.input.ibdin
 short_vcf=snakemake.input.vcfin
 K=int(float(snakemake.config["ISWEEPPARAMS"]["IBDCOMMK"]))

@@ -1,4 +1,4 @@
-from iSWEEP import *
+from isweep import *
 import pandas as pd
 # from copy import deepcopy
 # from sklearn.cluster import KMeans
