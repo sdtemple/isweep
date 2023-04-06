@@ -16,7 +16,8 @@ if not os.path.exists(folder):
 
 # fixed parameter settings
 # change selection coefficients if interested
-lst=[0.02,0.03,0.04,0.05,0.06] # selection coefficients
+lst=[0.03]
+# lst=[0.02,0.03,0.04,0.05,0.06] # selection coefficients
 
 # input parameter settings
 p=float(sys.argv[4]) # allele freq

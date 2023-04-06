@@ -314,43 +314,43 @@ def plot_frequency_by_position(table, vline=np.inf, colors=['tab:purple','tab:bl
     plt.legend(loc=loc)
     return None
 
-def inverse_rank_weighted_mean_std(table, topn=np.inf, power=1, method='isweep'):
-    '''Compute inverse rank weighted mean, standard deviation for adaptive allele frequency
-
-    Parameters
-    ----------
-    table : pandas DataFrame
-        VCF data sorted by delta derived allele frequency
-    topn : int
-        Number of top positions to study
-    power : float
-        Scalar to serve as exponent for inverse rank
-    method : str
-        'isweep' or 'safe'
-
-    Returns
-    -------
-    tuple
-        Mean, standard deviation estimates
-    '''
-    if method=='isweep':
-        ystr='AAF'
-        table.sort_values(['DELTA'],inplace=True,ascending=False)
-        table.reset_index(inplace=True,drop=True)
-    elif method=='isafe':
-        ystr='DAF'
-        table.sort_values(['iSAFE'],inplace=True,ascending=False)
-        table.reset_index(inplace=True,drop=True)
-    ranks = np.array([i+1 for i in range(table.shape[0])])
-    topn = min(table.shape[0], topn)
-    toprk = ranks[:topn]
-    invrk = 1 / toprk
-    scark = np.power(invrk, power)
-    norrk = scark / scark.sum()
-    freqs = table[ystr][:topn]
-    estim = (freqs * norrk).sum()
-    mome2 = (np.power(freqs,2) * norrk).sum()
-    return estim, (mome2 - estim ** 2) ** 0.5
+# def inverse_rank_weighted_mean_std(table, topn=np.inf, power=1, method='isweep'):
+#     '''Compute inverse rank weighted mean, standard deviation for adaptive allele frequency
+#
+#     Parameters
+#     ----------
+#     table : pandas DataFrame
+#         VCF data sorted by delta derived allele frequency
+#     topn : int
+#         Number of top positions to study
+#     power : float
+#         Scalar to serve as exponent for inverse rank
+#     method : str
+#         'isweep' or 'safe'
+#
+#     Returns
+#     -------
+#     tuple
+#         Mean, standard deviation estimates
+#     '''
+#     if method=='isweep':
+#         ystr='AAF'
+#         table.sort_values(['DELTA'],inplace=True,ascending=False)
+#         table.reset_index(inplace=True,drop=True)
+#     elif method=='isafe':
+#         ystr='DAF'
+#         table.sort_values(['iSAFE'],inplace=True,ascending=False)
+#         table.reset_index(inplace=True,drop=True)
+#     ranks = np.array([i+1 for i in range(table.shape[0])])
+#     topn = min(table.shape[0], topn)
+#     toprk = ranks[:topn]
+#     invrk = 1 / toprk
+#     scark = np.power(invrk, power)
+#     norrk = scark / scark.sum()
+#     freqs = table[ystr][:topn]
+#     estim = (freqs * norrk).sum()
+#     mome2 = (np.power(freqs,2) * norrk).sum()
+#     return estim, (mome2 - estim ** 2) ** 0.5
 
 def violinplot_rankers(results, method_names):
     '''Make violin plot to compare rank methods

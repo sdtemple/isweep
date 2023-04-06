@@ -75,6 +75,7 @@ for i in range(nreplicates):
                 bounds=(0,0.5),
                 method='bounded'
             ).x
+            sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
         sinf=[p,s,se,sint[1],sint[0],sint[2]]
         sinfs[k].append(sinf)
