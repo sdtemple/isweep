@@ -47,7 +47,7 @@ def read_ibd_file(ibd_file, header = 1, include_length = 1):
 
 # goodness-of-fit statistics (estimate selection coeffficent)
 
-def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0 = 0, ploidy = 2):
+def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Chi-squared statistic for sweep model (labeled)
 
     Parameters
@@ -70,6 +70,11 @@ def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation at which neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -82,7 +87,7 @@ def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0
     assert len(obs1) == (len(ab) - 1)
 
     # probabilities
-    ps, Ns, xs = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, ploidy)
+    ps, Ns, xs = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, sv, ploidy)
     mass1 = (ps[0] ** 2) * probability_quasi_geometric(ps, Ns, ploidy)
     mass0 = ((1 - ps[0]) ** 2) * probability_quasi_geometric(1 - ps, Ns, ploidy)
 
@@ -98,7 +103,7 @@ def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0
 
     return np.sum(OE1) + np.sum(OE0)
 
-def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'm', tau0 = 0, ploidy = 2):
+def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Chi-squared statistic for sweep model (unlabeled)
 
     Parameters
@@ -119,6 +124,11 @@ def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'm', tau0 = 0, ploidy = 
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation at which neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -127,7 +137,7 @@ def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'm', tau0 = 0, ploidy = 
     '''
 
     assert len(obs) == (len(ab) - 1)
-    ps, Ns, xs = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, ploidy)
+    ps, Ns, xs = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, sv, ploidy)
     mass1 = (ps[0] ** 2) * probability_quasi_geometric(ps, Ns, ploidy)
     mass0 = ((1 - ps[0]) ** 2) * probability_quasi_geometric(1 - ps, Ns, ploidy)
     E0 = probability_erlang_segments(ab, mass0)
@@ -281,7 +291,7 @@ def bootstrap_efron_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
 
 ##### time to event #####
 
-def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0):
+def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
     '''Report when variant count reaches set value
 
     Parameters
@@ -300,6 +310,11 @@ def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -307,14 +322,14 @@ def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
         Generation time
     '''
 
-    var = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0)[2]
+    var = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0, sv, ploidy)[2]
     idx = np.argmax(var <= ct)
     if idx == 0: # handle variant introduction
         return len(var)
 
     return idx
 
-def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0):
+def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
     '''Parametric bootstrap for variant count generation time
 
     Parameters
@@ -335,6 +350,11 @@ def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model 
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -346,11 +366,11 @@ def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model 
     boott = []
     for i in range(len(boots)):
         for b in range(B):
-            boott.append(when_count(ct, boots[i], bootp[i], Ne, random_walk, one_step_model, tau0))
+            boott.append(when_count(ct, boots[i], bootp[i], Ne, random_walk, one_step_model, tau0, sv, ploidy))
 
     return boott
 
-def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0):
+def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
     '''Report when variant frequency reaches set value
 
     Parameters
@@ -369,6 +389,11 @@ def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -376,14 +401,14 @@ def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
         Generation time
     '''
 
-    var = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0)[0]
+    var = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0, sv, ploidy)[0]
     idx = np.argmax(var <= maf)
     if idx == 0: # handle variant introduction
         return len(var)
 
     return idx
 
-def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0):
+def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
     '''Parametric bootstrap for variant frequency generation time
 
     Parameters
@@ -404,6 +429,11 @@ def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model 
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
+    ploidy : int
+        1 for haploid or 2 for diploid
 
     Returns
     -------
@@ -415,7 +445,7 @@ def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model 
     boott = []
     for i in range(len(boots)):
         for b in range(B):
-            boott.append(when_freq(maf, boots[i], bootp[i], Ne, random_walk, one_step_model, tau0))
+            boott.append(when_freq(maf, boots[i], bootp[i], Ne, random_walk, one_step_model, tau0, sv, ploidy))
 
     return boott
 
@@ -532,206 +562,3 @@ def true_positive_rate(matrix):
     tp = matrix[1][1]
 
     return tp / (tp + fn)
-
-# old
-
-# def ibs_community(graph, n, min_degree_centrality=0.25, first_frequency_cutoff=0.01, second_frequency_cutoff=0.05, distance_cutoff=4, quantile=0.05, quantile_scalar=1.0, ploidy=2):
-#     '''Compute the count of a community in a graph that:
-#     (1) has high minimum degree centrality (out of all degree centralities);
-#     (2) most node pairings are connected by no more than 2, 4, or 6 edges;
-#     (3) includes the node with the highest degree centrality
-
-#     Algorithm (two cases)
-#         Second case (highest degree centrality exceeds min_degree_centrality)
-#             1. Find node with highest degree centrality, the focal node
-#             2. Ignore all nodes with degree centrality less than second_frequency_cutoff
-#             3. Add all neighbors of focal node to community, the first order neighbors
-#             4. If distance_cutoff >= 4, add all neighbors of neighbors of focal node, the 2nd order neighbors
-#             5. If distance_cutoff >= 6, add all 3rd order neighbors
-#             6. Add remaining nodes if more edges w/ community than quantile_scalar * quantile(degree centrality of community)
-#         First case
-#             1. Find node with highest degree centrality, the focal node
-#             2. Ignore all nodes with degree centrality less than first_frequency_cutoff
-#             3. Add all neighbors of focal node to community
-#             4. Add remaining nodes if more edges w/ community than quantile_scalar * quantile(degree centrality of community)
-
-#     Parameters
-#     ----------
-#     graph : networkx Graph object
-#     n : int
-#         Sample size (individual)
-#     min_normalized_degree_centrality : float
-#         Threshold to conduct second case
-#     first_frequency_cutoff : float
-#         Threshold to insist component has nodes
-#     second_frequency_cutoff : float
-#         (Second case) Threshold to insist component has nodes
-#     distance_cutoff : int
-#         (Second case) Threshold for path distances connecting node pairings
-#     quantile : float
-#     quantile_scalar : float
-#         quantile * quantile_scalar is threshold for adding tightly connected nodes back
-#     ploidy : int
-#         1 for haploid, 2 for diploid, 4 for tetraploid, etc.
-
-#     Returns
-#     -------
-#     int
-#         A community size satisfying (1-3)
-#     '''
-#     assert first_frequency_cutoff >= 0
-#     assert second_frequency_cutoff > first_frequency_cutoff
-#     assert second_frequency_cutoff < 1
-#     assert min_degree_centrality >= 0
-#     assert min_degree_centrality <= 1
-#     assert quantile >= 0
-#     assert quantile <= 1
-#     assert quantile_scalar > 0
-#     if distance_cutoff >= 4:
-#         if distance_cutoff >= 6:
-#             print('Warning: distance_cutoff >= 6 is O(N^3)')
-#         else:
-#             print('Warning: 6 > distance_cutoff >= 4 is O(N^2)')
-#     N = ploidy * n
-#     first_count_cutoff = first_frequency_cutoff * N
-#     second_count_cutoff = second_frequency_cutoff * N
-#     m = graph.number_of_nodes() - 1
-#     degrees = nx.degree_centrality(graph)
-#     degrees = {key:round(val*m,0) for key, val in degrees.items()}
-#     # path length filter
-#     degreesT = sorted([(key,val) for key,val in degrees.items()], key=lambda item:item[1], reverse=True)
-#     friendliest_node = degreesT[0][0]
-#     friendly_count = len(graph[friendliest_node])
-#     within = set()
-#     removenodes = [key for key, val in degrees.items() if val < first_count_cutoff] # frequency filter
-#     graph.remove_nodes_from(removenodes)
-#     for node1 in graph.neighbors(friendliest_node):
-#         within.add(node1)
-#     outnodes = [node for node in graph.nodes() if node not in within]
-#     if friendly_count >= (min_degree_centrality * m): # degree centrality filter
-#         removenodes = [node for node in outnodes if degrees[node] < second_count_cutoff] # frequency filter
-#         outnodes = [node for node in outnodes if degrees[node] >= second_count_cutoff]
-#         graph.remove_nodes_from(removenodes)
-#         for node1 in graph.neighbors(friendliest_node):
-#             if distance_cutoff >= 4:
-#                 for node2 in graph.neighbors(node1):
-#                     within.add(node2)
-#                     if distance_cutoff >= 6:
-#                         for node3 in graph.neighbors(node2):
-#                             within.add(node3)
-#     subgraph = graph.subgraph(within)
-#     # add back tightly connected out nodes
-#     outnodes = [node for node in graph.nodes() if node not in within]
-#     subdegrees = nx.degree_centrality(subgraph)
-#     M = subgraph.number_of_nodes() - 1
-#     subdegrees = {key:round(val*M,0) for key, val in subdegrees.items()}
-#     vals = np.array([val for key, val in subdegrees.items()])
-#     quantile_sdeg = np.quantile(vals, quantile)
-#     addnodes = []
-#     add_thre = quantile_sdeg * quantile_scalar
-#     for node1 in outnodes:
-#         ctr = 0
-#         studynodes = [node for node in graph[node1]]
-#         for node in studynodes:
-#             if subgraph.has_node(node):
-#                 ctr += 1
-#         if ctr >= add_thre:
-#             addnodes.append(node1)
-#     addwithin = within.union(set(addnodes))
-#     subgraph = graph.subgraph(addwithin)
-#     return subgraph
-
-# def community_estimate_p0(ibs_file, n, min_degree_centrality=0.25, first_frequency_cutoff=0.01, second_frequency_cutoff=0.05, distance_cutoff=4, quantile=0.05, quantile_scalar=1.0, ploidy=2):
-#     '''Create a graph based on IBS/HBS segments
-
-#     Parameters
-#     ----------
-#     ibs_file : str
-#         Name of text file with edges (IBS/HBS segments)
-#     n : int
-#         Sample size (individual)
-
-#     * See ibs_community()
-#     min_normalized_degree_centrality : float
-#         Threshold to conduct second case
-#     first_frequency_cutoff : float
-#         Threshold to insist component has nodes
-#     second_frequency_cutoff : float
-#         (Second case) Threshold to insist component has nodes
-#     distance_cutoff : int
-#         (Second case) Threshold for path distances connecting node pairings
-#     quantile : float
-#     quantile_scalar : float
-#         quantile * quantile_scalar is threshold for adding tightly connected nodes back
-
-#     ploidy : int
-#         1 for haploid, 2 for diploid, 4 for tetraploid, etc.
-
-#     Returns
-#     -------
-#     float
-#         Allele frequency estimate
-#     '''
-#     # create graph
-#     graph = nx.Graph()
-#     # read in edges (IBS)
-#     edges_list = read_ibd_file(ibs_file, 0, 0)
-#     graph.add_edges_from(edges_list)
-#     # determine community of interest
-#     IbsCommunitySize = len(ibs_community(graph, n, min_degree_centrality, first_frequency_cutoff, second_frequency_cutoff, distance_cutoff, quantile, quantile_scalar, ploidy).nodes())
-#     return IbsCommunitySize / n / 2
-
-# def community_segment_counts(ibd_file, ibs_file, n, min_degree_centrality=0.25, first_frequency_cutoff=0.01, second_frequency_cutoff=0.05, distance_cutoff=4, quantile=0.05, quantile_scalar=1.0, ploidy=2):
-#     '''Create a graph based on IBS segments
-
-#     Parameters
-#     ----------
-#     ibd_file : str
-#         Name of text file with edges (IBD segments)
-#     ibs_file : str
-#         Name of text file with edges (IBS/HBS segments)
-#     n : int
-#         Sample size (individual)
-
-#     * See ibs_community()
-#     min_normalized_degree_centrality : float
-#         Threshold to conduct second case
-#     first_frequency_cutoff : float
-#         Threshold to insist component has nodes
-#     second_frequency_cutoff : float
-#         (Second case) Threshold to insist component has nodes
-#     distance_cutoff : int
-#         (Second case) Threshold for path distances connecting node pairings
-#     quantile : float
-#     quantile_scalar : float
-#         quantile * quantile_scalar is threshold for adding tightly connected nodes back
-
-#     ploidy : int
-#         1 for haploid, 2 for diploid, 4 for tetraploid, etc.
-
-
-#     Returns
-#     -------
-#     tuple
-#         (Total segment count, size of community 1, segment count of community 1, segment count of community 0)
-#     '''
-#     # create graph
-#     graph = nx.Graph()
-#     # read in edges (IBS/HBS)
-#     edges_list = read_ibd_file(ibs_file, 0, 0)
-#     graph.add_edges_from(edges_list)
-#     # determine community of interest
-#     IbsCommunity = ibs_community(graph, n, min_degree_centrality, first_frequency_cutoff, second_frequency_cutoff, distance_cutoff, quantile, quantile_scalar, ploidy)
-#     IbsCommunityNodes = [node for node in IbsCommunity.nodes()]
-#     # label segments 1 or 0
-#     segments = read_ibd_file(ibd_file, 1, 0)
-#     numTracts1 = 0
-#     numTracts0 = 0
-#     for segment in segments:
-#         if segment[0] in IbsCommunityNodes:
-#             numTracts1 += 1
-#         elif segment[1] in IbsCommunityNodes:
-#             numTracts1 += 1
-#         else:
-#             numTracts0 += 1
-#     return numTracts1 + numTracts0, len(IbsCommunityNodes), numTracts1, numTracts0

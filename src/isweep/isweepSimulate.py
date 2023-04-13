@@ -9,7 +9,7 @@ from copy import deepcopy
 from .cis.cisUtilities import *
 from .cis.coalescentIBD import *
 
-def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='m', tau0=0, ploidy=2):
+def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='m', tau0=0, sv=-0.01, ploidy=2):
     """Simulator for independent ibd segment lengths in recent sweep scenario
 
     Parameters
@@ -30,6 +30,9 @@ def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, 
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
     ploidy : int
         1 for haploid or 2 for diploid
 
@@ -42,11 +45,12 @@ def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, 
     assert ploidy in [1,2]
     assert p0 >= 0
     assert p0 <= 1
+    assert sv < 1
     if p0 == 0 or p0 == 1:
-        out = simulate_ibd_independent(n, Ne, long_ibd, random_walk, one_step_model, tau0, ploidy)
+        out = simulate_ibd_independent(n, Ne, long_ibd, ploidy)
         return (out[0], np.array([]), np.array([]), out[1], np.array([]), np.array([]))
     Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),2000)
-    ps, Ns, xs = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0, ploidy)
+    ps, Ns, xs = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0, sv, ploidy)
     n = int(n) * ploidy
     n1 = floor(n * p0)
     n0 = floor(n * (1-p0))
@@ -69,7 +73,7 @@ def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, 
 
     return ell, ell1, ell0, geom, geom1, geom0
 
-def probability_ibd_isweep(s, p0, Ne, one_step_model = 'm', tau0 = 0, long_ibd = 2, ploidy = 2):
+def probability_ibd_isweep(s, p0, Ne, long_ibd = 2, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Approximate probability of ibd given a sweep model
 
     Parameters
@@ -80,12 +84,15 @@ def probability_ibd_isweep(s, p0, Ne, one_step_model = 'm', tau0 = 0, long_ibd =
         Variant frequency at generation 0
     Ne : dict
         Effective population sizes
+    long_ibd : float
+        cM length threshold
     one_step_model : str
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
-    long_ibd : float
-        cM length threshold
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
     ploidy : int
         1 for haploid or 2 for diploid
 
@@ -97,6 +104,7 @@ def probability_ibd_isweep(s, p0, Ne, one_step_model = 'm', tau0 = 0, long_ibd =
     assert ploidy in [1,2]
     assert p0 >= 0
     assert p0 <= 1
+    assert sv < 1
     if p0==1 or p0==0:
         Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),1000)
         b = np.array(list(Ne.values()))
@@ -105,7 +113,7 @@ def probability_ibd_isweep(s, p0, Ne, one_step_model = 'm', tau0 = 0, long_ibd =
         f = 0
     else:
         Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),1000)
-        a, b, c = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, ploidy)
+        a, b, c = walk_variant_backward(s, p0, Ne, False, one_step_model, tau0, sv, ploidy)
         a = extend_vector(a, a[-1], max(Ne.keys()))
         b = extend_vector(b, b[-1], max(Ne.keys()))
         d = probability_ibd(a, b, long_ibd, ploidy)

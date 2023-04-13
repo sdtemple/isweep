@@ -24,7 +24,7 @@ pairwise_segments = []
 
 ### random walks ###
 
-def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', tau0 = 0, ploidy = 2):
+def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Variant frequencies backward in time
 
     Parameters
@@ -41,6 +41,9 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', 
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
     ploidy : int
         1 for haploid or 2 for diploid
 
@@ -53,6 +56,10 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', 
 
     # local functions
     assert ploidy in [1,2]
+    assert one_step_model in ['m','a','r','d']
+    assert p0 <= 1
+    assert p0 >= 0
+    assert sv < 1
     def haploid_bwd(p, s):
         return p / (1 + s)
     def multiplicative_bwd(p, s):
@@ -121,6 +128,8 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', 
                 break
             if p >= 1:
                 break
+            if p <= sv:
+                s = 0
             ps.append(p)
             xs.append(x)
             Ns.append(N)
@@ -141,6 +150,8 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', 
                 break
             if p >= 1:
                 break
+            if p <= sv:
+                s = 0
             Ns.append(N)
             xs.append(x)
             ps.append(p)
@@ -802,7 +813,7 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
             tuple(pairwise_segments)
            )
 
-def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=True, one_step_model='m', tau0=0, ploidy=2, record_dist=True, pairwise_output=True):
+def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=True, one_step_model='m', tau0=0, sv=-0.01, ploidy=2, record_dist=True, pairwise_output=True):
     '''ibd segments from a coalescent with selection
 
     Parameters
@@ -823,6 +834,9 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
         'm', 'a', 'd', or 'r'
     tau0 : int
         Generation when neutrality begins
+    sv: float
+        Allele frequency of standing variation
+        (Default -0.01 will assume de novo sweep)
     ploidy : int
         1 for haploid or 2 for diploid
     record_dist : bool
@@ -844,6 +858,7 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
     assert one_step_model in ['m','a','r','d']
     assert p0 <= 1
     assert p0 >= 0
+    assert sv < 1
 
     global H, H1, H0, ldist, ldist1, ldist0, tdist1, tdist0, tdist, ddist1, ddist0, ddist
     global pairwise_segments
@@ -879,7 +894,7 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
                )
 
     # calculating structured demographies
-    ps, Ns, xs = walk_variant_backward(s, p, Ne, stoc, mdl, tau0, ploidy)
+    ps, Ns, xs = walk_variant_backward(s, p, Ne, stoc, mdl, tau0, sv, ploidy)
     n = int(float(n))
     n = n * ploidy
     G = max(Ne.keys())
@@ -1171,7 +1186,7 @@ def probability_ibd(ps, Ns, long_ibd = 2, ploidy = 2):
 
 # simulators for ibd segments
 
-def simulate_ibd_independent(n, Ne, long_ibd=2, random_walk=True, one_step_model='m', tau0=0, ploidy=2):
+def simulate_ibd_independent(n, Ne, long_ibd=2, ploidy=2):
     """Simulator for independent ibd segment lengths about monomorphic, neutral site
 
     Parameters
@@ -1182,12 +1197,6 @@ def simulate_ibd_independent(n, Ne, long_ibd=2, random_walk=True, one_step_model
         Effective population sizes
     long_ibd : float
         cM length threshold
-    random_walk : bool
-        True for random walk
-    one_step_model : str
-        'm', 'a', 'd', or 'r'
-    tau0 : int
-        Generation when neutrality begins
     ploidy : int
         1 for haploid or 2 for diploid
 
