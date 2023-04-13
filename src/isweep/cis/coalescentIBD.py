@@ -3,7 +3,7 @@ import pandas as pd
 import networkx as nx
 from scipy.stats import binom
 from random import randint, sample
-from math import floor, exp, log, ceil
+from math import floor, exp, log, ceil, sqrt
 from numpy.random import exponential as Exp
 from copy import deepcopy
 from .cisUtilities import *

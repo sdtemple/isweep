@@ -7,22 +7,23 @@ from isweep import *
 # third arg: # diploids
 # fourth arg: selection coefficient
 # fifth arg: allele frequency
-# sixth arg: output folder
-# seventh arg: output file prefix
+# sixth arg: Ne demography file
+# seventh arg: output folder
+# eighth arg: output file prefix
 
-folder=sys.argv[6]
+folder=sys.argv[7]
 if not os.path.exists(folder):
     os.mkdir(folder)
 
 # fixed parameter settings
-# change demography if interested
-lst=['../../../auxillary/ne/constant-100k-1000G.ne',
-     '../../../auxillary/ne/bottleneck-1000G.ne',
-     '../../../auxillary/ne/increasing-1000G.ne'] # demo history
+# change selection coefficients if interested
+lst=[1.0,2.0,3.0,4.0] # cM threshold for IBD calling
 
 # input parameter settings
-s=float(sys.argv[4]) # selection coefficient
+s=float(sys.argv[4])
 p=float(sys.argv[5]) # allele freq
+Ne=read_Ne(sys.argv[6]) # demo history
+Me=sys.argv[6]
 
 # input sim settings
 nreplicates=int(float(sys.argv[1]))
@@ -32,22 +33,19 @@ nsamples=int(float(sys.argv[3]))
 # fixed sim settings
 ploidy=2
 msamples=ploidy*nsamples
-long_ibd=3.0
 N=msamples*(msamples-1)/2-msamples
-ab=[long_ibd,np.inf]
-
-outfile=folder+'/'+sys.argv[7]
+outfile=folder+'/'+sys.argv[8]
 
 # write to file concurrently
 
-f=open(outfile+'.Ne.tsv','w')
+f=open(outfile+'.cM.tsv','w')
 f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tINH\tTAU\tSV\tCM\n')
 
 sinfs=[[] for k in range(len(lst))]
 for i in range(nreplicates):
     for k in range(len(lst)):
-        Me=lst[k]
-        Ne=read_Ne(Me)
+        long_ibd=lst[k]
+        ab=[long_ibd,np.inf]
         out=simulate_ibd_isweep(
             nsamples,
             s,
