@@ -1,0 +1,113 @@
+// set up a simple adaptive simulation
+initialize() {
+	initializeTreeSeq();
+	// fixed adaptive mutation
+	initializeMutationRate(0);
+	initializeMutationType("m1", 0.5, "f", 0.08);
+
+	// chromosome
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 7999999);
+	initializeRecombinationRate(2.9999999999999395e-08);
+	initializeGeneConversion(0.66666666666666, 300, 1.0);
+
+	// bring in effective population sizes
+	defineGlobal("effSize", asInteger(readFile("bottle/forward.ne")));
+	defineGlobal("numGen", length(effSize));
+	defineGlobal("itrGen", 0);
+
+	// bring in variant
+	defineGlobal("posVar", 3999999);
+}
+
+// create population
+1 {
+	defineConstant("simID", getSeed());
+	subpopCount=1;
+	unequalSizes=c(1.0);
+	subpopSize=asInteger(effSize[itrGen]);
+	sim.addSubpop(1,subpopSize);
+	itrGen = itrGen + 1;
+}
+
+// size updates
+2:501 early() {
+	subpopCount=1;
+	unequalSizes=c(1.0);
+	for (i in 1:subpopCount){
+		subpopSize=asInteger(effSize[itrGen] * 1.0);
+		sim.subpopulations[i-1].setSubpopulationSize(subpopSize);
+	}
+	itrGen = itrGen + 1;
+}
+
+// draw adaptive mutations
+276 late() {
+	target = sample(p1.genomes, 1);
+	target.addNewDrawnMutation(m1, posVar);
+	// save simulation state
+	sim.treeSeqOutput("/tmp/slim_" + simID + ".trees");
+	// record allele frequency
+	writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"));
+}
+
+// make conditional
+277:501 late() {
+	catn(sim.generation);
+	writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"), append = T);
+	if (sim.countOfMutationsOfType(m1) == 0)
+	{
+		fixed = (sum(sim.substitutions.mutationType == m1) == 1);
+		if (fixed)
+		{
+			catn(simID + ": FIXED - RESTARTING");
+			deleteFile("bottle/SMALLS/4/slimulation.freq");
+			sim.readFromPopulationFile("/tmp/slim_" + simID + ".trees");
+			writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"));
+			setSeed(rdunif(1, 0, asInteger(2 ^ 62) - 1));
+			defineGlobal("itrGen",276);
+		}
+		else
+		{
+			catn(simID + ": LOST - RESTARTING");
+			deleteFile("bottle/SMALLS/4/slimulation.freq");
+			sim.readFromPopulationFile("/tmp/slim_" + simID + ".trees");
+			writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"));
+			setSeed(rdunif(1, 0, asInteger(2 ^ 62) - 1));
+			defineGlobal("itrGen",276);
+		}
+	}
+}
+
+// sample current 
+502 early() {
+	subpopCount=1;
+	subpop=1;
+	subpopSize=asInteger(2500);
+	for (i in 1:subpopCount){
+		sim.subpopulations[i-1].setSubpopulationSize(1);
+	}
+	sim.subpopulations[subpop-1].setSubpopulationSize(subpopSize);
+	sim.chromosome.setRecombinationRate(0);
+}
+
+// output TreeSeq 
+502 late() {
+	catn(sim.mutationFrequencies(p1));
+	if ((sim.mutationFrequencies(p1) > 0.1) & (sim.mutationFrequencies(p1) < 0.9))
+	{
+		writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"), append = T);
+		sim.treeSeqOutput("bottle/SMALLS/4/slimulation.trees");
+		sim.simulationFinished();
+	}
+	else
+	{
+		catn(simID + ": OUT OF FREQUENCY BOUNDS - RESTARTING");
+		deleteFile("bottle/SMALLS/4/slimulation.freq");
+		sim.readFromPopulationFile("/tmp/slim_" + simID + ".trees");
+		writeFile("bottle/SMALLS/4/slimulation.freq", paste(asString(sim.mutationFrequencies(p1)), asString(sim.mutationFrequencies(p1)), sep = "\t"));
+			setSeed(rdunif(1, 0, asInteger(2 ^ 62) - 1));
+		defineGlobal("itrGen",276);
+		sim.chromosome.setRecombinationRate(2.9999999999999395e-08);
+	}
+}
