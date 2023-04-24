@@ -7,8 +7,9 @@ development/
 img/
 archive/
 auxillary/
-
-
+workflow/analysis/forwsimstudy/bottle
+workflow/analysis/forwsimstudy/expgrowth
+workflow/analysis/forwsimstudy/const100k
 
 # taken from https://github.com/github/gitignore/blob/main/Python.gitignore
 
