@@ -1,6 +1,6 @@
 These folders contain code to reproduce simulation studies and real data analyses for the paper.
 
-coalsimstudy
+coalsimstudy:
   Simulation studies on coalescent IBD data
   Uses simulation scripts in isweep paradigm
   These simulation studies base the methodology on robust statistical inference
@@ -9,14 +9,14 @@ coalsimstudy
   Separate README.md for results of coalescent IBD studies
   
 forwsimstudy
-  Workhorse simulation studies based on genetic data
-  Forward simulate 1 de novo sweep variant with SLiM
-  Recapitate and place mutations on coalescent tree with tskit, msprime
-  Perform IBD-based inference steps
-  Use isweep paradigm to conduct inference
-    Create a separate conda environment for iSAFE comparison
-    Create a separate conda environment for CLUES comparison
-      These methods are from 2018-2020 and may downgrade versions required for isweep
+  * Workhorse simulation studies based on genetic data
+  * Forward simulate 1 de novo sweep variant with SLiM
+  * Recapitate and place mutations on coalescent tree with tskit, msprime
+  * Perform IBD-based inference steps
+  * Use isweep paradigm to conduct inference
+    ** Create a separate conda environment for iSAFE comparison
+    ** Create a separate conda environment for CLUES comparison
+      *** These methods are from 2018-2020 and may downgrade versions required for isweep
       
 isweep inference on real genetic data
   realprepstudy
