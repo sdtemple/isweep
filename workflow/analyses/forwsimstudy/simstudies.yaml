@@ -6,7 +6,7 @@
 
 FOLDERS:
   MACRO: 'bottle' # folder for macro experiments
-  MICRO: 'sim.example.2.tsv' # file for all experiments
+  MICRO: 'sim.test.tsv' # file for all experiments
 
 PATHS:
   # change these file locations for your local setup
