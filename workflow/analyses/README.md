@@ -14,9 +14,9 @@ forwsimstudy
   * Recapitate and place mutations on coalescent tree with tskit, msprime
   * Perform IBD-based inference steps
   * Use isweep paradigm to conduct inference
-    ** Create a separate conda environment for iSAFE comparison
-    ** Create a separate conda environment for CLUES comparison
-      *** These methods are from 2018-2020 and may downgrade versions required for isweep
+    * Create a separate conda environment for iSAFE comparison
+    * Create a separate conda environment for CLUES comparison
+      * These methods are from 2018-2020 and may downgrade versions required for isweep
       
 isweep inference on real genetic data
   realprepstudy
