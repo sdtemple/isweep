@@ -38,7 +38,8 @@ outfile=folder+'/'+sys.argv[8]
 
 # write to file concurrently
 
-f=open(outfile+'.cM.tsv','w')
+# f=open(outfile+'.cM.tsv','w')
+f=open(outfile+'.cM.v2.tsv','w')
 f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tINH\tTAU\tSV\tCM\n')
 
 sinfs=[[] for k in range(len(lst))]

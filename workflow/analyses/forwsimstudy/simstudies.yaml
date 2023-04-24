@@ -5,8 +5,8 @@
 ### LOCATION FOR ANALYSIS FILES ###
 
 FOLDERS:
-  MACRO: '10k' # folder for macro experiments
-  MICRO: 'sim.example.2.tsv' # file for all experiments
+  MACRO: 'bottle' # folder for macro experiments
+  MICRO: 'sim.test.tsv' # file for all experiments
 
 PATHS:
   # change these file locations for your local setup
@@ -22,8 +22,8 @@ PATHS:
 # modify these accordingly
 FIXED:
   SAMPSIZE: '2500'
-  tNe: '../../../auxillary/ne/constant-10k.ne' # change these for different analyses
-  iNe: '../../../auxillary/ne/constant-10k-1000G.ne' # broadly keep same as tNe
+  tNe: '../../../auxillary/ne/constant-100k.ne' # change these for different analyses
+  iNe: '../../../auxillary/ne/constant-100k-1000G.ne' # broadly keep same as tNe
   RHO: '1e-8' # genome-wide recombination rate
   MU: '1e-8' # genome-wide mutation rate
   a: '0.10' # min for adaptive allele freq

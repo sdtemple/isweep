@@ -25,8 +25,9 @@ m=ploidy*n
 N=m*(m-1)/2-m
 
 # estimate allele frequency
-ktab=pd.read_csv(ibdaf,sep='\t')
-p_est=(ktab.iloc[0])['AAF']
+tab=pd.read_csv(ibdaf,sep='\t')
+tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
+p_est=(tab['AAF']*tab['DELTANORM']).sum()
 print(p_est)
 
 # estimate selection coefficent

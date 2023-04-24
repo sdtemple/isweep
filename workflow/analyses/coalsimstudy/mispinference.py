@@ -17,12 +17,13 @@ if not os.path.exists(folder):
 
 # fixed parameter settings
 # change allele frequency if interested
-lst=[-0.1,
-     -0.05,
-     0,
-     0.05,
-     0.1
-     ] # p shift
+# lst=[-0.1,
+#      -0.05,
+#      0,
+#      0.05,
+#      0.1
+#      ] # p shifts
+lst=[-0.2,-0.02,0.02,0.2] # p shift
 
 # input parameter settings
 s=float(sys.argv[4]) # selection coefficient
@@ -90,7 +91,8 @@ for i in range(nreplicates):
             ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
-        sinf=[s,se,sint[1],sint[0],sint[2],round(pk,3),Me,0,'m',0,long_ibd]
+        # sinf=[s,se,sint[1],sint[0],sint[2],round(pk,3),Me,0,'m',0,long_ibd]
+        sinf=[s,se,sint[1],sint[0],sint[2],round(pk,3),Me,'m',0,0,long_ibd]
         sinfs[k].append(sinf)
         # saving
         row=sinf

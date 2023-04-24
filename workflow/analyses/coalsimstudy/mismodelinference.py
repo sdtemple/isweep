@@ -17,8 +17,10 @@ if not os.path.exists(folder):
 
 # fixed parameter settings
 # change selection coefficients if interested
+# lst=['m','a','d','r'] # different inheritance models
+# trumdl='d'
 lst=['m','a','d','r'] # different inheritance models
-trumdl='d'
+trumdl='m'
 
 # input parameter settings
 s=float(sys.argv[4])
@@ -41,7 +43,8 @@ outfile=folder+'/'+sys.argv[8]
 
 # write to file concurrently
 
-f=open(outfile+'.misinheritance.tsv','w')
+# f=open(outfile+'.misinheritance.tsv','w')
+f=open(outfile+'.misinheritance.v2.tsv','w')
 f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tINH\tTAU\tSV\tCM\n')
 
 sinfs=[[] for k in range(len(lst))]
@@ -87,7 +90,8 @@ for i in range(nreplicates):
             ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
-        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,0,mdl,0,long_ibd]
+        # sinf=[s,se,sint[1],sint[0],sint[2],p,Me,0,mdl,0,long_ibd]
+        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,mdl,0,0,long_ibd]
         sinfs[k].append(sinf)
         # saving
         row=sinf

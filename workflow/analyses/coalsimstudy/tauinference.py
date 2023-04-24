@@ -41,7 +41,12 @@ outfile=folder+'/'+sys.argv[8]
 # write to file concurrently
 
 f=open(outfile+'.tau.tsv','w')
-f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tINH\tTAU\tSV\tCM\n')
+# I messed up the header and columns for my simulation study in this setting
+# The INH column came before TAU
+# The commented out line is what I ran
+# Use the current version for future analyses to be in line with formatting of other simulation studies
+# f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tINH\tTAU\tSV\tCM\n')
+f.write('TRUE\tINITEST\tCORREST\tCORRLOW\tCORRUPP\tP0\tNE\tTAU\tINH\tSV\tCM\n')
 
 sinfs=[[] for k in range(len(lst))]
 for i in range(nreplicates):
@@ -86,7 +91,12 @@ for i in range(nreplicates):
             ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
-        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,'m',tau,0,long_ibd]
+        # I messed up the header and columns for my simulation study in this setting
+        # The INH column came before TAU
+        # The commented out line is what I ran
+        # Use the current version for future analyses to be in line with formatting of other simulation studies
+        # sinf=[s,se,sint[1],sint[0],sint[2],p,Me,'m',tau,0,long_ibd]
+        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,tau,'m',0,long_ibd]
         sinfs[k].append(sinf)
         # saving
         row=sinf

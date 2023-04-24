@@ -85,7 +85,8 @@ for i in range(nreplicates):
             ).x
             sboot.append(sj)
         sint=bootstrap_standard_bc(se,sboot)
-        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,0,'m',0,long_ibd]
+        # sinf=[s,se,sint[1],sint[0],sint[2],p,Me,0,'m',0,long_ibd]
+        sinf=[s,se,sint[1],sint[0],sint[2],p,Me,'m',0,0,long_ibd]
         sinfs[k].append(sinf)
         # saving
         row=sinf
