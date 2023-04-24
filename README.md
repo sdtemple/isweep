@@ -1,4 +1,4 @@
-# isweep <img src="isweep-icon.png" align="right" width="165px"/>
+# isweep <img src="isweep-icon.png" align="right" width="300px"/>
 
 incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
