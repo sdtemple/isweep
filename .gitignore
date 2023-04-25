@@ -1,4 +1,4 @@
-results/
+# results/
 .Rhistory
 .snakemake/
 .ipynb_checkpoints/
@@ -6,10 +6,7 @@ jars/
 development/
 img/
 archive/
-auxillary/
-workflow/analysis/forwsimstudy/bottle
-workflow/analysis/forwsimstudy/expgrowth
-workflow/analysis/forwsimstudy/const100k
+# auxillary/
 
 # taken from https://github.com/github/gitignore/blob/main/Python.gitignore
 
