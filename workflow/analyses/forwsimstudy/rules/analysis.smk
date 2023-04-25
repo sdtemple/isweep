@@ -12,15 +12,6 @@ rule community:
     script:
         '../../../snakescripts/isweep-rank.py'
 
-# rule kmeans:
-# 	input:
-# 		filein='{macro}/{micro}/short.{method}.full.ranks.tsv.gz',
-# 	output:
-# 		fileout='{macro}/{micro}/short.{method}.kmeans.ranks.tsv',
-# 		fignout='{macro}/{micro}/short.{method}.ranks.png',
-# 	script:
-# 		'../../../snakescripts/isweep-cluster.py'
-
 rule analysis:
 	input:
 		ibdlong='{macro}/{micro}/long.{method}.ibd.gz',

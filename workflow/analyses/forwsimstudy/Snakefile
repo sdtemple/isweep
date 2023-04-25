@@ -1,7 +1,11 @@
 # iSWEEP simulation studies
 # Seth D. Temple, sdtemple@uw.edu
 
-configfile: 'simstudies.yaml' # change this for new yaml configs
+configfile: 'simstudies.bottle.yaml' # change this for new yaml configs
+#configfile: 'simstudies.constant.yaml' # change this for new yaml configs
+#configfile: 'simstudies.popstruct1.yaml' # change this for new yaml configs
+#configfile: 'simstudies.popstruct2.yaml' # change this for new yaml configs
+#configfile: 'simstudies.popstruct3.yaml' # change this for new yaml configs
 
 # setup macro folder
 import os
@@ -43,4 +47,4 @@ rule all:
 
 		# triggers which method and centrality type to use
 		# should match rule remove in hooray.smk
-		# [f"{sim.FOLDER}/ibdends.results.tsv" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/ibdends.results.tsv" for sim in sims.itertuples()],

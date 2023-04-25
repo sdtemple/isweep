@@ -1,0 +1,99 @@
+##### YOU DO THIS ANALYSIS AFTER THE PREP ANALYSIS !!! #####
+
+##### IMPORTANT FILE STRUCTURE SETUP #####
+
+### LOCATION FOR ANALYSIS FILES ###
+
+FOLDERS:
+  MACRO: 'popstruct3'
+  MICRO: 'simstudy.normal.tsv'
+
+PATHS:
+  # change these file locations for your local setup
+  SLiM: '/home/sdtemple/owner/slimuser/slim' # https://messerlab.org/slim/
+#  BEAGLE: '../../../jars/beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
+  HAPIBD: '../../../jars/hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
+  IBDENDS: '../../../jars/ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
+  GTERR: '../../../jars/add-uniform-err.jar' # http://faculty.washington.edu/browning/
+  RMPHASE: '../../../jars/remove-phase.jar' # http://faculty.washington.edu/browning/
+  IBDNE: '../../../jars/ibdne.23Apr20.ae9.jar' # http://faculty.washington.edu/browning/
+  FILTER: '../../../jars/filter-lines.jar' # http://faculty.washington.edu/browning/
+
+# modify these accordingly
+FIXED:
+  SAMPSIZE: '10000'
+  tNe: '../../../auxillary/ne/bottleneck.ne'
+  iNe: '../../../auxillary/ne/bottleneck-1000G.ne'
+  RHO: '1e-8' # genome-wide recombination rate
+  MU: '1e-8' # genome-wide mutation rate
+  a: '0.15' # min for adaptive allele freq
+  b: '0.9' # max for adaptive allele freq
+  GCLEN: '300' # mean length of gene conversion
+  GCPROP: '0.66666666666666' # proportion of recombinations that are crossovers
+  SAMPLEONE: '1' # 1 to sample from all subpops, 0 otherwise
+  SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
+  NUMVAR: '1' # num adaptive mutations
+  PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
+  MSPMAF: '0.001' # MAF for msprime to control BCF size
+  CMLEN: '8' # in cM length, region size
+  LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+  GTERR: '0.0002' # genotype errors
+  MIGRRATE: '0.10'
+  NUMSUBPOP: '2'
+  TSPLIT: '1000' # time backwards of population split
+  PM: '1.2' # cM to left and right for small focal region
+
+### BROWNING SOFTWARE ###
+# contact sdtemple.github.io or Brian or Sharon Browning for help
+
+# candidate segments for ibd-ends.jar
+FIRSTHAP: # hap-ibd.jar
+  MINSEED: '0.5' # min-seed
+  MINEXT: '0.2' # min-extend
+  MINOUT: '2.5' # min-output
+  MINMAF: '0.40' # minimum minor allele frequency
+
+# ibd calls for selection scan
+FIRSTEND: # ibd-ends.jar
+  QUANTILES: '0.5' # quantiles from endpoint posterior
+  NSAMPLES: '0' # num samples from endpoint posterior
+  ERRRATE: '1e-4' # do a test run to set this
+  MINMAF: '0.001' # minimum minor allele frequency
+
+# ibd counts over windows
+FIRSTPASS:
+  GENOMEEND: '10' # in mega bp
+  BY: '10' # every 10 kilo bp
+  TELOCUT: '1.0' # cutting cM at telomeres
+  CUTOFF: '3.0' # ibd cM threshold for selection scan
+
+# long ibd calls
+SECONDHAP: # hap-ibd.jar
+  MINSEED: '0.5' # min-seed
+  MINEXT: '0.2' # min-extend
+  MINMAF: '0.10' # controls min-mac
+
+# short ibd calls
+THIRDHAP:
+  MINSEED: '0.5' # min-seed
+  MINEXT: '0.2' # min-extend
+  MINOUT: '1.0' # min-output
+  MINMAF: '0.10' # controls min-mac
+  MINMARK: '100' # min-markers
+
+### iSWEEP SOFTWARE ###
+# https://github.com/sdtemple/iSWEEP
+
+ISWEEPPARAMS:
+  IBDCUTOFF: '3.0' # ibd cM threshold for method of moments
+  NBOOT: '50' # num bootstraps; for uncertainty quantification
+  IBDCOMMK: '1' # 2*K is max # edges for path connection -> for IBD community detection
+  IBDCOMMF: '0.00' # allele freq in labeled group 1 must exceed -> for IBD community detection, freq estimate
+# IBDCOMMA will also control hap-ibd min-mac
+  IBDCOMMA: '0.10' # nonmajor allele freq lower bound for focus region -> control memory
+  OUTLIERSCALAR: '3' # for IBD community detection
+  RANDSTATE: '11081959' # David Temple's birthday
+  IBDCOMMQ1: '0.15' # min allele freq to consider, should by and large match config[FIXED][a]
+  IBDCOMMQ2: '0.90' # max allele freq to consider, should by and large match config[FIXED][b]
+  DPI: '300' # dots per inch for figures
+  CONFPERC: '0.95' # like percent for confidence interval (actually based on quantiles)

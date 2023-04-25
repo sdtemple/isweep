@@ -63,3 +63,34 @@ for tru in truth:
         g.write(str(cov)+'\n') # make sure final one has \n new line
 
 g.close()
+
+# ### For selection coefficient simulation study ###
+#
+# # loop over parameter perturbations
+# for tru in truth:
+#     subleft = tab[tab[column]==tru]
+#
+#     # here define statistics of interest
+#     # column 0 is true selection coefficient
+#     # column 1 is inital estimate selection coefficient
+#     # column 2 is bootstrap (bias-corrected) median selection coefficient
+#     # column 3 is bootstrap (bias-corrected) left bound selection coefficient
+#     # column 4 is bootstrap (bias-corrected) right bound selection coefficient
+#
+#     avg = subleft[2].mean() # mean over replicates of bootstrap median
+#     low = subleft[3].mean() # mean over replicates of bootstrap left bound
+#     upp = subleft[4].mean() # mean over replicates of bootstrap right bound
+#     bia = tru - avg # mean bias
+#     cov = ((subleft[3]<=tru)&(subleft[4]>=tru)).mean() # coverage
+#
+#     g.write(typ+'\t')
+#     g.write(str(tru)+'\t')
+#     g.write(str(tru)+'\t')
+#     g.write(str(avg)+'\t')
+#     g.write(str(bia)+'\t')
+#     g.write(str(low)+'\t')
+#     g.write(str(avg)+'\t') # duplicate avg
+#     g.write(str(upp)+'\t')
+#     g.write(str(cov)+'\n') # make sure final one has \n new line
+#
+# g.close()

@@ -5,13 +5,13 @@
 ### LOCATION FOR ANALYSIS FILES ###
 
 FOLDERS:
-  MACRO: 'bottle' # folder for macro experiments
-  MICRO: 'sim.test.tsv' # file for all experiments
+  MACRO: 'popstruct1'
+  MICRO: 'simstudy.normal.tsv'
 
 PATHS:
   # change these file locations for your local setup
   SLiM: '/home/sdtemple/owner/slimuser/slim' # https://messerlab.org/slim/
-  BEAGLE: '../../../jars/beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
+#  BEAGLE: '../../../jars/beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
   HAPIBD: '../../../jars/hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
   IBDENDS: '../../../jars/ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
   GTERR: '../../../jars/add-uniform-err.jar' # http://faculty.washington.edu/browning/
@@ -21,25 +21,25 @@ PATHS:
 
 # modify these accordingly
 FIXED:
-  SAMPSIZE: '2500'
-  tNe: '../../../auxillary/ne/constant-100k.ne' # change these for different analyses
-  iNe: '../../../auxillary/ne/constant-100k-1000G.ne' # broadly keep same as tNe
+  SAMPSIZE: '10000'
+  tNe: '../../../auxillary/ne/bottleneck.ne'
+  iNe: '../../../auxillary/ne/bottleneck-1000G.ne'
   RHO: '1e-8' # genome-wide recombination rate
   MU: '1e-8' # genome-wide mutation rate
-  a: '0.10' # min for adaptive allele freq
-  b: '0.90' # max for adaptive allele freq
+  a: '0.15' # min for adaptive allele freq
+  b: '0.9' # max for adaptive allele freq
   GCLEN: '300' # mean length of gene conversion
   GCPROP: '0.66666666666666' # proportion of recombinations that are crossovers
   SAMPLEONE: '1' # 1 to sample from all subpops, 0 otherwise
   SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
   NUMVAR: '1' # num adaptive mutations
   PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
-  MSPMAF: '0.01' # MAF for msprime to control BCF size
+  MSPMAF: '0.001' # MAF for msprime to control BCF size
   CMLEN: '8' # in cM length, region size
   LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
   GTERR: '0.0002' # genotype errors
-  MIGRRATE: '0' # migration rate
-  NUMSUBPOP: '1' # number of subpopulations
+  MIGRRATE: '0.01'
+  NUMSUBPOP: '2'
   TSPLIT: '1000' # time backwards of population split
   PM: '1.2' # cM to left and right for small focal region
 
@@ -86,14 +86,14 @@ THIRDHAP:
 
 ISWEEPPARAMS:
   IBDCUTOFF: '3.0' # ibd cM threshold for method of moments
-  NBOOT: '10' # num bootstraps; for uncertainty quantification
+  NBOOT: '50' # num bootstraps; for uncertainty quantification
   IBDCOMMK: '1' # 2*K is max # edges for path connection -> for IBD community detection
-  IBDCOMMF: '0.90' # allele freq in labeled group 1 must exceed -> for IBD community detection, freq estimate
+  IBDCOMMF: '0.00' # allele freq in labeled group 1 must exceed -> for IBD community detection, freq estimate
+# IBDCOMMA will also control hap-ibd min-mac
   IBDCOMMA: '0.10' # nonmajor allele freq lower bound for focus region -> control memory
   OUTLIERSCALAR: '3' # for IBD community detection
-  SKLEARNK: '10' # for frequency estimation
   RANDSTATE: '11081959' # David Temple's birthday
-  IBDCOMMQ1: '0.10' # min allele freq to consider, should by and large match config[FIXED][a]
+  IBDCOMMQ1: '0.15' # min allele freq to consider, should by and large match config[FIXED][a]
   IBDCOMMQ2: '0.90' # max allele freq to consider, should by and large match config[FIXED][b]
   DPI: '300' # dots per inch for figures
   CONFPERC: '0.95' # like percent for confidence interval (actually based on quantiles)
