@@ -17,6 +17,10 @@ forwsimstudy
     * Create a separate conda environment for iSAFE comparison
     * Create a separate conda environment for CLUES comparison
       * These methods are from 2018-2020 and may downgrade versions required for isweep
+
+fitsimstudy
+  * Simple IPython notebook to see if length distribution can determine Mendelian inheritance model
+    * It cannot.
       
 isweep inference on real genetic data
   * realprepstudy
