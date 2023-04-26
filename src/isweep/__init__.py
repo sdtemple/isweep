@@ -3,12 +3,14 @@ import gzip
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from seaborn import kdeplot
+# from seaborn import kdeplot
 from scipy.optimize import minimize_scalar
 from scipy.stats import binom, norm
 from math import sqrt, floor, ceil, exp, log
 from random import randint
 from copy import deepcopy
+import networkx
+import seaborn as sns
 
 # modules
 from .isweepCommunities import *

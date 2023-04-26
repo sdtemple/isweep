@@ -1,0 +1,20 @@
+# isweep real data analysis part 2 (roi)
+# Seth D. Temple, sdtemple@uw.edu
+# April 26, 2023
+
+configfile: 'realDataRoi.yaml'
+
+# setup macro folder
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+roi=str(config['CHANGE']['FOLDERS']['ROI'])
+folder=macro+'/'+roi+'/'
+include: 'rules/roi.smk'
+
+rule all:
+	input:
+		focus=folder+'focus.ibd.gz',
+		mom=folder+'mom.ibd.gz',
+	output:
+		yaml=folder+'arguments.yaml',
+	shell:
+		'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'

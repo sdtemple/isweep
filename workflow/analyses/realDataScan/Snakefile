@@ -1,0 +1,18 @@
+# isweep real data analysis part 1 (scan)
+# Seth D. Temple, sdtemple@uw.edu
+# April 26, 2023
+
+configfile: 'realDataScan.yaml'
+
+# setup macro folder
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+include: 'rules/scan.smk'
+
+rule all:
+	input:
+		macro+'/ibdsegs/ibdends/modified/scan/excess.ibd.tsv',
+		macro+'/ne/inferredNe.ne',
+	output:
+		yaml=macro+'arguments.yaml',
+	shell:
+		'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'

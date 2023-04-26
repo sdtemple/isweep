@@ -1,0 +1,69 @@
+# Seth D. Temple, sdtemple@uw.edu
+# April 26, 2023
+
+# change these
+CHANGE:
+  FOLDERS:
+    # folder for analysis
+    STUDY: '/projects/browning/brwnlab/seth/VTE/'
+    # the yaml file with scan analysis options
+    YAML: './realdata1.yaml'
+    # folder where snakescripts are
+    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/realDataScan/snakescripts'
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/realDataScan/terminalscripts'
+    SOFTWARE: '/projects/browning/brwnlab/seth/software/'
+  # chromsomes, sample size for analysis
+  ISWEEP:
+    # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
+    SAMPSIZE: '1000'
+    # lowest chromosome number
+    CHRLOW: '1'
+    # highest chromosome numbers
+    CHRHIGH: '22'
+  # download these software
+  PROGRAMS:
+    # https://github.com/browning-lab/hap-ibd
+    HAPIBD: 'hap-ibd.jar'
+    # https://github.com/browning-lab/ibd-ends
+    IBDENDS: 'ibd-ends.jar'
+    # http://faculty.washington.edu/browning/
+    IBDNE: 'ibdne.23Apr20.ae9.jar'
+    # http://faculty.washington.edu/browning/
+    FILTER: 'filter-lines.jar'
+
+# keep these fixed
+FIXED:
+  # hap-ibd.jar
+  CANDHAPIBD:
+    # min-seed
+    MINSEED: '0.5'
+    # min-extend
+    MINEXT: '0.2'
+    # min-output
+    MINOUT: '1.0'
+    # minimum minor allele frequency
+    MINMAF: '0.40'
+    # ploidy number
+    PLOIDY: '2'
+  # ibd-ends.jar
+  IBDENDS:
+    # quantiles from endpoint posterior
+    QUANTILES: '0.5'
+    # num samples from endpoint posterior
+    NSAMPLES: '0'
+    # do a test run on 1 chromosome to set this
+    ERRRATE: '2e-4'
+    # minimum minor allele frequency
+    MINMAF: '0.001'
+  # isweep
+  ISWEEP:
+    # in mega bp
+    GENOMEEND: '1000'
+    # in kilo bp
+    BY: '20'
+    # cutting cM at telomeres
+    TELOCUT: '2.0'
+    # ibd cM threshold for isweep method of moments
+    MOMCUTOFF: '3.0'
+    # ibd cM threshold for isweep scan
+    SCANCUTOFF: '2.0'
