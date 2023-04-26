@@ -7,7 +7,7 @@ CHANGE:
     # folder for analysis
     STUDY: '/projects/browning/brwnlab/seth/VTE/'
     # the yaml file with scan analysis options
-    YAML: './realdata1.yaml'
+    YAML: './realDataScan.yaml'
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/realDataScan/snakescripts'
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/realDataScan/terminalscripts'
