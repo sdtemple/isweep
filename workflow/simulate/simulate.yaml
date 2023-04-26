@@ -6,9 +6,9 @@ CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
     MACRO: 'bottle' # folder for macro experiments
-    MICRO: 'simstudy.test.tsv'
-    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/analyses/simulate/snakescripts/'
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/analyses/simulate/terminalcripts/'
+    MICRO: 'experiments/simstudy.test.tsv'
+    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/snakescripts/'
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/terminalscripts/'
     SOFTWARE: '/projects/browning/brwnlab/seth/software/'
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
@@ -20,7 +20,7 @@ CHANGE:
     IBDNE: 'ibdne.23Apr20.ae9.jar' # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar' # http://faculty.washington.edu/browning/
   SIMULATE:
-      tNe: 'bottleneck.ne'
+      tNe: 'ne/bottleneck.ne'
       ancNe: '10000'
       SAMPSIZE: '10000'
       MSPMAF: '0.001' # 0.001 for sequence data, >=0.01 for array data
