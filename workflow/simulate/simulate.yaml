@@ -7,8 +7,11 @@ CHANGE:
   FOLDERS:
     MACRO: 'bottle' # folder for macro experiments
     MICRO: 'experiments/simstudy.test.tsv'
-    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/snakescripts/'
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/terminalscripts/'
+    # folder where snakescripts are
+    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/snakescripts'
+    # forlder where terminal scripts are
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.3.0/workflow/simulate/terminalscripts'
+    # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software/'
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
@@ -93,52 +96,3 @@ FIXED:
     MINMAF: '0.10'
     # ploidy number
     PLOIDY: '2'
-
-  # BROWNING:
-  #   # candidate segments for ibd-ends.jar
-  #   FIRSTHAP: # hap-ibd.jar
-  #     MINSEED: '0.5' # min-seed
-  #     MINEXT: '0.2' # min-extend
-  #     MINOUT: '2.5' # min-output
-  #     MINMAF: '0.40' # minimum minor allele frequency
-  #   # ibd calls for selection scan
-  #   FIRSTEND: # ibd-ends.jar
-  #     QUANTILES: '0.5' # quantiles from endpoint posterior
-  #     NSAMPLES: '0' # num samples from endpoint posterior
-  #     ERRRATE: '1e-4' # do a test run to set this
-  #     MINMAF: '0.001' # minimum minor allele frequency
-  #   # ibd counts over windows
-  #   FIRSTPASS:
-  #     GENOMEEND: '10' # in mega bp
-  #     BY: '20' # every 10 kilo bp
-  #     TELOCUT: '0.5' # cutting cM at telomeres
-  #     CUTOFF: '3.0' # ibd cM threshold for selection scan
-  #   # long ibd calls
-  #   SECONDHAP: # hap-ibd.jar
-  #     MINSEED: '0.5' # min-seed
-  #     MINEXT: '0.2' # min-extend
-  #     MINMAF: '0.10' # controls min-mac
-  #   # short ibd calls
-  #   THIRDHAP:
-  #     MINSEED: '0.5' # min-seed
-  #     MINEXT: '0.2' # min-extend
-  #     MINOUT: '1.0' # min-output
-  #     MINMAF: '0.10' # controls min-mac
-  #     MINMARK: '100' # min-markers
-
-# ### iSWEEP SOFTWARE ###
-# # https://github.com/sdtemple/iSWEEP
-#
-# ISWEEPPARAMS:
-#   IBDCUTOFF: '3.0' # ibd cM threshold for method of moments
-#   NBOOT: '50' # num bootstraps; for uncertainty quantification
-#   IBDCOMMK: '1' # 2*K is max # edges for path connection -> for IBD community detection
-#   IBDCOMMF: '0.00' # allele freq in labeled group 1 must exceed -> for IBD community detection, freq estimate
-# # IBDCOMMA will also control hap-ibd min-mac
-#   IBDCOMMA: '0.10' # nonmajor allele freq lower bound for focus region -> control memory
-#   OUTLIERSCALAR: '3' # for IBD community detection
-#   RANDSTATE: '11081959' # David Temple's birthday
-#   IBDCOMMQ1: '0.15' # min allele freq to consider, should by and large match config[FIXED][a]
-#   IBDCOMMQ2: '0.90' # max allele freq to consider, should by and large match config[FIXED][b]
-#   DPI: '300' # dots per inch for figures
-#   CONFPERC: '0.95' # like percent for confidence interval (actually based on quantiles)
