@@ -4,6 +4,8 @@ n=int(float(config['CHANGE']['ISWEEP']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
+smallthreads=int(float(str(config['CHANGE']['CLUSTER']['SMALLTHREAD'])))
+largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 # do this before running snakemake
 # mkdir -p {config[CHANGE][FOLDERS][STUDY]}/{config[CHANGE][FOLDERS][ROI]}
@@ -28,7 +30,7 @@ rule hapibd: # segments from hap-ibd.jar
         hbd='{cohort}/{roi}/chr{chr}.hbd.gz',
         log='{cohort}/{roi}/chr{chr}.log',
 	threads:
-		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
+		largethreads,
 	resources:
 		mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:

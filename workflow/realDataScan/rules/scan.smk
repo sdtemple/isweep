@@ -5,6 +5,8 @@ mac1=int(ploidy*n*maf1)
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
+smallthreads=int(float(str(config['CHANGE']['CLUSTER']['SMALLTHREAD'])))
+largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 rule hapibd: # candidate segments from hap-ibd.jar
     input:
@@ -18,7 +20,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
         hbd='{cohort}/ibdsegs/hapibd/chr{num}.hbd.gz',
         log='{cohort}/ibdsegs/hapibd/chr{num}.log',
     threads:
-        int(float('{config[CHANGE][CLUSTER][SMALLTHREAD]}')),
+        smallthreads,
     resources:
         mem_gb='{config[CHANGE][PROGRAMS][SMALLMEM]}',
     shell:
@@ -35,7 +37,7 @@ rule ibdends: # ibd-ends.jar
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
         log='{cohort}/ibdsegs/ibdends/chr{num}.log',
     threads:
-        int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
+        largethreads,
     resources:
         mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:
