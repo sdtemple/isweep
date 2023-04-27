@@ -10,6 +10,7 @@ LOGS=$2 # folder to put -o and -e from jobs in
 mkdir -p $WHERE
 mkdir -p ${WHERE}/vcfs
 mkdir -p ${WHERE}/maps
+mkdir -p ${WHERE}/ne
 mkdir -p ${WHERE}/plots
 mkdir -p ${WHERE}/ibdsegs
 mkdir -p ${WHERE}/ibdsegs/hapibd

@@ -5,19 +5,19 @@
 CHANGE:
   FOLDERS:
     # folder for analysis
-    STUDY: ''
+    STUDY: '/projects/browning/brwnlab/seth/VTE'
     # the yaml file with scan analysis options
-    YAML: ''
+    YAML: './VTE.yaml'
     # folder where snakescripts are
-    SNAKESCRIPTS: ''
+    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.4.0/workflow/realDataScan/snakescripts'
     # folder where terminal scripts are
-    TERMINALSCRIPTS: ''
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.4.0/workflow/realDataScan/terminalscripts'
     # folder where software is
-    SOFTWARE: ''
+    SOFTWARE: '/projects/browning/brwnlab/seth/software'
   # chromsomes, sample size for analysis
   ISWEEP:
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1000'
+    SAMPSIZE: '1345'
     # lowest chromosome number
     CHRLOW: '1'
     # highest chromosome numbers

@@ -3,18 +3,19 @@ wildcard_constraints:
 
 rule record:
 	input:
-		# '{macro}/{micro}/hapibd.results.tsv',
-		'{macro}/{micro}/ibdends.results.tsv',
+		'{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
+		'{macro}/{micro}/{seed}/short.chr1.ibd.gz',
+		'{macro}/{micro}/{seed}/long.chr1.ibd.gz'
 	output:
-		yaml='{macro}/{micro}/arguments.yaml'
+		yaml='{macro}/{micro}/{seed}/arguments.yaml'
 	shell:
-		'cp ../config/simstudies.yaml {output.yaml}'
+		'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
 
 rule tszip:
 	input:
-		trees='{macro}/{micro}/slimulation.trees',
-		yaml='{macro}/{micro}/arguments.yaml',
+		trees='{macro}/{micro}/{seed}/slimulation.trees',
+		yaml='{macro}/{micro}/{seed}/arguments.yaml',
 	output:
-		tsz='{macro}/{micro}/slimulation.trees.tsz'
+		tsz='{macro}/{micro}/{seed}/slimulation.trees.tsz'
 	shell:
 		'tszip {input.trees}'
