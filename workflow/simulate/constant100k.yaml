@@ -6,7 +6,7 @@ CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
     MACRO: 'constant100k' # folder for macro experiments
-    MICRO: 'experiments/simstudy.test.tsv'
+    MICRO: 'experiments/simstudy.test.tsv' # tsv file describing simulations
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/snakescripts'
     # forlder where terminal scripts are

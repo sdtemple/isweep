@@ -53,7 +53,7 @@ rule filter_ibdends_scan: # applying cutoffs
     input:
         ibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
     output:
-        fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',,
+        fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',
     shell:
         'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
 
