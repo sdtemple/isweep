@@ -30,7 +30,7 @@ rule small_hapibd:
         hbd='{macro}/{micro}/{seed}/small.chr1.hbd.gz',
         log='{macro}/{micro}/{seed}/small.chr1.log',
 	threads:
-		'{config[CHANGE][CLUSTER][LARGETHREAD]}',
+		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
 	resources:
 		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:

@@ -20,7 +20,7 @@ rule hapibd:
         hbd='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate.hbd.gz',
         log='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate.log',
 	threads:
-		'{config[CHANGE][CLUSTER][SMALLTHREAD]}',
+		int(float('{config[CHANGE][CLUSTER][SMALLTHREAD]}')),
 	resources:
 		mem_gb='{config[CHANGE][CLUSTER][SMALLMEM]}'
     shell:
@@ -37,7 +37,7 @@ rule ibdends:
         ibd='{macro}/{micro}/{seed}/large.chr1.ibdends.ibd.gz',
         log='{macro}/{micro}/{seed}/large.chr1.ibdends.log',
 	threads:
-		'{config[CHANGE][CLUSTER][LARGETHREAD]}',
+		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
 	resources:
 		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:

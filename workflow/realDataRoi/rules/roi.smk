@@ -28,7 +28,7 @@ rule hapibd: # segments from hap-ibd.jar
         hbd='{cohort}/{roi}/chr{chr}.hbd.gz',
         log='{cohort}/{roi}/chr{chr}.log',
 	threads:
-		'{config[CHANGE][CLUSTER][LARGETHREAD]}',
+		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
 	resources:
 		mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:

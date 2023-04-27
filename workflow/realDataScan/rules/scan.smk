@@ -18,7 +18,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
         hbd='{cohort}/ibdsegs/hapibd/chr{num}.hbd.gz',
         log='{cohort}/ibdsegs/hapibd/chr{num}.log',
     threads:
-        '{config[CHANGE][CLUSTER][SMALLTHREAD]}',
+        int(float('{config[CHANGE][CLUSTER][SMALLTHREAD]}')),
     resources:
         mem_gb='{config[CHANGE][PROGRAMS][SMALLMEM]}',
     shell:
@@ -35,7 +35,7 @@ rule ibdends: # ibd-ends.jar
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
         log='{cohort}/ibdsegs/ibdends/chr{num}.log',
     threads:
-        '{config[CHANGE][CLUSTER][LARGETHREAD]}',
+        int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
     resources:
         mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:
