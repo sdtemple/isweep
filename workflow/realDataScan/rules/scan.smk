@@ -17,8 +17,12 @@ rule hapibd: # candidate segments from hap-ibd.jar
         ibd='{cohort}/ibdsegs/hapibd/chr{num}.ibd.gz',
         hbd='{cohort}/ibdsegs/hapibd/chr{num}.hbd.gz',
         log='{cohort}/ibdsegs/hapibd/chr{num}.log',
+    threads:
+        '{config[CHANGE][CLUSTER][SMALLTHREAD]}',
+    resources:
+        mem_gb='{config[CHANGE][PROGRAMS][SMALLMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][PROGRAMS][SMALLMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
 
 rule ibdends: # ibd-ends.jar
     input:
@@ -29,10 +33,13 @@ rule ibdends: # ibd-ends.jar
         out='{cohort}/ibdsegs/ibdends/chr{num}',
     output:
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
-        hbd='{cohort}/ibdsegs/ibdends/chr{num}.hbd.gz',
         log='{cohort}/ibdsegs/ibdends/chr{num}.log',
+    threads:
+        '{config[CHANGE][CLUSTER][LARGETHREAD]}',
+    resources:
+        mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][IBDENDS]} gt={input.vcf} ibd={input.ibd} map={input.map} out={params.out} min-maf={config[FIXED][IBDENDS][MINMAF]} quantiles={config[FIXED][IBDENDS][QUANTILES]} nsamples={config[FIXED][IBDENDS][NSAMPLES]} err={config[FIXED][IBDENDS][ERRRATE]}'
+        'java -Xmx{config[CHANGE][PROGRAMS][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][IBDENDS]} gt={input.vcf} ibd={input.ibd} map={input.map} out={params.out} min-maf={config[FIXED][IBDENDS][MINMAF]} quantiles={config[FIXED][IBDENDS][QUANTILES]} nsamples={config[FIXED][IBDENDS][NSAMPLES]} err={config[FIXED][IBDENDS][ERRRATE]}'
 
 rule format_ibdends: # reformatting
 	input:
@@ -46,9 +53,9 @@ rule filter_ibdends_scan: # applying cutoffs
     input:
         ibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
     output:
-        fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',
+        fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',,
     shell:
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_scan: # computing counts over windows
 	input:
@@ -65,7 +72,7 @@ rule filter_ibdends_mom: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/modified/mom/chr{num}.ibd.gz',
     shell:
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_mom: # computing counts over windows
 	input:

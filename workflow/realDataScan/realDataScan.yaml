@@ -23,6 +23,15 @@ CHANGE:
     # highest chromosome numbers
     CHRHIGH: '22'
   # download these software
+  CLUSTER:
+    # controls memory resource to some rules
+    # in Gb
+    LARGEMEM: '100'
+    SMALLMEM: '50'
+    # controls thread resource to some rules
+    # must be integers
+    LARGETHREAD: '16'
+    SMALLTHREAD: '12'
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
     HAPIBD: 'hap-ibd.jar'
@@ -30,8 +39,6 @@ CHANGE:
     IBDENDS: 'ibd-ends.jar'
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
-    # controls -Xmxg in java -jar applets
-    XMXMEM: '100'
 
 # keep these fixed
 FIXED:

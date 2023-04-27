@@ -27,8 +27,12 @@ rule hapibd: # segments from hap-ibd.jar
         ibd='{cohort}/{roi}/chr{chr}.ibd.gz',
         hbd='{cohort}/{roi}/chr{chr}.hbd.gz',
         log='{cohort}/{roi}/chr{chr}.log',
+	threads:
+		'{config[CHANGE][CLUSTER][LARGETHREAD]}',
+	resources:
+		mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][PROGRAMS][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-mac={params.minmac}'
 
 rule filter_hapibd: # applying focus
     input:
@@ -36,7 +40,7 @@ rule filter_hapibd: # applying focus
     output:
         fipass='{cohort}/{roi}/focus.ibd.gz',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'
 
 rule filter_mom:
 	input:
@@ -44,4 +48,4 @@ rule filter_mom:
     output:
         fipass='{cohort}/{config[CHANGE][FOLDERS][ROI]}/mom.ibd.gz',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'

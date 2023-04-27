@@ -32,6 +32,8 @@ rule slim:
 	output:
 		trees="{macro}/{micro}/{seed}/slimulation.trees",
 		freq="{macro}/{micro}/{seed}/slimulation.freq",
+	resources:
+		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
 	shell:
 		'{config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][SLiM]} {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/slimulation.slim'
 
@@ -41,6 +43,8 @@ rule msprime:
 		trees = "{macro}/{micro}/{seed}/slimulation.trees",
 	output:
 		bcf="{macro}/{micro}/{seed}/slimulation.bcf.gz",
+	resources:
+		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
 	script:
 		'{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/treeVCF.py'
 
@@ -68,7 +72,7 @@ rule genotyping_error:
 	output:
 		out='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
 	shell:
-		'zcat {input.vcf} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][GTERR]} {config[FIXED][SIMULATE][GTERR]} | gzip > {output.out}'
+		'zcat {input.vcf} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][GTERR]} {config[FIXED][SIMULATE][GTERR]} | gzip > {output.out}'
 
 ### true labels ###
 

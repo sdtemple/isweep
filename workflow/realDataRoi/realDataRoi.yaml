@@ -13,7 +13,7 @@ CHANGE:
     # folder for analysis
     STUDY: ''
     # the yaml file with scan analysis options
-    YAML: ''
+    YAML: './realDataRoi.yaml'
     # name of roi
     ROI: ''
     # folder where terminal scripts are
@@ -25,14 +25,21 @@ CHANGE:
     SAMPSIZE: '1000'
     # minimum allele frequency of adaptive variant
     MINAF: '0.10'
+  CLUSTER:
+    # controls memory resource to some rules
+    # in Gb
+    LARGEMEM: '100'
+    SMALLMEM: '50'
+    # controls thread resource to some rules
+    # must be integers
+    LARGETHREAD: '16'
+    SMALLTHREAD: '12'
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
     HAPIBD: 'hap-ibd.jar'
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
-    # controls -Xmxg in java -jar applets
-    XMXMEM: '100'
 
 # keep these fixed
 FIXED:
