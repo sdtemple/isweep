@@ -24,11 +24,9 @@ CHANGE:
     # controls memory resource to some rules
     # in Gb
     LARGEMEM: '100'
-    SMALLMEM: '50'
     # controls thread resource to some rules
     # must be integers
     LARGETHREAD: '16'
-    SMALLTHREAD: '12'
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
     HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
@@ -38,11 +36,9 @@ CHANGE:
     # controls memory resource to some rules
     # in Gb
     LARGEMEM: '100'
-    SMALLMEM: '50'
     # controls thread resource to some rules
     # must be integers
     LARGETHREAD: '16'
-    SMALLTHREAD: '12'
     # RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
     # BEAGLE: 'beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
 

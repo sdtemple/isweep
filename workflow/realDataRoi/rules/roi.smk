@@ -4,7 +4,6 @@ n=int(float(config['CHANGE']['ISWEEP']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
-smallthreads=int(float(str(config['CHANGE']['CLUSTER']['SMALLTHREAD'])))
 largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 # do this before running snakemake

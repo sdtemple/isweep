@@ -17,6 +17,7 @@ n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
+largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 rule small_hapibd:
     input:
@@ -30,7 +31,7 @@ rule small_hapibd:
         hbd='{macro}/{micro}/{seed}/small.chr1.hbd.gz',
         log='{macro}/{micro}/{seed}/small.chr1.log',
 	threads:
-		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
+		largethreads,
 	resources:
 		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:

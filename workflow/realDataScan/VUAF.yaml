@@ -19,11 +19,9 @@ CHANGE:
     # controls memory resource to some rules
     # in Gb
     LARGEMEM: '100'
-    SMALLMEM: '50'
     # controls thread resource to some rules
     # must be integers
     LARGETHREAD: '16'
-    SMALLTHREAD: '12'
   ISWEEP:
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
     SAMPSIZE: '1110'
@@ -61,7 +59,7 @@ FIXED:
     # num samples from endpoint posterior
     NSAMPLES: '0'
     # do a test run on 1 chromosome to set this
-    ERRRATE: '2e-4'
+    ERRRATE: '1.5e-4'
     # minimum minor allele frequency
     MINMAF: '0.001'
   # isweep

@@ -5,6 +5,7 @@ n=int(float(config['CHANGE']['ISWEEP']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
+largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 ### ibd-ends from candidate segments ###
 
@@ -20,11 +21,11 @@ rule hapibd:
         hbd='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate.hbd.gz',
         log='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate.log',
 	threads:
-		int(float('{config[CHANGE][CLUSTER][SMALLTHREAD]}')),
+		largethreads,
 	resources:
-		mem_gb='{config[CHANGE][CLUSTER][SMALLMEM]}'
+		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
-        'java -Xmx{config[CHANGE][CLUSTER][SMALLMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
 
 rule ibdends:
     input:
@@ -37,7 +38,7 @@ rule ibdends:
         ibd='{macro}/{micro}/{seed}/large.chr1.ibdends.ibd.gz',
         log='{macro}/{micro}/{seed}/large.chr1.ibdends.log',
 	threads:
-		int(float('{config[CHANGE][CLUSTER][LARGETHREAD]}')),
+		largethreads,
 	resources:
 		mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:

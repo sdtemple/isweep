@@ -5,7 +5,6 @@ mac1=int(ploidy*n*maf1)
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
-smallthreads=int(float(str(config['CHANGE']['CLUSTER']['SMALLTHREAD'])))
 largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
 rule hapibd: # candidate segments from hap-ibd.jar
@@ -20,11 +19,11 @@ rule hapibd: # candidate segments from hap-ibd.jar
         hbd='{cohort}/ibdsegs/hapibd/chr{num}.hbd.gz',
         log='{cohort}/ibdsegs/hapibd/chr{num}.log',
     threads:
-        smallthreads,
+        largethreads,
     resources:
-        mem_gb='{config[CHANGE][PROGRAMS][SMALLMEM]}',
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][SMALLMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac}'
 
 rule ibdends: # ibd-ends.jar
     input:
@@ -39,9 +38,9 @@ rule ibdends: # ibd-ends.jar
     threads:
         largethreads,
     resources:
-        mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][IBDENDS]} gt={input.vcf} ibd={input.ibd} map={input.map} out={params.out} min-maf={config[FIXED][IBDENDS][MINMAF]} quantiles={config[FIXED][IBDENDS][QUANTILES]} nsamples={config[FIXED][IBDENDS][NSAMPLES]} err={config[FIXED][IBDENDS][ERRRATE]}'
+        'java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][IBDENDS]} gt={input.vcf} ibd={input.ibd} map={input.map} out={params.out} min-maf={config[FIXED][IBDENDS][MINMAF]} quantiles={config[FIXED][IBDENDS][QUANTILES]} nsamples={config[FIXED][IBDENDS][NSAMPLES]} err={config[FIXED][IBDENDS][ERRRATE]}'
 
 rule format_ibdends: # reformatting
 	input:
