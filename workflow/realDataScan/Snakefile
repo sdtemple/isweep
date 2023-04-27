@@ -9,6 +9,7 @@ include: 'rules/scan.smk'
 rule all:
 	input:
 		macro+'/excess.ibd.tsv',
+		macro+'/excess.region.ibd.tsv',
 	output:
 		yaml=macro+'/arguments.yaml',
 	shell:

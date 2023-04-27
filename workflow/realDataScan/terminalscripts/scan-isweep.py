@@ -10,13 +10,9 @@ import pandas as pd
 import numpy as np
 
 # inputtting
-folder=snakemake.config['CHANGE']['FOLDERS']['STUDY']
+folder,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
 firstfolder=folder
 folder+='/ibdsegs/modified/scan/'
-chrlow=snakemake.config['CHANGE']['ISWEEP']['CHRLOW']
-chrhigh=snakemake.config['CHANGE']['ISWEEP']['CHRHIGH']
-cutoff1=snakemake.config['FIXED']['ISWEEP']['SCANCUTOFF']
-cutoff2=snakemake.config['FIXED']['ISWEEP']['TELOCUTOFF']
 
 # type casting
 chrlow=int(float(chrlow))
@@ -47,4 +43,4 @@ b=medi+stdv*cutoff1
 out=tab[tab['COUNT']>=b]
 
 # saving excess
-out.to_csv(firstfolder+'/excess.ibd.tsv',sep='\t',index=False)
+out.to_csv(firstfolder+'/excess.ibd.tsv',sep'\t',index=False)

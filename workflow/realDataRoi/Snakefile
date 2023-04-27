@@ -4,7 +4,7 @@
 
 # setup macro folder
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-roi=str(config['CHANGE']['FOLDERS']['ROI'])
+roi=str(config['CHANGE']['ROI']['NAME'])
 folder=macro+'/'+roi+'/'
 include: 'rules/roi.smk'
 

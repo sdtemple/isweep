@@ -8,14 +8,13 @@ CHANGE:
       LEFT: ''
       RIGHT: ''
       CENTER: ''
+      NAME: ''
   # folders
   FOLDERS:
     # folder for analysis
     STUDY: '/projects/browning/brwnlab/seth/VTE'
     # the yaml file with scan analysis options
     YAML: './VTEROI.yaml'
-    # name of roi
-    ROI: ''
     # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/realDataRoi/terminalscripts'
     SOFTWARE: '/projects/browning/brwnlab/seth/software'

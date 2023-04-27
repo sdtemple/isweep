@@ -12,6 +12,8 @@ EMAIL=sdtemple@uw.edu
 LOGS=~/logs/
 
 # where
+
+# address this
 VCFS=/projects/browning/brwnlab/topmed_freeze8/merge_Mar21/
 VCFPREFIX=merged_chr
 VCFSUFFIX=_BAGS_BIOME_CCAF_FHS_HYPERGEN_JHS_MLOF_VTE_VUAF_WHI.PASS_polysnps.vcf.gz

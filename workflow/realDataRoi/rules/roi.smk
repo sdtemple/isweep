@@ -13,7 +13,7 @@ rule subset_vcf: # focus vcf on region of interest
 	input:
 		vcfin='{cohort}/vcfs/chr{chr}.vcf.gz',
 	output:
-		subvcf='{cohort}/{config[CHANGE][FOLDERS][ROI]}/chr{chr}.vcf.gz',
+		subvcf='{cohort}/{config[CHANGE][ROI][NAME]}/chr{chr}.vcf.gz',
 	shell:
 		'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {cohort}/{roi} {input.vcfin} {output.vcfout} {config[CHANGE][ROI][LEFT]} {config[CHANGE][ROI][RIGHT]} {chr} {config[FIXED][ISWEEP][MINAF]}'
 

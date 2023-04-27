@@ -56,7 +56,7 @@ rule filter_ibdends_scan: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',
     shell:
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_scan: # computing counts over windows
 	input:
@@ -73,7 +73,7 @@ rule filter_ibdends_mom: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/modified/mom/chr{num}.ibd.gz',
     shell:
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_mom: # computing counts over windows
 	input:
@@ -92,3 +92,13 @@ rule scan: # conduct a manhattan scan
 		macro+'/excess.ibd.tsv',
 	script:
 		'{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/scan-isweep.py'
+
+rule excess_region: # concatenate regions of excess IBD
+    input:
+        filein=macro+'/excess.ibd.tsv',
+    output:
+        fileout=macro+'/excess.region.ibd.tsv',
+    params:
+        cMgap='{config[FIXED][ISWEEP][CMGAP]}',
+    script:
+        '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/excess-region.py'

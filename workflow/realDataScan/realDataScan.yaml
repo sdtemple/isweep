@@ -74,3 +74,5 @@ FIXED:
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
     SCANCUTOFF: '2.0'
+    # cM gap when concatenating regions of excess IBD
+    CMGAP: '1.0'
