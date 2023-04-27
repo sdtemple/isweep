@@ -68,7 +68,7 @@ rule genotyping_error:
 	output:
 		out='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
 	shell:
-		'zcat {input.vcf} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][GTERR]} {config[FIXED][SIMULATE][GTERR]} | gzip > {output.out}'
+		'zcat {input.vcf} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][GTERR]} {config[FIXED][SIMULATE][GTERR]} | gzip > {output.out}'
 
 ### true labels ###
 

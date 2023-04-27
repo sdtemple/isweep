@@ -30,7 +30,7 @@ rule small_hapibd:
         hbd='{macro}/{micro}/{seed}/small.chr1.hbd.gz',
         log='{macro}/{micro}/{seed}/small.chr1.log',
     shell:
-        'java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-markers={config[FIXED][HAPIBD][MINMARK]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-markers={config[FIXED][HAPIBD][MINMARK]} min-mac={params.minmac}'
 
 ### long IBD ###
 
@@ -40,7 +40,7 @@ rule long_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/long.chr1.ibd.gz',
     shell:
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0 {config[FIXED][SIMULATE][LOC]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[FIXED][SIMULATE][LOC]} 100000000 | gzip > {output.ibd}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0 {config[FIXED][SIMULATE][LOC]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[FIXED][SIMULATE][LOC]} 100000000 | gzip > {output.ibd}'
 
 ### small IBD ###
 
@@ -50,4 +50,4 @@ rule small_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/short.chr1.ibd.gz',
     shell:
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][HAPIBD][MINOUT]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0 {config[FIXED][SIMULATE][LOC]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[FIXED][SIMULATE][LOC]} 100000000 | gzip > {output.ibd}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][HAPIBD][MINOUT]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0 {config[FIXED][SIMULATE][LOC]} | java -Xmx{config[CHANGE][PROGRAMS][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[FIXED][SIMULATE][LOC]} 100000000 | gzip > {output.ibd}'

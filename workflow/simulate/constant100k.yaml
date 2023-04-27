@@ -5,14 +5,14 @@
 CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
-    MACRO: '' # folder for macro experiments
-    MICRO: ''
+    MACRO: 'constant100k' # folder for macro experiments
+    MICRO: 'experiments/simstudy.test.tsv'
     # folder where snakescripts are
-    SNAKESCRIPTS: ''
+    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.4.0/workflow/simulate/snakescripts'
     # forlder where terminal scripts are
-    TERMINALSCRIPTS: ''
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.4.0/workflow/simulate/terminalscripts'
     # folder where software is
-    SOFTWARE: ''
+    SOFTWARE: '/projects/browning/brwnlab/seth/software/'
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
     HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
@@ -23,7 +23,7 @@ CHANGE:
     # RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
     # BEAGLE: 'beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
   SIMULATE:
-      tNe: ''
+      tNe: 'ne/constant100k.ne'
       ancNe: '10000'
       SAMPSIZE: '10000'
       MSPMAF: '0.001' # 0.001 for sequence data, >=0.01 for array data

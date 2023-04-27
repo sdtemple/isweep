@@ -11,18 +11,18 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: ''
+    STUDY: '/projects/browning/brwnlab/seth/VTE'
     # the yaml file with scan analysis options
     YAML: ''
     # name of roi
     ROI: ''
     # folder where terminal scripts are
-    TERMINALSCRIPTS: ''
-    SOFTWARE: ''
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep-0.4.0/workflow/realDataRoi/terminalscripts'
+    SOFTWARE: '/projects/browning/brwnlab/seth/software'
   # chromsomes, sample size for analysis
   ISWEEP:
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1000'
+    SAMPSIZE: '1345'
     # minimum allele frequency of adaptive variant
     MINAF: '0.10'
   # download these software
