@@ -19,8 +19,8 @@ for j in range(J):
 	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
 		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
 	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)))
-sims['FOLDER'] = [macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/CENTER'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)) for j in range(J)]
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT))
+sims['FOLDER'] = [(macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/CENTER'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
 
 # setup macro folder
 # macro=str(config['CHANGE']['FOLDERS']['STUDY'])
@@ -30,11 +30,6 @@ include: 'rules/roi.smk'
 
 rule all:
 	input:
-		[f"{sim.FOLDER}/focus.ibd.gz" for sim in sims.itertuples()],
-		[f"{sim.FOLDER}/mom.ibd.gz" for sim in sims.itertuples()],
-		# focus=folder+'focus.ibd.gz',
-		# mom=folder+'mom.ibd.gz',
-	# output:
-	# 	yaml=folder+'arguments.yaml',
-	# shell:
-	# 	'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
+		touches=[f"{sim.FOLDER}/touched" for sim in sims.itertuples()],
+		# focuses=[f"{sim.FOLDER}/focus.ibd.gz" for sim in sims.itertuples()],
+		# moms=[f"{sim.FOLDER}/mom.ibd.gz" for sim in sims.itertuples()],
