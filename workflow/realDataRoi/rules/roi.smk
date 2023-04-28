@@ -9,44 +9,60 @@ largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 # do this before running snakemake
 # mkdir -p {config[CHANGE][FOLDERS][STUDY]}/{config[CHANGE][FOLDERS][ROI]}
 
+rule copy_vcf:
+    input:
+        scandone='{config[CHANGE][FOLDERS][STUDY]}/excess.regions.tsv',
+    output:
+        copydone='{config[CHANGE][FOLDERS][STUDY]}/ROI.tsv',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
+    script:
+        '{config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/copy-vcf.py {config[CHANGE][FOLDERS][STUDY]} {config[CHANGE][FOLDERS][ROI]}'
+
 rule subset_vcf: # focus vcf on region of interest
-	input:
-		vcfin='{cohort}/vcfs/chr{chr}.vcf.gz',
-	output:
-		subvcf='{cohort}/{config[CHANGE][ROI][NAME]}/chr{chr}.vcf.gz',
-	shell:
-		'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {cohort}/{roi} {input.vcfin} {output.vcfout} {config[CHANGE][ROI][LEFT]} {config[CHANGE][ROI][RIGHT]} {chr} {config[FIXED][ISWEEP][MINAF]}'
+    input:
+        vcfin='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.vcf.gz',
+    output:
+        subvcf='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.focused.vcf.gz',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
+    shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
+        'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {cohort}/{roi}/{center}/{left}/{right} {input.vcfin} {output.vcfout} {left} {right} {chr} {config[FIXED][ISWEEP][MINAF]}; rm {input.vcfin}'
 
 rule hapibd: # segments from hap-ibd.jar
     input:
-        vcf='{cohort}/{roi}/chr{chr}.vcf.gz',
+        vcf='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.focused.vcf.gz',
         map='{cohort}/maps/chr{chr}.map',
     params:
         minmac=str(mac1),
-        out='{cohort}/{roi}/chr{chr}',
+        out='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/',
     output:
-        ibd='{cohort}/{roi}/chr{chr}.ibd.gz',
-        hbd='{cohort}/{roi}/chr{chr}.hbd.gz',
-        log='{cohort}/{roi}/chr{chr}.log',
-	threads:
-		largethreads,
-	resources:
-		mem_gb='{config[CHANGE][PROGRAMS][LARGEMEM]}',
+        ibd='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.ibd.gz',
+        hbd='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.hbd.gz',
+        log='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.log',
+    threads:
+        largethreads,
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
-        'java -Xmx{config[CHANGE][PROGRAMS][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-mac={params.minmac}'
+        'java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-mac={params.minmac}'
 
 rule filter_hapibd: # applying focus
     input:
-        ibd='{cohort}/{roi}/chr{config[CHANGE][ROI][CHRNUM]}.ibd.gz',
+        ibd='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.ibd.gz',
     output:
-        fipass='{cohort}/{roi}/focus.ibd.gz',
+        fipass='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/focus.ibd.gz',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {center} 10000000000 | gzip > {output.fipass}; rm {input.ibd}'
 
 rule filter_mom:
-	input:
-		'{cohort}/ibdsegs/ibdends/modified/mom/chr{config[CHANGE][ROI][CHRNUM]}.ibd.gz',
+    input:
+        '{cohort}/ibdsegs/ibdends/modified/mom/chr{chr}.ibd.gz',
     output:
-        fipass='{cohort}/{config[CHANGE][FOLDERS][ROI]}/mom.ibd.gz',
+        fipass='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {config[CHANGE][ROI][CENTER]} | java -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {config[CHANGE][ROI][CENTER]} 10000000000 | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {center} 10000000000 | gzip > {output.fipass}'

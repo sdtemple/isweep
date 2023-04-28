@@ -1,18 +1,40 @@
 # isweep real data analysis part 2 (roi)
 # Seth D. Temple, sdtemple@uw.edu
-# April 26, 2023
+# April 27, 2023
+
+import os
+import pandas as pd
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+micro=str(config['CHANGE']["FOLDERS"]["ROI"])
+sims = pd.read_csv(micro, sep='\t', header=0)
+J = sims.shape[0]
+for j in range(J):
+	row = sims.loc[j,]
+	if not os.path.exists(macro+'/roi'+str(row.NAME)):
+		os.mkdir(macro+'/roi'+str(row.NAME))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)))
+sims['FOLDER'] = [macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/CENTER'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)) for j in range(J)]
 
 # setup macro folder
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-roi=str(config['CHANGE']['ROI']['NAME'])
-folder=macro+'/'+roi+'/'
+# macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+# roi=str(config['CHANGE']['ROI']['NAME'])
+# folder=macro+'/'+roi+'/'
 include: 'rules/roi.smk'
 
 rule all:
 	input:
-		focus=folder+'focus.ibd.gz',
-		mom=folder+'mom.ibd.gz',
-	output:
-		yaml=folder+'arguments.yaml',
-	shell:
-		'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
+		[f"{sim.FOLDER}/focus.ibd.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/mom.ibd.gz" for sim in sims.itertuples()],
+		# focus=folder+'focus.ibd.gz',
+		# mom=folder+'mom.ibd.gz',
+	# output:
+	# 	yaml=folder+'arguments.yaml',
+	# shell:
+	# 	'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
