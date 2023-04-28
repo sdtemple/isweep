@@ -15,7 +15,7 @@ CHANGE:
     # the yaml file with scan analysis options
     YAML: './VUAFROI.yaml'
     # name of roi
-    ROI: ''
+    ROI: './LCT.test2.tsv'
     # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/realDataRoi/terminalscripts'
     SOFTWARE: '/projects/browning/brwnlab/seth/software'

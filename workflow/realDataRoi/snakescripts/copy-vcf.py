@@ -6,7 +6,7 @@
 import os
 import sys
 import pandas as pd
-study,roi=sys.argv[1:]
+# study,roi=sys.argv[1:]
 # study is the name of a folder for a real data analysis
 # roi is the name of a *.tsv file with info on an roi (region of interest)
 # the header should be NAME CHROM BPLEFT BPCENTER BPRIGHT

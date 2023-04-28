@@ -14,13 +14,15 @@ for j in range(J):
 		os.mkdir(macro+'/roi'+str(row.NAME))
 	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)):
 		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
 		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT))
-sims['FOLDER'] = [(macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/CENTER'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
+	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/ready'):
+		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/ready')
+sims['FOLDER'] = [(macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
 
 # setup macro folder
 # macro=str(config['CHANGE']['FOLDERS']['STUDY'])

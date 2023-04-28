@@ -6,18 +6,18 @@ maf1=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
 largethreads=int(float(str(config['CHANGE']['CLUSTER']['LARGETHREAD'])))
 
-# do this before running snakemake
-# mkdir -p {config[CHANGE][FOLDERS][STUDY]}/{config[CHANGE][FOLDERS][ROI]}
-
+# work on this line
 rule copy_vcf:
     input:
-        scandone='{config[CHANGE][FOLDERS][STUDY]}/excess.regions.tsv',
+        # scandone='{config[CHANGE][FOLDERS][STUDY]}/excess.region.ibd.tsv',
+        ready='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/ready',
     output:
-        copydone='{config[CHANGE][FOLDERS][STUDY]}/ROI.tsv',
+        # copydone='{config[CHANGE][FOLDERS][STUDY]}/ROI.tsv',
+        vcfout='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.vcf.gz',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     script:
-        '{config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/copy-vcf.py {config[CHANGE][FOLDERS][STUDY]} {config[CHANGE][FOLDERS][ROI]}'
+        '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/copy-vcf.py'
 
 rule subset_vcf: # focus vcf on region of interest
     input:
@@ -27,7 +27,7 @@ rule subset_vcf: # focus vcf on region of interest
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {cohort}/{roi}/{center}/{left}/{right} {input.vcfin} {output.vcfout} {left} {right} {chr} {config[FIXED][ISWEEP][MINAF]}; rm {input.vcfin}'
+        'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {wildcards.cohort}/roi{wildcards.roi}/center{wildcards.center}/left{wildcards.left}/right{wildcards.right} {input.vcfin} {output.subvcf} {wildcards.left} {wildcards.right} {wildcards.chr} {config[CHANGE][ISWEEP][MINAF]}; rm {input.vcfin}'
 
 rule hapibd: # segments from hap-ibd.jar
     input:
@@ -55,17 +55,17 @@ rule filter_hapibd: # applying focus
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {center} 10000000000 | gzip > {output.fipass}; rm {input.ibd}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {wildcards.center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {wildcards.center} 10000000000 | gzip > {output.fipass}; rm {input.ibd}'
 
 rule filter_mom:
     input:
-        '{cohort}/ibdsegs/ibdends/modified/mom/chr{chr}.ibd.gz',
+        ibd='{cohort}/ibdsegs/ibdends/modified/mom/chr{chr}.ibd.gz',
     output:
         fipass='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {center} 10000000000 | gzip > {output.fipass}'
+        'zcat {input.ibd} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {wildcards.center} | java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {wildcards.center} 10000000000 | gzip > {output.fipass}'
 
 rule done_filtering:
     input:
@@ -74,4 +74,4 @@ rule done_filtering:
     output:
         '{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/touched',
     shell:
-        'touch {cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/touched',
+        'touch {wildcards.cohort}/roi{wildcards.roi}/chr{wildcards.chr}/center{wildcards.center}/left{wildcards.left}/right{wildcards.right}/touched'
