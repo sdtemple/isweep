@@ -3,20 +3,35 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "iSWEEP: incomplete Selective sweep With Extended haplotypes Estimation Procedure"
-version = "0.0.1"
+name = "isweep"
+version = "0.1.2"
 authors = [
   { name="Seth D. Temple", email="sdtemple@uw.edu" },
 ]
-description = "Tools for selection estimation, coalescent modeling, and identity-by-descent analysis"
+description = "Tools for selective sweep inference (and coalescent + identity-by-descent simulators)"
 readme = "README.md"
 requires-python = ">=3.7"
+dependencies = [
+    "numpy>=1.21",
+    "pandas",
+    "scipy>=1.7",
+    "networkx",
+    "matplotlib",
+    "seaborn",
+    "msprime",
+    "tskit",
+    "pyslim",
+    "stdpopsim",
+    "snakemake",
+    "tszip"
+]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: CC0 1.0 Universal License",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Development Status :: 4 - Beta",
     "Operating System :: OS Independent",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/sdtemple/iSWEEP"
-"Bug Tracker" = "https://github.com/sdtemple/iSWEEP/issues"
+"Homepage" = "https://github.com/sdtemple/isweep"
+"Bug Tracker" = "https://github.com/sdtemple/isweep/issues"

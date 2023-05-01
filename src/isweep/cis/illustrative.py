@@ -1,11 +1,14 @@
-from .cis.cisUtilities import *
-from .cis.coalescentIBD import *
+#!/bin/python
+
+# imports
+from .cisUtilities import *
+from .coalescentIBD import *
 import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_selection_Ne(s, p, Ne, xlimmax=300, colors=['tab:red','tab:blue','tab:pink','tab:cyan'], title='', loc='upper right', log_scale=False, show_neutral=True):
     '''Make an illustrative plot of how selection impacts Ne over time
-    
+
     Parameters:
     -----------
     s : float
@@ -25,7 +28,7 @@ def plot_selection_Ne(s, p, Ne, xlimmax=300, colors=['tab:red','tab:blue','tab:p
         To put y-axis on log10 scale
     show_neutral : bool
         To plot Ne without selection for comparison
-    
+
     Returns
     -------
     None
@@ -57,7 +60,7 @@ def plot_selection_Ne(s, p, Ne, xlimmax=300, colors=['tab:red','tab:blue','tab:p
         y0=np.log10(y0)
     plt.plot(x1,y1, color=colors[0], label='Derived (adaptive)')
     plt.plot(x0,y0, color=colors[1], label='Ancestral (adaptive)')
-    
+
     # without selection
     if show_neutral:
         ps, Ns, xs = walk_variant_backward(0, p, Ne)
@@ -95,7 +98,7 @@ def plot_selection_Ne(s, p, Ne, xlimmax=300, colors=['tab:red','tab:blue','tab:p
 
 def plot_illustrative_ibd_graph(ks,js, colors=['tab:red','tab:blue'], node_size=5):
     '''Plot an example of an IBD graph
-    
+
     Parameters
     ----------
     ks : list
@@ -105,12 +108,12 @@ def plot_illustrative_ibd_graph(ks,js, colors=['tab:red','tab:blue'], node_size=
     colors : list
         matplotlib colors
     node_size : float
-    
+
     Returns
     -------
     None
     '''
-    
+
     def make_ibd_clique_list(k, itr):
         start = itr
         edges = []
@@ -128,7 +131,7 @@ def plot_illustrative_ibd_graph(ks,js, colors=['tab:red','tab:blue'], node_size=
             g.add_edges_from(edges)
             itr+=k
         return g
-    
+
     color_mapk=[colors[0]]*sum(ks)
     color_mapj=[colors[1]]*sum(js)
     color_map=color_mapk+color_mapj
@@ -138,7 +141,7 @@ def plot_illustrative_ibd_graph(ks,js, colors=['tab:red','tab:blue'], node_size=
     nx.draw(f,node_size=node_size, node_color=color_map)
     legend_elements = [
     Line2D([0], [0], marker='o', color='w', label='Adaptive', markerfacecolor='tab:red', markersize=node_size),
-    Line2D([0], [0], marker='o', color='w', label='Ancestral', markerfacecolor='tab:blue', markersize=node_size),        
+    Line2D([0], [0], marker='o', color='w', label='Ancestral', markerfacecolor='tab:blue', markersize=node_size),
     ]
     plt.legend(handles=legend_elements)
     return None

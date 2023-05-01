@@ -1,15 +1,17 @@
+#!/bin/python
+
+# imports
 import numpy as np
 import pandas as pd
 from copy import deepcopy
-
-### plotting ###
-
 from matplotlib import cm, patches
 from matplotlib.lines import Line2D
 
+### plotting ###
+
 def discrete_cmap(cmap_name, num_colors, scale = 1, reverse = False):
     '''Create list of discrete colors
-    
+
     Parameters
     ----------
     cmap_name : str
@@ -20,25 +22,25 @@ def discrete_cmap(cmap_name, num_colors, scale = 1, reverse = False):
         Controls shading of color map
     reverse : bool
         Reverse the color map
-        
+
     Returns
     -------
     list
         Discrete colors
     '''
-    
+
     assert scale >= 1
     assert isinstance(num_colors, int)
     cmap = cm.get_cmap(cmap_name, int(scale * num_colors))
     cmaplist = [cmap(i) for i in range(cmap.N)]
     cmaplist = cmaplist[-num_colors:]
     cmaplist.reverse()
-    
+
     return cmaplist
 
 def discrete_handles(vec, dcolors, prec = 2, patches = False, lss = None, lws = None):
     '''Create handles for discrete values in legend
-    
+
     Parameters
     ----------
     vec : array-like
@@ -53,13 +55,13 @@ def discrete_handles(vec, dcolors, prec = 2, patches = False, lss = None, lws = 
         Line styles
     lws : list
         Line widths
-    
+
     Returns
     -------
     list
         Handles for legend
     '''
-    
+
     assert len(vec) == len(dcolors)
     vec = [round(v, 2) for v in vec]
     if patches == True:
@@ -67,29 +69,29 @@ def discrete_handles(vec, dcolors, prec = 2, patches = False, lss = None, lws = 
     else:
         if lws is not None:
             if lss is not None:
-                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], ls = lss[i], lw = lws[i]) 
+                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], ls = lss[i], lw = lws[i])
                            for i in range(len(vec))]
             else:
-                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], lw = lws[i]) 
+                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], lw = lws[i])
                            for i in range(len(vec))]
         else:
-            handles = [Line2D([0], [0], color = dcolors[i], label = vec[i]) 
+            handles = [Line2D([0], [0], color = dcolors[i], label = vec[i])
                        for i in range(len(vec))]
-            
+
     return handles
 
 ### formatting vectors for plotting ###
 
 def big_format_distribution(distr, counts):
     '''Reformat a vector for plotting with matplotlib, seaborn
-    
+
     Parameters
     ----------
     distr : array-like
         Vector of realizations (lengths, times, etc.)
     counts : array-like
         Vector of realization multiplicities
-    
+
     Returns
     -------
     array-like
@@ -128,19 +130,19 @@ def extend_vector(vec, val, mxn):
     -------
     array-like
         NumPy array
-    '''  
+    '''
     num = mxn - (len(vec) - 1)
     ext = np.array([val for i in range(num)])
     return np.concatenate((vec, ext))
 
 def zero_shift_Ne(Ne):
     '''Shift the Ne dictionary to start at generation 0
-    
+
     Parameters
     ----------
     Ne : dict
         Effective population sizes
-    
+
     Return
     ------
     dict
@@ -151,14 +153,14 @@ def zero_shift_Ne(Ne):
 
 def cut_Ne(Ne, cut):
     '''Shrink the Ne dictionary to end at specified generational time
-    
+
     Parameters
     ----------
     Ne : dict
         Effective population sizes
     cut : float
         Generational time
-    
+
     Returns
     -------
     dict
@@ -168,12 +170,12 @@ def cut_Ne(Ne, cut):
 
 def fill_Ne(Ne):
     '''Fill in effective sizes for non-specified generations
-    
+
     Parameters
     ----------
     Ne : dict
         Effective population sizes
-    
+
     Returns
     -------
     dict
@@ -199,14 +201,14 @@ def fill_Ne(Ne):
 
 def to_max_Ne(Ne, maxG = 500):
     '''Fill in effective sizes to a maximum assuming constant in deep past
-    
+
     Parameters
     ----------
     Ne : dict
         Effective population sizes
     maxG : numeric
         Maximum generation
-    
+
     Returns
     -------
     Modified Ne dictionary
@@ -224,18 +226,18 @@ def to_max_Ne(Ne, maxG = 500):
 
 def read_Ne(file):
     '''Read *.ne file
-    
+
     Parameters
     ----------
     file : string
         Input file name
-        
+
     Returns
     -------
     dict
         dict[generation] = size
     '''
-    
+
     Ne = {}
     f = open(file, 'r')
     f.readline() # header
@@ -243,19 +245,19 @@ def read_Ne(file):
         g, size = line.split('\t')[:2]
         Ne[int(g)] = int(float(size))
     f.close()
-    
+
     return Ne
 
 def write_Ne(Ne, output_file):
     '''Write Ne dictionary to .ne file
-    
+
     Parameters
     ----------
     Ne : dict
         Effective population sizes
     output_file : str
         File name
-    
+
     Returns
     -------
     None
@@ -268,9 +270,9 @@ def write_Ne(Ne, output_file):
 
 def extend_Ne(file, maxg, output):
     '''Extend *.ne file
-    
+
     Constant size until user-specificied generation. Creates a new file.
-    
+
     Parameters
     ----------
     file : str
@@ -279,17 +281,17 @@ def extend_Ne(file, maxg, output):
         Maximum generation
     output : str
         Output file name
-    
+
     Returns
     -------
     NoneType
         Writes a *.ne file
     '''
-    
+
     with open(file, 'r') as f:
         lines = f.readlines()
         g, size = lines[-1].strip().split('\t')[:2]
-    
+
     g = int(g)
     if maxg >= g:
         with open(output, 'w') as o:
@@ -300,12 +302,12 @@ def extend_Ne(file, maxg, output):
                 g += 1
     else:
         raise ValueError('*.ne file contains coalescent times greater than maxg')
-        
+
     return None
-              
+
 def make_constant_Ne(file, size, maxg):
     '''Create *.ne file for constant size population
-    
+
     Parameters
     ----------
     file: str
@@ -314,13 +316,13 @@ def make_constant_Ne(file, size, maxg):
         Effective population size
     maxg : int
         Maximum generation
-        
+
     Returns
     -------
     NoneType
         Writes a *.ne file
     '''
-    
+
     size = floor(size)
     maxg = floor(maxg)
     with open(file, 'w') as f:
@@ -328,12 +330,12 @@ def make_constant_Ne(file, size, maxg):
         f.write(str(0)); f.write('\t'); f.write(str(size)); f.write('\n')
         for i in range(1, int(maxg) + 1):
             f.write(str(i)); f.write('\t'); f.write(str(size)); f.write('\n')
-            
+
     return None
 
 def make_exponential_Ne(file, size, maxg, rate):
     '''Create *.ne file for exponentially growing population
-    
+
     Parameters
     ----------
     file : string
@@ -350,7 +352,7 @@ def make_exponential_Ne(file, size, maxg, rate):
     NoneType
         Writes a *.ne file
     '''
-    
+
     assert len(rate) == len(maxg)
     size = floor(size)
     with open(file, 'w') as f:
@@ -364,12 +366,12 @@ def make_exponential_Ne(file, size, maxg, rate):
                 size = floor(size * exp(r))
                 f.write(str(i)); f.write('\t'); f.write(str(size)); f.write('\n')
             g1 = g2 + 1
-            
+
     return None
-            
+
 def make_bottleneck_Ne(file, isize, bsize, rt1, rt2, rt3):
     '''Create *.ne file for bottlneck population
-    
+
     Parameters
     ----------
     file : str
@@ -384,13 +386,13 @@ def make_bottleneck_Ne(file, isize, bsize, rt1, rt2, rt3):
         Second phase (exponential rate, time)
     rt3 : tuple
         Third phase (exponential rate, time)
-        
+
     Returns
     -------
     NoneType
         Writes a *.ne file
     '''
-    
+
     # initialize
     size = []
     r1 = rt1[0]
@@ -399,22 +401,22 @@ def make_bottleneck_Ne(file, isize, bsize, rt1, rt2, rt3):
     t2 = rt2[1]
     r3 = rt3[0]
     t3 = rt3[1]
-    
+
     # first growth phase
     for i in range(t1+1):
         size.append(isize * exp(r1 * i))
-        
+
     # second growth phase
     for j in range(1,t2):
         size.append(isize * exp(r1 * t1) * exp(r2 * j))
-        
+
     # bottleneck
     size.append(bsize)
-    
+
     # third growth phase
     for k in range(1,t3+1):
         size.append(bsize * exp(r3 * k))
-        
+
     # output
     size.reverse()
     with open(file, 'w') as f:
@@ -424,12 +426,12 @@ def make_bottleneck_Ne(file, isize, bsize, rt1, rt2, rt3):
             f.write('\t')
             f.write(str(size[l]))
             f.write('\n')
-            
+
     return None
 
 def make_two_growth_phases_Ne(file, isize, rt1, rt2):
     '''Create *.ne file for two growth phases population
-    
+
     Parameters
     ----------
     file : str
@@ -440,28 +442,28 @@ def make_two_growth_phases_Ne(file, isize, rt1, rt2):
         First phase (exponential rate, time)
     rt2 : tuple
         Second phase (exponential rate, time)
-        
+
     Returns
     -------
     NoneType
         Writes a *.ne file
     '''
-    
+
     # initialize
     size = []
     r1 = rt1[0]
     t1 = rt1[1]
     r2 = rt2[0]
     t2 = rt2[1]
-    
+
     # first growth phase
     for i in range(t1+1):
         size.append(isize * exp(r1 * i))
-        
+
     # second growth phase
     for j in range(1,t2):
         size.append(isize * exp(r1 * t1) * exp(r2 * j))
-            
+
     # output
     size.reverse()
     with open(file, 'w') as f:
@@ -471,12 +473,12 @@ def make_two_growth_phases_Ne(file, isize, rt1, rt2):
             f.write('\t')
             f.write(str(size[l]))
             f.write('\n')
-            
+
     return None
 
 def make_three_growth_phases_Ne(file, isize, rt1, rt2, rt3):
     '''Create *.ne file three growth phases population
-    
+
     Parameters
     ----------
     file : str
@@ -489,13 +491,13 @@ def make_three_growth_phases_Ne(file, isize, rt1, rt2, rt3):
         Second phase (exponential rate, time)
     rt3 : tuple
         Third phase (exponential rate, time)
-        
+
     Returns
     -------
     NoneType
         Writes a *.ne file
     '''
-    
+
     # initialize
     size = []
     r1 = rt1[0]
@@ -504,19 +506,19 @@ def make_three_growth_phases_Ne(file, isize, rt1, rt2, rt3):
     t2 = rt2[1]
     r3 = rt3[0]
     t3 = rt3[1]
-    
+
     # first growth phase
     for i in range(t1+1):
         size.append(isize * exp(r1 * i))
-        
+
     # second growth phase
     for j in range(1,t2):
         size.append(isize * exp(r1 * t1) * exp(r2 * j))
-        
+
     # third growth phase
     for k in range(1,t3+1):
         size.append(isize * exp(r1 * t1) * exp(r2 * j) * exp(r3 * k))
-        
+
     # output
     size.reverse()
     with open(file, 'w') as f:
@@ -526,5 +528,5 @@ def make_three_growth_phases_Ne(file, isize, rt1, rt2, rt3):
             f.write('\t')
             f.write(str(size[l]))
             f.write('\n')
-            
+
     return None

@@ -1,3 +1,6 @@
+#!/bin/python
+
+# imports
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -8,6 +11,8 @@ from numpy.random import exponential as Exp
 from copy import deepcopy
 from .cis.cisUtilities import *
 from .cis.coalescentIBD import *
+# from .cis.cisUtilities import *
+# from .cis.coalescentIBD import *
 
 def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='m', tau0=0, sv=-0.01, ploidy=2):
     """Simulator for independent ibd segment lengths in recent sweep scenario

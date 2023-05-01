@@ -1,3 +1,6 @@
+#!/bin/python
+
+# imports
 import numpy as np
 import networkx as nx
 from copy import deepcopy

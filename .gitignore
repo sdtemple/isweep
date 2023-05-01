@@ -9,6 +9,9 @@ archive/
 # auxillary/
 old/
 fitsimstudy/
+src2/
+workflow/realDataRoi/
+workflow/realDataScan/
 
 # taken from https://github.com/github/gitignore/blob/main/Python.gitignore
 

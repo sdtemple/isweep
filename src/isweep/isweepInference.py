@@ -1,3 +1,6 @@
+#!/bin/python
+
+# imports
 import gzip
 import numpy as np
 import pandas as pd
@@ -8,6 +11,7 @@ from math import floor, exp, log, ceil
 from numpy.random import exponential as Exp
 from scipy.stats import norm, binom
 from scipy.optimize import minimize, minimize_scalar
+# from .cis.coalescentIBD import walk_variant_backward, probability_quasi_geometric, probability_erlang_segments
 from .cis.coalescentIBD import walk_variant_backward, probability_quasi_geometric, probability_erlang_segments
 from .isweepUtilities import bin_ibd_segments
 
