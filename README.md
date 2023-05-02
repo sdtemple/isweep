@@ -39,6 +39,8 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
   * If necessary, modify memory resources in rules/scan.smk
 5. Look at roi.tsv , plots/ , stats/
   * Rename and modify roi.tsv as desired
+  * This is you deciding which regions of interest
+  * Add a few Mb to left and right of BPLEFT and BPRIGHT !!!
 6. Navigate to workflow/roi/ and run the Snakemake 
   * Same instructions as step 4
 7. You can run manhattan-rates.R in scan/terminalscripts/ to make Manhattan plots
