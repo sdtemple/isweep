@@ -37,13 +37,22 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
       * -V is important to pass your conda environment in
       * -N , -e , -o , -m e -M sdtemple@uw.edu are not necessary
   * If necessary, modify memory resources in rules/scan.smk
-5. Look at roi.tsv , plots/ , stats/
+5. Run IBDNe software (http://faculty.washington.edu/browning/)
+ * zcat chr*.ibd.gz | java -Xmx100g -jar ibdne.jar map= out=
+ * Do this on a cluster !!!
+ * -Xmx100g is the heap memory
+ * map= is a genetic map where you concatenate all chromosomes
+ * out= is prefix for your .ne file
+ * Point to your .ne file in step 7
+ * You may need to downsample for this
+  * isweep only requires enough samples to have uniformly non-zero ibd segment counts
+6. Look at roi.tsv , plots/ , stats/
   * Rename and modify roi.tsv as desired
   * This is you deciding which regions of interest
   * Add a few Mb to left and right of BPLEFT and BPRIGHT !!!
-6. Navigate to workflow/roi/ and run the Snakemake 
+7. Navigate to workflow/roi/ and run the Snakemake 
   * Same instructions as step 4
-7. You can run manhattan-rates.R in scan/terminalscripts/ to make Manhattan plots
+8. You can run manhattan-rates.R in scan/terminalscripts/ to make Manhattan plots
   * head -n 20 manhattan-rates.R
   * Rscript --vanilla manhattan-rates.R args
 
