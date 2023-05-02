@@ -23,11 +23,11 @@ chrlow=as.integer(chrlow)
 chrhigh=as.integer(chrhigh)
 
 # reading in data
-ibd = read.table(paste(folder,,'/ibdsegs/modified/scan/''chr',chrlow,suffix, sep = ''), header = T, stringsAsFactors = F)
+ibd = read.table(paste(folder,,'/ibdsegs/ibdends/modified/scan/''chr',chrlow,suffix, sep = ''), header = T, stringsAsFactors = F)
 ibd$CHROM = chrlow
 for(i in (chrlow+1):(chrhigh)){
   print(i)
-  incoming = read.table(paste(folder,'/ibdsegs/modified/scan/','chr',i,suffix, sep = ''), header = T, stringsAsFactors = F)
+  incoming = read.table(paste(folder,'/ibdsegs/ibdends/modified/scan/','chr',i,suffix, sep = ''), header = T, stringsAsFactors = F)
   incoming$CHROM = i
   ibd = rbind(ibd, incoming)
 }

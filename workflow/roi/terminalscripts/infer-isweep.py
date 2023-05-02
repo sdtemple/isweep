@@ -1,146 +1,132 @@
+# importing
 from isweep import *
 import pandas as pd
 import numpy as np
 import gzip
+import sys
 
-# importing
-ibdct=snakemake.input.ibdlong
-ibdaf=snakemake.input.ibdcomm
-fileout=snakemake.output.fileout
-freq_file=snakemake.input.freq
+# edit these manually
+inhs=['d','a','m'] # different inheritance models
+svmaf=[0.05,0.02,0.01] # different standing variation
+alpha=0.95
+alpha1=(1-alpha)/2
+alpha2=1-alpha1
+
+# i/o
+ibdct, ibdaf, fileout, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
 
 # setting up
-B=int(float(snakemake.config['ISWEEPPARAMS']['NBOOT']))
-CUTOFF=float(snakemake.config['ISWEEPPARAMS']['IBDCUTOFF'])
+B=int(float(nboot))
+CUTOFF=float(cutoff)
 long_ibd=CUTOFF
-short_ibd=float(snakemake.config['THIRDHAP']['MINOUT'])
-# power=float(snakemake.config['ISWEEPPARAMS']['INVPOW'])
-header=int(float(snakemake.params.header))
-Ne=snakemake.config['FIXED']['iNe']
+short_ibd=long_ibd
+Ne=str(Ne)
 Ne=read_Ne(Ne)
 ab=[CUTOFF,np.inf]
-n=int(float(snakemake.config['FIXED']['SAMPSIZE']))
-ploidy=int(float(snakemake.config['FIXED']['PLOIDY']))
+n=int(float(n))
+ploidy=int(float(ploidy))
 m=ploidy*n
 N=m*(m-1)/2-m
 
 # estimate allele frequency
 tab=pd.read_csv(ibdaf,sep='\t')
-tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
+#tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
 p_est=(tab['AAF']*tab['DELTANORM']).sum()
-print(p_est)
 
 # estimate selection coefficent
 numTracts=0
 with gzip.open(ibdct, 'rt') as f:
     for line in f:
-        numTracts += 1
-s_est = minimize_scalar(chi2_isweep,
-         args=(p_est,Ne,N,(numTracts,),ab),
-         bounds=(0,0.5),
-         method='bounded'
-        ).x
+        row=line.strip().sep('\t')
+        if float(row[7]) >= long_ibd:
+            numTracts += 1
+
+sinhs=[]
+for inh in inhs:
+    s_est = minimize_scalar(chi2_isweep,
+             args=(p_est,Ne,N,(numTracts,),ab,inh),
+             bounds=(0,0.5),
+             method='bounded'
+            ).x
+    sinh.append(s_est)
 
 # bootstrap
-sbs=[]
-for b in range(B):
-    print(b)
-    simdata = simulate_ibd_isweep(n,s_est,p_est,Ne,long_ibd=long_ibd,short_ibd=short_ibd,ploidy=ploidy)
-    simibd = simdata[0][0]
-    sb = minimize_scalar(chi2_isweep,
-         args=(p_est,Ne,N,(simibd,),ab),
-         bounds=(0,0.5),
-         method='bounded'
-        ).x
-    sbs.append(sb)
+sbsinhs=[[] for i in range(len(sinhs))]
+
+for j in range(len(inhs)):
+    sinh = sinhs[j]
+    inh = inhs[j]
+    for b in range(B):
+        simdata = simulate_ibd_isweep(n,sinh,p_est,Ne,long_ibd=long_ibd,short_ibd=lonj_ibd,ploidy=ploidy,one_step_model=inh)
+        simibd = simdata[0][0]
+        sb = minimize_scalar(chi2_isweep,
+             args=(p_est,Ne,N,(simibd,),ab,inh),
+             bounds=(0,0.5),
+             method='bounded'
+            ).x
+        sbsinhs[j].append(sb)
+
+# writing in the moment
+f=open(fileout,'w')
+f.write('VarFreqEst\t')
+f.write('SelCoefEst\t')
+f.write('SelCoefLow\t')
+f.write('SelCoefUpp\t')
+f.write('Mendel\t')
+f.write('TimeSV5Est\t')
+f.write('TimeSV5Low\t')
+f.write('TimeSV5Upp\t')
+f.write('TimeSV2Est\t')
+f.write('TimeSV2Low\t')
+f.write('TimeSV2Upp\t')
+f.write('TimeSV1Upp\t')
+f.write('TimeSV1Est\t')
+f.write('TimeSV1Low\t')
+f.write('TimeDeNovoUpp\t')
+f.write('TimeDeNovoEst\t')
+f.write('TimeDeNovoLow\t')
+f.write('TimeDeNovoUpp\n')
 
 # correct, interval estimate
-sl,sm,su=bootstrap_standard_bc(s_est, sbs)
-
-# get frequency from file
-f = open(freq_file, 'r')
-for line in f:
-    row = line.strip().split('\t')
-    val = float(row[0])
-p = val
-
-# write to file
-with open(fileout, 'w') as f:
-    f.write('VarFreq\t')
-    f.write('VarFreqEst\t')
-    f.write('SelCoefEst\t')
-    f.write('SelCoefLow\t')
-    f.write('SelCoefMid\t')
-    f.write('SelCoefUpp\n')
-    # f.write('TauTime\t')
-    # f.write('TauTimeEst\t')
-    # f.write('TauTimeLow\t')
-    # f.write('TauTimeMid\t')
-    # f.write('TauTimeUpp\t')
-    # f.write('AF1TimeCoef\t')
-    # f.write('AF1TimeEst\t')
-    # f.write('AF1TimeLow\t')
-    # f.write('AF1TimeMid\t')
-    # f.write('AF1TimeUpp\t')
-    # f.write('AFNeaTimeCoef\t')
-    # f.write('AFNeaTimeEst\t')
-    # f.write('AFNeaTimeLow\t')
-    # f.write('AFNeaTimeMid\t')
-    # f.write('AFNeaTimeUpp\t')
-    # f.write('AF5TimeCoef\t')
-    # f.write('AF5TimeEst\t')
-    # f.write('AF5TimeLow\t')
-    # f.write('AF5TimeMid\t')
-    # f.write('AF5TimeUpp\n')
-    f.write(str(p))
-    f.write('\t')
-    f.write(str(p_est))
-    f.write('\t')
-    f.write(str(s_est))
-    f.write('\t')
-    f.write(str(sl))
-    f.write('\t')
-    f.write(str(sm))
-    f.write('\t')
-    f.write(str(su))
-    f.write('\t')
-    # f.write(str(new))
-    # f.write('\t')
-    # f.write(str(new_est))
-    # f.write('\t')
-    # f.write(str(cl))
-    # f.write('\t')
-    # f.write(str(cm))
-    # f.write('\t')
-    # f.write(str(cu))
-    # f.write('\t')
-    # f.write(str(one))
-    # f.write('\t')
-    # f.write(str(one_est))
-    # f.write('\t')
-    # f.write(str(ul))
-    # f.write('\t')
-    # f.write(str(um))
-    # f.write('\t')
-    # f.write(str(uu))
-    # f.write('\t')
-    # f.write(str(two))
-    # f.write('\t')
-    # f.write(str(two_est))
-    # f.write('\t')
-    # f.write(str(ml))
-    # f.write('\t')
-    # f.write(str(mm))
-    # f.write('\t')
-    # f.write(str(mu))
-    # f.write('\t')
-    # f.write(str(five))
-    # f.write('\t')
-    # f.write(str(five_est))
-    # f.write('\t')
-    # f.write(str(rl))
-    # f.write('\t')
-    # f.write(str(rm))
-    # f.write('\t')
-    # f.write(str(ru))
-    f.write('\n')
+for j in range(len(inhs)):
+    # writing the selection coefficient, allele frequency results
+    sinh=sinhs[j]
+    sbsinh=sbsinhs[j]
+    inh=inhs[j]
+    sl,sm,su=bootstrap_standard_bc(sinh, sbsinh, alpha1, alpha2)
+    f.write(str(p_est)); f.write('\t')
+    f.write(str(sm)); f.write('\t')
+    f.write(str(sl)); f.write('\t')
+    f.write(str(su)); f.write('\t')
+    f.write(str(inh)); f.write('\t')
+    svs=[[] for i in range(len(svmaf)+1)] # 1 more for de novo
+    for i in range(len(svmaf)):
+        # writing time until standing variation
+        sv=svmaf[i]
+        themeantime=when_freq(sv,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False,sv=sv)
+        for k in range(len(sbsinh)):
+            # bootstrap once
+            sb=sbsinh[k]
+            thetime=when_freq(sv,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True,sv=sv)
+            svs[i].append(thetime)
+        # time estimates
+        tl = np.quantile(thetime,alpha1)
+        tu = np.quantile(thetime,alpha2)
+        tm=themeantime
+        f.write(str(tm)); f.write('\t')
+        f.write(str(tl)); f.write('\t')
+        f.write(str(tu)); f.write('\t')
+    svs.append([])
+    themeantime=when_count(1,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False)
+    for k in range(len(sbsinh)):
+        sb=sbsinh[k]
+        thetime=when_one(1,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
+        svs[len(svs)].append(thetime)
+    # time estimates
+    tl = np.quantile(thetime,alpha1) # hall method
+    tu = np.quantile(thetime,alpha2)
+    tm=themeantime
+    f.write(str(tm)); f.write('\t')
+    f.write(str(tl)); f.write('\t')
+    f.write(str(tu)); f.write('\n')
+f.close()

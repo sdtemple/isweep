@@ -5,10 +5,11 @@
 import os
 import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-micro=str(config['CHANGE']["FOLDERS"]["ROI"])
+micro=str(config['CHANGE']["ISWEEP"]["ROI"])
+yaml=str(config['CHANGE']["FOLDERS"]["YAML"])
 sims = pd.read_csv(micro, sep='\t', header=0)
-chrlow=int(float(config['CHANGE']['ISWEEP']['CHRLOW']))
-chrhigh=int(float(config['CHANGE']['ISWEEP']['CHRHIGH']))
+# chrlow=int(float(config['CHANGE']['ISWEEP']['CHRLOW']))
+# chrhigh=int(float(config['CHANGE']['ISWEEP']['CHRHIGH']))
 J = sims.shape[0]
 for j in range(J):
 	row = sims.loc[j,]
@@ -32,7 +33,10 @@ include: 'rules/analysis.smk'
 
 rule all:
 	input:
-		touches=[f"{sim.FOLDER}/touched" for sim in sims.itertuples()],
-		maps=[macro+'/chr'+str(i)+'.map' for i in range(chrlow, chrhigh+1)],
-		# focuses=[f"{sim.FOLDER}/focus.ibd.gz" for sim in sims.itertuples()],
-		# moms=[f"{sim.FOLDER}/mom.ibd.gz" for sim in sims.itertuples()],
+		touches=[f"{sim.FOLDER}/done{sim.NAME}" for sim in sims.itertuples()],],
+	output:
+		yaml=macro+'/'+str(config['CHANGE']['FOLDERS']['YAML']),
+	params:
+		yaml=yaml,
+	shell:
+		'cp {input.yaml} {output.yaml}'

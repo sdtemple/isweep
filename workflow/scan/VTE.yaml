@@ -16,13 +16,15 @@ CHANGE:
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
   ISWEEP:
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1110'
+    SAMPSIZE: '1273'
     # lowest chromosome number
     CHRLOW: '1'
     # highest chromosome numbers
     CHRHIGH: '22'
     SUBSAMPLE: '/projects/browning/brwnlab/seth/vte.subsample.txt'
     XMXMEM: '100' # in gb
+    TELOSIGMA: '3.0' # sigma scalar to remove telomeres
+    SCANSIGMA: '4.0' # sigma scalar to call excess ibd
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
@@ -33,9 +35,9 @@ CHANGE:
     FILTER: 'filter-lines.jar'
     IBDNE: 'ibdne.ne'
   EXISTING:
-    VCFS: '/projects/browning/brwnlab/seth/VTE2'
+    VCFS: '/projects/browning/brwnlab/seth/VTE2/vcfs'
     VCFPRE: 'chr'
-    VCFSUF: '.map'
+    VCFSUF: '.vcf.gz'
 
 # keep these fixed
 FIXED:

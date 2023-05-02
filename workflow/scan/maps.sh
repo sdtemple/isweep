@@ -16,6 +16,7 @@ WHERE=$4
 CHRLOW=$5
 CHRHIGH=$6
 
+mkdir -p ${WHERE}/
 mkdir -p ${WHERE}/maps/
 touch ${WHERE}/maps/chr${CHRLOW}-${CHRLOW}.map
 rm ${WHERE}/maps/chr${CHRLOW}-${CHRLOW}.map

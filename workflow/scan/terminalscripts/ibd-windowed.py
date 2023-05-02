@@ -1,5 +1,3 @@
-#!/bin/python
-
 # Computing ibd counts over windows
 # Seth D. Temple, sdtemple@uw.edu
 # April 26, 2023

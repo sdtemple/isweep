@@ -6,23 +6,22 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/projects/browning/brwnlab/seth/VUAF'
+    STUDY: '/projects/browning/brwnlab/seth/VUAF2'
     # the yaml file with scan analysis options
     YAML: './VUAFROI.yaml'
-    # region of interest file
-    ROI: 'textfile.txt'
     # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/roi/terminalscripts'
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
   # chromsomes, sample size for analysis
   ISWEEP:
+    # region of interest file
+    ROI: './finalroi.txt'
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1110'
-    # minimum allele frequency
-    MINMAF: '0.10'
+    SAMPSIZE: '1045'
     CHRLOW: '1'
     CHRHIGH: '22'
     XMXMEM: '100' # in gb
+    NE: 'ibdne.ne' # inferred Ne(t) to use
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
@@ -52,14 +51,8 @@ FIXED:
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
     SCANCUTOFF: '2.0'
-    # scalar for outlier detection via sigma rule
-    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    OUTLIER: '3'
-    # lower bound for incomplete sweep frequency
-    LOWER: '0.10'
-    # upper bound for incomplete sweep frequency
-    UPPER: '0.90'
-    # frequency in large groups must exceed
+    RULESCALAR: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
     ATLEAST: '0.00'
-    # diameter in diameter = 2K community detection
-    DIAMETER: '2'
+    MINAF: '0.10' # min adaptive allele frequency
+    MAXAF: '0.90' # max adaptive allele frequency
+    NBOOT: '1000' # number of bootstrap

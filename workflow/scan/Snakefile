@@ -14,7 +14,7 @@ rule all:
     input:
         macro+'/excess.ibd.tsv',
         macro+'/excess.region.ibd.tsv',
-        macro+'/ibdne.ne',
+        macro+'/roi.tsv',
         macro+'/excludesamples.txt',
     output:
         yaml=macro+'/arguments.yaml',

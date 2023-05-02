@@ -1,5 +1,3 @@
-#!/bin/python
-
 # Write locations where ibd exceeds a significance threshold
 # Seth D. Temple, sdtemple@uw.edu
 # April 26, 2023
@@ -12,7 +10,7 @@ import numpy as np
 # inputtting
 folder,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
 firstfolder=folder
-folder+='/ibdsegs/modified/scan/'
+folder+='/ibdsegs/ibdends/modified/scan/'
 
 # type casting
 chrlow=int(float(chrlow))
@@ -43,4 +41,4 @@ b=medi+stdv*cutoff1
 out=tab[tab['COUNT']>=b]
 
 # saving excess
-out.to_csv(firstfolder+'/excess.ibd.tsv',sep'\t',index=False)
+out.to_csv(firstfolder+'/excess.ibd.tsv',sep='\t',index=False)

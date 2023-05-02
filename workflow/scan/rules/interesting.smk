@@ -12,34 +12,13 @@ rule excess_region: # concatenate regions of excess IBD
         fileout=macro+'/excess.region.ibd.tsv',
     params:
         cMgap='{config[FIXED][ISWEEP][CMGAP]}',
-    script:
-        '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/excess-region.py'
-
-# check this
-rule concat_windowed:
-    input:
-        [macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
-    output:
-        allwindows=macro+'/ibd.windowed.tsv',
     shell:
-        'for j in $(seq {config[CHANGE][ISWEEP][CHRLOW]} 1 {config[CHANGE][ISWEEP][CHRLOW]}); do zcat {config[CHANGE][FOLDERS][STUDY]}/ibdsegs/ibdends/modified/scan/chr${j}.ibd.windowed.tsz.gz | tail -n +2 >> {output.allwindows} ; done;'
+        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/excess-region.py {input.filein} {output.fileout} {config[FIXED][ISWEEP][CMGAP]}'
 
-# work this
-# check this
 rule make_roi_table:
     input:
-        windowed=macro+'/ibd.windowed.tsv',
-        excessregion=macro+'/excess.region.ibd.tsv',
+        filein=macro+'/excess.region.ibd.tsv',
     output:
-        roitable=macro+'/roi.table.tsv',
-    script:
-        '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/make-roi-table.py'
-
-# check this
-rule make_roi_folders:
-    input:
-        roitable=macro+'/roi.table.tsv',
-    output:
-        macro+'/roifolders.done',
-    script:
-        '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/make-roi-folders.py'
+        fileout=macro+'/roi.tsv',
+    shell:
+        'mkdir -p {config[CHANGE][FOLDERS][STUDY]}/plots; mkdir -p {config[CHANGE][FOLDERS][STUDY]}/stats; python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/make-roi-table.py {config[CHANGE][FOLDERS][STUDY]}'

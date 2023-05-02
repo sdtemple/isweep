@@ -1,17 +1,17 @@
-# setting up
+# importing
+import sys
 from isweep import *
-short_ibd=snakemake.input.ibdin
-short_vcf=snakemake.input.vcfin
-K=int(float(snakemake.config["FIXED"]["ISWEEP"]["DIAMETER"])/2)
-F=float(snakemake.config["FIXED"]["ISWEEP"]["ATLEAST"])
-Q1=float(snakemake.config["FIXED"]["ISWEEP"]["LOWER"])
-Q2=float(snakemake.config["FIXED"]["ISWEEP"]["UPPER"])
-header=int(float(snakemake.params.header))
-scalar=int(float(snakemake.config["FIXED"]["ISWEEP"]["OUTLIER"]))
-fileout=snakemake.output.fileout
+
+#  i/o
+short_ibd, short_vcf, fileout, K, F, Q1, Q2, scalar = sys.argv[1:]
+K=int(float(K)/2)
+F=float(F)
+Q1=float(Q1)
+Q2=float(Q2)
+scalar=int(float(scalar))
 
 # forming graph
-segs = read_ibd_file(short_ibd, header = header, include_length = 0)
+segs = read_ibd_file(short_ibd, header = 0, include_length = 0)
 graph = make_ibd_graph(segs)
 
 # detecting communities
@@ -30,4 +30,5 @@ table=table[table['AAF1']>=F]
 table=table[table['AAF']>=Q1]
 table=table[table['AAF']<=Q2]
 table.reset_index(inplace=True,drop=True)
+tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
 table.to_csv(fileout,sep='\t',index=False)
