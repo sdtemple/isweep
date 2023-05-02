@@ -26,6 +26,7 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
     * Use PCA or ADMIXTURE-like to study population structure
     * There are various tools to infer relatedness in genetic samples
     * (Not advised) An analysis with mainly closely related genetic samples
+  * If you have very few samples relative to a meta biobank vcf, consider using bcftools view -S
 4. Navigate to workflow/scan/ and run the Snakemake
   * Modify the .yaml file for your analysis (the CHANGE parts)
     * Note directing to where .vcf.gz are
@@ -45,7 +46,7 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
  * out= is prefix for your .ne file
  * Point to your .ne file in step 7
  * You may need to downsample for this
-  * isweep only requires enough samples to have uniformly non-zero ibd segment counts
+   * isweep only requires enough samples to have uniformly non-zero ibd segment counts
 6. Look at roi.tsv , plots/ , stats/
   * Rename and modify roi.tsv as desired
   * This is you deciding which regions of interest
