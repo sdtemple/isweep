@@ -27,12 +27,7 @@ for j in range(J):
 sims['FOLDER'] = [(macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
 
 # setup macro folder
-# macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-# roi=str(config['CHANGE']['ROI']['NAME'])
-# folder=macro+'/'+roi+'/'
 include: 'rules/roi.smk'
-include: 'rules/samples.smk'
-include: 'rules/maps.smk'
 include: 'rules/analysis.smk'
 
 rule all:

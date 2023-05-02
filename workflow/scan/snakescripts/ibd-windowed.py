@@ -25,7 +25,7 @@ cmcut=telocut
 cmcut=float(cmcut)
 
 # formatting
-table = pd.read_csv(input_file, sep='\t', compression='gzip')
+table = pd.read_csv(input_file, sep='\t', compression='gzip', header=None)
 columns=list(table.columns)
 cmcol=columns[7]
 encol=columns[6]
@@ -47,6 +47,8 @@ currlist=currline.split('\t')
 currcm=float(currlist[2])
 currbp=float(currlist[3])
 cms=[]
+
+print('read')
 
 # getting genetic distance
 for w in windows:

@@ -2,12 +2,12 @@
 from isweep import *
 short_ibd=snakemake.input.ibdin
 short_vcf=snakemake.input.vcfin
-K=int(float(snakemake.config["ISWEEPPARAMS"]["IBDCOMMK"]))
-F=float(snakemake.config["ISWEEPPARAMS"]["IBDCOMMF"])
-Q1=float(snakemake.config["ISWEEPPARAMS"]["IBDCOMMQ1"])
-Q2=float(snakemake.config["ISWEEPPARAMS"]["IBDCOMMQ2"])
+K=int(float(snakemake.config["FIXED"]["ISWEEP"]["DIAMETER"])/2)
+F=float(snakemake.config["FIXED"]["ISWEEP"]["ATLEAST"])
+Q1=float(snakemake.config["FIXED"]["ISWEEP"]["LOWER"])
+Q2=float(snakemake.config["FIXED"]["ISWEEP"]["UPPER"])
 header=int(float(snakemake.params.header))
-scalar=int(float(snakemake.config["ISWEEPPARAMS"]["OUTLIERSCALAR"]))
+scalar=int(float(snakemake.config["FIXED"]["ISWEEP"]["OUTLIER"]))
 fileout=snakemake.output.fileout
 
 # forming graph

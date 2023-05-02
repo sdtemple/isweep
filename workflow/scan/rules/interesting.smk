@@ -12,8 +12,6 @@ rule excess_region: # concatenate regions of excess IBD
         fileout=macro+'/excess.region.ibd.tsv',
     params:
         cMgap='{config[FIXED][ISWEEP][CMGAP]}',
-    resources:
-        mem_gb=5
     script:
         '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/excess-region.py'
 
@@ -23,8 +21,6 @@ rule concat_windowed:
         [macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
     output:
         allwindows=macro+'/ibd.windowed.tsv',
-    resources:
-        mem_gb=5
     shell:
         'for j in $(seq {config[CHANGE][ISWEEP][CHRLOW]} 1 {config[CHANGE][ISWEEP][CHRLOW]}); do zcat {config[CHANGE][FOLDERS][STUDY]}/ibdsegs/ibdends/modified/scan/chr${j}.ibd.windowed.tsz.gz | tail -n +2 >> {output.allwindows} ; done;'
 
@@ -36,8 +32,6 @@ rule make_roi_table:
         excessregion=macro+'/excess.region.ibd.tsv',
     output:
         roitable=macro+'/roi.table.tsv',
-    resources:
-        mem_gb=5
     script:
         '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/make-roi-table.py'
 

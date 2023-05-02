@@ -6,13 +6,9 @@ vcfin=$2
 vcfout=$3
 left=$4
 right=$5
-chrnum=$6
-
-# changing to bgzip
-gunzip -c ${vcfin} | bgzip  > ${folder}/chr${chrnum}.vcf.bgz
-tabix -fp vcf ${folder}/chr${chrnum}.vcf.bgz
+sampfile=$6
+minaf=$7
 
 # filtering
-bcftools view ${folder}/chr${chrnum}.vcf.bgz -r 1:${left}-${right} -Oz > ${vcfout}
-rm ${folder}/chr${chrnum}.vcf.bgz
-rm ${folder}/chr${chrnum}.vcf.bgz.tbi
+tabix -fp vcf ${vcfin}
+bcftools view ${vcfin} -r 1:${left}-${right} -S ${sampfile} -q ${minaf} -Oz > ${vcfout}

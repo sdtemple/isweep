@@ -4,17 +4,19 @@
 
 # setup macro folder
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+low=int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
+high=int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
-include: 'rules/maps.smk'
 include: 'rules/samples.smk'
 
 rule all:
-	input:
-		macro+'/excess.ibd.tsv',
-		macro+'/excess.region.ibd.tsv',
-		macro+'/ibdne.ne',
-	output:
-		yaml=macro+'/arguments.yaml',
-	shell:
-		'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
+    input:
+        macro+'/excess.ibd.tsv',
+        macro+'/excess.region.ibd.tsv',
+        macro+'/ibdne.ne',
+        macro+'/excludesamples.txt',
+    output:
+        yaml=macro+'/arguments.yaml',
+    shell:
+        'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'

@@ -1,4 +1,5 @@
 import sys
+# sampfile,subsampfile,exclsampfile=sys.argv[1:]
 sampfile=snakemake.input.sample
 subsampfile=snakemake.input.subsample
 exclsampfile=snakemake.output[0]

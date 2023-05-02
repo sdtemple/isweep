@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 # inputting
-input_file,output_file,map_file,by,end,telo_cut=sys.argv[1:]
+input_file,output_file,map_file,by,end,telocut=sys.argv[1:]
 
 # type casting
 start=0
@@ -20,7 +20,7 @@ cmcut=telocut
 cmcut=float(cmcut)
 
 # formatting
-table = pd.read_csv(input_file, sep='\t', compression='gzip')
+table = pd.read_csv(input_file, sep='\t', compression='gzip', header=None)
 columns=list(table.columns)
 cmcol=columns[7]
 encol=columns[6]
