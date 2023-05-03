@@ -15,7 +15,7 @@ CHANGE:
   # chromsomes, sample size for analysis
   ISWEEP:
     # region of interest file
-    ROI: './finalroi.txt'
+    ROI: 'finalroi.tsv'
     # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
     SAMPSIZE: '1045'
     CHRLOW: '1'

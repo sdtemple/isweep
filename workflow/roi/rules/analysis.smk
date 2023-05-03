@@ -20,7 +20,7 @@ rule rank:
 rule infer:
     input:
         long='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
-        fileout='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.ranks.tsv.gz',
+        ranks='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.ranks.tsv.gz',
     output:
         fileout='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.inferences.tsv.gz',
     params:
@@ -30,4 +30,4 @@ rule infer:
         effdemo='{config[CHANGE][ISWEEP][NE]}',
         ploidy='{config[FIXED][HAPIBD][PLOIDY]}',
     shell:
-        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/infer-isweep.py {input.short} {input.vcf} {output.fileout} {params.diameter} {params.atleast} {params.q1} {params.q2} {params.rulesigma}; touch {config[CHANGE][FOLDERS][STUDY]}/done{roi}'
+        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/infer-isweep.py {input.long} {input.ranks} {output.fileout} {params.nboot} {params.cm} {params.n} {params.effdemo} {params.ploidy}; touch {config[CHANGE][FOLDERS][STUDY]}/done{roi}'

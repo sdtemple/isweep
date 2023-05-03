@@ -18,12 +18,12 @@ dependencies = [
     "networkx",
     "matplotlib",
     "seaborn",
-    "msprime",
-    "tskit",
-    "pyslim",
-    "stdpopsim",
     "snakemake",
-    "tszip"
+    # "msprime",
+    # "tskit",
+    # "pyslim",
+    # "stdpopsim",
+    # "tszip"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

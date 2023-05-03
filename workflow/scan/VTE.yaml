@@ -7,10 +7,7 @@ CHANGE:
     # folder for analysis
     STUDY: '/projects/browning/brwnlab/seth/VTE2'
     # the yaml file with scan analysis options
-    YAML: './VTE.yaml'
-      # folder where snakemake scripts are
-    SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/scan/snakescripts'
-    # folder where terminal scripts are
+    YAML: 'VTE.yaml'    # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/scan/terminalscripts'
     # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
@@ -23,8 +20,6 @@ CHANGE:
     CHRHIGH: '22'
     SUBSAMPLE: '/projects/browning/brwnlab/seth/vte.subsample.txt'
     XMXMEM: '100' # in gb
-    TELOSIGMA: '3.0' # sigma scalar to remove telomeres
-    SCANSIGMA: '4.0' # sigma scalar to call excess ibd
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
@@ -77,3 +72,5 @@ FIXED:
     SCANCUTOFF: '2.0'
     # cM gap when concatenating regions of excess IBD
     CMGAP: '1.0'
+    TELOSIGMA: '3.0' # sigma scalar to remove telomeres
+    SCANSIGMA: '4.0' # sigma scalar to call excess ibd

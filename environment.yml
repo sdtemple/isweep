@@ -1,4 +1,4 @@
-name: isweep
+name: isweep-simulate
 channels:
   - conda-forge
   - bioconda

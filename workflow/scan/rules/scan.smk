@@ -76,38 +76,6 @@ rule count_ibdends_scan: # computing counts over windows
     shell:
         'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/ibd-windowed.py {input.filein} {output.fileout} {input.mapin} {config[FIXED][ISWEEP][BY]} {config[FIXED][ISWEEP][GENOMEEND]} {config[FIXED][ISWEEP][TELOCUT]}'
 
-# macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-# xmx=str(config['CHANGE']['ISWEEP']['XMXMEM'])
-# jar=str(config['CHANGE']['PROGRAMS']['IBDNE'])
-# software=str(config['CHANGE']['FOLDERS']['SOFTWARE'])
-# rule ibdne:
-#     input:
-#         ibds=[macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.gz' for i in range(low,high+1)],
-#         allmap=concatmap,
-#     output:
-#         macro+'/ibdne.ne',
-#     params:
-#         study=macro,
-#         xmx=xmx,
-#         subpath='ibdsegs/ibdends/modified/scan',
-#         jar=jar,
-#         software=software,
-#     resources:
-#         mem_gb=100
-#     shell:
-#         'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/run-ibdne.sh {params.study} {params.subpath} {params.xmx} {params.software} {params.jar} {input.allmap} ibdne'
-
-# rule ibdne:
-#     input:
-#         ibds=[macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.gz' for i in range(low,high+1)],
-#         allmap=concatmap,
-#     output:
-#         macro+'/ibdne.ne',
-#     resources:
-#         mem_gb=100
-#     shell:
-#         'zcat {config[CHANGE][FOLDERS][STUDY]}/ibdsegs/ibdends/modified/scan/chr{*}.ibd.gz | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][PROGRAMS][IBDNE]} map={input.allmap} out=ibdne'
-
 rule filter_ibdends_mom: # applying cutoffs
     input:
         ibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
@@ -138,6 +106,4 @@ rule scan: # conduct a manhattan scan
     resources:
         mem_gb=5
     shell:
-        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/scan-isweep.py {config[CHANGE][FOLDERS][STUDY]} {config[CHANGE][ISWEEP][CHRLOW]} {config[CHANGE][ISWEEP][CHRHIGH]} {config[CHANGE][ISWEEP][SCANSIGMA]} {config[CHANGE][ISWEEP][TELOSIGMA]}'
-    # script:
-    #     '{config[CHANGE][FOLDERS][SNAKESCRIPTS]}/scan-isweep.py'
+        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/scan-isweep.py {config[CHANGE][FOLDERS][STUDY]} {config[CHANGE][ISWEEP][CHRLOW]} {config[CHANGE][ISWEEP][CHRHIGH]} {config[FIXED][ISWEEP][SCANSIGMA]} {config[FIXED][ISWEEP][TELOSIGMA]}'

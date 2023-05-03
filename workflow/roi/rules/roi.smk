@@ -26,7 +26,7 @@ rule subset_vcf: # focus vcf on region of interest
         subvcf='{cohort}/roi{roi}/chr{chr}/center{center}/left{left}/right{right}/chr{chr}.focused.vcf.gz',
     params:
         qmaf=maf,
-        subsample=samplefile,
+        subsample=macro+"/subsample.txt",
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {wildcards.cohort}/roi{wildcards.roi}/center{wildcards.center}/left{wildcards.left}/right{wildcards.right} {input.vcfin} {output.subvcf} {wildcards.left} {wildcards.right} {params.subsample} {params.qmaf}'
 
