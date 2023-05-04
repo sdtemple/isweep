@@ -34,7 +34,7 @@ rule infer:
         long='{macro}/{micro}/{seed}/long.chr1.ibd.gz',
         ranks='{macro}/{micro}/{seed}/isweep.ranks.tsv.gz',
     output:
-        fileout='{macro}/{micro}/{seed}/isweep.inference.tsv.gz',
+        fileout='{macro}/{micro}/{seed}/isweep.inference.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),

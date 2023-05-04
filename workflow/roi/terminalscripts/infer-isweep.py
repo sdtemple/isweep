@@ -110,8 +110,8 @@ for j in range(len(inhs)):
             thetime=when_freq(sv,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
             svs[i].append(thetime)
         # time estimates
-        tl = np.quantile(thetime,alpha1)
-        tu = np.quantile(thetime,alpha2)
+        tl = np.quantile(svs[i],alpha1)
+        tu = np.quantile(svs[i],alpha2)
         tm=themeantime
         f.write(str(tm)); f.write('\t')
         f.write(str(tl)); f.write('\t')
@@ -120,10 +120,10 @@ for j in range(len(inhs)):
     for k in range(len(sbsinh)):
         sb=sbsinh[k]
         thetime=when_count(1,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
-        svs[len(svs)].append(thetime)
+        svs[-1].append(thetime)
     # time estimates
-    tl = np.quantile(thetime,alpha1) # hall method
-    tu = np.quantile(thetime,alpha2)
+    tl = np.quantile(svs[-1],alpha1) # hall method
+    tu = np.quantile(svs[-1],alpha2)
     tm=themeantime
     f.write(str(tm)); f.write('\t')
     f.write(str(tl)); f.write('\t')

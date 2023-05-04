@@ -63,7 +63,7 @@ rule infer:
         ranks='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.ranks.tsv.gz',
         effdemo=macro+'/extended.ne',
     output:
-        fileout='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.inference.tsv.gz',
+        fileout='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/isweep.inference.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
@@ -86,7 +86,7 @@ rule infer:
 
 rule combine:
     input:
-        sweeps=[f"{sim.FOLDER}/isweep.inference.tsv.gz" for sim in sims.itertuples()],
+        sweeps=[f"{sim.FOLDER}/isweep.inference.tsv" for sim in sims.itertuples()],
         roitsv=macro+'/'+micro,
     output:
         doneso=macro+'/doneso.txt',

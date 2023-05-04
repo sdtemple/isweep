@@ -3,7 +3,7 @@ wildcard_constraints:
 
 rule hooray:
     input:
-        fileout='{macro}/{micro}/{seed}/isweep.inference.tsv.gz',
+        fileout='{macro}/{micro}/{seed}/isweep.inference.tsv',
         ranks='{macro}/{micro}/{seed}/isweep.ranks.tsv.gz',
     output:
         hooray='{macro}/{micro}/{seed}/hooray.txt',
