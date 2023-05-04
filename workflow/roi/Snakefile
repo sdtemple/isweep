@@ -7,34 +7,36 @@ import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 micro=str(config['CHANGE']["ISWEEP"]["ROI"])
 yaml=str(config['CHANGE']["FOLDERS"]["YAML"])
-sims = pd.read_csv(macro+micro, sep='\t', header=0)
+sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
 J = sims.shape[0]
 for j in range(J):
-	row = sims.loc[j,]
-	if not os.path.exists(macro+'/roi'+str(row.NAME)):
-		os.mkdir(macro+'/roi'+str(row.NAME))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT))
-	if not os.path.exists(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/ready'):
-		os.mkdir(macro+'/roi'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/ready')
-sims['FOLDER'] = [(macro +'/roi'+str(sims.loc[j].NAME)+'/chr'+str(row.CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
+	row = sims.iloc[j]
+	if not os.path.exists(macro+'/'+str(row.NAME)):
+		os.mkdir(macro+'/'+str(row.NAME))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/empty.txt'):
+		os.mknod(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/empty.txt')
+sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
 
-# setup macro folder
+# include .smk files with rules
 include: 'rules/roi.smk'
 include: 'rules/analysis.smk'
 
+# snakemake all -c1 -n
 rule all:
 	input:
-		touches=[f"{sim.FOLDER}/done{sim.NAME}" for sim in sims.itertuples()],
+		macro+'/doneso.txt',
+		# [f"{sim.FOLDER}/isweep.inference.tsv.gz" for sim in sims.itertuples()],
 	output:
-		yaml=macro+'/'+str(config['CHANGE']['FOLDERS']['YAML']),
+		yamlout=macro+'/arguments.roi.yaml',
 	params:
-		yaml=yaml,
+		yamlpar=macro+'/'+yaml,
 	shell:
-		'cp {input.yaml} {output.yaml}'
+		'cp {params.yamlpar} {output.yamlout}'

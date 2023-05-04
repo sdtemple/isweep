@@ -4,12 +4,14 @@ Put mutations on tree sequence
 @author: sdtemple
 """
 
-import sys, os, subprocess, pyslim, msprime, tskit
+import sys, os, subprocess, pyslim, msprime
+import tskit as ts
+import numpy as np
+import pandas as pd
 # from isweep import *
 
 mu=snakemake.config['FIXED']['SIMULATE']['MU']
 rho=snakemake.config['FIXED']['SIMULATE']['RHO']
-Ne=snakemake.config['FIXED']['SIMULATE']['tNe']
 trees=snakemake.input.trees
 maf=snakemake.config['CHANGE']['SIMULATE']['MSPMAF']
 n=snakemake.config['CHANGE']['SIMULATE']['SAMPSIZE']
@@ -28,7 +30,7 @@ Ne = int(float(str(snakemake.config['CHANGE']['SIMULATE']['ancNe'])))
 # Ne = read_Ne(Ne)
 # Ne = int(float(list(Ne.values())[-1]))
 
-orig_ts = tskit.load(trees)
+orig_ts = ts.load(trees)
 orig_ts = pyslim.update(orig_ts) # pyslim, tskit new versions
 
 # random nucleotide(s)
@@ -48,16 +50,16 @@ mut_ts = msprime.sim_mutations(recap_ts, rate=mu, keep=True)
 
 # remove rare variants
 # courtesy of Ryan Waples (waplesr@uw.edu)
-def strip_MAC(ts, MAC):
+def strip_MAC(treeseq, MAC):
     """
     Removes sites with minor allele count <= MAC
     Returns a new tree sequence with sites removed
     """
-    initial_sites = ts.num_sites
-    samples = ts.samples()
+    initial_sites = treeseq.num_sites
+    samples = treeseq.samples()
     nsamp = len(samples)
     sites_to_remove = []
-    for tree in ts.trees():
+    for tree in treeseq.trees():
         for site in tree.sites():
             if len(site.mutations) == 1:
                 mut = site.mutations[0]
@@ -66,24 +68,24 @@ def strip_MAC(ts, MAC):
                     sites_to_remove.append(site.id)
             else:
                 sites_to_remove.append(site.id)
-    ts = ts.delete_sites(sites_to_remove)
-    final_sites = ts.num_sites
+    treeseq = treeseq.delete_sites(sites_to_remove)
+    final_sites = treeseq.num_sites
     print(f"MAC filter (<={MAC}):")
     print(f"removed {initial_sites - final_sites} sites ({(initial_sites - final_sites) / (initial_sites):.0%}), {final_sites} sites remain")
-    return ts
-def strip_adjacent_sites(ts, dist=1.5):
+    return treeseq
+def strip_adjacent_sites(treeseq, dist=1.5):
     """Remove sites within dist bp of each other.
     Removes the right-most site in each pair.
     Returns a new tree-sequence.
     """
-    initial_sites = ts.num_sites
+    initial_sites = treeseq.num_sites
     present_samples = np.intersect1d(
-    	ts.samples(),
-    	np.where(ts.tables.nodes.asdict()['time'] == 0)[0]
+    	treeseq.samples(),
+    	np.where(treeseq.tables.nodes.asdict()['time'] == 0)[0]
     )
     sites_to_remove = []
     prev_pos = 0
-    for tree in ts.trees(tracked_samples=present_samples):
+    for tree in treeseq.trees(tracked_samples=present_samples):
         for site in tree.sites():
             if len(site.mutations) == 1:
                 pos = site.position
@@ -92,16 +94,16 @@ def strip_adjacent_sites(ts, dist=1.5):
                     prev_pos = pos
             else:
                 sites_to_remove.append(site.id)
-    ts = ts.delete_sites(sites_to_remove)
-    final_sites = ts.num_sites
+    treeseq = treeseq.delete_sites(sites_to_remove)
+    final_sites = treeseq.num_sites
     print('Adjacent sites filter:')
     print(f"removed {initial_sites-final_sites} sites ({(initial_sites-final_sites) / (initial_sites):.0%}), {final_sites} sites remain")
-    return(ts)
+    return(treeseq)
 
 # apply MAC, bp distance filter
-ts = strip_MAC(mut_ts, mac)
-ts = strip_adjacent_sites(ts)
-# ts = strip_adjacent_sites(ts, 10)
+treeseq = strip_MAC(mut_ts, mac)
+treeseq = strip_adjacent_sites(treeseq)
+# treeseq = strip_adjacent_sites(treeseq, 10)
 
 # saving
 
@@ -111,7 +113,7 @@ with open(filename, "w") as bcf_file:
     proc = subprocess.Popen(
         ["bcftools", "view", "-O", "b"], stdin=read_fd, stdout=bcf_file
     )
-    ts.write_vcf(write_pipe)
+    treeseq.write_vcf(write_pipe)
     write_pipe.close()
     os.close(read_fd)
     proc.wait()

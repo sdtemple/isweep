@@ -7,18 +7,17 @@ import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-folder=sys.argv[1]
+folder,mbbuffer=sys.argv[1]
 filein=folder+'/excess.region.ibd.tsv'
 folder1=folder+'/ibdsegs/ibdends/modified/scan/'
 filepre='chr'
 filesuf='.ibd.windowed.tsv.gz'
 fileout=folder+'/roi.tsv'
+mbbuffer=int(float(mbbuffer))*1000000
 
 roitab=pd.read_csv(filein,sep='\t')
 bpcenter=[]
 cmcenter=[]
-
-print(roitab)
 
 # make magic happen
 
@@ -86,4 +85,13 @@ for i in range(roitab.shape[0]):
 # adding bp, cm centrality to roi table
 roitab['BPCENTER']=bpcenter
 roitab['CMCENTER']=cmcenter
+roitab['BPLEFTCENTER']=(roitab['BPLEFT']-mbbuffer).clip(lower=1)
+roitab['BPRIGHTCENTER']=roitab['BPRIGHT']+mbbuffer
+# sorting, giving generic names
+initcol=list(roitab.columns)
+finacol=['NAME']+initcol
+roitab.sort_values(by='MAXIBD',ascending=False,inplace=True)
+nrow=roitab.shape[0]
+roitab['NAME']=['hit'+str(i) for i in range(1,nrow+1)]
+roitab=roitab[finacol]
 roitab.to_csv(fileout,sep='\t',index=False)

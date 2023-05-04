@@ -6,8 +6,8 @@ import gzip
 import sys
 
 # edit these manually
-inhs=['d','a','m'] # different inheritance models
-svmaf=[0.05,0.02,0.01] # different standing variation
+inhs=['a'] # different inheritance models
+svmaf=[0.05,0.02] # different standing variation
 alpha=0.95
 alpha1=(1-alpha)/2
 alpha2=1-alpha1

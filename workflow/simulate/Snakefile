@@ -2,22 +2,15 @@
 # Seth D. Temple, sdtemple@uw.edu
 # April 26, 2023
 
-# configfile: 'simulate.yaml'
-# configfile: 'simstudies.bottle.yaml' # change this for new yaml configs
-#configfile: 'simstudies.constant.yaml' # change this for new yaml configs
-#configfile: 'simstudies.popstruct1.yaml' # change this for new yaml configs
-#configfile: 'simstudies.popstruct2.yaml' # change this for new yaml configs
-#configfile: 'simstudies.popstruct3.yaml' # change this for new yaml configs
-
 # setup macro folder
 import os
-macro=str(config['FOLDERS']['MACRO'])
+macro=str(config['CHANGE']['FOLDERS']['MACRO'])
 if not os.path.exists(macro):
 	os.mkdir(macro)
 
 # load in experiments, set up micro, simname folders
 import pandas as pd
-micro=str(config["FOLDERS"]["MICRO"])
+micro=str(config['CHANGE']["FOLDERS"]["MICRO"])
 sims = pd.read_csv(micro, sep='\t', header=0)
 J = sims.shape[0]
 for j in range(J):
@@ -32,6 +25,8 @@ sims = sims.set_index("SIMNAME", drop=False)
 include: 'rules/simulate.smk'
 include: 'rules/scan.smk'
 include: 'rules/roi.smk'
+include: 'rules/hooray.smk'
+include: 'rules/analysis.smk'
 
 rule all:
 	input:
@@ -40,4 +35,4 @@ rule all:
 		[f"{sim.FOLDER}/scan.chr1.windowed.tsv.gz" for sim in sims.itertuples()],
 		[f"{sim.FOLDER}/slimulation.true1.labels.gz" for sim in sims.itertuples()],
 		[f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
-		[f"{sim.FOLDER}/arguments.yaml" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/hooray.txt" for sim in sims.itertuples()],

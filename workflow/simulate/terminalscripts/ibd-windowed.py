@@ -8,12 +8,7 @@ import numpy as np
 import pandas as pd
 
 # inputting
-map_file=snakemake.input.mapin
-end=snakemake.config['FIXED']['ISWEEP']['GENOMEEND']
-telocut=snakemake.config['FIXED']['ISWEEP']['TELOCUT']
-by=snakemake.config['FIXED']['ISWEEP']['BY']
-input_file=snakemake.input.filein
-output_file=snakemake.output.fileout
+input_file,output_file,map_file,by,end,telocut=sys.argv[1:]
 
 # type casting
 start=0
@@ -23,7 +18,7 @@ cmcut=telocut
 cmcut=float(cmcut)
 
 # formatting
-table = pd.read_csv(input_file, sep='\t', compression='gzip')
+table = pd.read_csv(input_file, sep='\t', compression='gzip', header=None)
 columns=list(table.columns)
 cmcol=columns[7]
 encol=columns[6]

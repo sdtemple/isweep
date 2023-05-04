@@ -7,19 +7,18 @@ CHANGE:
     # folder for analysis
     STUDY: '/projects/browning/brwnlab/seth/VUAF2'
     # the yaml file with scan analysis options
-    YAML: './VUAF.yaml'
+    YAML: 'VUAF.yaml'
     # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/scan/terminalscripts'
     # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
+  # parameters, subsample file
   ISWEEP:
-    # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1045'
     # lowest chromosome number
     CHRLOW: '1'
     # highest chromosome numbers
     CHRHIGH: '22'
-    SUBSAMPLE: '/projects/browning/brwnlab/seth/vuaf.subsample.txt'
+    SUBSAMPLE: 'subsample.txt'
     XMXMEM: '100' # in gb
   # download these software
   PROGRAMS:
@@ -31,14 +30,20 @@ CHANGE:
     FILTER: 'filter-lines.jar'
     IBDNE: 'ibdne.jar'
   EXISTING:
-    VCFS: '/projects/browning/brwnlab/seth/VUAF2'
+    # these are phased vcfs
+    VCFS: '/projects/browning/brwnlab/seth/VTE2/vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
+    # these are genetic maps
+    MAPS: '/projects/browning/maps/decode.2019.b38'
+    MAPPRE: 'decode2019.chrchr'
+    MAPSUF: '.GRCh38.map'
 
 # keep these fixed
 FIXED:
   # hap-ibd.jar
-  CANDHAPIBD:
+  # these are inspired by Cai, Browning, and Browning (2023+)
+  CANDHAPIBD: # candidate
     # min-seed
     MINSEED: '0.5'
     # min-extend
@@ -75,3 +80,5 @@ FIXED:
     CMGAP: '1.0'
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd
+    # mb buffer
+    MBBUF: '2'

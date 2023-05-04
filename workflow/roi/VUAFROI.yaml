@@ -8,30 +8,37 @@ CHANGE:
     # folder for analysis
     STUDY: '/projects/browning/brwnlab/seth/VUAF2'
     # the yaml file with scan analysis options
-    YAML: './VUAFROI.yaml'
+    YAML: 'VUAFROI.yaml'
     # folder where terminal scripts are
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/roi/terminalscripts'
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
-  # chromsomes, sample size for analysis
+  # parameters, subsample file
   ISWEEP:
     # region of interest file
     ROI: 'finalroi.tsv'
-    # use bcftools query -l *.vcf.gz | wc -l [on one chromosome]
-    SAMPSIZE: '1045'
+    CHRPRE: 'chr' # either '' or 'chr' ; look at your vcf and map file
+    # numeric first, last chromosome number
     CHRLOW: '1'
     CHRHIGH: '22'
     XMXMEM: '100' # in gb
-    NE: 'ibdne.ne' # inferred Ne(t) to use
+    # inferred Ne(t) to use
+    NE: 'ibdne.ne'
+    SUBSAMPLE: 'subsample.txt'
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
     HAPIBD: 'hap-ibd.jar'
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
+  EXISTING:
+    VCFS: '/projects/browning/brwnlab/seth/VUAF2'
+    VCFPRE: 'chr'
+    VCFSUF: '.vcf.gz'
 
 # keep these fixed
 FIXED:
   # hap-ibd.jar
+  # these are hap-ibd.jar sequence parameters (see suppl.)
   HAPIBD:
     # min-seed
     MINSEED: '0.5'
@@ -50,9 +57,10 @@ FIXED:
     # ibd cM threshold for isweep method of moments
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
+    DIAMETER: '2'
     SCANCUTOFF: '2.0'
-    RULESCALAR: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    RULESIGMA: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
     ATLEAST: '0.00'
-    MINAF: '0.10' # min adaptive allele frequency
-    MAXAF: '0.90' # max adaptive allele frequency
+    MINAAF: '0.10' # min adaptive allele frequency
+    MAXAAF: '0.90' # max adaptive allele frequency
     NBOOT: '1000' # number of bootstrap

@@ -5,11 +5,17 @@ channels:
   - defaults
 dependencies:
   - python>=3.8
-  - snakemake
   - numpy>=1.21
   - pandas
   - scipy>=1.7
-  - msprime
+  - matplotlib
+  - seaborn
+  - networkx
   - tskit
-  - tszip
   - pyslim
+  - tszip
+  - msprime
+  - snakemake
+  - pip
+  # - pip:
+  #     - isweep

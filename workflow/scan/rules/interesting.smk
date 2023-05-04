@@ -1,5 +1,7 @@
 # process the isweep scan
 # form table of roi
+# seth temple, sdtemple@uw.edu
+# may 3, 2023
 
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
@@ -11,14 +13,24 @@ rule excess_region: # concatenate regions of excess IBD
     output:
         fileout=macro+'/excess.region.ibd.tsv',
     params:
-        cMgap='{config[FIXED][ISWEEP][CMGAP]}',
+        cMgap=str(config['FIXED']['ISWEEP']['CMGAP']),
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
-        'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/excess-region.py {input.filein} {output.fileout} {config[FIXED][ISWEEP][CMGAP]}'
+        'python {params.scripts}/excess-region.py {input.filein} {output.fileout} {params.cMgap}'
 
 rule make_roi_table:
     input:
         filein=macro+'/excess.region.ibd.tsv',
     output:
         fileout=macro+'/roi.tsv',
+    params:
+        study=macro,
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
     shell:
-        'mkdir -p {config[CHANGE][FOLDERS][STUDY]}/plots; mkdir -p {config[CHANGE][FOLDERS][STUDY]}/stats; python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/make-roi-table.py {config[CHANGE][FOLDERS][STUDY]}'
+        """
+        mkdir -p {params.study}/plots
+        mkdir -p {params.study}/stats
+        python {params.scripts}/make-roi-table.py {params.study} {params.mbbuf}
+        """
+        # 'mkdir -p {config[CHANGE][FOLDERS][STUDY]}/plots; mkdir -p {config[CHANGE][FOLDERS][STUDY]}/stats; python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/make-roi-table.py {config[CHANGE][FOLDERS][STUDY]}'
