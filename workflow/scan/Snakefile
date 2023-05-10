@@ -41,5 +41,7 @@ rule all:
         macro+'/ibdne.ne',
     output:
         yaml=macro+'/arguments.scan.yaml',
+    params:
+        yaml=str(config['CHANGE']['FOLDERS']['YAML']),
     shell:
-        'cp {config[CHANGE][FOLDERS][YAML]} {output.yaml}'
+        'cp {params.yaml} {output.yaml}'
