@@ -140,7 +140,8 @@ def format_allele_table(pos, freq1, freq0, freqm, topn=np.inf):
     v,u,w=putative_allele_frequencies(freq1,freq0,freqm)
     table = {'POS':pos, 'AAF':w, 'AAF1':v, 'AAF0':u, 'DELTA':v-u}
     table = pd.DataFrame(table)
-    table.sort_values(by=['DELTA','POS'], inplace=True, ascending=False)
+    table['DELTAPRIME'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
+    table.sort_values(by=['DELTAPRIME','POS'], inplace=True, ascending=False)
     table.reset_index(inplace=True,drop=True)
     if topn < table.shape[0]:
         return table.loc[:topn,]

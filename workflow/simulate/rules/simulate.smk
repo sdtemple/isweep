@@ -93,31 +93,6 @@ rule genotyping_error:
         """
 		# 'zcat {input.vcf} | java -jar {params.soft}/{params.prog} {params.gter} | gzip > {output.out}'
 
-### true labels ###
-
-# work on location
-rule causal_vcf:
-    input:
-        bcf='{macro}/{micro}/{seed}/slimulation.bcf.gz',
-        csi='{macro}/{micro}/{seed}/slimulation.bcf.gz.csi',
-    output:
-        vcf='{macro}/{micro}/{seed}/causal.chr1.vcf.gz'
-    params:
-        loc=str(config['FIXED']['SIMULATE']['LOC'])
-    shell:
-        'bcftools view {input.bcf} -Oz -m2 -M2 -t 1:{params.loc} -o {output.vcf}'
-
-rule true_labels:
-    input:
-        vcf='{macro}/{micro}/{seed}/causal.chr1.vcf.gz'
-    output:
-        labels1='{macro}/{micro}/{seed}/slimulation.true1.labels.gz',
-        labels0='{macro}/{micro}/{seed}/slimulation.true0.labels.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
-    script:
-        '{params.scripts}/true-labels.py'
-
 ### zip tree sequence ###
 
 rule tszip:
@@ -128,3 +103,28 @@ rule tszip:
         tsz='{macro}/{micro}/{seed}/slimulation.trees.tsz'
     shell:
         'tszip {input.trees}'
+
+### true labels ###
+
+# # work on location
+# rule causal_vcf:
+#     input:
+#         bcf='{macro}/{micro}/{seed}/slimulation.bcf.gz',
+#         csi='{macro}/{micro}/{seed}/slimulation.bcf.gz.csi',
+#     output:
+#         vcf='{macro}/{micro}/{seed}/causal.chr1.vcf.gz'
+#     params:
+#         loc=str(config['FIXED']['SIMULATE']['LOC'])
+#     shell:
+#         'bcftools view {input.bcf} -Oz -m2 -M2 -t 1:{params.loc} -o {output.vcf}'
+
+# rule true_labels:
+#     input:
+#         vcf='{macro}/{micro}/{seed}/causal.chr1.vcf.gz'
+#     output:
+#         labels1='{macro}/{micro}/{seed}/slimulation.true1.labels.gz',
+#         labels0='{macro}/{micro}/{seed}/slimulation.true0.labels.gz',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
+#     script:
+#         '{params.scripts}/true-labels.py'

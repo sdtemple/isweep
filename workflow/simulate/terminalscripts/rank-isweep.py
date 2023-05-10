@@ -3,11 +3,10 @@ import sys
 from isweep import *
 
 #  i/o
-short_ibd, short_vcf, fileout, K, F, Q1, Q2, scalar = sys.argv[1:]
+short_ibd, short_vcf, fileout, K, Q1, scalar = sys.argv[1:]
 K=int(float(K)/2)
-F=float(F)
 Q1=float(Q1)
-Q2=float(Q2)
+Q2=1-Q1
 scalar=int(float(scalar))
 
 # forming graph
@@ -25,10 +24,10 @@ tup=labeled_allele_frequencies(short_vcf, outliers)
 pos=tup[0]
 freq1, freq0, freqm = putative_allele_frequencies(tup[1], tup[2], tup[3])
 table = format_allele_table(pos, freq1, freq0, freqm)
-table.sort_values(['DELTA'],inplace=True,ascending=False)
-table=table[table['AAF1']>=F]
+table['DELTAPRIME'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
+table.sort_values(['DELTAPRIME'],inplace=True,ascending=False)
 table=table[table['AAF']>=Q1]
 table=table[table['AAF']<=Q2]
 table.reset_index(inplace=True,drop=True)
-table['DELTANORM']=table['DELTA']/table['DELTA'].sum()
+# table['DELTANORM']=table['DELTA']/table['DELTA'].sum()
 table.to_csv(fileout,sep='\t',index=False)

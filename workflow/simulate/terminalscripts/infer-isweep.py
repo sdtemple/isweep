@@ -13,7 +13,7 @@ alpha1=(1-alpha)/2
 alpha2=1-alpha1
 
 # i/o
-ibdct, ibdaf, fileout, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
+ibdct, ibdaf, fileout, nboot, cutoff, n, Ne, ploidy, quant = sys.argv[1:]
 
 # setting up
 B=int(float(nboot))
@@ -27,11 +27,16 @@ n=int(float(n))
 ploidy=int(float(ploidy))
 m=ploidy*n
 N=m*(m-1)/2-m
+quant=float(quant)
 
 # estimate allele frequency
 tab=pd.read_csv(ibdaf,sep='\t')
 #tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
-p_est=(tab['AAF']*tab['DELTANORM']).sum()
+tab['DELTAPRIME'] = tab['DELTA'] / np.sqrt(tab['AAF'] * (1-tab['AAF']))
+sub = tab[tab['DELTAPRIME'] >= np.quantile(tab['DELTAPRIME'],quant)]
+sub['WEIGHT'] = sub['DELTAPRIME'] / sub['DELTAPRIME'].sum()
+p_est=(sub['AAF']*sub['WEIGHT']).sum()
+loc_est=(sub['POS']*sub['WEIGHT']).sum()
 
 # estimate selection coefficent
 numTracts=0
@@ -68,6 +73,7 @@ for j in range(len(inhs)):
 
 # writing in the moment
 f=open(fileout,'w')
+f.write('BpLocEst\t')
 f.write('VarFreqEst\t')
 f.write('SelCoefEst\t')
 f.write('SelCoefLow\t')
@@ -90,6 +96,7 @@ for j in range(len(inhs)):
     sbsinh=sbsinhs[j]
     inh=inhs[j]
     sl,sm,su=bootstrap_standard_bc(sinh, sbsinh, alpha1, alpha2)
+    f.write(str(loc_est)); f.write('\t')
     f.write(str(p_est)); f.write('\t')
     f.write(str(sm)); f.write('\t')
     f.write(str(sl)); f.write('\t')

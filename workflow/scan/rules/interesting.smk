@@ -20,17 +20,18 @@ rule excess_region: # concatenate regions of excess IBD
 
 rule make_roi_table:
     input:
+        maps=[macro+'/maps/chr'+str(i)+'.map' for i in range(low,high+1)],
         filein=macro+'/excess.region.ibd.tsv',
     output:
         fileout=macro+'/roi.tsv',
     params:
         study=macro,
+        mapfolder=macro+'/maps',
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
     shell:
         """
         mkdir -p {params.study}/plots
         mkdir -p {params.study}/stats
-        python {params.scripts}/make-roi-table.py {params.study} {params.mbbuf}
+        python {params.scripts}/make-roi-table.py {params.study} {params.mbbuf} {params.mapfolder}
         """
-        # 'mkdir -p {config[CHANGE][FOLDERS][STUDY]}/plots; mkdir -p {config[CHANGE][FOLDERS][STUDY]}/stats; python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/make-roi-table.py {config[CHANGE][FOLDERS][STUDY]}'

@@ -5,11 +5,11 @@
 CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
-    YAML: 'bottle.yaml'
+    YAML: 'bottle-popstruct-33.yaml'
     # folder for macro experiments
-    MACRO: 'bottle'
+    MACRO: 'bottle-popstruct-33'
     # tsv file describing simulations
-    MICRO: 'experiments/simstudy.expand.tsv'
+    MICRO: 'experiments/simstudy.basic.tsv'
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/snakescripts'
     # forlder where terminal scripts are
@@ -22,8 +22,8 @@ CHANGE:
     ancNe: '10000' # ancestral Ne (should be last in value in iNe)
     SAMPSIZE: '5000' # num diploids
     MSPMAF: '0.001' # 0.001 for sequence data, >=0.01 for array data
-    MIGRRATE: '0' # migration rate
-    NUMSUBPOP: '1' # number of subpopulations
+    MIGRRATE: '0.01' # migration rate
+    NUMSUBPOP: '3' # number of subpopulations
   CLUSTER:
     # controls memory resource to some rules
     # in Gb

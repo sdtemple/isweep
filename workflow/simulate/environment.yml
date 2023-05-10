@@ -19,3 +19,7 @@ dependencies:
   - pip
   # - pip:
   #     - isweep
+  # for relate, clues
+  - numba
+  - biopython
+  - progressbar

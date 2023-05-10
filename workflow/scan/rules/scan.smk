@@ -6,7 +6,8 @@
 subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 samplesize=0
-with open(macro+'/'+subsamplefile,'r') as f:
+with open(subsamplefile,'r') as f:
+# with open(macro+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 # samplesize=str(samplesize)
@@ -60,7 +61,7 @@ rule ibdends: # ibd-ends.jar
         ibd='{cohort}/ibdsegs/hapibd/chr{num}.ibd.gz',
         subsample='{cohort}/excludesamples.txt',
     output:
-        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',,
+        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     params:
         out='{cohort}/ibdsegs/ibdends/chr{num}',
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
@@ -217,8 +218,8 @@ rule scan: # conduct a manhattan scan
 
 rule ibdne:
     input:
-        [macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.gz' for i in range(low,high+1)],
-        map=macro+'/maps/chr'+str(low)+'-'+str(high)+'.map',
+        ibds=[macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.gz' for i in range(low,high+1)],
+        maps=[macro+'/maps/chr'+str(i)+'.map' for i in range(low,high+1)],
     output:
         ne=macro+'/ibdne.ne',
     params:
@@ -234,7 +235,17 @@ rule ibdne:
         mem_gb=100
     shell:
         """
-        for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); do zcat ${params.prefix}chr${{params.j}}.ibd.gz >> {params.prefix}chrall.ibd ; done;
-        cat ${params.prefix}chrall.ibd | java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} map={input.map} out={params.folder}/ibdne
+        for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
+        do zcat ${params.folder}/maps/chr${{params.j}}.map \
+        >> ${params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map ; \
+        done;
+        for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
+        do zcat ${params.prefix}chr${{params.j}}.ibd.gz \
+        >> {params.prefix}chrall.ibd ; \
+        done;
+        cat ${params.prefix}chrall.ibd | \
+        java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
+        map={params.folder}/maps/chr${params.chrlow}-{params.chrhigh}.map \
+        out={params.folder}/ibdne \
         rm {params.prefix}chrall.ibd
         """

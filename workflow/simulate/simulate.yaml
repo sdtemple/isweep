@@ -5,8 +5,10 @@
 CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
-    MACRO: '' # folder for macro experiments
-    MICRO: '' # tsv file describing simulations
+    # folder for macro experiments
+    MACRO: ''
+    # tsv file describing simulations
+    MICRO: ''
     # folder where snakescripts are
     SNAKESCRIPTS: ''
     # forlder where terminal scripts are
@@ -15,6 +17,7 @@ CHANGE:
     SOFTWARE: ''
   SIMULATE:
       tNe: '' # true Ne file
+      iNe: '' # Ne file for inference (tail should be last value in tNe)
       ancNe: '' # diploids in ancestral Ne
       SAMPSIZE: '' # num diploids
       MSPMAF: '' # 0.001 for sequence data, >=0.01 for array data
@@ -24,26 +27,24 @@ CHANGE:
     # controls memory resource to some rules
     # in Gb
     LARGEMEM: '100'
-    # controls thread resource to some rules
-    # must be integers
-    LARGETHREAD: '16'
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
     HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
     IBDENDS: 'ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
     GTERR: 'add-uniform-err.jar' # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar' # http://faculty.washington.edu/browning/
-    # controls memory resource to some rules
-    # in Gb
-    LARGEMEM: '100'
-    # controls thread resource to some rules
-    # must be integers
-    LARGETHREAD: '16'
     # RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
     # BEAGLE: 'beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
 
 # keep these fixed
 FIXED:
+  # RELATE:
+  #   # these are only to compare against clues
+  #   # left, right should be close to [SIMULATE][LOC]
+  #   RELATELEFT: '' # left bound for relate arg inference
+  #   RELATERIGHT: '' # right bound for relate arg inference
+  #   RELATESIZE: '' # sample size for relate arg inference
+  #   HAPSIZE: '' # 2 times the sample size
   # simulation study settings
   SIMULATE:
     CMLEN: '8' # in cM length, region size
@@ -96,6 +97,19 @@ FIXED:
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
     SCANCUTOFF: '2.0'
+    # any two nodes in community can reach other in this many edges
+    DIAMETER: '6'
+    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    RULESIGMA: '3'
+    # min adaptive allele frequency,
+    # 1 - (this value) is max adaptive allele frequency
+    MINMAXAAF: '0.10'
+    # top order statistics for allele frequency estimator
+    # so you use basepairs with on this % of Delta stats
+    QUANT: '0.99'
+    # number of bootstraps
+    NBOOT: '100'
+
   # hap-ibd for short
   HAPIBD:
     # min-seed

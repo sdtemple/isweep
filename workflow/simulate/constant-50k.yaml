@@ -5,11 +5,11 @@
 CHANGE:
   # folders, file name of simulation study *.tsv
   FOLDERS:
-    YAML: 'bottle.yaml'
+    YAML: 'constant-50k.yaml'
     # folder for macro experiments
-    MACRO: 'bottle'
+    MACRO: 'constant-50k'
     # tsv file describing simulations
-    MICRO: 'experiments/simstudy.expand.tsv'
+    MICRO: 'experiments/simstudy.basic.tsv'
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/snakescripts'
     # forlder where terminal scripts are
@@ -17,9 +17,9 @@ CHANGE:
     # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
   SIMULATE:
-    tNe: 'ne/bottleneck.ne' # true Ne file
-    iNe: 'ne/bottleneck-1000G.ne' # Ne file for inference (tail should be last value in tNe)
-    ancNe: '10000' # ancestral Ne (should be last in value in iNe)
+    tNe: 'ne/constant-50k.ne' # true Ne file
+    iNe: 'ne/constant-50k-1000G.ne' # Ne file for inference (tail should be last value in tNe)
+    ancNe: '50000' # ancestral Ne (should be last in value in iNe)
     SAMPSIZE: '5000' # num diploids
     MSPMAF: '0.001' # 0.001 for sequence data, >=0.01 for array data
     MIGRRATE: '0' # migration rate

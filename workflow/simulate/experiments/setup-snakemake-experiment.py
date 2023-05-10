@@ -12,3 +12,13 @@ with open(fileout,'w') as f:
         f.write(str(idx)); f.write('\t')
         f.write(str(s)); f.write('\t')
         f.write(str(t)); f.write('\n')
+
+# # write another one for pop struct
+# with open(fileout,'w') as f:
+#     f.write('MICROEXP\tSIMNAME\tSELCOEF\tTIMEMUT\n')
+#     for k in range(K):
+#         idx=k+start
+#         f.write(micro); f.write('\t')
+#         f.write(str(idx)); f.write('\t')
+#         f.write(str(s)); f.write('\t')
+#         f.write(str(t)); f.write('\n')

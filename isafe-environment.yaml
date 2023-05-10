@@ -1,0 +1,21 @@
+name: isafe
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.7
+  - numpy>=0.18.0
+  - pandas>=1.9.0
+  - pip
+  - bcftools>=1.2
+# conda activate isafe
+# conda env create -f isafe-environment.yml
+# make a soft link (https://github.com/alek0991/iSAFE/issues/17)
+# cd /your/path/to/conda/lib
+# ln -s libcrypto.so.1.1 libcrypto.so.1.0.0
+# if bcftools install has issues
+# conda install -c bioconda bcftools
+# in cluster computing:
+# conda activate isafe
+# pass -V option to qsub command to use this isafe environment
