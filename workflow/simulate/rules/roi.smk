@@ -66,43 +66,65 @@ rule small_hapibd:
 rule long_ibd:
     input:
         ibd='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
+		ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
         ibd='{macro}/{micro}/{seed}/long.chr1.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
+        # loc=str(config['FIXED']['SIMULATE']['LOC']),
+		script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
+		themode=$(python ${{params.script}} ${{input.ibdwin}})
         zcat {input.ibd} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 {params.loc} | \
+            "I" 6 0.00 $themode | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 {params.loc} 10000000000 | \
+            "I" 7 $themode 10000000000 | \
             gzip > {output.ibd}
         """
+        # """
+        # zcat {input.ibd} | \
+        #     java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 6 0.00 {params.loc} | \
+        #     java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 7 {params.loc} 10000000000 | \
+        #     gzip > {output.ibd}
+        # """
 
 ### small IBD ###
 
 rule small_ibd:
     input:
         ibd='{macro}/{micro}/{seed}/small.chr1.ibd.gz',
+		ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
         ibd='{macro}/{micro}/{seed}/short.chr1.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
+        # loc=str(config['FIXED']['SIMULATE']['LOC']),
+		script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
+		themode=$(python ${{params.script}} ${{input.ibdwin}})
         zcat {input.ibd} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 {params.loc} | \
+            "I" 6 0.00 $themode | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 {params.loc} 10000000000 | \
+            "I" 7 $themode 10000000000 | \
             gzip > {output.ibd}
         """
+        # """
+        # zcat {input.ibd} | \
+        #     java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 6 0.00 {params.loc} | \
+        #     java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 7 {params.loc} 10000000000 | \
+        #     gzip > {output.ibd}
+        # """
