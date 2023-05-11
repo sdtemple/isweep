@@ -134,3 +134,13 @@ plt.xlim(0,5000)
 plt.title('Distributions of segment counts')
 plt.legend(labels=['0.25','0.50','0.75'],title='Frequency')
 plt.savefig('kde.frequency.png')
+
+# distribution of segment counts by selection coefficient
+tab=pd.read_csv('sim.tract.distr.tsv',sep='\t')
+sns.kdeplot(tab['0.015'])
+sns.kdeplot(tab['0.025'])
+sns.kdeplot(tab['0.035'])
+plt.xlim(0,25000)
+plt.title('Distributions of segment counts')
+plt.legend(labels=['0.015','0.025','0.035'],title='Sel. Coef.')
+plt.savefig('kde.selcoef.png')
