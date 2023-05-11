@@ -79,6 +79,6 @@ FIXED:
     # cM gap when concatenating regions of excess IBD
     CMGAP: '1.0'
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
-    SCANSIGMA: '4.0' # sigma scalar to call excess ibd
+    SCANSIGMA: '3.0' # sigma scalar to call excess ibd
     # mb buffer
     MBBUF: '2'

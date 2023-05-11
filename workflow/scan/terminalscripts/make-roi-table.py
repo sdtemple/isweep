@@ -52,8 +52,10 @@ for i in range(roitab.shape[0]):
     meBP=int(meBP)
     mdCM=tab[tab['CUMSUM']>=0.5]['CMWINDOW'].tolist()[0]
     mdBP=tab[tab['CUMSUM']>=0.5]['BPWINDOW'].tolist()[0]
-    bpcenter.append(meBP)
-    cmcenter.append(meCM)
+    # bpcenter.append(meBP)
+    # cmcenter.append(meCM)
+    bpcenter.append(moBP)
+    cmcenter.append(moCM)
 
     # writing stats
     chrotit=str(int(float(rowing.CHROM)))
@@ -79,29 +81,33 @@ for i in range(roitab.shape[0]):
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.cM.png'
-    plottit='Chromosome '+chrotit+', Mean '+str(meCM)
+    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meCM) + '.cm.png'
+    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moCM) + '.cm.png'
+    # plottit='Chromosome '+chrotit+', Mean '+str(meCM)
+    plottit='Chromosome '+chrotit+', Mode '+str(moCM)
     plt.plot(tab['CMWINDOW'],tab['COUNT'],linewidth=3,color='k')
     plt.xlabel('centiMorgan position')
     plt.ylabel('IBD segment count')
     plt.title(plottit)
     # plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray')
     # plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray')
-    plt.axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray')
+    # plt.axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray')
     plt.savefig(plotout,dpi=300)
     plt.clf()
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.bp.png'
-    plottit='Chromosome '+chrotit+', Mean '+str(meBP)
+    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.bp.png'
+    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.bp.png'
+    # plottit='Chromosome '+chrotit+', Mean '+str(meBP)
+    plottit='Chromosome '+chrotit+', Mode '+str(moBP)
     plt.plot(tab['BPWINDOW'],tab['COUNT'],linewidth=3,color='k')
     plt.xlabel('basepair position')
     plt.ylabel('IBD segment count')
     plt.title(plottit)
     # plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray')
     # plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray')
-    plt.axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray')
+    # plt.axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray')
     plt.savefig(plotout,dpi=300)
     plt.clf()
 
@@ -150,8 +156,10 @@ for j in range(J):
     # namestr=str(row.NAME.tolist()[0])
     namestr=str(row.NAME)
     chrotit=str(int(float(row.CHROM)))
-    meBP=str(int(float(row.BPCENTER)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
+    # meBP=str(int(float(row.BPCENTER)))
+    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
+    moBP=str(int(float(row.BPCENTER)))
+    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
     plt.title('Chromosome '+chrotit)
     plt.savefig(plotout,dpi=300)
     plt.clf()
