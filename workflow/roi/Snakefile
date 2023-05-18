@@ -17,13 +17,13 @@ for j in range(J):
 		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM))
 	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)):
 		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/empty.txt'):
-		os.mknod(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFT)+ '/right'+str(row.BPRIGHT)+'/empty.txt')
-sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)):
+		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER))
+	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)+'/empty.txt'):
+		os.mknod(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)+'/empty.txt')
+sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFTCENTER)+'/right'+str(sims.loc[j].BPRIGHTCENTER)).strip() for j in range(J)]
 
 # include .smk files with rules
 include: 'rules/roi.smk'
@@ -33,7 +33,6 @@ include: 'rules/analysis.smk'
 rule all:
 	input:
 		macro+'/doneso.txt',
-		# [f"{sim.FOLDER}/isweep.inference.tsv.gz" for sim in sims.itertuples()],
 	output:
 		yamlout=macro+'/arguments.roi.yaml',
 	params:

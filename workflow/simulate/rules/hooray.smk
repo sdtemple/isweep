@@ -8,7 +8,6 @@ rule hooray:
         trank='{macro}/{micro}/{seed}/isweep.rank.true.tsv',
         # clues='{macro}/{micro}/{seed}/clues.post.npy',
     output:
-        # hooray='{macro}/{micro}/{seed}/hooray.txt',
         yaml='{macro}/{micro}/{seed}/arguments.yaml',
     params:
         yaml=str(config['CHANGE']['FOLDERS']['YAML']),
@@ -16,5 +15,3 @@ rule hooray:
         """
         cp {params.yaml} {output.yaml}
         """
-
-        # touch {output.hooray}

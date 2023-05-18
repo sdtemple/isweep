@@ -13,7 +13,7 @@ samplesize=str(samplesize)
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac1=int(ploidy*int(samplesize)*maf1)
-maf2=float(config['FIXED']['ISWEEP']['MINAAF'])
+maf2=float(config['FIXED']['ISWEEP']['MINMAXAAF'])
 maf=min(maf1,maf2)
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
@@ -50,7 +50,6 @@ rule subset_vcf: # focus vcf on region of interest
             bcftools view -S {input.subsample} -Ob | \
             bcftools view -q {params.qmaf}:nonmajor -Oz -o {output.subvcf}
         """
-        # 'bash {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/roi-vcf.sh {input.vcfin} {output.subvcf} {wildcards.left} {wildcards.right} {input.subsample} {params.qmaf} {wildcards.chr} {params.chrpre}'
 
 # perform hap-ibd with sequence parameter settings
 rule hapibd: # segments from hap-ibd.jar
@@ -83,7 +82,6 @@ rule hapibd: # segments from hap-ibd.jar
             min-mac={params.minmac} \
             excludesamples={input.excludesamples}
         """
-        # 'java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][HAPIBD][MINSEED]} min-extend={config[FIXED][HAPIBD][MINEXT]} min-output={config[FIXED][HAPIBD][MINOUT]} min-mac={params.minmac} excludesamples={input.excludesamples}'
 
 # filter outputs of hap-ibd to be about focal location
 rule filter_hapibd: # applying focus
@@ -104,7 +102,6 @@ rule filter_hapibd: # applying focus
             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 7 {wildcards.center} 10000000000 | \
             gzip > {output.fipass}; rm {input.ibd}
         """
-        # 'zcat {input.ibd} | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {wildcards.center} | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {wildcards.center} 10000000000 | gzip > {output.fipass}; rm {input.ibd}'
 
 # filter method of moments to be about focal location
 rule filter_mom:
@@ -113,7 +110,6 @@ rule filter_mom:
         ibdpseudo='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/focus.ibd.gz',
     output:
         fipass='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
-        # doneso='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/done.txt',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
@@ -126,6 +122,4 @@ rule filter_mom:
             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 6 0.00 {wildcards.center} | \
             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 7 {wildcards.center} 10000000000 | \
             gzip > {output.fipass}
-        rm {input.ibd}
         """
-        # 'zcat {wildcards.cohort}/ibdsegs/ibdends/modified/mom/chr{wildcards.chr}.ibd.gz | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 6 0.00 {wildcards.center} | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" 7 {wildcards.center} 10000000000 | gzip > {output.fipass}'

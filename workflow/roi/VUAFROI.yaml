@@ -6,7 +6,7 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/projects/browning/brwnlab/seth/VUAF2'
+    STUDY: '/projects/browning/brwnlab/seth/VUAF'
     # the yaml file with scan analysis options
     YAML: 'VUAFROI.yaml'
     # folder where terminal scripts are
@@ -15,7 +15,7 @@ CHANGE:
   # parameters, subsample file
   ISWEEP:
     # region of interest file
-    ROI: 'finalroi.tsv'
+    ROI: 'final.roi.tsv'
     CHRPRE: 'chr' # either '' or 'chr' ; look at your vcf and map file
     # numeric first, last chromosome number
     CHRLOW: '1'
@@ -31,7 +31,7 @@ CHANGE:
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
   EXISTING:
-    VCFS: '/projects/browning/brwnlab/seth/VUAF2'
+    VCFS: '/projects/browning/brwnlab/seth/VUAF/vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
 
@@ -50,17 +50,26 @@ FIXED:
     MINMAF: '0.10'
     # ploidy number
     PLOIDY: '2'
-  # isweep
   ISWEEP:
     # in mega bp
     GENOMEEND: '1000'
+    # in kilo bp
+    BY: '20'
+    # cutting cM at telomeres
+    TELOCUT: '0.5'
     # ibd cM threshold for isweep method of moments
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
-    DIAMETER: '2'
     SCANCUTOFF: '2.0'
-    RULESIGMA: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    ATLEAST: '0.00'
-    MINAAF: '0.10' # min adaptive allele frequency
-    MAXAAF: '0.90' # max adaptive allele frequency
-    NBOOT: '1000' # number of bootstrap
+    # any two nodes in community can reach other in this many edges
+    DIAMETER: '6'
+    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    RULESIGMA: '3'
+    # min adaptive allele frequency,
+    # 1 - (this value) is max adaptive allele frequency
+    MINMAXAAF: '0.10'
+    # top order statistics for allele frequency estimator
+    # so you use basepairs with on this % of Delta stats
+    QUANT: '0.99'
+    # number of bootstraps
+    NBOOT: '250'

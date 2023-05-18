@@ -9,6 +9,8 @@ dependencies:
   - pandas>=1.9.0
   - pip
   - bcftools>=1.2
+  - isafe
+  - snakemake
 # conda activate isafe
 # conda env create -f isafe-environment.yml
 # make a soft link (https://github.com/alek0991/iSAFE/issues/17)

@@ -6,7 +6,7 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/projects/browning/brwnlab/seth/VTE'
+    STUDY: '/projects/browning/brwnlab/seth/study'
     # the yaml file with scan analysis options
     YAML: 'VTEROI.yaml'
     # folder where terminal scripts are
@@ -31,7 +31,7 @@ CHANGE:
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
   EXISTING:
-    VCFS: '/projects/browning/brwnlab/seth/VTE/vcfs'
+    VCFS: '/projects/browning/brwnlab/seth/study/vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
 
@@ -50,7 +50,6 @@ FIXED:
     MINMAF: '0.10'
     # ploidy number
     PLOIDY: '2'
-  # isweep
   # isweep
   ISWEEP:
     # in mega bp

@@ -44,4 +44,3 @@ rule make_excludesamples:
             {input.subsample} \
             {output.exclsample}
         """
-        # 'python {params.scripts}/exclude-samples.py {input.sample} {input.subsample} {output.exclsample}'

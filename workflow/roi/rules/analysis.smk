@@ -21,9 +21,7 @@ rule rank:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        atleast=str(config['FIXED']['ISWEEP']['ATLEAST']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
-        q2=str(config['FIXED']['ISWEEP']['MAXAAF']),
+        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
     shell:
         """
@@ -32,18 +30,15 @@ rule rank:
             {input.vcf} \
             {output.fileout} \
             {params.diameter} \
-            {params.atleast} \
             {params.q1} \
-            {params.q2} \
             {params.rulesigma}
         """
-        # 'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/rank-isweep.py {input.short} {input.vcf} {output.fileout} {params.diameter} {params.atleast} {params.q1} {params.q2} {params.rulesigma}'
 
 # some input, string management
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 micro=str(config['CHANGE']["ISWEEP"]["ROI"])
 sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
-sims['FOLDER'] = [(macro +'/'+str(sims.loc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFT)+'/right'+str(sims.loc[j].BPRIGHT)).strip() for j in range(J)]
+sims['FOLDER'] = [(macro +'/'+str(sims.loc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFTCENTER)+'/right'+str(sims.loc[j].BPRIGHTCENTER)).strip() for j in range(J)]
 
 # extend Ne(t)
 rule extendNe:
@@ -68,8 +63,9 @@ rule infer:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
-        n=samplesize,
+        n=str(samplesize),
         ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
+        quant=str(config['FIXED']['ISWEEP']['QUANT']),
     shell:
         """
         python {params.scripts}/infer-isweep.py \
@@ -80,9 +76,9 @@ rule infer:
             {params.cm} \
             {params.n} \
             {input.effdemo} \
-            {params.ploidy}
+            {params.ploidy} \
+            {params.quant}
         """
-        # 'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/infer-isweep.py {input.long} {input.ranks} {output.fileout} {params.nboot} {params.cm} {params.n} {params.effdemo} {params.ploidy}'
 
 rule combine:
     input:

@@ -52,10 +52,10 @@ for i in range(roitab.shape[0]):
     meBP=int(meBP)
     mdCM=tab[tab['CUMSUM']>=0.5]['CMWINDOW'].tolist()[0]
     mdBP=tab[tab['CUMSUM']>=0.5]['BPWINDOW'].tolist()[0]
-    # bpcenter.append(meBP)
-    # cmcenter.append(meCM)
-    bpcenter.append(moBP)
-    cmcenter.append(moCM)
+    bpcenter.append(meBP)
+    cmcenter.append(meCM)
+    # bpcenter.append(moBP)
+    # cmcenter.append(moCM)
 
     # writing stats
     chrotit=str(int(float(rowing.CHROM)))
@@ -81,33 +81,33 @@ for i in range(roitab.shape[0]):
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meCM) + '.cm.png'
-    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moCM) + '.cm.png'
-    # plottit='Chromosome '+chrotit+', Mean '+str(meCM)
-    plottit='Chromosome '+chrotit+', Mode '+str(moCM)
+    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meCM) + '.cm.png'
+    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moCM) + '.cm.png'
+    # plottit='Chromosome '+chrotit+', Mode '+str(moCM)
+    plottit='Chromosome '+chrotit+', Mean '+str(meCM)
     plt.plot(tab['CMWINDOW'],tab['COUNT'],linewidth=3,color='k')
     plt.xlabel('centiMorgan position')
     plt.ylabel('IBD segment count')
     plt.title(plottit)
-    # plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray')
-    # plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray')
-    # plt.axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray')
+    plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
+    plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
+    plt.axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray',label='Mean')
     plt.savefig(plotout,dpi=300)
     plt.clf()
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.bp.png'
-    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.bp.png'
-    # plottit='Chromosome '+chrotit+', Mean '+str(meBP)
-    plottit='Chromosome '+chrotit+', Mode '+str(moBP)
+    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.bp.png'
+    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.bp.png'
+    # plottit='Chromosome '+chrotit+', Mode '+str(moBP)
+    plottit='Chromosome '+chrotit+', Mean '+str(meBP)
     plt.plot(tab['BPWINDOW'],tab['COUNT'],linewidth=3,color='k')
     plt.xlabel('basepair position')
     plt.ylabel('IBD segment count')
     plt.title(plottit)
-    # plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray')
-    # plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray')
-    # plt.axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray')
+    plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
+    plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
+    plt.axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray',label='Mode')
     plt.savefig(plotout,dpi=300)
     plt.clf()
 
@@ -123,19 +123,16 @@ roitab.sort_values(by='MAXIBD',ascending=False,inplace=True)
 nrow=roitab.shape[0]
 roitab['NAME']=['hit'+str(i) for i in range(1,nrow+1)]
 roitab=roitab[finacol]
-roitab.to_csv(fileout,sep='\t',index=False)
+roitab.to_csv(fileout,sep='\t',index=False,columns=['NAME','CHROM','MINIBD','MAXIBD','BPCENTER','CMCENTER','BPLEFTCENTER','BPRIGHTCENTER'])
 
 # plotting recombination variability
 J=roitab.shape[0]
 for j in range(J):
     row=roitab.iloc[j]
-    # chrstr=str(row.CHROM.tolist()[0])
     chrstr=str(row.CHROM)
     mapfile=mapfolder+'/chr'+chrstr+'.map'
     genmap=pd.read_csv(mapfile,sep='\t',header=None)
-    # cutleft=row.BPLEFTCENTER.tolist()[0]
     cutleft=row.BPLEFTCENTER
-    # cutright=row.BPRIGHTCENTER.tolist()[0]
     cutright=row.BPRIGHTCENTER
     genmapsub=genmap[(genmap[3]<cutright)&(genmap[3]>cutleft)]
     genmapsub.reset_index(inplace=True)
@@ -153,13 +150,12 @@ for j in range(J):
     plt.scatter(genmapsub[3][:-1],diffs,s=3)
     plt.ylabel('cM / bp')
     plt.xlabel('bp position')
-    # namestr=str(row.NAME.tolist()[0])
     namestr=str(row.NAME)
     chrotit=str(int(float(row.CHROM)))
-    # meBP=str(int(float(row.BPCENTER)))
-    # plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
-    moBP=str(int(float(row.BPCENTER)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
+    meBP=str(int(float(row.BPCENTER)))
+    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
+    # moBP=str(int(float(row.BPCENTER)))
+    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
     plt.title('Chromosome '+chrotit)
     plt.savefig(plotout,dpi=300)
     plt.clf()

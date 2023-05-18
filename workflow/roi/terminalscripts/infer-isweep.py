@@ -6,14 +6,14 @@ import gzip
 import sys
 
 # edit these manually
-inhs=['d','a','m'] # different inheritance models
-svmaf=[0.05,0.02,0.01] # different standing variation
+inhs=['a'] # different inheritance models
+svmaf=[0.05,0.02] # different standing variation
 alpha=0.95
 alpha1=(1-alpha)/2
 alpha2=1-alpha1
 
 # i/o
-ibdct, ibdaf, fileout, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
+ibdct, ibdaf, fileout, nboot, cutoff, n, Ne, ploidy, quant = sys.argv[1:]
 
 # setting up
 B=int(float(nboot))
@@ -27,11 +27,14 @@ n=int(float(n))
 ploidy=int(float(ploidy))
 m=ploidy*n
 N=m*(m-1)/2-m
+quant=float(quant)
 
 # estimate allele frequency
 tab=pd.read_csv(ibdaf,sep='\t')
-#tab['DELTANORM']=tab['DELTA']/tab['DELTA'].sum()
-p_est=(tab['AAF']*tab['DELTANORM']).sum()
+sub=tab[tab['ZDELTA']>=np.quantile(tab['ZDELTA'],quant)]
+sub['WEIGHT']=sub['ZDELTA']/sub['ZDELTA'].sum()
+p_est=(tab['AAF']*tab['WEIGHT']).sum()
+loc_est=(tab['POS']*tab['WEIGHT']).sum()
 
 # estimate selection coefficent
 numTracts=0
@@ -68,6 +71,7 @@ for j in range(len(inhs)):
 
 # writing in the moment
 f=open(fileout,'w')
+f.write('BpLocEst\t')
 f.write('VarFreqEst\t')
 f.write('SelCoefEst\t')
 f.write('SelCoefLow\t')
@@ -79,10 +83,6 @@ f.write('TimeSV5Upp\t')
 f.write('TimeSV2Est\t')
 f.write('TimeSV2Low\t')
 f.write('TimeSV2Upp\t')
-f.write('TimeSV1Upp\t')
-f.write('TimeSV1Est\t')
-f.write('TimeSV1Low\t')
-f.write('TimeDeNovoUpp\t')
 f.write('TimeDeNovoEst\t')
 f.write('TimeDeNovoLow\t')
 f.write('TimeDeNovoUpp\n')
@@ -94,6 +94,7 @@ for j in range(len(inhs)):
     sbsinh=sbsinhs[j]
     inh=inhs[j]
     sl,sm,su=bootstrap_standard_bc(sinh, sbsinh, alpha1, alpha2)
+    f.write(str(loc_est)); f.write('\t')
     f.write(str(p_est)); f.write('\t')
     f.write(str(sm)); f.write('\t')
     f.write(str(sl)); f.write('\t')

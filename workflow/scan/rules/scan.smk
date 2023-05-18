@@ -52,7 +52,6 @@ rule hapibd: # candidate segments from hap-ibd.jar
             min-mac={params.minmac} \
             excludesamples={input.excludesamples}
         """
-        # 'java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][HAPIBD]} gt={input.vcf} map={input.map} out={params.out} min-seed={config[FIXED][CANDHAPIBD][MINSEED]} min-extend={config[FIXED][CANDHAPIBD][MINEXT]} min-output={config[FIXED][CANDHAPIBD][MINOUT]} min-mac={params.minmac} excludesamples={input.subsample}'
 
 rule ibdends: # ibd-ends.jar
     input:
@@ -86,7 +85,6 @@ rule ibdends: # ibd-ends.jar
             err={params.err} \
             excludesamples={input.subsample}
         """
-        # 'java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][IBDENDS]} gt={input.vcf} ibd={input.ibd} map={input.map} out={params.out} min-maf={config[FIXED][IBDENDS][MINMAF]} quantiles={config[FIXED][IBDENDS][QUANTILES]} nsamples={config[FIXED][IBDENDS][NSAMPLES]} err={config[FIXED][IBDENDS][ERRRATE]} excludesamples={input.subsample}'
 
 rule format_ibdends: # reformatting
     input:
@@ -116,8 +114,6 @@ rule filter_ibdends_scan: # applying cutoffs
             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.scancut} | \
             gzip > {output.fipass}
         """
-        # 'zcat {input.ibd} | java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.scancut}  | gzip > {output.fipass}'
-        # 'zcat {input.ibd} | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][SCANCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_scan: # computing counts over windows
     input:
@@ -142,7 +138,6 @@ rule count_ibdends_scan: # computing counts over windows
             {params.ge} \
             {params.tc}
         """
-        # 'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/ibd-windowed.py {input.filein} {output.fileout} {input.mapin} {config[FIXED][ISWEEP][BY]} {config[FIXED][ISWEEP][GENOMEEND]} {config[FIXED][ISWEEP][TELOCUT]}'
 
 rule filter_ibdends_mom: # applying cutoffs
     input:
@@ -162,8 +157,6 @@ rule filter_ibdends_mom: # applying cutoffs
             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.momcut} | \
             gzip > {output.fipass}
         """
-        # 'zcat {input.ibd} | java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.momcut}  | gzip > {output.fipass}'
-        # 'zcat {input.ibd} | java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {config[CHANGE][FOLDERS][SOFTWARE]}/{config[CHANGE][PROGRAMS][FILTER]} "I" -8 0.00 {config[FIXED][ISWEEP][MOMCUTOFF]} | gzip > {output.fipass}'
 
 rule count_ibdends_mom: # computing counts over windows
     input:
@@ -179,7 +172,6 @@ rule count_ibdends_mom: # computing counts over windows
     resources:
         mem_gb=10
     shell:
-        # 'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/ibd-windowed.py {input.filein} {output.fileout} {input.mapin} {config[FIXED][ISWEEP][BY]} {config[FIXED][ISWEEP][GENOMEEND]} {config[FIXED][ISWEEP][TELOCUT]}'
         """
         python {params.scripts}/ibd-windowed.py \
             {input.filein} \
@@ -206,7 +198,6 @@ rule scan: # conduct a manhattan scan
     resources:
         mem_gb=10
     shell:
-        # 'python {config[CHANGE][FOLDERS][TERMINALSCRIPTS]}/scan-isweep.py {config[CHANGE][FOLDERS][STUDY]} {config[CHANGE][ISWEEP][CHRLOW]} {config[CHANGE][ISWEEP][CHRHIGH]} {config[FIXED][ISWEEP][SCANSIGMA]} {config[FIXED][ISWEEP][TELOSIGMA]}'
         """
         python {params.scripts}/scan-isweep.py \
             {params.folder} \
@@ -236,16 +227,16 @@ rule ibdne:
     shell:
         """
         for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
-        do zcat ${params.folder}/maps/chr${{params.j}}.map \
-        >> ${params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map ; \
+        do cat {params.folder}/maps/chr${j}.map \
+        >> {params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map ; \
         done;
         for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
-        do zcat ${params.prefix}chr${{params.j}}.ibd.gz \
+        do zcat {params.prefix}chr${j}.ibd.gz \
         >> {params.prefix}chrall.ibd ; \
         done;
-        cat ${params.prefix}chrall.ibd | \
+        cat {params.prefix}chrall.ibd | \
         java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
-        map={params.folder}/maps/chr${params.chrlow}-{params.chrhigh}.map \
+        map={params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map \
         out={params.folder}/ibdne \
         rm {params.prefix}chrall.ibd
         """

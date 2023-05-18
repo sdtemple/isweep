@@ -1,0 +1,57 @@
+# iSWEEP simulation studies
+# Seth D. Temple, sdtemple@uw.edu
+# May 15, 2023
+
+# setup macro folder
+import os
+macro=str(config['CHANGE']['FOLDERS']['MACRO'])
+if not os.path.exists(macro):
+	os.mkdir(macro)
+
+# load in experiments, set up micro, simname folders
+import pandas as pd
+micro=str(config['CHANGE']["FOLDERS"]["MICRO"])
+sims = pd.read_csv(micro, sep='\t', header=0)
+J = sims.shape[0]
+for j in range(J):
+	row = sims.loc[j,]
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)):
+		os.mkdir(macro+'/'+str(row.MICROEXP))
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME)):
+		os.mkdir(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME))
+sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
+sims['FILE'] = sims['FOLDER'] + '/isweep.ranks.tsv.gz'
+sims['EXISTS'] = sims['FILE'].apply(os.path.isfile)
+sims=sims[sims['EXISTS']]
+sims = sims.set_index("SIMNAME", drop=False)
+
+rule all:
+    input:
+        [f"{sim.FOLDER}/isafe.ranks.tsv.gz" for sim in sims.itertuples()],
+
+rule isafe:
+    input:
+        vcf='{macro}/{micro}/{seed}/small.chr1.vcf.gz',
+    output:
+        out='{macro}/{micro}/{seed}/isafe.ranks.iSAFE.out',
+    params:
+        head='{macro}/{micro}/{seed}/isafe.ranks',
+        left=str(config['FIXED']["SIMULATE"]["LEFT"]),
+        right=str(config['FIXED']["SIMULATE"]["RIGHT"]),
+    shell:
+        """
+        tabix -fp vcf {input.vcf}
+        isafe --input {input.vcf} --output {params.head} --format vcf --region 1:{params.left}-{params.right}
+        """
+
+rule sort:
+    input:
+        unsort='{macro}/{micro}/{seed}/isafe.ranks.iSAFE.out',
+    output:
+        sort='{macro}/{micro}/{seed}/isafe.ranks.tsv.gz',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.scripts}/sort-pandas.py {input.unsort} {output.sort}
+        """
