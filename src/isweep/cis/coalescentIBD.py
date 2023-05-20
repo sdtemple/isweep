@@ -27,7 +27,7 @@ pairwise_segments = []
 
 ### random walks ###
 
-def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
+def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Variant frequencies backward in time
 
     Parameters
@@ -161,7 +161,7 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'm', 
 
         return np.array([np.array(ps), np.array(Ns), np.array(xs)]) # numpy-ify
 
-def walk_variant_forward(s, pG, Ne, random_walk = False, one_step_model = 'm', tau0 = 0, ploidy = 2):
+def walk_variant_forward(s, pG, Ne, random_walk = False, one_step_model = 'a', tau0 = 0, ploidy = 2):
     '''Variant frequencies forward in time
 
     Parameters
@@ -816,7 +816,7 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
             tuple(pairwise_segments)
            )
 
-def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=True, one_step_model='m', tau0=0, sv=-0.01, ploidy=2, record_dist=True, pairwise_output=True):
+def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=True, one_step_model='a', tau0=0, sv=-0.01, ploidy=2, record_dist=True, pairwise_output=True):
     '''ibd segments from a coalescent with selection
 
     Parameters

@@ -31,8 +31,7 @@ include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
 include: 'rules/samples.smk'
 
-# snakemake all -c1 -n
-rule all:
+rule yaml:
     input:
         macro+'/excess.ibd.tsv',
         macro+'/excess.region.ibd.tsv',
@@ -45,3 +44,8 @@ rule all:
         yaml=str(config['CHANGE']['FOLDERS']['YAML']),
     shell:
         'cp {params.yaml} {output.yaml}'
+
+# snakemake all -c1 -n
+rule all:
+    input:
+        macro+'/arguments.scan.yaml',

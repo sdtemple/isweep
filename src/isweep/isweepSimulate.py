@@ -14,7 +14,7 @@ from .cis.coalescentIBD import *
 # from .cis.cisUtilities import *
 # from .cis.coalescentIBD import *
 
-def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='m', tau0=0, sv=-0.01, ploidy=2):
+def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='a', tau0=0, sv=-0.01, ploidy=2):
     """Simulator for independent ibd segment lengths in recent sweep scenario
 
     Parameters
@@ -78,7 +78,7 @@ def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, 
 
     return ell, ell1, ell0, geom, geom1, geom0
 
-def probability_ibd_isweep(s, p0, Ne, long_ibd = 2, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
+def probability_ibd_isweep(s, p0, Ne, long_ibd = 2, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Approximate probability of ibd given a sweep model
 
     Parameters

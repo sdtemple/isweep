@@ -25,7 +25,6 @@ sims = sims.set_index("SIMNAME", drop=False)
 include: 'rules/simulate.smk'
 include: 'rules/scan.smk'
 include: 'rules/roi.smk'
-include: 'rules/hooray.smk'
 include: 'rules/analysis.smk'
 
 rule yaml:
@@ -33,13 +32,12 @@ rule yaml:
         # [f"{sim.FOLDER}/short.chr1.ibd.gz" for sim in sims.itertuples()],
         # [f"{sim.FOLDER}/long.chr1.ibd.gz" for sim in sims.itertuples()],
         # [f"{sim.FOLDER}/scan.chr1.windowed.tsv.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/arguments.yaml" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.inference.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/isweep.rank.true.mean.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/isweep.rank.true.mode.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/isweep.rank.true.median.tsv" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/isweep.inference.tsv" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/isweep.rank.true.tsv" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.rank.true.mean.tsv" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.rank.true.mode.tsv" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.rank.true.median.tsv" for sim in sims.itertuples()],
     output:
         yaml=macro+'/arguments.simulate.yaml',
     params:
@@ -50,19 +48,3 @@ rule yaml:
 rule all:
     input:
         yaml=macro+'/arguments.simulate.yaml',
-        # [f"{sim.FOLDER}/short.chr1.ibd.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/long.chr1.ibd.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/scan.chr1.windowed.tsv.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/arguments.yaml" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.inference.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.mean.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.mode.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.median.tsv" for sim in sims.itertuples()],
-    # output:
-    #     yaml=macro+'/arguments.simulate.yaml',
-    # params:
-    #     yaml=str(config['CHANGE']['FOLDERS']['YAML']),
-    # shell:
-    #     'cp {params.yaml} {output.yaml}'

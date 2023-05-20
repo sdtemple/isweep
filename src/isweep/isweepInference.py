@@ -51,7 +51,7 @@ def read_ibd_file(ibd_file, header = 1, include_length = 1):
 
 # goodness-of-fit statistics (estimate selection coeffficent)
 
-def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
+def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Chi-squared statistic for sweep model (labeled)
 
     Parameters
@@ -107,7 +107,7 @@ def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'm', tau0
 
     return np.sum(OE1) + np.sum(OE0)
 
-def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy = 2):
+def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Chi-squared statistic for sweep model (unlabeled)
 
     Parameters
@@ -295,7 +295,7 @@ def bootstrap_efron_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
 
 ##### time to event #####
 
-def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
+def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy=2):
     '''Report when variant count reaches set value
 
     Parameters
@@ -333,7 +333,7 @@ def when_count(ct, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
 
     return idx
 
-def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
+def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy=2):
     '''Parametric bootstrap for variant count generation time
 
     Parameters
@@ -374,7 +374,7 @@ def bootstrap_count(ct, B, boots, bootp, Ne, random_walk = True, one_step_model 
 
     return boott
 
-def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
+def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy=2):
     '''Report when variant frequency reaches set value
 
     Parameters
@@ -412,7 +412,7 @@ def when_freq(maf, s, p0, Ne, random_walk = True, one_step_model = 'm', tau0 = 0
 
     return idx
 
-def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model = 'm', tau0 = 0, sv=-0.01, ploidy=2):
+def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy=2):
     '''Parametric bootstrap for variant frequency generation time
 
     Parameters

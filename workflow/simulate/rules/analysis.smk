@@ -17,7 +17,7 @@ rule rank_vcf:
         bcftools view -q {params.maf}:nonmajor \
             -Oz -o {output.vcfout} \
             {input.vcfin}
-        tabix -fp {output.vcfout}
+        tabix -fp vcf {output.vcfout}
         """
 
 # rank polymorphisms in focus region
@@ -89,191 +89,190 @@ rule infer:
             {params.quant}
         """
 
-##### everything below this is for mean, median, mode versus true loc #####
-
-# less basepairs in ranking
-rule rank_vcf_mean:
-    input:
-        vcfin='{macro}/{micro}/{seed}/small.chr1.mean.vcf.gz',
-    output:
-        vcfout='{macro}/{micro}/{seed}/short.chr1.mean.vcf.gz',
-    params:
-        maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        folder='{macro}/{micro}/{seed}',
-    shell:
-        """
-        gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.mean.vcf.bgz
-        tabix -fp vcf {params.folder}/chrtemp.mean.vcf.bgz
-        bcftools view -q {params.maf}:nonmajor \
-            -Oz -o {output.vcfout} \
-            {params.folder}/chrtemp.mean.vcf.bgz
-        tabix -fp vcf {output.vcfout}
-        rm {params.folder}/chrtemp.mean.vcf.bgz
-        """
-
-# rank polymorphisms in focus region
-rule rank_mean:
-    input:
-        short='{macro}/{micro}/{seed}/short.chr1.mean.ibd.gz',
-        vcf='{macro}/{micro}/{seed}/short.chr1.mean.vcf.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
-    shell:
-        """
-        python {params.scripts}/rank-isweep.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
-        """
-
-# check rank of the true polymorphism
-rule rank_true_mean:
-    input:
-        filein='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.rank.true.mean.tsv',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
-    shell:
-        """
-        python {params.scripts}/rank-true.py \
-            {input.filein} \
-            {output.fileout} \
-            {params.loc} \
-            1
-        """
-
-# less basepairs in ranking
-rule rank_vcf_mode:
-    input:
-        vcfin='{macro}/{micro}/{seed}/small.chr1.mode.vcf.gz',
-    output:
-        vcfout='{macro}/{micro}/{seed}/short.chr1.mode.vcf.gz',
-    params:
-        maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        folder='{macro}/{micro}/{seed}',
-    shell:
-        """
-        gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.mode.vcf.bgz
-        tabix -fp vcf {params.folder}/chrtemp.mode.vcf.bgz
-        bcftools view -q {params.maf}:nonmajor \
-            -Oz -o {output.vcfout} \
-            {params.folder}/chrtemp.mode.vcf.bgz
-        tabix -fp vcf {output.vcfout}
-        rm {params.folder}/chrtemp.mode.vcf.bgz
-        """
-
-# rank polymorphisms in focus region
-rule rank_mode:
-    input:
-        short='{macro}/{micro}/{seed}/short.chr1.mode.ibd.gz',
-        vcf='{macro}/{micro}/{seed}/short.chr1.mode.vcf.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.ranks.mode.tsv.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
-    shell:
-        """
-        python {params.scripts}/rank-isweep.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
-        """
-
-# check rank of the true polymorphism
-rule rank_true_mode:
-    input:
-        filein='{macro}/{micro}/{seed}/isweep.ranks.mode.tsv.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.rank.true.mode.tsv',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
-    shell:
-        """
-        python {params.scripts}/rank-true.py \
-            {input.filein} \
-            {output.fileout} \
-            {params.loc} \
-            1
-        """
-
-# less basepairs in ranking
-rule rank_vcf_median:
-    input:
-        vcfin='{macro}/{micro}/{seed}/small.chr1.median.vcf.gz',
-    output:
-        vcfout='{macro}/{micro}/{seed}/short.chr1.median.vcf.gz',
-    params:
-        maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        folder='{macro}/{micro}/{seed}',
-    shell:
-        """
-        gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.median.vcf.bgz
-        tabix -fp vcf {params.folder}/chrtemp.median.vcf.bgz
-        bcftools view -q {params.maf}:nonmajor \
-            -Oz -o {output.vcfout} \
-            {params.folder}/chrtemp.median.vcf.bgz
-        tabix -fp vcf {output.vcfout}
-        rm {params.folder}/chrtemp.median.vcf.bgz
-        """
-
-# rank polymorphisms in focus region
-rule rank_median:
-    input:
-        short='{macro}/{micro}/{seed}/short.chr1.median.ibd.gz',
-        vcf='{macro}/{micro}/{seed}/short.chr1.median.vcf.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.ranks.median.tsv.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
-    shell:
-        """
-        python {params.scripts}/rank-isweep.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
-        """
-
-# check rank of the true polymorphism
-rule rank_true_median:
-    input:
-        filein='{macro}/{micro}/{seed}/isweep.ranks.median.tsv.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.rank.true.median.tsv',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
-    shell:
-        """
-        python {params.scripts}/rank-true.py \
-            {input.filein} \
-            {output.fileout} \
-            {params.loc} \
-            1
-        """
-
+# ##### everything below this is for mean, median, mode versus true loc #####
+#
+# # less basepairs in ranking
+# rule rank_vcf_mean:
+#     input:
+#         vcfin='{macro}/{micro}/{seed}/small.chr1.mean.vcf.gz',
+#     output:
+#         vcfout='{macro}/{micro}/{seed}/short.chr1.mean.vcf.gz',
+#     params:
+#         maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         folder='{macro}/{micro}/{seed}',
+#     shell:
+#         """
+#         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.mean.vcf.bgz
+#         tabix -fp vcf {params.folder}/chrtemp.mean.vcf.bgz
+#         bcftools view -q {params.maf}:nonmajor \
+#             -Oz -o {output.vcfout} \
+#             {params.folder}/chrtemp.mean.vcf.bgz
+#         tabix -fp vcf {output.vcfout}
+#         rm {params.folder}/chrtemp.mean.vcf.bgz
+#         """
+#
+# # rank polymorphisms in focus region
+# rule rank_mean:
+#     input:
+#         short='{macro}/{micro}/{seed}/short.chr1.mean.ibd.gz',
+#         vcf='{macro}/{micro}/{seed}/short.chr1.mean.vcf.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+#         q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-isweep.py \
+#             {input.short} \
+#             {input.vcf} \
+#             {output.fileout} \
+#             {params.diameter} \
+#             {params.q1} \
+#             {params.rulesigma}
+#         """
+#
+# # check rank of the true polymorphism
+# rule rank_true_mean:
+#     input:
+#         filein='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.rank.true.mean.tsv',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         loc=str(config['FIXED']['SIMULATE']['LOC']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-true.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {params.loc} \
+#             1
+#         """
+#
+# # less basepairs in ranking
+# rule rank_vcf_mode:
+#     input:
+#         vcfin='{macro}/{micro}/{seed}/small.chr1.mode.vcf.gz',
+#     output:
+#         vcfout='{macro}/{micro}/{seed}/short.chr1.mode.vcf.gz',
+#     params:
+#         maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         folder='{macro}/{micro}/{seed}',
+#     shell:
+#         """
+#         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.mode.vcf.bgz
+#         tabix -fp vcf {params.folder}/chrtemp.mode.vcf.bgz
+#         bcftools view -q {params.maf}:nonmajor \
+#             -Oz -o {output.vcfout} \
+#             {params.folder}/chrtemp.mode.vcf.bgz
+#         tabix -fp vcf {output.vcfout}
+#         rm {params.folder}/chrtemp.mode.vcf.bgz
+#         """
+#
+# # rank polymorphisms in focus region
+# rule rank_mode:
+#     input:
+#         short='{macro}/{micro}/{seed}/short.chr1.mode.ibd.gz',
+#         vcf='{macro}/{micro}/{seed}/short.chr1.mode.vcf.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.ranks.mode.tsv.gz',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+#         q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-isweep.py \
+#             {input.short} \
+#             {input.vcf} \
+#             {output.fileout} \
+#             {params.diameter} \
+#             {params.q1} \
+#             {params.rulesigma}
+#         """
+#
+# # check rank of the true polymorphism
+# rule rank_true_mode:
+#     input:
+#         filein='{macro}/{micro}/{seed}/isweep.ranks.mode.tsv.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.rank.true.mode.tsv',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         loc=str(config['FIXED']['SIMULATE']['LOC']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-true.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {params.loc} \
+#             1
+#         """
+#
+# # less basepairs in ranking
+# rule rank_vcf_median:
+#     input:
+#         vcfin='{macro}/{micro}/{seed}/small.chr1.median.vcf.gz',
+#     output:
+#         vcfout='{macro}/{micro}/{seed}/short.chr1.median.vcf.gz',
+#     params:
+#         maf=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         folder='{macro}/{micro}/{seed}',
+#     shell:
+#         """
+#         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.median.vcf.bgz
+#         tabix -fp vcf {params.folder}/chrtemp.median.vcf.bgz
+#         bcftools view -q {params.maf}:nonmajor \
+#             -Oz -o {output.vcfout} \
+#             {params.folder}/chrtemp.median.vcf.bgz
+#         tabix -fp vcf {output.vcfout}
+#         rm {params.folder}/chrtemp.median.vcf.bgz
+#         """
+#
+# # rank polymorphisms in focus region
+# rule rank_median:
+#     input:
+#         short='{macro}/{micro}/{seed}/short.chr1.median.ibd.gz',
+#         vcf='{macro}/{micro}/{seed}/short.chr1.median.vcf.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.ranks.median.tsv.gz',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+#         q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+#         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-isweep.py \
+#             {input.short} \
+#             {input.vcf} \
+#             {output.fileout} \
+#             {params.diameter} \
+#             {params.q1} \
+#             {params.rulesigma}
+#         """
+#
+# # check rank of the true polymorphism
+# rule rank_true_median:
+#     input:
+#         filein='{macro}/{micro}/{seed}/isweep.ranks.median.tsv.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.rank.true.median.tsv',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         loc=str(config['FIXED']['SIMULATE']['LOC']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-true.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {params.loc} \
+#             1
+#         """
 
 # ##### everything below this is for relate, clues #####
 #
