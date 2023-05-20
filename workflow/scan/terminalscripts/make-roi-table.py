@@ -13,7 +13,7 @@ folder1=folder+'/ibdsegs/ibdends/modified/scan/'
 filepre='chr'
 filesuf='.ibd.windowed.tsv.gz'
 fileout=folder+'/roi.tsv'
-mbbuffer=int(float(mbbuffer))*1000000
+mbbuffer=int(float(mbbuffer)*1000000)
 
 roitab=pd.read_csv(filein,sep='\t')
 bpcenter=[]
@@ -79,36 +79,34 @@ for i in range(roitab.shape[0]):
     right=int(float(rowing.BPRIGHT))+mbbuffer
     tab=tab[(tab['BPWINDOW']>=left)&(tab['BPWINDOW']<=right)]
 
-    # writing plots
-    chrotit=str(int(float(rowing.CHROM)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meCM) + '.cm.png'
-    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moCM) + '.cm.png'
-    # plottit='Chromosome '+chrotit+', Mode '+str(moCM)
-    plottit='Chromosome '+chrotit+', Mean '+str(meCM)
-    plt.plot(tab['CMWINDOW'],tab['COUNT'],linewidth=3,color='k')
-    plt.xlabel('centiMorgan position')
-    plt.ylabel('IBD segment count')
-    plt.title(plottit)
-    plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
-    plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
-    plt.axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray',label='Mean')
-    plt.savefig(plotout,dpi=300)
-    plt.clf()
+    fig, ax = plt.subplots(2,1,figsize=(8.5,8.5))
+    plt.subplots_adjust(hspace=0.5)
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.bp.png'
-    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.bp.png'
-    # plottit='Chromosome '+chrotit+', Mode '+str(moBP)
+    plotout=folder+'/plots/chr'+ chrotit + '.mean.' + str(meCM) + '.cm.png'
+    plottit='Chromosome '+chrotit+', Mean '+str(meCM)
+    ax[0].plot(tab['CMWINDOW'],tab['COUNT'],linewidth=3,color='k')
+    ax[0].set_xlabel('centiMorgan position')
+    ax[0].set_ylabel('IBD segment count')
+    ax[0].set_title(plottit)
+    ax[0].axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
+    ax[0].axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
+    ax[0].axvline(meCM,linestyle='solid',linewidth=2,color='tab:gray',label='Mean')
+    ax[0].legend()
+
+    # writing plots
+    chrotit=str(int(float(rowing.CHROM)))
     plottit='Chromosome '+chrotit+', Mean '+str(meBP)
-    plt.plot(tab['BPWINDOW'],tab['COUNT'],linewidth=3,color='k')
-    plt.xlabel('basepair position')
-    plt.ylabel('IBD segment count')
-    plt.title(plottit)
-    plt.axvline(moCM,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
-    plt.axvline(mdCM,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
-    plt.axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray',label='Mode')
-    plt.savefig(plotout,dpi=300)
+    ax[1].plot(tab['BPWINDOW'],tab['COUNT'],linewidth=3,color='k')
+    ax[1].set_xlabel('basepair position')
+    ax[1].set_ylabel('IBD segment count')
+    ax[1].set_title(plottit)
+    ax[1].axvline(moBP,linestyle='dotted',linewidth=2,color='tab:gray',label='Mode')
+    ax[1].axvline(mdBP,linestyle='dashed',linewidth=2,color='tab:gray',label='Median')
+    ax[1].axvline(meBP,linestyle='solid',linewidth=2,color='tab:gray',label='Mode')
+    fig.savefig(plotout,dpi=300)
+    plt.close()
     plt.clf()
 
 # adding bp, cm centrality to roi table
@@ -154,8 +152,6 @@ for j in range(J):
     chrotit=str(int(float(row.CHROM)))
     meBP=str(int(float(row.BPCENTER)))
     plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
-    # moBP=str(int(float(row.BPCENTER)))
-    # plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
     plt.title('Chromosome '+chrotit)
     plt.savefig(plotout,dpi=300)
     plt.clf()

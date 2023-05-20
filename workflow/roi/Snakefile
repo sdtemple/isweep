@@ -32,10 +32,4 @@ include: 'rules/analysis.smk'
 # snakemake all -c1 -n
 rule all:
 	input:
-		macro+'/doneso.txt',
-	output:
-		yamlout=macro+'/arguments.roi.yaml',
-	params:
-		yamlpar=macro+'/'+yaml,
-	shell:
-		'cp {params.yamlpar} {output.yamlout}'
+		macro+'/arguments.roi.yaml',

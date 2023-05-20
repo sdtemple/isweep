@@ -20,14 +20,15 @@ for j in range(J):
 	if not os.path.exists(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME)):
 		os.mkdir(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME))
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
-sims['FILE'] = sims['FOLDER'] + '/isweep.rank.true.tsv'
+sims['FILE'] = sims['FOLDER'] + '/isweep.ranks.tsv.gz'
 sims['EXISTS'] = sims['FILE'].apply(os.path.isfile)
 sims=sims[sims['EXISTS']]
 sims = sims.set_index("SIMNAME", drop=False)
 
 rule all:
 	input:
-		[f"{sim.FOLDER}/isafe.rank.true.tsv" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/isafe.ranks.tsv.gz" for sim in sims.itertuples()],
+		# [f"{sim.FOLDER}/isafe.rank.true.tsv" for sim in sims.itertuples()],
 
 rule isafe:
     input:
@@ -52,19 +53,19 @@ rule copy:
     rm {input.ran}
     """
 
-rule rank_true:
-    input:
-        filein='{macro}/{micro}/{seed}/isafe.ranks.tsv.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isafe.rank.true.tsv',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
-    shell:
-        """
-        python {params.scripts}/rank-true-isafe.py \
-            {input.filein} \
-            {output.fileout} \
-            {params.loc} \
-            1
-        """
+# rule rank_true:
+#     input:
+#         filein='{macro}/{micro}/{seed}/isafe.ranks.tsv.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isafe.rank.true.tsv',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         loc=str(config['FIXED']['SIMULATE']['LOC']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-true-isafe.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {params.loc} \
+#             1
+#         """

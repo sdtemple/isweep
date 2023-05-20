@@ -43,23 +43,23 @@ rule rank:
             {params.rulesigma}
         """
 
-# check rank of the true polymorphism
-rule rank_true:
-    input:
-        filein='{macro}/{micro}/{seed}/isweep.ranks.tsv.gz',
-    output:
-        fileout='{macro}/{micro}/{seed}/isweep.rank.true.tsv',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        loc=str(config['FIXED']['SIMULATE']['LOC']),
-    shell:
-        """
-        python {params.scripts}/rank-true.py \
-            {input.filein} \
-            {output.fileout} \
-            {params.loc} \
-            1
-        """
+# # check rank of the true polymorphism
+# rule rank_true:
+#     input:
+#         filein='{macro}/{micro}/{seed}/isweep.ranks.tsv.gz',
+#     output:
+#         fileout='{macro}/{micro}/{seed}/isweep.rank.true.tsv',
+#     params:
+#         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+#         loc=str(config['FIXED']['SIMULATE']['LOC']),
+#     shell:
+#         """
+#         python {params.scripts}/rank-true.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {params.loc} \
+#             1
+#         """
 
 rule infer:
     input:

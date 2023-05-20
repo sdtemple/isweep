@@ -103,23 +103,23 @@ rule filter_hapibd: # applying focus
             gzip > {output.fipass}; rm {input.ibd}
         """
 
-# filter method of moments to be about focal location
-rule filter_mom:
-    input:
-        ibd='{cohort}/ibdsegs/ibdends/modified/mom/chr{chr}.ibd.gz',
-        ibdpseudo='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/focus.ibd.gz',
-    output:
-        fipass='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
-    params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-    resources:
-        mem_gb=10
-    shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
-        """
-        zcat {wildcards.cohort}/ibdsegs/ibdends/modified/mom/chr{wildcards.chr}.ibd.gz | \
-            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 6 0.00 {wildcards.center} | \
-            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 7 {wildcards.center} 10000000000 | \
-            gzip > {output.fipass}
-        """
+# # filter method of moments to be about focal location
+# rule filter_mom:
+#     input:
+#         ibd='{cohort}/ibdsegs/ibdends/modified/mom/chr{chr}.ibd.gz',
+#         ibdpseudo='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/focus.ibd.gz',
+#     output:
+#         fipass='{cohort}/{roi}/chr{chr}/center{center}/left{left}/right{right}/mom.ibd.gz',
+#     params:
+#         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+#         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+#         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
+#     resources:
+#         mem_gb=10
+#     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
+#         """
+#         zcat {wildcards.cohort}/ibdsegs/ibdends/modified/mom/chr{wildcards.chr}.ibd.gz | \
+#             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 6 0.00 {wildcards.center} | \
+#             java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" 7 {wildcards.center} 10000000000 | \
+#             gzip > {output.fipass}
+#         """
