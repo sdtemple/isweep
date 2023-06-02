@@ -23,7 +23,7 @@ chrlow=as.integer(chrlow)
 chrhigh=as.integer(chrhigh)
 
 # reading in data
-ibd = read.table(paste(folder,,'/ibdsegs/ibdends/modified/scan/''chr',chrlow,suffix, sep = ''), header = T, stringsAsFactors = F)
+ibd = read.table(paste(folder,'/ibdsegs/ibdends/modified/scan/''chr',chrlow,suffix, sep = ''), header = T, stringsAsFactors = F)
 ibd$CHROM = chrlow
 for(i in (chrlow+1):(chrhigh)){
   print(i)
