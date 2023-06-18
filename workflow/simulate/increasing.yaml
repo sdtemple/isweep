@@ -39,13 +39,6 @@ CHANGE:
 
 # keep these fixed
 FIXED:
-  # RELATE:
-  #   # these are only to compare against clues
-  #   # left, right should be close to [SIMULATE][LOC]
-  #   RELATELEFT: '' # left bound for relate arg inference
-  #   RELATERIGHT: '' # right bound for relate arg inference
-  #   RELATESIZE: '' # sample size for relate arg inference
-  #   HAPSIZE: '' # 2 times the sample size
   # simulation study settings
   SIMULATE:
     CMLEN: '8' # in cM length, region size

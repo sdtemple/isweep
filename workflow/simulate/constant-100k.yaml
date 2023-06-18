@@ -52,6 +52,7 @@ FIXED:
     LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
     LEFT: '2799999' # left bound for focal region, say 1.2 Mb
     RIGHT: '5199999' # right bound for focal region, say 1.2 Mb
+    BUFFER: '1200000'
     RHO: '1e-8' # genome-wide recombination rate
     MU: '1e-8' # genome-wide mutation
     GCLEN: '300' # mean length of gene conversion
@@ -110,6 +111,8 @@ FIXED:
     QUANT: '0.99'
     # number of bootstraps
     NBOOT: '100'
+    WINSIZE: '100000'
+    WINSTEP: '20000'
 
   # hap-ibd for short
   HAPIBD:

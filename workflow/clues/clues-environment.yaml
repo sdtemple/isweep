@@ -1,0 +1,17 @@
+name: clues
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.7
+  - numpy>=0.18.0
+  - pandas>=1.9.0
+  - pip
+  - bcftools>=1.2
+  - snakemake
+  - numba
+  - progressbar
+  - biopython
+  - gzip
+  - scipy>=1.7

@@ -9,7 +9,7 @@ CHANGE:
     # folder for macro experiments
     MACRO: 'bottle'
     # tsv file describing simulations
-    MICRO: 'experiments/simstudy.expand.tsv'
+    MICRO: 'experiments/simstudy.test2.tsv'
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/snakescripts'
     # forlder where terminal scripts are
@@ -52,11 +52,12 @@ FIXED:
     LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
     LEFT: '2799999' # left bound for focal region, say 1.2 Mb
     RIGHT: '5199999' # right bound for focal region, say 1.2 Mb
+    BUFFER: '1200000'
     RHO: '1e-8' # genome-wide recombination rate
     MU: '1e-8' # genome-wide mutation
     GCLEN: '300' # mean length of gene conversion
     GCPROP: '0.66666666666666' # proportion of recombinations that are crossovers
-    SAMPLEONE: '1' # 1 to sample from all subpops, 0 otherwise
+    SAMPLEONE: '1' # 1 to sample from 1 subpop, 0 to sample from all subpops
     SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
     NUMVAR: '1' # num adaptive mutations
     PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
@@ -110,6 +111,12 @@ FIXED:
     QUANT: '0.99'
     # number of bootstraps
     NBOOT: '100'
+    # window size and step in cM
+    WINSIZE: '0.25'
+    WINSTEP: '0.05'
+    # below quantile ; above frequency
+    LOWQ: '0.25'
+    LOWP: '0.1'
 
   # hap-ibd for short
   HAPIBD:

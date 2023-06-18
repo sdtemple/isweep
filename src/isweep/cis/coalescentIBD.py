@@ -63,8 +63,8 @@ def walk_variant_backward(s, p0, Ne, random_walk = False, one_step_model = 'a', 
     assert p0 <= 1
     assert p0 >= 0
     assert sv < 1
-    def haploid_bwd(p, s):
-        return p / (1 + s)
+    def haploid_bwd(p, s): # haploid is same as multiplicative (Felsenstein, 2017)
+        return p / (1 + s - s * p)
     def multiplicative_bwd(p, s):
         num = 1
         dnm = 1 + (1 - p) * s
@@ -189,8 +189,8 @@ def walk_variant_forward(s, pG, Ne, random_walk = False, one_step_model = 'a', t
 
     # local functions
     assert ploidy in [1,2]
-    def haploid_fwd(p, s):
-        return p * (1 + s)
+    def haploid_fwd(p, s): # haploid is same as multiplicative
+        return p * (1 + s) / (1 + p * s)
     def additive_fwd(p, s):
         num = 1 + s + p * s
         dnm = 1 + 2 * p * s
