@@ -112,11 +112,18 @@ FIXED:
     # number of bootstraps
     NBOOT: '100'
     # window size and step in cM
-    WINSIZE: '0.25'
+    WINSIZE: '0.20'
     WINSTEP: '0.05'
-    # below quantile ; above frequency
-    LOWQ: '0.25'
-    LOWP: '0.1'
+    WINCOL: 'CM'
+    FREQSIZE: '0.04'
+    FREQSTEP: '0.02'
+    FREQCOL: 'AAF'
+    MINAAF1: '0.01'
+    MINAAF2: '0.10'
+    NUMCOL: '5'
+    SCORE: 'DELTA'
+    MAXSPACING: '0.01'
+    QRANGE: '10'
 
   # hap-ibd for short
   HAPIBD:

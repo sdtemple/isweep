@@ -26,9 +26,13 @@ include: 'rules/simulate.smk'
 include: 'rules/scan.smk'
 include: 'rules/roi.smk'
 include: 'rules/analysis.smk'
+include: 'rules/first.smk'
+include: 'rules/second.smk'
+include: 'rules/third.smk'
 
 rule yaml:
     input:
+        [f"{sim.FOLDER}/results.tsv" for sim in sims.itertuples()],
         ### requesting analysis of true rank
         # may error if sweep variant not in vcf
         # these are file *.rank.true.tsv
@@ -38,9 +42,9 @@ rule yaml:
         #[f"{sim.FOLDER}/isweep.ranks.tsv.gz" for sim in sims.itertuples()],
         # [f"{sim.FOLDER}/isweep.rank.true.gz" for sim in sims.itertuples()],
         ### if you want to see analyses based on coefficient of variation
-        [f"{sim.FOLDER}/isweep.hap.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/isweep.hap.png" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/isweep.snp.png" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.hap.tsv" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.hap.png" for sim in sims.itertuples()],
+        # [f"{sim.FOLDER}/isweep.snp.png" for sim in sims.itertuples()],
         ### if you want to see analyses based on coefficient of variation
         # [f"{sim.FOLDER}/isweep.locus.inference.tsv" for sim in sims.itertuples()],
         ### if you want to see analyses based on coefficient of variation

@@ -93,7 +93,7 @@ rule infer:
 
 rule haplotypes:
     input:
-        rankin='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',
+        rankin='{macro}/{micro}/{seed}/qscore.ranks.tsv.gz',
         ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
         lociout='{macro}/{micro}/{seed}/isweep.hap.pos.txt',
@@ -180,7 +180,7 @@ rule infer_hap:
         """
 
 ##### refining the locus #####
-# 
+#
 # rule locus:
 #     input:
 #         rankin='{macro}/{micro}/{seed}/isweep.ranks.mean.tsv.gz',

@@ -407,3 +407,107 @@ rule small_ibd_median:
             "I" 7 $themedian 10000000000 | \
             gzip > {output.ibd}
         """
+
+### narrowing in ###
+
+# rank polymorphisms in focus region
+rule init_rank:
+    input:
+        short='{macro}/{micro}/{seed}/short.chr1.ibd.gz',
+        vcf='{macro}/{micro}/{seed}/small.chr1.vcf.gz',
+    output:
+        fileout='{macro}/{micro}/{seed}/init.ranks.tsv.gz',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+    shell:
+        """
+        python {params.scripts}/rank-isweep.py \
+            {input.short} \
+            {input.vcf} \
+            {output.fileout} \
+            {params.diameter} \
+            {params.q1} \
+            {params.rulesigma}
+        """
+
+rule qscore:
+    input:
+        snps='{macro}/{micro}/{seed}/init.ranks.tsv.gz',
+        conv='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
+    output:
+        wins='{macro}/{micro}/{seed}/qtable.tsv.gz',
+        loci='{macro}/{micro}/{seed}/qscore.pos.txt',
+    params:
+        windowsize=str(config['FIXED']['ISWEEP']['WINSIZE']),
+        windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
+        windowcol=str(config['FIXED']['ISWEEP']['WINCOL']),
+        freqcol=str(config['FIXED']['ISWEEP']['FREQCOL']),
+        qrng=str(config['FIXED']['ISWEEP']['QRANGE']),
+        maxspace=str(config['FIXED']['ISWEEP']['MAXSPACING'])
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        folderout='{macro}/{micro}/{seed}',
+    shell:
+        """
+        python {params.scripts}/refine-site.py \
+            {input.snps} \
+            {input.conv} \
+            {params.folderout} \
+            0 \
+            BPWINDOW \
+            CMWINDOW \
+            {params.windowsize} \
+            {params.windowstep} \
+            {params.windowcol} \
+            {params.freqcol} \
+            {params.qrng} \
+            {params.maxspace}
+        """
+
+rule qscore_ibd:
+    input:
+        ibd='{macro}/{micro}/{seed}/small.chr1.ibd.gz',
+        locus='{macro}/{micro}/{seed}/qscore.pos.txt',
+    output:
+        ibd='{macro}/{micro}/{seed}/short.chr1.qscore.ibd.gz',
+    params:
+        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/first-line.py',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
+    shell:
+        """
+        themean=$(python {params.script} {input.locus})
+        zcat {input.ibd} | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 6 0.00 ${{themean}} | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 7 ${{themean}} 10000000000 | \
+            gzip > {output.ibd}
+        """
+
+# rank polymorphisms in focus region
+rule qscore_rank:
+    input:
+        short='{macro}/{micro}/{seed}/short.chr1.qscore.ibd.gz',
+        vcf='{macro}/{micro}/{seed}/small.chr1.vcf.gz',
+    output:
+        fileout='{macro}/{micro}/{seed}/qscore.ranks.tsv.gz',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+        q1=str(config['FIXED']['ISWEEP']['MINMAXAAF']),
+        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+    shell:
+        """
+        python {params.scripts}/rank-isweep.py \
+            {input.short} \
+            {input.vcf} \
+            {output.fileout} \
+            {params.diameter} \
+            {params.q1} \
+            {params.rulesigma}
+        """

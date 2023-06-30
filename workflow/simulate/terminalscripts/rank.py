@@ -29,5 +29,4 @@ table.sort_values(['DELTAPRIME'],inplace=True,ascending=False)
 table=table[table['AAF']>=Q1]
 table=table[table['AAF']<=Q2]
 table.reset_index(inplace=True,drop=True)
-# table['DELTANORM']=table['DELTA']/table['DELTA'].sum()
 table.to_csv(fileout,sep='\t',index=False)

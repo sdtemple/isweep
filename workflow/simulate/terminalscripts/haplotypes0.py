@@ -181,13 +181,15 @@ def haplotypes(table,
                 tup=(winmid,
                      aafmid,
                      score,
-                     haplotable.shape[0]
+                     haplotable.shape[0],
+                     freq,
+                     posi
                     )
                 windowed[ctr]=list(tup)
                 ctr+=1
     windowed=pd.DataFrame(windowed)
     windowed=windowed.T
-    windowed.columns=['POS','AAF','SCORE','SIZE']
+    windowed.columns=['POS','AF','SCORE','SIZE','FREQ','LOC']
     windowed.sort_values(by='SCORE',ascending=False,inplace=True)
     windowed.reset_index(inplace=True,drop=True)
     return windowed
@@ -195,9 +197,8 @@ def haplotypes(table,
 # haplotype math
 snptab=pd.read_csv(snpin,sep='\t')
 ibdtab=pd.read_csv(mapin,sep='\t')
-# snptabcm=centiMorgan(snptab,ibdtab[bpcol],ibdtab[cmcol],bpidx)
-# haptab=haplotypes(snptabcm,
-haptab=haplotypes(snptab,
+snptabcm=centiMorgan(snptab,ibdtab[bpcol],ibdtab[cmcol],bpidx)
+haptab=haplotypes(snptabcm,
                   afsize,
                   afstep,
                   afcol,
@@ -206,48 +207,45 @@ haptab=haplotypes(snptab,
                   wincol,
                   scorecol=scocol
                  )
-# haptab.sort_values(by='POS',ascending=True,inplace=True)
-# haptabbp=basepair(haptab,ibdtab[bpcol],ibdtab[cmcol],-1)
-# haptabbp.sort_values(by='SCORE',ascending=False,inplace=True)
-# haptabbp.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
-haptab.sort_values(by='SCORE',ascending=False,inplace=True)
-haptab.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
+haptab.sort_values(by='LOC',ascending=True,inplace=True)
+haptabbp=basepair(haptab,ibdtab[bpcol],ibdtab[cmcol],-1)
+haptabbp.sort_values(by='SCORE',ascending=False,inplace=True)
+haptabbp.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
 
 # best haplotype
-# besthap=list(haptabbp.iloc[0])
-# besthap=list(haptab.iloc[0])
-bestbp=haptab['POS'][0]
-# bestcm=besthap[-2]
-bestaf=haptab['AF'][0]
+besthap=list(haptabbp.iloc[0])
+bestbp=besthap[-1]
+bestcm=besthap[-2]
+bestaf=besthap[-3]
 
 # frequency
-f=open(folderout+'/third.freq.txt','w')
+f=open(folderout+'/isweep.hap.freq.txt','w')
 f.write(str(round(bestaf,4)))
 f.write('\n')
 f.close()
 
 # position
-f=open(folderout+'/third.pos.txt','w')
+f=open(folderout+'/isweep.hap.pos.txt','w')
 f.write(str(int(bestbp)))
-# f.write('\t')
-# f.write(str(round(bestcm,4)))
+f.write('\t')
+f.write(str(round(bestcm,4)))
 f.write('\n')
 f.close()
 
 # haplotypes figure
-plt.scatter(haptab['POS'],haptab['AAF'],c=haptab['SCORE'],cmap='copper_r',s=haptab['SIZE'])
+plt.scatter(haptab['POS'],haptab['FREQ'],c=haptab['SCORE'],cmap='copper_r',s=haptab['SIZE'])
 plt.ylim(-0.1,1.1)
 plt.colorbar(label='Haplotype z-score')
 plt.ylabel('Haplotype frequency')
 plt.xlabel('Position')
-plt.savefig(folderout+'/third.hap.png',dpi=300)
+plt.savefig(folderout+'/isweep.hap.png',dpi=300)
 plt.clf()
 
 # snps figure
-plt.scatter(snptab[wincol],snptab[afcol],c=snptab[scocol],cmap='copper_r',s=5)
+plt.scatter(snptabcm[wincol],snptabcm[afcol],c=snptabcm[scocol],cmap='copper_r',s=5)
 plt.ylim(-0.1,1.1)
 plt.colorbar(label='SNP z-score')
 plt.ylabel('SNP frequency')
 plt.xlabel('Position')
-plt.savefig(folderout+'/third.snp.png',dpi=300)
+plt.savefig(folderout+'/isweep.snp.png',dpi=300)
 plt.clf()
