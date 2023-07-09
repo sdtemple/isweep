@@ -158,7 +158,7 @@ f.write('\n')
 f.close()
 
 # haplotypes figure
-plt.scatter(haptab['POS'],haptab['AAF'],c=haptab['SCORE'],cmap='copper_r',s=haptab['SIZE'])
+plt.scatter(haptab['POS'],haptab['AAF'],c=haptab['SCORE'],cmap='copper_r',s=5)
 plt.ylim(-0.1,1.1)
 plt.colorbar(label='Haplotype z-score')
 plt.ylabel('Haplotype frequency')

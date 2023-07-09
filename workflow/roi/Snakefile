@@ -6,7 +6,6 @@ import os
 import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 micro=str(config['CHANGE']["ISWEEP"]["ROI"])
-yaml=str(config['CHANGE']["FOLDERS"]["YAML"])
 sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
 J = sims.shape[0]
 for j in range(J):

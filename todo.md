@@ -3,5 +3,13 @@
   - haplotypes.py
 - Address packages like numpy in python package
 - argparse instead of sys ?
-- Take out some options
+  - Not essential given snakemake
+- Take out some options ?
   - e.g., local functions in haplotypes.py
+- modify for 1 final run of simulate scripts
+- run a popstructure analysis with 0.4
+  - 2 pop
+  - 3 pop
+- output ibd groups
+- run ukbb analysis
+- look at weaker sweeps
