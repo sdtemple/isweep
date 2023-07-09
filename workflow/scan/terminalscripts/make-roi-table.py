@@ -52,14 +52,12 @@ for i in range(roitab.shape[0]):
     meBP=int(meBP)
     mdCM=tab[tab['CUMSUM']>=0.5]['CMWINDOW'].tolist()[0]
     mdBP=tab[tab['CUMSUM']>=0.5]['BPWINDOW'].tolist()[0]
-    bpcenter.append(meBP)
-    cmcenter.append(meCM)
-    # bpcenter.append(moBP)
-    # cmcenter.append(moCM)
+    bpcenter.append(moBP)
+    cmcenter.append(moCM)
 
     # writing stats
     chrotit=str(int(float(rowing.CHROM)))
-    statout=folder+'/stats/chr'+ chrotit + '.mean' + str(meBP) + '.tsv'
+    statout=folder+'/stats/chr'+ chrotit + '.mode' + str(moBP) + '.tsv'
     f=open(statout,'w')
     f.write('CHROM\tMODECM\tMEDIANCM\tMEANCM\tMODEBP\tMEDIANBP\tMEANBP\n')
     f.write(chrotit); f.write('\t')
@@ -84,8 +82,8 @@ for i in range(roitab.shape[0]):
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean.' + str(meCM) + '.cm.png'
-    plottit='Chromosome '+chrotit+', Mean '+str(meCM)
+    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.png'
+    plottit='Chromosome '+chrotit+', Mode '+str(moCM)
     ax[0].plot(tab['CMWINDOW'],tab['COUNT'],linewidth=3,color='k')
     ax[0].set_xlabel('centiMorgan position')
     ax[0].set_ylabel('IBD segment count')
@@ -97,7 +95,7 @@ for i in range(roitab.shape[0]):
 
     # writing plots
     chrotit=str(int(float(rowing.CHROM)))
-    plottit='Chromosome '+chrotit+', Mean '+str(meBP)
+    plottit='Chromosome '+chrotit+', Mode '+str(moBP)
     ax[1].plot(tab['BPWINDOW'],tab['COUNT'],linewidth=3,color='k')
     ax[1].set_xlabel('basepair position')
     ax[1].set_ylabel('IBD segment count')
@@ -151,7 +149,7 @@ for j in range(J):
     namestr=str(row.NAME)
     chrotit=str(int(float(row.CHROM)))
     meBP=str(int(float(row.BPCENTER)))
-    plotout=folder+'/plots/chr'+ chrotit + '.mean' + str(meBP) + '.recomb.png'
+    plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
     plt.title('Chromosome '+chrotit)
     plt.savefig(plotout,dpi=300)
     plt.clf()

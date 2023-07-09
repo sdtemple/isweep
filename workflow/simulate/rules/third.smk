@@ -6,56 +6,47 @@ wildcard_constraints:
 rule third_haplotypes:
     input:
         rankin='{macro}/{micro}/{seed}/second.ranks.tsv.gz',
-        ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
-        lociout='{macro}/{micro}/{seed}/third.pos.txt',
-        freqout='{macro}/{micro}/{seed}/third.freq.txt',
+        lociout='{macro}/{micro}/{seed}/third.best.txt',
         happng='{macro}/{micro}/{seed}/third.hap.png',
         snppng='{macro}/{micro}/{seed}/third.snp.png',
     params:
         windowsize=str(config['FIXED']['ISWEEP']['WINSIZE']),
         windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
-        windowcol=str(config['FIXED']['ISWEEP']['WINCOL']),
         freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
-        freqcol=str(config['FIXED']['ISWEEP']['FREQCOL']),
-        scorecol=str(config['FIXED']['ISWEEP']['SCORECOL']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
         python {params.scripts}/haplotypes.py \
             {input.rankin} \
-            {input.ibdwin} \
             {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             0 \
-            BPWINDOW \
-            CMWINDOW \
+            1 \
+            -1 \
             {params.freqsize} \
             {params.freqstep} \
-            {params.freqcol} \
             {params.windowsize} \
             {params.windowstep} \
-            {params.windowcol} \
-            {params.scorecol} \
             {params.numsnp}
         """
 
 rule third_ibd:
     input:
         ibd='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
-        locus='{macro}/{micro}/{seed}/third.pos.txt',
+        locus='{macro}/{micro}/{seed}/third.best.txt',
     output:
         ibd='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/first-line.py',
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.script} {input.locus})
+        thecenter=$(python {params.script} {input.locus} 1 2)
         zcat {input.ibd} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
             "I" 6 0.00 ${{thecenter}} | \
@@ -67,7 +58,7 @@ rule third_ibd:
 rule third_infer:
     input:
         long='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
-        freq='{macro}/{micro}/{seed}/third.freq.txt',
+        freq='{macro}/{micro}/{seed}/third.best.txt',
     output:
         fileout='{macro}/{micro}/{seed}/results.tsv',
     params:
@@ -79,7 +70,7 @@ rule third_infer:
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
     shell:
         """
-        freqest=$(python {params.scripts}/first-line.py {input.freq})
+        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
         python {params.scripts}/estimate.py \
             {input.long} \
             {output.fileout} \

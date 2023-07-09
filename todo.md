@@ -1,0 +1,7 @@
+- Add script local functions to python package
+  - site.py
+  - haplotypes.py
+- Address packages like numpy in python package
+- argparse instead of sys ?
+- Take out some options
+  - e.g., local functions in haplotypes.py

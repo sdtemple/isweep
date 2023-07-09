@@ -17,10 +17,10 @@ rule second_region:
     params:
         folder='{macro}/{micro}/{seed}',
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/first-line.py',
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python {params.script} {input.locus})
+        thecenter=$(python {params.script} {input.locus} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -74,12 +74,12 @@ rule second_filt:
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/first-line.py',
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.script} {input.locus})
+        thecenter=$(python {params.script} {input.locus} 1 2)
         zcat {input.ibd} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
             "I" 6 0.00 $thecenter | \

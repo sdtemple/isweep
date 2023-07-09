@@ -10,122 +10,56 @@ warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
 
 (snpin,
- mapin,
  folderout,
- bpidx,
- bpcol,
- cmcol,
- afsize,
- afstep,
- afcol,
+ winidx,
+ freqidx,
+ scoreidx,
+ freqsize,
+ freqstep,
  winsize,
  winstep,
- wincol,
- scocol,
  numsnp)=sys.argv[1:]
 
 winsize=float(winsize)
 winstep=float(winstep)
-afsize=float(afsize)
-afstep=float(afstep)
-bpidx=int(float(bpidx))
+freqsize=float(freqsize)
+freqstep=float(freqstep)
 
-def centiMorgan(table,
-                bpcol,
-                cmcol,
-                idx=0
-               ):
-    '''Append a column for cM distance
-
-    Parameters
-    ----------
-    table : pandas DataFrame
-        Rows are SNPs with a bp column
-    bpcol : array-like
-        bp column
-    cmcol : array-like
-        cM column (match bpcol)
-    idx : int
-        Column index with bp in table
-
-    Returns
-    -------
-    pandas DataFrame
-        Same table but with a cM column
-    '''
-    nm=list(table.columns)[idx]
-    z1=np.sort(bpcol)
-    z2=np.sort(cmcol)
-    X=[]
-    Y=table[nm]
-    for y in Y:
-        bp1=z1[z1<=y].tolist()[-1]
-        bp2=z1[z1>y].tolist()[0]
-        cm1=z2[z1<=y].tolist()[-1]
-        cm2=z2[z1>y].tolist()[0]
-        c=bp1+bp2
-        a=bp1/c
-        b=bp2/c
-        cm=cm1*a+cm2*b
-        X.append(cm)
-    table['CM']=X
-    return table
-
-def basepair(table,
-             bpcol,
-             cmcol,
-             idx=0
-            ):
-    '''Append a column for bp distance
-
-    Parameters
-    ----------
-    table : pandas DataFrame
-        Rows are SNPs with a bp column
-    bpcol : array-like
-        bp column
-    cmcol : array-like
-        cM column (match bpcol)
-    idx : int
-        Column index with bp in table
-
-    Returns
-    -------
-    pandas DataFrame
-        Same table but with a cM column
-    '''
-    nm=list(table.columns)[idx]
-    z1=np.sort(bpcol)
-    z2=np.sort(cmcol)
-    X=[]
-    Y=np.sort(table[nm])
-    for y in Y:
-        cm1=z2[z2<=y].tolist()[-1]
-        cm2=z2[z2>y].tolist()[0]
-        bp1=z1[z2<=y].tolist()[-1]
-        bp2=z1[z2>y].tolist()[0]
-        c=cm1+cm2
-        a=cm1/c
-        b=cm2/c
-        bp=bp1*a+bp2*b
-        X.append(bp)
-    table['BP']=X
-    return table
+winidx=int(float(winidx))
+freqidx=int(float(freqidx))
+scoreidx=int(float(scoreidx))
 
 def haplotypes(table,
-               afsize=0.100,
-               afstep=0.025,
-               afcol='AAF',
-               winsize=0.5,
-               winstep=0.1,
-               wincol='CM',
-               scorecol='SCORE',
+               freqsize=0.04,
+               freqstep=0.02,
+               freqidx=1,
+               winsize=200_000,
+               winstep=50_000,
+               winidx=0,
+               scoreidx=-1,
                numsnp=5
               ):
     '''Define haplotypes
 
     Parameters
     ----------
+    table : pandas.DataFrame
+    freqsize : float
+        Size of frequency window
+    freqstep : float
+        Step of frequency window
+    freqidx : int
+        Index of frequency column
+    winsize : int
+        Size of bp window
+    winstep : int
+        Step of bp window
+    winidx : int
+        Index of bp column
+    scoreidx : int
+        Index of score column
+    numsnp : int
+        Min # of SNPs in haplotype
 
     Returns
     -------
@@ -136,30 +70,35 @@ def haplotypes(table,
     def double_window(table,
                       leftaaf,
                       rightaaf,
-                      aafcol,
+                      afreqcol,
                       leftwin,
                       rightwin,
                       wincol
                      ):
         '''Grid subset of table (frequency by position)'''
-        subtable=table[(table[aafcol]>=leftaaf)&(table[aafcol]<=rightaaf)]
+        subtable=table[(table[afreqcol]>=leftaaf)&(table[afreqcol]<=rightaaf)]
         subtable=subtable[(table[wincol]>=leftwin)&(subtable[wincol]<=rightwin)]
         return subtable
     def mean(x):
         return sum(x)/len(x)
+    # column names
+    headernames=list(table.columns)
+    wincol=headernames[winidx] # position name
+    freqcol=headernames[freqidx] # frequency name
+    scorecol=headernames[scoreidx] # score name
     # code
     winmin=table[wincol].min()
     winmax=table[wincol].max()
     aafmin=0
     aafmax=1
     numsnp=10
-    aafrange=np.arange(aafmin,aafmax,afstep)
+    aafrange=np.arange(aafmin,aafmax,freqstep)
     winrange=np.arange(winmin,winmax,winstep)
     windowed=dict()
     ctr=0
     for a in aafrange:
         aafleft=a
-        aafright=a+afsize
+        aafright=a+freqsize
         aafmid=(aafleft+aafright)/2
         for w in winrange:
             winleft=w
@@ -168,7 +107,7 @@ def haplotypes(table,
             haplotable=double_window(table,
                                      aafleft,
                                      aafright,
-                                     afcol,
+                                     freqcol,
                                      winleft,
                                      winright,
                                      wincol
@@ -176,8 +115,6 @@ def haplotypes(table,
             if haplotable.shape[0] >= numsnp:
                 haplotable.sort_values(by=scorecol,ascending=False,inplace=True)
                 score=mean(list(haplotable[scorecol])[:numsnp])
-                freq=mean(list(haplotable[afcol])[:numsnp])
-                posi=mean(list(haplotable[wincol])[:numsnp])
                 tup=(winmid,
                      aafmid,
                      score,
@@ -194,43 +131,29 @@ def haplotypes(table,
 
 # haplotype math
 snptab=pd.read_csv(snpin,sep='\t')
-ibdtab=pd.read_csv(mapin,sep='\t')
-# snptabcm=centiMorgan(snptab,ibdtab[bpcol],ibdtab[cmcol],bpidx)
-# haptab=haplotypes(snptabcm,
 haptab=haplotypes(snptab,
-                  afsize,
-                  afstep,
-                  afcol,
+                  freqsize,
+                  freqstep,
+                  freqidx,
                   winsize,
                   winstep,
-                  wincol,
-                  scorecol=scocol
+                  winidx,
+                  scoreidx,
+                  numsnp
                  )
-# haptab.sort_values(by='POS',ascending=True,inplace=True)
-# haptabbp=basepair(haptab,ibdtab[bpcol],ibdtab[cmcol],-1)
-# haptabbp.sort_values(by='SCORE',ascending=False,inplace=True)
-# haptabbp.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
 haptab.sort_values(by='SCORE',ascending=False,inplace=True)
 haptab.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
 
 # best haplotype
-# besthap=list(haptabbp.iloc[0])
-# besthap=list(haptab.iloc[0])
 bestbp=haptab['POS'][0]
-# bestcm=besthap[-2]
-bestaf=haptab['AF'][0]
+bestaf=haptab['AAF'][0]
 
-# frequency
-f=open(folderout+'/third.freq.txt','w')
-f.write(str(round(bestaf,4)))
-f.write('\n')
-f.close()
-
-# position
-f=open(folderout+'/third.pos.txt','w')
+f=open(folderout+'/third.best.txt','w')
+f.write('bp\t')
 f.write(str(int(bestbp)))
-# f.write('\t')
-# f.write(str(round(bestcm,4)))
+f.write('\n')
+f.write('frequency\t')
+f.write(str(round(bestaf,4)))
 f.write('\n')
 f.close()
 
@@ -244,7 +167,11 @@ plt.savefig(folderout+'/third.hap.png',dpi=300)
 plt.clf()
 
 # snps figure
-plt.scatter(snptab[wincol],snptab[afcol],c=snptab[scocol],cmap='copper_r',s=5)
+headernames=list(snptab.columns)
+wincol=headernames[winidx] # position name
+freqcol=headernames[freqidx] # frequency name
+scorecol=headernames[scoreidx] # score name
+plt.scatter(snptab[wincol],snptab[freqcol],c=snptab[scorecol],cmap='copper_r',s=5)
 plt.ylim(-0.1,1.1)
 plt.colorbar(label='SNP z-score')
 plt.ylabel('SNP frequency')

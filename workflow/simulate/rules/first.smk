@@ -6,21 +6,39 @@ ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
 
+### modal location
+
+rule first_mode:
+    input:
+        ibd='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
+    output:
+        ibd='{macro}/{micro}/{seed}/first.mode.txt',
+    params:
+        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
+    shell:
+        """
+        python {params.script} {input.ibd} {output.ibd}
+        """
+
 ### filter vcf ###
 
 rule first_region:
     input:
         vcfin='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
-        ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
+        ibdwin='{macro}/{micro}/{seed}/first.mode.txt',
     output:
         vcfout='{macro}/{micro}/{seed}/first.chr1.vcf.gz',
     params:
         folder='{macro}/{micro}/{seed}',
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python {params.script} {input.ibdwin})
+        thecenter=$(python {params.script} {input.ibdwin} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -68,18 +86,18 @@ rule first_hapibd:
 rule first_filt:
     input:
         ibd='{macro}/{micro}/{seed}/first.chr1.ibd.gz',
-        ibdwin='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
+        ibdwin='{macro}/{micro}/{seed}/first.mode.txt',
     output:
         ibd='{macro}/{micro}/{seed}/first.filt.chr1.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.script} {input.ibdwin})
+        thecenter=$(python {params.script} {input.ibdwin} 1 2)
         zcat {input.ibd} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
             "I" 6 0.00 $thecenter | \
@@ -115,14 +133,11 @@ rule first_rank:
 rule first_score:
     input:
         snps='{macro}/{micro}/{seed}/first.ranks.tsv.gz',
-        conv='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
         loci='{macro}/{micro}/{seed}/first.pos.txt',
     params:
         windowsize=str(config['FIXED']['ISWEEP']['WINSIZE']),
         windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
-        windowcol=str(config['FIXED']['ISWEEP']['WINCOL']),
-        freqcol=str(config['FIXED']['ISWEEP']['FREQCOL']),
         qrng=str(config['FIXED']['ISWEEP']['QRANGE']),
         maxspace=str(config['FIXED']['ISWEEP']['MAXSPACING']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
@@ -131,15 +146,11 @@ rule first_score:
         """
         python {params.scripts}/site.py \
             {input.snps} \
-            {input.conv} \
             {params.folderout} \
             0 \
-            BPWINDOW \
-            CMWINDOW \
+            1 \
             {params.windowsize} \
             {params.windowstep} \
-            0 \
-            1 \
             {params.qrng} \
             {params.maxspace}
         """

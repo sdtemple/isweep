@@ -48,11 +48,10 @@ FIXED:
     MINOUT: '1.0'
     # minimum minor allele frequency
     MINMAF: '0.10'
-    # ploidy number
-    PLOIDY: '2'
-  # isweep
   # isweep
   ISWEEP:
+    # ploidy number
+    PLOIDY: '2'
     # in mega bp
     GENOMEEND: '1000'
     # in kilo bp

@@ -127,7 +127,7 @@ qtab=q_score(snptab,
              qrng,
              maxspace
              )
-qtab.to_csv(folderout+'/first.tsv.gz',
+qtab.to_csv(folderout+'/first.qs.tsv.gz',
             sep='\t',
             index=False
             )
@@ -144,7 +144,22 @@ plt.plot(qtab['POS'],
     )
 plt.ylabel('Score')
 plt.xlabel('Position')
-plt.savefig(folderout+'/first.png')
+plt.savefig(folderout+'/first.score.png')
+plt.clf()
+
+headernames=list(snptab.columns)
+wincol=headernames[winidx] # position name
+freqcol=headernames[freqidx] # frequency name
+plt.scatter(snptab[wincol],
+    snptab[freqcol],
+    color='k',
+    s=5
+    )
+plt.ylim(-0.1,1.1)
+plt.ylabel('SNP frequency')
+plt.xlabel('Position')
+plt.savefig(folderout+'/first.snp.png',dpi=300)
+plt.clf()
 
 # record positions
 f=open(folderout+'/first.pos.txt','w')

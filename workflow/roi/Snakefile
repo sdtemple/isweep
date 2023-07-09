@@ -13,23 +13,38 @@ for j in range(J):
 	row = sims.iloc[j]
 	if not os.path.exists(macro+'/'+str(row.NAME)):
 		os.mkdir(macro+'/'+str(row.NAME))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)):
-		os.mkdir(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER))
-	if not os.path.exists(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+'/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)+'/empty.txt'):
-		os.mknod(macro+'/'+str(row.NAME)+'/chr'+str(row.CHROM)+ '/center'+str(row.BPCENTER)+ '/left'+str(row.BPLEFTCENTER)+ '/right'+str(row.BPRIGHTCENTER)+'/empty.txt')
-sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)+'/chr'+str(sims.iloc[j].CHROM)+'/center'+str(sims.loc[j].BPCENTER)+'/left'+str(sims.loc[j].BPLEFTCENTER)+'/right'+str(sims.loc[j].BPRIGHTCENTER)).strip() for j in range(J)]
+	f=open(macro+'/'+str(row.NAME)+'/locus.txt','w')
+	f.write('NAME\t')
+	f.write(str(row.NAME))
+	f.write('\n')
+	f.write('CHROM\t')
+	f.write(str(int(row.CHROM)))
+	f.write('\n')
+	f.write('CENTER\t')
+	f.write(str(int(row.BPCENTER)))
+	f.write('\n')
+	f.write('LEFT\t')
+	f.write(str(int(row.BPLEFTCENTER)))
+	f.write('\n')
+	f.write('RIGHT\t')
+	f.write(str(int(row.BPRIGHTCENTER)))
+	f.write('\n')
+	f.close()
+sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
 # include .smk files with rules
-include: 'rules/roi.smk'
-include: 'rules/analysis.smk'
+include: 'rules/first.smk'
+include: 'rules/second.smk'
+include: 'rules/third.smk'
 
 # snakemake all -c1 -n
 rule all:
 	input:
-		macro+'/arguments.roi.yaml',
+		# for best snp analysis
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.tsv' for j in range(J)],
+		# for best haplotype analysis
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
+		# for quantile scores only
+		# comment above
+		# uncomment below
+		# [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/first.qs.tsv.gz' for j in range(J)],

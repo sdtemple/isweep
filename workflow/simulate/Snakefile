@@ -1,6 +1,6 @@
 # iSWEEP simulation studies
 # Seth D. Temple, sdtemple@uw.edu
-# April 26, 2023
+# July 8, 2023
 
 # setup macro folder
 import os
@@ -24,8 +24,6 @@ sims = sims.set_index("SIMNAME", drop=False)
 
 include: 'rules/simulate.smk'
 include: 'rules/scan.smk'
-include: 'rules/roi.smk'
-include: 'rules/analysis.smk'
 include: 'rules/first.smk'
 include: 'rules/second.smk'
 include: 'rules/third.smk'
@@ -33,35 +31,6 @@ include: 'rules/third.smk'
 rule yaml:
     input:
         [f"{sim.FOLDER}/results.tsv" for sim in sims.itertuples()],
-        ### requesting analysis of true rank
-        # may error if sweep variant not in vcf
-        # these are file *.rank.true.tsv
-        ### main analysis (about true loc)
-        #[f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
-        #[f"{sim.FOLDER}/isweep.inference.tsv" for sim in sims.itertuples()],
-        #[f"{sim.FOLDER}/isweep.ranks.tsv.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.gz" for sim in sims.itertuples()],
-        ### if you want to see analyses based on coefficient of variation
-        # [f"{sim.FOLDER}/isweep.hap.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.hap.png" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.snp.png" for sim in sims.itertuples()],
-        ### if you want to see analyses based on coefficient of variation
-        # [f"{sim.FOLDER}/isweep.locus.inference.tsv" for sim in sims.itertuples()],
-        ### if you want to see analyses based on coefficient of variation
-        #[f"{sim.FOLDER}/isweep.inference.coef.var.tsv" for sim in sims.itertuples()],
-        #[f"{sim.FOLDER}/isweep.coef.var.txt" for sim in sims.itertuples()],
-        ### if you want to see analyses about mean
-        #[f"{sim.FOLDER}/isweep.ranks.mean.tsv.gz" for sim in sims.itertuples()],
-        #[f"{sim.FOLDER}/isweep.inference.mean.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.mean.tsv" for sim in sims.itertuples()],
-        ### if you want to see analyses about mode
-        # [f"{sim.FOLDER}/isweep.ranks.mode.tsv.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.inference.mode.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.mode.tsv" for sim in sims.itertuples()],
-        ### if you want to see analyses about median
-        # [f"{sim.FOLDER}/isweep.ranks.median.tsv.gz" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.inference.median.tsv" for sim in sims.itertuples()],
-        # [f"{sim.FOLDER}/isweep.rank.true.median.tsv" for sim in sims.itertuples()],
     output:
         yaml=macro+'/arguments.simulate.yaml',
     params:
