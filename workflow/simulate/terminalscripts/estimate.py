@@ -13,7 +13,7 @@ alpha1=(1-alpha)/2
 alpha2=1-alpha1
 
 # i/o
-ibdct, fileout, p_est, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
+fileout, ibdct, p_est, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
 
 # setting up
 B=int(float(nboot))
@@ -28,14 +28,7 @@ ploidy=int(float(ploidy))
 m=ploidy*n
 N=m*(m-1)/2-m
 p_est=float(p_est)
-
-# estimate selection coefficent
-numTracts=0
-with gzip.open(ibdct, 'rt') as f:
-    for line in f:
-        row=line.strip().split('\t')
-        if float(row[7]) >= long_ibd:
-            numTracts += 1
+numTracts=int(float(ibdct))
 
 sinhs=[]
 for inh in inhs:

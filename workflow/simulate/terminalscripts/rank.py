@@ -24,8 +24,8 @@ tup=labeled_allele_frequencies(short_vcf, outliers)
 pos=tup[0]
 freq1, freq0, freqm = putative_allele_frequencies(tup[1], tup[2], tup[3])
 table = format_allele_table(pos, freq1, freq0, freqm)
-table['DELTAPRIME'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
-table.sort_values(['DELTAPRIME'],inplace=True,ascending=False)
+table['ZDELTA'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
+table.sort_values(['ZDELTA'],inplace=True,ascending=False)
 table=table[table['AAF']>=Q1]
 table=table[table['AAF']<=Q2]
 table.reset_index(inplace=True,drop=True)

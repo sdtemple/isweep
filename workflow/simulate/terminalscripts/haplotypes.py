@@ -148,7 +148,7 @@ haptab.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
 bestbp=haptab['POS'][0]
 bestaf=haptab['AAF'][0]
 
-f=open(folderout+'/third.best.txt','w')
+f=open(folderout+'/third.best.hap.txt','w')
 f.write('bp\t')
 f.write(str(int(bestbp)))
 f.write('\n')
@@ -158,7 +158,7 @@ f.write('\n')
 f.close()
 
 # haplotypes figure
-plt.scatter(haptab['POS'],haptab['AAF'],c=haptab['SCORE'],cmap='copper_r',s=haptab['SIZE'])
+plt.scatter(haptab['POS'],haptab['AAF'],c=haptab['SCORE'],cmap='copper_r',s=5)
 plt.ylim(-0.1,1.1)
 plt.colorbar(label='Haplotype z-score')
 plt.ylabel('Haplotype frequency')
