@@ -3,11 +3,12 @@ wildcard_constraints:
 
 ##### haplotype analysis #####
 
-rule third_haplotypes:
+rule third_hap:
     input:
         rankin='{macro}/{micro}/{seed}/second.ranks.tsv.gz',
+        outlied='{macro}/{micro}/{seed}/second.outliers.txt',
     output:
-        lociout='{macro}/{micro}/{seed}/third.best.txt',
+        lociout='{macro}/{micro}/{seed}/third.best.hap.txt',
         happng='{macro}/{micro}/{seed}/third.hap.png',
         snppng='{macro}/{micro}/{seed}/third.snp.png',
     params:
@@ -32,12 +33,12 @@ rule third_haplotypes:
             {params.numsnp}
         """
 
-rule third_ibd:
+rule third_hap_ibd:
     input:
         ibd='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
-        locus='{macro}/{micro}/{seed}/third.best.txt',
+        locus='{macro}/{micro}/{seed}/third.best.hap.txt',
     output:
-        ibd='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
+        ibd='{macro}/{micro}/{seed}/third.chr1.hap.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
@@ -55,12 +56,12 @@ rule third_ibd:
             gzip > {output.ibd}
         """
 
-rule third_infer:
+rule third_hap_infer:
     input:
-        long='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
-        freq='{macro}/{micro}/{seed}/third.best.txt',
+        long='{macro}/{micro}/{seed}/third.chr1.hap.ibd.gz',
+        freq='{macro}/{micro}/{seed}/third.best.hap.txt',
     output:
-        fileout='{macro}/{micro}/{seed}/results.tsv',
+        fileout='{macro}/{micro}/{seed}/results.hap.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
@@ -70,14 +71,84 @@ rule third_infer:
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
     shell:
         """
+        ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
         python {params.scripts}/estimate.py \
-            {input.long} \
             {output.fileout} \
+            ${{ibdest}} \
             ${{freqest}} \
             {params.nboot} \
             {params.cm} \
             {params.n} \
-            {params.effdemo} \
+            {input.longNe} \
             {params.ploidy}
         """
+
+##### snp analysis #####
+
+rule third_snp:
+    input:
+        rankin='{macro}/{micro}/{seed}/second.ranks.tsv.gz',
+        outlied='{macro}/{micro}/{seed}/second.outliers.txt',
+    output:
+        lociout='{macro}/{micro}/{seed}/third.best.snp.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.scripts}/snp.py \
+            {input.rankin} \
+            {output.lociout}
+        """
+
+rule third_snp_ibd:
+    input:
+        ibd='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
+        locus='{macro}/{micro}/{seed}/third.best.snp.txt',
+    output:
+        ibd='{macro}/{micro}/{seed}/third.chr1.snp.ibd.gz',
+    params:
+        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+    resources:
+        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
+    shell:
+        """
+        thecenter=$(python {params.script} {input.locus} 1 2)
+        zcat {input.ibd} | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 6 0.00 ${{thecenter}} | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 7 ${{thecenter}} 10000000000 | \
+            gzip > {output.ibd}
+        """
+
+rule third_snp_infer:
+    input:
+        long='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
+        freq='{macro}/{micro}/{seed}/third.best.snp.txt',
+    output:
+        fileout='{macro}/{micro}/{seed}/results.snp.tsv',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
+        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
+        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
+        effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
+    shell:
+        """
+        ibdest=$(zcat {input.long} | wc -l)
+        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
+        python {params.scripts}/estimate.py \
+            {output.fileout} \
+            ${{ibdest}} \
+            ${{freqest}} \
+            {params.nboot} \
+            {params.cm} \
+            {params.n} \
+            {input.longNe} \
+            {params.ploidy}
+        """
+

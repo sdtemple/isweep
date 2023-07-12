@@ -43,7 +43,3 @@ rule all:
 		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.tsv' for j in range(J)],
 		# for best haplotype analysis
 		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
-		# for quantile scores only
-		# comment above
-		# uncomment below
-		# [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/first.qs.tsv.gz' for j in range(J)],

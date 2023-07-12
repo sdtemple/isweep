@@ -9,11 +9,25 @@ with open(cohort+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 
+# extend Ne(t)
+rule third_Ne:
+    input:
+        shortNe='{cohort}/'+str(config['CHANGE']['ISWEEP']['NE']),
+    output:
+        longNe='{cohort}/extended.ne',
+    params:
+        lastne=str(config['FIXED']['ISWEEP']['LASTNE']),
+    shell:
+        """
+        python -c 'from isweep import extend_Ne; extend_Ne("{input.shortNe}","{params.lastne}","{output.longNe}")'
+        """
+
 ##### haplotype analysis #####
 
 rule third_hap:
     input:
         rankin='{cohort}/{hit}/second.ranks.tsv.gz',
+        outlied='{cohort}/{hit}/second.outliers.txt',
     output:
         lociout='{cohort}/{hit}/third.best.hap.txt',
         happng='{cohort}/{hit}/third.hap.png',
@@ -40,19 +54,6 @@ rule third_hap:
             {params.numsnp}
         """
 
-rule third_snp:
-    input:
-        rankin='{cohort}/{hit}/second.ranks.tsv.gz',
-    output:
-        lociout='{cohort}/{hit}/third.best.snp.txt',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-    shell:
-        """
-        python {params.scripts}/snp.py \
-            {input.rankin} \
-            {output.lociout}
-        """
 
 rule third_hap_ibd:
     input:
@@ -80,44 +81,6 @@ rule third_hap_ibd:
             gzip > {output.ibd}
         """
 
-rule third_snp_ibd:
-    input:
-        best='{cohort}/{hit}/third.best.snp.txt',
-        locus='{cohort}/{hit}/locus.txt',
-    output:
-        ibd='{cohort}/{hit}/third.snp.ibd.gz',
-    params:
-        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mom',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
-    resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
-    shell:
-        """
-        chr=$(python {params.script} {input.locus} 2 2)
-        thecenter=$(python {params.script} {input.best} 1 2)
-        ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        zcat $ibd | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 ${{thecenter}} | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 ${{thecenter}} 10000000000 | \
-            gzip > {output.ibd}
-        """
-
-# extend Ne(t)
-rule third_Ne:
-    input:
-        shortNe='{cohort}/'+str(config['CHANGE']['ISWEEP']['NE']),
-    output:
-        longNe='{cohort}/extended.ne',
-    params:
-        lastne=str(config['FIXED']['ISWEEP']['LASTNE']),
-    shell:
-        """
-        python -c 'from isweep import extend_Ne; extend_Ne("{input.shortNe}","{params.lastne}","{output.longNe}")'
-        """
 
 rule third_hap_infer:
     input:
@@ -146,6 +109,50 @@ rule third_hap_infer:
             {input.longNe} \
             {params.ploidy}
         """
+
+##### snp analysis #####
+
+rule third_snp:
+    input:
+        rankin='{cohort}/{hit}/second.ranks.tsv.gz',
+        outlied='{cohort}/{hit}/second.outliers.txt',
+    output:
+        lociout='{cohort}/{hit}/third.best.snp.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.scripts}/snp.py \
+            {input.rankin} \
+            {output.lociout}
+        """
+
+rule third_snp_ibd:
+    input:
+        best='{cohort}/{hit}/third.best.snp.txt',
+        locus='{cohort}/{hit}/locus.txt',
+    output:
+        ibd='{cohort}/{hit}/third.snp.ibd.gz',
+    params:
+        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mom',
+        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+    resources:
+        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
+    shell:
+        """
+        chr=$(python {params.script} {input.locus} 2 2)
+        thecenter=$(python {params.script} {input.best} 1 2)
+        ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
+        zcat $ibd | \
+            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 6 0.00 ${{thecenter}} | \
+            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
+            "I" 7 ${{thecenter}} 10000000000 | \
+            gzip > {output.ibd}
+        """
+
 
 rule third_snp_infer:
     input:

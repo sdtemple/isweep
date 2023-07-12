@@ -84,3 +84,24 @@ rule second_rank:
             {params.q1} \
             {params.rulesigma}
         """
+
+### write outliers ###
+
+rule second_outlier:
+    input:
+        short='{cohort}/{hit}/second.filt.ibd.gz',
+    output:
+        fileout='{cohort}/{hit}/second.outliers.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+    shell:
+        """
+        python {params.scripts}/outliers.py \
+            {input.short} \
+            {wildcards.cohort}/{wildcards.hit} \
+            {params.diameter} \
+            {params.rulesigma}
+        touch {output.fileout}
+        """

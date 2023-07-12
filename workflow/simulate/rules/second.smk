@@ -111,3 +111,24 @@ rule second_rank:
             {params.q1} \
             {params.rulesigma}
         """
+        
+### write outliers ###
+
+rule second_outlier:
+    input:
+        short='{macro}/{micro}/{seed}/second.filt.ibd.gz',
+    output:
+        fileout='{macro}/{micro}/{seed}/second.outliers.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+    shell:
+        """
+        python {params.scripts}/outliers.py \
+            {input.short} \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            {params.diameter} \
+            {params.rulesigma}
+        touch {output.fileout}
+        """
