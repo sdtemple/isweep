@@ -38,6 +38,7 @@ rule third_hap:
         freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
+        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
@@ -51,7 +52,8 @@ rule third_hap:
             {params.freqstep} \
             {params.windowsize} \
             {params.windowstep} \
-            {params.numsnp}
+            {params.numsnp} \
+            {params.lowbnd}
         """
 
 
@@ -120,11 +122,13 @@ rule third_snp:
         lociout='{cohort}/{hit}/third.best.snp.txt',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
     shell:
         """
         python {params.scripts}/snp.py \
             {input.rankin} \
-            {output.lociout}
+            {output.lociout} \
+            {params.lowbnd}
         """
 
 rule third_snp_ibd:
