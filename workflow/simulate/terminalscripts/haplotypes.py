@@ -18,7 +18,9 @@ import matplotlib.pyplot as plt
  freqstep,
  winsize,
  winstep,
- numsnp)=sys.argv[1:]
+ numsnp,
+ low
+ )=sys.argv[1:]
 
 winsize=float(winsize)
 winstep=float(winstep)
@@ -28,6 +30,9 @@ freqstep=float(freqstep)
 winidx=int(float(winidx))
 freqidx=int(float(freqidx))
 scoreidx=int(float(scoreidx))
+
+low=float(low)
+numsnp=int(float(numsnp))
 
 def haplotypes(table,
                freqsize=0.04,
@@ -91,7 +96,6 @@ def haplotypes(table,
     winmax=table[wincol].max()
     aafmin=0
     aafmax=1
-    numsnp=10
     aafrange=np.arange(aafmin,aafmax,freqstep)
     winrange=np.arange(winmin,winmax,winstep)
     windowed=dict()
@@ -141,7 +145,12 @@ haptab=haplotypes(snptab,
                   scoreidx,
                   numsnp
                  )
-haptab.sort_values(by='SCORE',ascending=False,inplace=True)
+haptab=haptab[haptab['AAF']>=low]
+haptab.sort_values(by='SCORE',
+                   ascending=False,
+                   inplace=True,
+                   ignore_index=True
+                   )
 haptab.to_csv(folderout+'/haplotypes.tsv',sep='\t',index=False)
 
 # best haplotype

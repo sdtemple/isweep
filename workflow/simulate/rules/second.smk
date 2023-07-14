@@ -116,7 +116,7 @@ rule second_rank:
 
 rule second_outlier:
     input:
-        short='{macro}/{micro}/{seed}/second.filt.ibd.gz',
+        short='{macro}/{micro}/{seed}/second.filt.chr1.ibd.gz',
     output:
         fileout='{macro}/{micro}/{seed}/second.outliers.txt',
     params:

@@ -17,6 +17,7 @@ rule third_hap:
         freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
+        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
@@ -30,7 +31,8 @@ rule third_hap:
             {params.freqstep} \
             {params.windowsize} \
             {params.windowstep} \
-            {params.numsnp}
+            {params.numsnp} \
+            {params.lowbnd}
         """
 
 rule third_hap_ibd:
@@ -80,7 +82,7 @@ rule third_hap_infer:
             {params.nboot} \
             {params.cm} \
             {params.n} \
-            {input.longNe} \
+            {params.effdemo} \
             {params.ploidy}
         """
 
@@ -94,11 +96,13 @@ rule third_snp:
         lociout='{macro}/{micro}/{seed}/third.best.snp.txt',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
     shell:
         """
         python {params.scripts}/snp.py \
             {input.rankin} \
-            {output.lociout}
+            {output.lociout} \
+            {params.lowbnd}
         """
 
 rule third_snp_ibd:
@@ -126,7 +130,7 @@ rule third_snp_ibd:
 
 rule third_snp_infer:
     input:
-        long='{macro}/{micro}/{seed}/third.chr1.ibd.gz',
+        long='{macro}/{micro}/{seed}/third.chr1.snp.ibd.gz',
         freq='{macro}/{micro}/{seed}/third.best.snp.txt',
     output:
         fileout='{macro}/{micro}/{seed}/results.snp.tsv',
@@ -148,7 +152,7 @@ rule third_snp_infer:
             {params.nboot} \
             {params.cm} \
             {params.n} \
-            {input.longNe} \
+            {params.effdemo} \
             {params.ploidy}
         """
 
