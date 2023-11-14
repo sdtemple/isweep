@@ -4,6 +4,9 @@ incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
 This software presents a statistical method for inferring the selection coefficient and the allele frequency of a single adaptive allele introduced to a population in the recent 50-600 generations. It uses identity-by-descent segments, i.e., pairwise matching long haplotypes, to make these inferences. The methodology proposes a parametric statistical model that relates segment data to population genetics and coalescent trees. Please read the following paper for more context:
 
+
+CAUTION: THIS PACKAGE IS ACTIVELY BEING WORKED ON AND CLEANED UP IN LATE NOVEMBER, DECEMBER 2023.
+
 ## Computer Overview
 
 This repository contains a Python package and some Snakemake bioinformatics pipelines to conduct simulation studies and real data analysis. Functions in the Python package have been documented and tested. The main package contains the subpackage, cis (coalescent identity-by-descent segments), which is for studying and simulating identity-by-descent segments with respect to a coalescent process.
