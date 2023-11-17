@@ -83,7 +83,7 @@ rule genotyping_error:
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['GTERR']),
-        gter=str(config['FIXED']['SIMULATE']['GTERR']),
+        gter=str(config['CHANGE']['SIMULATE']['GTERR']),
     shell:
         """
         zcat {input.vcf} | \

@@ -99,7 +99,7 @@ rule second_rank:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF2']),
+        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
     shell:
         """

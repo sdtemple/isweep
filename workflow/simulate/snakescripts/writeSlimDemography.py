@@ -8,14 +8,14 @@ Write SLiM script for forward simulations
 ##### inputs #####
 
 n=snakemake.config['CHANGE']['SIMULATE']['SAMPSIZE']
-ageSplit=snakemake.config['FIXED']['SIMULATE']['TSPLIT']
+ageSplit=snakemake.config['CHANGE']['SIMULATE']['TSPLIT']
 V=snakemake.config['FIXED']['SIMULATE']['NUMVAR']
-L=snakemake.config['FIXED']['SIMULATE']['CMLEN']
+L=snakemake.config['CHANGE']['SIMULATE']['CMLEN']
 m=snakemake.config['CHANGE']['SIMULATE']['NUMSUBPOP']
 q=snakemake.config['CHANGE']['SIMULATE']['MIGRRATE']
-rho=snakemake.config['FIXED']['SIMULATE']['RHO']
-gcProp=snakemake.config['FIXED']['SIMULATE']['GCPROP']
-gcMeanLength=snakemake.config['FIXED']['SIMULATE']['GCLEN']
+rho=snakemake.config['CHANGE']['SIMULATE']['RHO']
+gcProp=snakemake.config['CHANGE']['SIMULATE']['GCPROP']
+gcMeanLength=snakemake.config['CHANGE']['SIMULATE']['GCLEN']
 Ne=snakemake.input.trueNe
 a=snakemake.config['FIXED']['SIMULATE']['a']
 b=snakemake.config['FIXED']['SIMULATE']['b']

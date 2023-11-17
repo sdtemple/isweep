@@ -10,8 +10,8 @@ import numpy as np
 import pandas as pd
 # from isweep import *
 
-mu=snakemake.config['FIXED']['SIMULATE']['MU']
-rho=snakemake.config['FIXED']['SIMULATE']['RHO']
+mu=snakemake.config['CHANGE']['SIMULATE']['MU']
+rho=snakemake.config['CHANGE']['SIMULATE']['RHO']
 trees=snakemake.input.trees
 maf=snakemake.config['CHANGE']['SIMULATE']['MSPMAF']
 n=snakemake.config['CHANGE']['SIMULATE']['SAMPSIZE']

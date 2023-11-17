@@ -17,7 +17,7 @@ rule third_hap:
         freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
-        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
+        lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
