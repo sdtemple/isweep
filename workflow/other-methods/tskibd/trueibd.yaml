@@ -1,0 +1,36 @@
+# change these
+CHANGE:
+  # folders, file name of simulation study *.tsv
+  FOLDERS:
+    # folder for macro experiments
+    MACRO: 'bottle'
+    # tsv file describing simulations
+    MICRO: 'experiments/simstudy.test2.tsv'
+    # forlder where terminal scripts are
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/terminalscripts'
+    # folder where software is
+    SOFTWARE: '/projects/browning/brwnlab/seth/software'
+    TSKIBDFOLDER: '~/brwn/seth/tskibd'
+  SIMULATE:
+    iNe: 'ne/bottleneck-1000G.ne' # Ne file for inference (tail should be last value in tNe)
+    ancNe: '10000'
+
+# keep these fixed
+FIXED:
+  # simulation study settings
+  SIMULATE:
+    LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+    CUT: '3.0'
+    SAMPSIZE: '5000'
+    RHO: '1e-8'
+  # isweep
+  ISWEEP:
+    # ibd cM threshold for isweep method of moments
+    MOMCUTOFF: '3.0'
+    # number of bootstraps
+    NBOOT: '100'
+
+  # hap-ibd for short
+  HAPIBD:
+    # ploidy number
+    PLOIDY: '2'
