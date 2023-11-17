@@ -1,0 +1,87 @@
+# Seth D. Temple, sdtemple@uw.edu
+# April 26, 2023
+
+# change these
+CHANGE:
+  FOLDERS:
+    # folder for analysis
+    STUDY: '/projects/browning/brwnlab/seth/topmed-isweep/eur1'
+    # the yaml file with scan analysis options
+    YAML: 'eur1.yaml'
+    # folder where terminal scripts are
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/scan/terminalscripts'
+    # folder where software is
+    SOFTWARE: '/projects/browning/brwnlab/seth/software'
+  # parameters, subsample file
+  ISWEEP:
+    # lowest chromosome number
+    CHRLOW: '1'
+    # highest chromosome numbers
+    CHRHIGH: '22'
+    SUBSAMPLE: '/projects/browning/brwnlab/seth/topmed/groups/inferred.european.10.ibdkin.txt'
+    XMXMEM: '240' # in gb
+    THREADS: '16'
+  # download these software
+  PROGRAMS:
+    # https://github.com/browning-lab/hap-ibd
+    HAPIBD: 'hap-ibd.jar'
+    # https://github.com/browning-lab/ibd-ends
+    IBDENDS: 'ibd-ends.jar'
+    # http://faculty.washington.edu/browning/
+    FILTER: 'filter-lines.jar'
+    IBDNE: 'ibdne.ne'
+  EXISTING:
+    # these are phased vcfs
+    VCFS: '/projects/browning/brwnlab/phase.paper/analysis/topmed/all3'
+    VCFPRE: 'chr'
+    VCFSUF: '.vcf.gz'
+    # these are genetic maps
+    MAPS: '/projects/browning/maps/decode.2019.b38'
+    MAPPRE: 'decode2019.chrchr'
+    MAPSUF: '.GRCh38.map'
+
+# keep these fixed
+FIXED:
+  # hap-ibd.jar
+  # these are inspired by Cai, Browning, and Browning (2023+)
+  CANDHAPIBD: # candidate
+    # min-seed
+    MINSEED: '0.5'
+    # min-extend
+    MINEXT: '0.2'
+    # min-output
+    MINOUT: '1.0'
+    # minimum minor allele frequency
+    MINMAF: '0.40'
+    # ploidy number
+    PLOIDY: '2'
+  # ibd-ends.jar
+  IBDENDS:
+    # quantiles from endpoint posterior
+    QUANTILES: '0.5'
+    # num samples from endpoint posterior
+    NSAMPLES: '0'
+    # do a test run on 1 chromosome to set this
+    ERRRATE: '1.5e-4'
+    # minimum minor allele frequency
+    MINMAF: '0.001'
+  # isweep
+  ISWEEP:
+    # in mega bp
+    GENOMEEND: '1000'
+    # in kilo bp
+    BY: '20'
+    # cutting cM at telomeres
+    TELOCUT: '2.0'
+    # ibd cM threshold for isweep method of moments
+    MOMCUTOFF: '3.0'
+    # ibd cM threshold for isweep scan
+    SCANCUTOFF: '3.0'
+    # cM gap when concatenating regions of excess IBD
+    CMGAP: '1.0'
+    TELOSIGMA: '3.0' # sigma scalar to remove telomeres
+    SCANSIGMA: '3.0' # sigma scalar to call excess ibd
+    # mb buffer
+    MBBUF: '2'
+    CMCOVER: '1.0'
+    CMSMALL: '2.0'

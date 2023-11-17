@@ -1,0 +1,37 @@
+import os
+import pandas as pd
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+micro=str(config['CHANGE']["ISWEEP"]["ROI"])
+sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
+J = sims.shape[0]
+
+subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
+cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
+samplesize=0
+with open(cohort+'/'+subsamplefile,'r') as f:
+    for line in f:
+        samplesize+=1
+ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
+samplesize=samplesize*ploidy
+
+# snakemake all -c1 -n
+rule all:
+	input:
+		# for entropy
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/entropy.tsv' for j in range(J)],
+
+rule entropy:
+	input:
+		filein='{macro}/{micro}/outlier1.txt',
+	output:
+		fileout='{macro}/{micro}/entropy.tsv',
+	params:
+		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+		samplesize=str(samplesize),
+	shell:
+		"""
+		python {params.scripts}/ibd-entropy.py \
+			{wildcards.macro}/{wildcards.micro} \
+			{output.fileout} \
+			{params.samplesize}
+		"""
