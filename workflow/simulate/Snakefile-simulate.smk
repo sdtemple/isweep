@@ -1,6 +1,7 @@
-n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
-ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
-samplesize = n * ploidy
+# iSWEEP simulation studies
+# Seth D. Temple, sdtemple@uw.edu
+# November 17, 2023
+# editing to do simulate steps only
 
 # setup macro folder
 import os
@@ -22,24 +23,9 @@ for j in range(J):
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
 sims = sims.set_index("SIMNAME", drop=False)
 
-# snakemake all -c1 -n
+include: 'rules/simulate.smk'
+
 rule all:
-	input: [f"{sim.FOLDER}/entropy.tsv" for sim in sims.itertuples()],
-        
-
-
-rule entropy:
-	input:
-		filein='{macro}/{micro}/outlier1.txt',
-	output:
-		fileout='{macro}/{micro}/entropy.tsv',
-	params:
-		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-		samplesize=str(samplesize),
-	shell:
-		"""
-		python {params.scripts}/ibd-entropy.py \
-			{wildcards.macro}/{wildcards.micro} \
-			{output.fileout} \
-			{params.samplesize}
-		"""
+    input:
+        [f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/large.chr1.vcf.gz" for sim in sims.itertuples()],

@@ -1,6 +1,8 @@
 # iSWEEP simulation studies
 # Seth D. Temple, sdtemple@uw.edu
-# July 8, 2023
+# November 17, 2023
+# editing to do ibd analysis after simulating data
+# you have to have first run snakemake -s Snakefile-simulate.smk
 
 # setup macro folder
 import os
@@ -22,7 +24,6 @@ for j in range(J):
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
 sims = sims.set_index("SIMNAME", drop=False)
 
-include: 'rules/simulate.smk'
 include: 'rules/scan.smk'
 include: 'rules/first.smk'
 include: 'rules/second.smk'

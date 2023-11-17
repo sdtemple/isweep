@@ -132,3 +132,19 @@ rule second_outlier:
             {params.rulesigma}
         touch {output.fileout}
         """
+
+rule ibd_entropy:
+	input:
+		filein='{macro}/{micro}/second.outliers.txt',
+	output:
+		fileout='{macro}/{micro}/ibd.entropy.tsv',
+	params:
+		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+		samplesize=str(n*ploidy),
+	shell:
+		"""
+		python {params.scripts}/ibd-entropy.py \
+			{wildcards.macro}/{wildcards.micro} \
+			{output.fileout} \
+			{params.samplesize}
+		"""
