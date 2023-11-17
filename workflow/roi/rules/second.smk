@@ -11,27 +11,23 @@ rule second_region: # focus vcf on region of interest
     input:
         locus='{cohort}/{hit}/locus.txt',
         focus='{cohort}/{hit}/first.pos.txt',
+        vcf='{cohort}/{hit}/first.focused.vcf.gz',
         subsample=cohort+"/subsample.txt",
-        excludesamples=cohort+"/excludesamples.txt",
     output:
         subvcf='{cohort}/{hit}/second.focused.vcf.gz',
     params:
         qmaf=maf,
         chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
         pm=str(config['FIXED']['ISWEEP']['PM']),
-    resources:
-        mem_gb=10
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
         chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
         center=$(python {params.scripts}/lines.py {input.focus} 1 2)
-        left=$(python -c "out = $center - {params.pm} ; print(out)")
+        left=$(python -c "out = $center - {params.pm} ; print(max(out,2))")
         right=$(python -c "out = $center + {params.pm} ; print(out)")
-        vcf={params.vcfs}/chr${{chr}}.vcf.gz
-        tabix -fp vcf ${{vcf}}
-        bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
+        tabix -fp vcf {input.vcf}
+        bcftools view {input.vcf} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
             bcftools view -q {params.qmaf}:nonmajor -Oz -o {output.subvcf}
         """
@@ -48,8 +44,6 @@ rule second_filt:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
-    resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
         thecenter=$(python {params.script} {input.locus} 1 2)
@@ -92,6 +86,7 @@ rule second_outlier:
         short='{cohort}/{hit}/second.filt.ibd.gz',
     output:
         fileout='{cohort}/{hit}/second.outliers.txt',
+        out1='{cohort}/{hit}/outlier1.txt',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
@@ -104,4 +99,5 @@ rule second_outlier:
             {params.diameter} \
             {params.rulesigma}
         touch {output.fileout}
+        touch {output.out1}
         """

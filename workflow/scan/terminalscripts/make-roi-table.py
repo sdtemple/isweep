@@ -7,13 +7,22 @@ import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-folder,mbbuffer,mapfolder=sys.argv[1:]
+
+
+folder,cmcover,cmsmall,mbbuffer,mapfolder=sys.argv[1:]
+# folder,mbbuffer,mapfolder=sys.argv[1:]
+
 filein=folder+'/excess.region.ibd.tsv'
 folder1=folder+'/ibdsegs/ibdends/modified/scan/'
 filepre='chr'
 filesuf='.ibd.windowed.tsv.gz'
 fileout=folder+'/roi.tsv'
-mbbuffer=int(float(mbbuffer)*1000000)
+mbbuffer=float(mbbuffer)*1000000
+
+### this stuff is new
+cmcover=float(cmcover)
+cmsmall=float(cmsmall)
+### this stuff is new
 
 roitab=pd.read_csv(filein,sep='\t')
 bpcenter=[]
@@ -73,8 +82,10 @@ for i in range(roitab.shape[0]):
     rowing=roitab.iloc[i]
     filein1=folder1+filepre+str(int(float(rowing.CHROM)))+filesuf
     tab=pd.read_csv(filein1, sep='\t')
+
     left=int(float(rowing.BPLEFT))-mbbuffer
     right=int(float(rowing.BPRIGHT))+mbbuffer
+
     tab=tab[(tab['BPWINDOW']>=left)&(tab['BPWINDOW']<=right)]
 
     fig, ax = plt.subplots(2,1,figsize=(8.5,8.5))
@@ -110,8 +121,21 @@ for i in range(roitab.shape[0]):
 # adding bp, cm centrality to roi table
 roitab['BPCENTER']=bpcenter
 roitab['CMCENTER']=cmcenter
-roitab['BPLEFTCENTER']=(roitab['BPLEFT']-mbbuffer).clip(lower=1)
-roitab['BPRIGHTCENTER']=roitab['BPRIGHT']+mbbuffer
+
+### this stuff is new
+roitab=roitab[(roitab['CMRIGHT']-roitab['CMLEFT'])>=cmcover]
+roitab['BPLEFTCENTER']=roitab['BPLEFT']
+roitab['BPRIGHTCENTER']=roitab['BPRIGHT']
+roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPLEFTCENTER']=roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPLEFTCENTER']-mbbuffer
+roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPRIGHTCENTER']=roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPRIGHTCENTER']+mbbuffer
+roitab['BPLEFTCENTER']=roitab['BPLEFTCENTER'].clip(lower=1)
+### this stuff is new
+
+# ### this stuff it replaces
+# roitab['BPLEFTCENTER']=(roitab['BPLEFT']-mbbuffer).clip(lower=1)
+# roitab['BPRIGHTCENTER']=roitab['BPRIGHT']+mbbuffer
+# ### this stuff it replaces
+
 # sorting, giving generic names
 initcol=list(roitab.columns)
 finacol=['NAME']+initcol

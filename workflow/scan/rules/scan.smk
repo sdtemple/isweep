@@ -22,6 +22,8 @@ vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
 vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
 concatmap=macro+'/maps/chr'+str(low)+'-'+str(high)+'.map'
 
+mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
+
 rule hapibd: # candidate segments from hap-ibd.jar
     input:
         vcf=vcffolder + '/' + vcfpre + '{num}' + vcfsuf,
@@ -39,7 +41,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
         minext=str(config['FIXED']['CANDHAPIBD']['MINEXT']),
         minout=str(config['FIXED']['CANDHAPIBD']['MINOUT']),
     resources:
-        mem_gb=100
+        mem_gb=mgb+1,
     shell:
         """
         java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
@@ -71,7 +73,7 @@ rule ibdends: # ibd-ends.jar
         sam=str(config['FIXED']['IBDENDS']['NSAMPLES']),
         err=str(config['FIXED']['IBDENDS']['ERRRATE']),
     resources:
-        mem_gb=100
+        mem_gb=mgb+1,
     shell:
         """
         java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
@@ -91,8 +93,6 @@ rule format_ibdends: # reformatting
         bigibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     output:
         cutibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
-    resources:
-        mem_gb=10
     shell:
         'zcat {input.bigibd} | tail -n +2 | cut -f 1-5,10,11,12 | gzip > {output.cutibd}'
 
@@ -106,8 +106,6 @@ rule filter_ibdends_scan: # applying cutoffs
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
-    resources:
-        mem_gb=10
     shell:
         """
         zcat {input.ibd} | \
@@ -126,8 +124,6 @@ rule count_ibdends_scan: # computing counts over windows
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
-    resources:
-        mem_gb=10
     shell:
         """
         python {params.scripts}/ibd-windowed.py \
@@ -149,8 +145,6 @@ rule filter_ibdends_mom: # applying cutoffs
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         momcut=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
-    resources:
-        mem_gb=10
     shell:
         """
         zcat {input.ibd} | \
@@ -169,8 +163,6 @@ rule count_ibdends_mom: # computing counts over windows
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
-    resources:
-        mem_gb=10
     shell:
         """
         python {params.scripts}/ibd-windowed.py \
@@ -187,56 +179,26 @@ rule scan: # conduct a manhattan scan
         [macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
         [macro+'/ibdsegs/ibdends/modified/mom/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
     output:
-        macro+'/excess.ibd.tsv',
+        scandata=macro+'/scan.ibd.tsv',
+        excessdata=macro+'/excess.ibd.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         folder=macro,
+        nextfolder=macro+'/ibdsegs/ibdends/modified/scan/',
         chrlow=str(low),
         chrhigh=str(high),
         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
-    resources:
-        mem_gb=10
     shell:
         """
         python {params.scripts}/scan-isweep.py \
             {params.folder} \
+            {params.nextfolder} \
+            {output.scandata} \
+            {output.excessdata} \ 
             {params.chrlow} \
             {params.chrhigh} \
             {params.scansigma} \
             {params.telosigma}
         """
 
-rule ibdne:
-    input:
-        ibds=[macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.gz' for i in range(low,high+1)],
-        maps=[macro+'/maps/chr'+str(i)+'.map' for i in range(low,high+1)],
-    output:
-        ne=macro+'/ibdne.ne',
-    params:
-        chrlow=str(low),
-        chrhigh=str(high),
-        prefix=macro+'/ibdsegs/ibdends/modified/scan/',
-        folder=macro,
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['IBDNE']),
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-        j='j',
-    resources:
-        mem_gb=100
-    shell:
-        """
-        for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
-        do cat {params.folder}/maps/chr${j}.map \
-        >> {params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map ; \
-        done;
-        for {params.j} in $(seq {params.chrlow} 1 {params.chrhigh}); \
-        do zcat {params.prefix}chr${j}.ibd.gz \
-        >> {params.prefix}chrall.ibd ; \
-        done;
-        cat {params.prefix}chrall.ibd | \
-        java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
-        map={params.folder}/maps/chr{params.chrlow}-{params.chrhigh}.map \
-        out={params.folder}/ibdne \
-        rm {params.prefix}chrall.ibd
-        """

@@ -8,6 +8,8 @@ samplesize=0
 with open(cohort+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
+ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
+samplesize_ploidy=samplesize*ploidy
 
 # extend Ne(t)
 rule third_Ne:
@@ -19,7 +21,7 @@ rule third_Ne:
         lastne=str(config['FIXED']['ISWEEP']['LASTNE']),
     shell:
         """
-        python -c 'from isweep import extend_Ne; extend_Ne("{input.shortNe}","{params.lastne}","{output.longNe}")'
+        python -c "from isweep import extend_Ne; extend_Ne('{input.shortNe}',float('{params.lastne}'),'{output.longNe}')"
         """
 
 ##### haplotype analysis #####
@@ -68,8 +70,6 @@ rule third_hap_ibd:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
-    resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
         chr=$(python {params.script} {input.locus} 2 2)
@@ -142,8 +142,6 @@ rule third_snp_ibd:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
-    resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
         chr=$(python {params.script} {input.locus} 2 2)
@@ -185,3 +183,21 @@ rule third_snp_infer:
             {input.longNe} \
             {params.ploidy}
         """
+
+### write entropy ###
+
+rule entropy:
+	input:
+		filein='{cohort}/{hit}/outlier1.txt',
+	output:
+		fileout='{cohort}/{hit}/entropy.tsv',
+	params:
+		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+		samplesizep=str(samplesize_ploidy),
+	shell:
+		"""
+		python {params.scripts}/ibd-entropy.py \
+			{wildcards.cohort}/{wildcards.hit} \
+			{output.fileout} \
+			{params.samplesizep}
+		"""
