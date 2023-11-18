@@ -5,9 +5,6 @@ CHECK BACK IN EARLY DECEMBER 2023.
 
 incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
-Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
-https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
-
 <img src="isweep-icon.png" align="center" width="400px"/>
 
 This software presents statistical methods to study very recent, very strong positive selection.
@@ -46,30 +43,6 @@ Currently, they are built in snakemake pipelines.)
     - More for larger datasets
   - Have not extended to cloud computing yet
 
-## Running the isweep procedure:
-
-Phase data w/ Beagle or Shapeit beforehand.
-
-1. Edit yaml files in the different workflow directories
-2. Make pointers to large vcf files
-3. nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
-4. Run ibdne scripts
-5. Make manhattan plot
-6. Checkout the roi.tsv table
-  - Edit it with locus names if you want
-7. nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
-  - Evaluate your analysis
-
-Refer to the README.md in "cd workflow/*"
-
-## Computer Overview
-
-This repository contains a Python package and some Snakemake bioinformatics pipelines.
-- The package ---> src/
-- The pipelines ---> workflow/
-
-We have made README.md files in most subfolders.
-
 ## Installation
 
 1. git clone https://github.com/sdtemple/isweep.git
@@ -81,6 +54,30 @@ We have made README.md files in most subfolders.
   - Remember where you put these
   - Put them in the same place
   - You need to cite these software
+
+## Computer Overview
+
+This repository contains a Python package and some Snakemake bioinformatics pipelines.
+- The package ---> src/
+- The pipelines ---> workflow/
+
+We have made README.md files in most subfolders.
+
+## Running the isweep procedure:
+
+Phase data w/ Beagle or Shapeit beforehand.
+
+1. Make pointers to large (phased) vcf files
+2. Edit yaml files in the different workflow directories
+3. nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
+4. Run ibdne scripts
+5. Make manhattan plot
+6. Checkout the roi.tsv table
+  - Edit it with locus names if you want
+7. nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
+  - Evaluate your analysis
+
+Refer to the README.md in "cd workflow/*"
 
 ## Other software
 
