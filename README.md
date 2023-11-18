@@ -5,6 +5,9 @@ CHECK BACK IN EARLY DECEMBER 2023.
 
 incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
+Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
+https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
+
 <img src="isweep-icon.png" align="center" width="400px"/>
 
 This software presents statistical methods to study very recent, very strong positive selection.
@@ -12,14 +15,16 @@ This software presents statistical methods to study very recent, very strong pos
 - By very strong, we mean selection coefficient s >= 0.015 (1.5%)
 
 The methods relate the lengths of IBD tracts to a coalescent model under selection. 
+
 We assume 1 selected allele at a biallelic locus.
+
 There are ~ six major ideas.
 
 1. A genome-wide selection scan that looks for anomalously large IBD rates
 2. Inferring anomalously large IBD clusters
-3. Ranking alleles based on evidence that they are selected or in strong correlation w/ a selected allele.
+3. Ranking alleles based on evidence for selection
 4. Computing a measure of cluster agglomeration (an IBD information entropy)
-5. Estimating an allele frequency of a sweeping allele, w/o knowing its identity (it also doesn't have to be genotyped)
+5. Estimating allele frequency of unknown sweeping allele
 6. Estimating selection coefficients (w/ nice statistical properties)
 7. Estimating a confidence interval (w/ nice statistical properties)
 
