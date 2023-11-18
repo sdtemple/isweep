@@ -1,3 +1,6 @@
+
+THIS FILE HAS NOT BEEN UPDATED YET.
+
 These folders contain code to reproduce simulation studies and real data analyses for the paper.
 
 coalsimstudy

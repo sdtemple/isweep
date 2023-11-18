@@ -12,10 +12,10 @@ You should review the files:
 ## The procedure
 
 1. Edit the *.yaml file
-2. conda activate isweep
-3. snakemake -c1 -s Snakefile-roi.smk --configfile *.yaml
-    - "-n" option is the dry run
-4. nohup snakemake -c1 -s Snakefile-roi.smk --cluster "[options]" --jobs X --configfile *.yaml &
+2. ` conda activate isweep ``
+3. ` snakemake -c1 -s Snakefile-roi.smk --configfile *.yaml ``
+    - ` -n ` option is the dry run
+4. ` nohup snakemake -c1 -s Snakefile-roi.smk --cluster "[options]" --jobs X --configfile *.yaml & `
     - Make sure to pass in the isweep environment to cluster
 
 I will write some scripts (soon-ish) to concatenate results for the loci.

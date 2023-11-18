@@ -45,10 +45,10 @@ Currently, they are built in snakemake pipelines.)
 
 ## Installation
 
-1. git clone https://github.com/sdtemple/isweep.git
-2. conda env create -f workflow/environment.yml
-  - conda activate isweep
-  - python -c 'import site; print(site.getsitepackages())'
+1. ` git clone https://github.com/sdtemple/isweep.git `
+2. ` conda env create -f workflow/environment.yml `
+  - ` conda activate isweep `
+  - ` python -c 'import site; print(site.getsitepackages())' `
 3. Download other software
   - See below
   - Remember where you put these
@@ -69,13 +69,17 @@ Phase data w/ Beagle or Shapeit beforehand.
 
 1. Make pointers to large (phased) vcf files
 2. Edit yaml files in the different workflow directories
-3. nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
-4. Run ibdne scripts
-5. Make manhattan plot
-6. Checkout the roi.tsv table
+3. Run the selection scan
+- ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
+4. Estimate recent effective sizes
+- ` some command `
+5. Make the Manhattan plot
+- ` some command `
+6. Checkout the roi.tsv file
+  - ` cat roi.tsv `
   - Edit it with locus names if you want
-7. nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml &
-  - Evaluate your analysis
+7. Run the region of interest analysis
+  - ` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
 
 Refer to the README.md in "cd workflow/*"
 
