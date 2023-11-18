@@ -15,7 +15,7 @@ The methods relate the lengths of IBD tracts to a coalescent model under selecti
 
 We assume 1 selected allele at a biallelic locus.
 
-There are ~ six major ideas.
+There are ~ seven major ideas.
 
 1. A genome-wide selection scan that looks for anomalously large IBD rates
 2. Inferring anomalously large IBD clusters
