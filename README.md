@@ -11,8 +11,9 @@ This software presents statistical methods to study very recent, very strong pos
 - By very recent, we mean within the last 500 generations
 - By very strong, we mean selection coefficient s >= 0.015 (1.5%)
 
-#### The methods relate the lengths of IBD tracts to a coalescent model under selection. We assume 1 selected allele at a biallelic locus.
-#### There are ~ six major ideas.
+### The methods relate the lengths of IBD tracts to a coalescent model under selection. 
+### We assume 1 selected allele at a biallelic locus.
+### There are ~ six major ideas.
 
 1. A genome-wide selection scan that looks for anomalously large IBD rates
 2. Inferring anomalously large IBD clusters
@@ -25,7 +26,7 @@ This software presents statistical methods to study very recent, very strong pos
 (I plan to create some isolated bash scripts for these.
 Currently, they are built in snakemake pipelines.)
 
-#### The input data is:
+### The input data is:
 
 - Whole genome sequences
   - Probably at least > 500 diploids
@@ -40,7 +41,7 @@ Currently, they are built in snakemake pipelines.)
     - More for larger datasets
   - Have not extended to cloud computing yet
 
-#### Running the isweep procedure:
+### Running the isweep procedure:
 
 Phase data w/ Beagle or Shapeit beforehand.
 
@@ -56,7 +57,7 @@ Phase data w/ Beagle or Shapeit beforehand.
 
 Refer to the README.md in "cd workflow/*"
 
-#### Computer Overview
+### Computer Overview
 
 This repository contains a Python package and some Snakemake bioinformatics pipelines.
 - The package ---> src/
@@ -64,7 +65,7 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
 
 We have made README.md files in most subfolders.
 
-#### Installation
+### Installation
 
 1. git clone https://github.com/sdtemple/isweep.git
 2. conda env create -f workflow/environment.yml
@@ -76,7 +77,7 @@ We have made README.md files in most subfolders.
   - Put them in the same place
   - You need to cite these software
 
-#### Other software
+### Other software
 
 - Beagle
 - hap-ibd.jar
