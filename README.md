@@ -1,6 +1,8 @@
-# isweep <img src="isweep-icon.png" align="right" width="200px"/>
+# isweep 
 
 incomplete Selective sweep With Extended haplotypes Estimation Procedure
+
+<img src="isweep-icon.png" align="center" width="400px"/>
 
 This software presents a statistical method for inferring the selection coefficient and the allele frequency of a single adaptive allele introduced to a population in the recent 50-600 generations. It uses identity-by-descent segments, i.e., pairwise matching long haplotypes, to make these inferences. The methodology proposes a parametric statistical model that relates segment data to population genetics and coalescent trees. Please read the following paper for more context:
 
