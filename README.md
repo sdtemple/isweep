@@ -1,7 +1,10 @@
 <img src="isweep-icon.png" align="center" width="400px"/>
 
-
 CAUTION: I did some re-organizing. Testing them out, debugging in late November.
+- I believe the workflow/simulate/ is debugged
+  - Small issue with new string formatting for python 3.12
+- I believe the package src/ is debugged
+- Need to check the workflow/roi/ and workflow/scan/
 
 ## Overview
 
