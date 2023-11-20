@@ -42,7 +42,7 @@ These steps are implemented automatically in a `snakemake` pipeline.
 ## Installation
 
 1. ` git clone https://github.com/sdtemple/isweep.git `
-2. ` conda env create -f isweep-environment.yml `
+2. ` conda env create -f isweep-environment.yml ` or ` mamba env create -f isweep-environment.yml`  
   - ` conda activate isweep `
   - ` python -c 'import site; print(site.getsitepackages())' `
 3. Download other software

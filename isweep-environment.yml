@@ -20,8 +20,8 @@ dependencies:
   - jupyter
   - notebook
   - pip
-  # - pip:
-  #     - isweep
+  - pip:
+      - isweep
   # - r-base
   # - r-essentials
   - bcftools
