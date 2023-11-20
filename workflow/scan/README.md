@@ -2,7 +2,7 @@
 
 You must phase your data beforehand (Beagle, Shapeit, etc.)
 - For Beagle, something like ` java -jar beagle.jar gt=chr.vcf.gz map=chr.map out=chr.phased `
--- Send this as a cluster job !
+    - Send this as a cluster job !
 
 You must remove close relatives beforehand (IBDkin, plink, etc.)
 - Recommendation: at least remove relations w/ kinship > 0.125
@@ -36,7 +36,7 @@ If you are studying a subset of a larger (biobank) dataset, create a subsample t
 
 5. Make a manhattan plot?
     - put a path to my plot script
-    - ` python terminalscripts/manhattan.py [options]`
+    - ` python scripts/manhattan.py [options]`
         - $1 : tsv file name for ibd at each window
         - $2 : prefix for output image files
         - $3 : lowest chromosome number (e.g, 1)
@@ -49,8 +49,8 @@ If you are studying a subset of a larger (biobank) dataset, create a subsample t
         - $9 : height of plot
 
 6. Run ibdne.jar to get recent effective sizes
-    - `cat terminalscripts/run-ibdne.sh ` or `head -n 20 terminalscripts/run-ibdne.sh `
-    - `bash terminalscripts/run-ibdne.sh [options] `
+    - `cat scripts/run-ibdne.sh ` or `head -n 20 scripts/run-ibdne.sh `
+    - `bash scripts/run-ibdne.sh [options] `
         - $1 : location of ibdne.jar applet
         - $2 : memory limit in Gb
         - $3 : folder name for the study
@@ -73,9 +73,9 @@ I use the qsub system to manage cluster jobs.
     - `-pe local 12` allocates 12 CPUs on same node
      - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
 
-5. `python terminalscripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3` 
+5. `python scripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3` 
 
 
-6. ` echo "bash terminalscripts/run-ibdne.sh ibdne.jar 100 eur ibdsegs/ibdends/modified/scan 1 22 ibdne " | qsub -q some-queue.q -N ibdne -m e -M your.email@university.edu `
+6. ` echo "bash scripts/run-ibdne.sh ibdne.jar 100 eur ibdsegs/ibdends/modified/scan 1 22 ibdne " | qsub -q some-queue.q -N ibdne -m e -M your.email@university.edu `
 
 You don't have to use my `manhattan.R` or `manhattan.py` files for plotting. Feel free to take inspiration from the scripts.

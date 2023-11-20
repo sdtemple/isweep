@@ -9,7 +9,7 @@ CHANGE:
     # the yaml file with scan analysis options
     YAML: 'eur.yaml'
     # folder where terminal scripts are
-    TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/terminalscripts'
+    TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/scripts'
     # folder where software is
     SOFTWARE: '/path-to-software'
   # parameters, subsample file

@@ -67,23 +67,23 @@ We have made README.md files in most subfolders.
 
 ## Running the isweep procedure:
 
+This is the overall procedure. You will see more details for each step in workflow/some-pipeline/README.md files.
+
 Phase data w/ Beagle or Shapeit beforehand.
 
 1. Make pointers to large (phased) vcf files
 2. Edit yaml files in the different workflow directories
-3. Run the selection scan
+3. Run the selection scan (workflow/scan)
 - ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
-4. Estimate recent effective sizes
+4. Estimate recent effective sizes (workflow/scan)
 - ` workflow/scan/terminalscripts/run-ibdne.sh `
-5. Make the Manhattan plot
+5. Make the Manhattan plot (workflow/scan)
 - ` workflow/scan/terminalscripts/manhattan.py `
 6. Checkout the roi.tsv file
   - ` cat roi.tsv `
   - Edit it with locus names if you want
-7. Run the region of interest analysis
+7. Run the region of interest analysis (workflow/roi)
   - ` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
-
-Refer to the README.md in ` cd workflow/some-pipeline ` for more instructions.
 
 Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 `
 
