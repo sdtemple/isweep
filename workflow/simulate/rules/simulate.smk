@@ -60,8 +60,8 @@ rule slim_script:
         gcLen=str(config['CHANGE']['SIMULATE']['GCLEN']),
         a=str(config['FIXED']['SIMULATE']['a']),
         b=str(config['FIXED']['SIMULATE']['b']),
-        sampleequal=str(config['CHANGE']['SIMULATE']['SAMPLEEQUAL']),
-        sampleone=str(config['CHANGE']['SIMULATE']['SAMPLEONE']),
+        sampleequal=str(config['FIXED']['SIMULATE']['SAMPLEEQUAL']),
+        sampleone=str(config['FIXED']['SIMULATE']['SAMPLEONE']),
     shell:
         """
         python {params.scripts}/writeSlimDemography.py \
