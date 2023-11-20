@@ -7,13 +7,15 @@ import sys
 import numpy as np
 import pandas as pd
 
-# inputting
-map_file=snakemake.input.mapin
-end=snakemake.config['FIXED']['ISWEEP']['GENOMEEND']
-telocut=snakemake.config['FIXED']['ISWEEP']['TELOCUT']
-by=snakemake.config['FIXED']['ISWEEP']['BY']
-input_file=snakemake.input.filein
-output_file=snakemake.output.fileout
+input_file, output_file, map_file, end, telocut, by = sys.argv[1:]
+
+# # inputting
+# map_file=snakemake.input.mapin
+# end=snakemake.config['FIXED']['ISWEEP']['GENOMEEND']
+# telocut=snakemake.config['FIXED']['ISWEEP']['TELOCUT']
+# by=snakemake.config['FIXED']['ISWEEP']['BY']
+# input_file=snakemake.input.filein
+# output_file=snakemake.output.fileout
 
 # type casting
 start=0

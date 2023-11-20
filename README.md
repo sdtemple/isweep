@@ -31,13 +31,16 @@ These steps are implemented automatically in a `snakemake` pipeline.
 
 - Whole genome sequences
   - Probably at least > 500 diploids
-  - Phased data 0|1
+  - Phased vcf data 0|1
   - No apparent population structure
   - No apparent close relatedness
+  - A genetic map (bp ---> cM)
+  - Recombining diploid chromosomes
+    - Not extended to human X chromosome (yet?)
 - Access to cluster computing
   - You should have at least 25 Gb of RAM and 6 CPUs on a node
     - More for larger datasets
-  - Have not extended to cloud computing yet
+  - Have not extended to cloud computing (yet?)
 
 ## Installation
 
@@ -75,6 +78,7 @@ Phase data w/ Beagle or Shapeit beforehand.
 2. Edit yaml files in the different workflow directories
 3. Run the selection scan (workflow/scan)
 - ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
+- Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
 4. Estimate recent effective sizes (workflow/scan)
 - ` workflow/scan/terminalscripts/run-ibdne.sh `
 5. Make the Manhattan plot (workflow/scan)
@@ -117,6 +121,31 @@ Please cite if you use this package.
 Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
 https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
 
+## Do these methods apply to my sample size?
+
+It'd be nice if you have:
+- Ancestral Ne >= 3000
+- No population bottleneck with Ne < 3000 in last 500 generations
+- Sample from 1 generation
+  - I.e., use other methods for flies, mosquitoes, worms
+
+You could test if there is enough IBD:
+- In python, use the `simulate_ibd` and `read_Ne` functions in `isweep`
+  - Ne file is tab-separated w/ two columns: generation, Ne
+  - You should make at least 500 generations
+  - It is okay to have a guess of Ne size before inferring with IBDNe
+- Do you have # of ibd tracts >= 200? Then, probably yes.
+
+Some species from `stdpopsim` that may apply:
+- Great apes
+  - Pongo abelii
+  - Pan troglodytes
+  - Papio anubis
+- Anas platyrhynchos (duck)
+- Apis mellifera (bee)
+- Canis familiaris (dog)
+  - Address population structure, admixture
+
 ## Development things to do
 
 - Provide some scripts to summarize analyses
@@ -124,3 +153,4 @@ https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
 - Change all snakescripts/ to terminalscripts/
 - Severely simplify the yaml files
   - So many parameters for methods development, not user-friendly
+- Test performance in array data, less dense sequence data

@@ -14,7 +14,7 @@ CHANGE:
     # folder where snakescripts are
     SNAKESCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/snakescripts'
     # forlder where terminal scripts are
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/terminalscripts'
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/scripts'
     # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
     
