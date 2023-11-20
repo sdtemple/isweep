@@ -119,7 +119,7 @@ rule first_rank:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
         python {params.scripts}/rank.py \
