@@ -14,9 +14,9 @@ import networkx as nx
 import seaborn as sns
 
 # my modules
-from .isweepCommunities import *
-from .isweepFavoredMutation import *
-from .isweepUtilities import *
-from .isweepSimulate import *
-from .isweepInference import *
-from .cis import *
+from .outgroups import *
+from .favoredalleles import *
+from .utilities import *
+from .inference import *
+from .slow import *
+from .coalescent import *

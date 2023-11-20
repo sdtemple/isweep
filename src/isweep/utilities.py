@@ -1,84 +1,53 @@
-#!/bin/python
-
 # imports
 import numpy as np
 import pandas as pd
 from copy import deepcopy
-from matplotlib import cm, patches
-from matplotlib.lines import Line2D
 
-### plotting ###
+### binning ###
 
-def discrete_cmap(cmap_name, num_colors, scale = 1, reverse = False):
-    '''Create list of discrete colors
+def read_bins(file):
+    '''Read *.bins file
 
     Parameters
     ----------
-    cmap_name : str
-        Name of color map
-    num_colors : int
-        Number of discrete colors
-    scale : numeric
-        Controls shading of color map
-    reverse : bool
-        Reverse the color map
+    file : str
+        Input file name
 
     Returns
     -------
-    list
-        Discrete colors
+    array-like
+        Increasing floats in centiMorgans
     '''
 
-    assert scale >= 1
-    assert isinstance(num_colors, int)
-    cmap = cm.get_cmap(cmap_name, int(scale * num_colors))
-    cmaplist = [cmap(i) for i in range(cmap.N)]
-    cmaplist = cmaplist[-num_colors:]
-    cmaplist.reverse()
+    bins = pd.read_csv(file, header = None)
+    ab = bins[0]
 
-    return cmaplist
+    return list(ab)
 
-def discrete_handles(vec, dcolors, prec = 2, patches = False, lss = None, lws = None):
-    '''Create handles for discrete values in legend
+def bin_ibd_segments(ell, ab):
+    """Put ibd segments into bins
 
     Parameters
     ----------
-    vec : array-like
-        Values assigned discrete colors and styles
-    dcolors : list
-        Discrete colors
-    prec : int
-        Rounding precision
-    patches : bool
-        Patch or Line2D
-    lss : list
-        Line styles
-    lws : list
-        Line widths
+    ell : array-like
+        ibd segments
+    ab : array-like
+        Increasing floats in centiMorgans
 
     Returns
     -------
-    list
-        Handles for legend
-    '''
+    NumPy array
+        Observed counts for ibd segment bins
+    """
 
-    assert len(vec) == len(dcolors)
-    vec = [round(v, 2) for v in vec]
-    if patches == True:
-        handles = [patches.Patch(color = dcolors[i], label = vec[i]) for i in range(len(vec))]
-    else:
-        if lws is not None:
-            if lss is not None:
-                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], ls = lss[i], lw = lws[i])
-                           for i in range(len(vec))]
-            else:
-                handles = [Line2D([0], [0], color = dcolors[i], label = vec[i], lw = lws[i])
-                           for i in range(len(vec))]
-        else:
-            handles = [Line2D([0], [0], color = dcolors[i], label = vec[i])
-                       for i in range(len(vec))]
+    M = len(ab)
+    obs = []
+    for m in range(1, M):
+        idx = ell < ab[m]
+        obs.append(sum(idx))
+        ell = ell[ell >= ab[m]]
 
-    return handles
+    return np.array(obs)
 
 ### formatting vectors for plotting ###
 
