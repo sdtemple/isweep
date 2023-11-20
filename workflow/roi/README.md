@@ -26,9 +26,12 @@ I will write some scripts (soon-ish) to concatenate results for the loci.
 I use the qsub system to manage cluster jobs.
 
 1. `conda activate isweep`
+
 2. `snakemake -c1 -n -s Snakefile-roi.smk --configfile eur.yaml`
+
 3. `nohup snakemake -c1 -s Snakefile-roi.smk --keep-going --latency-wait 300 --cluster "qsub -q some-queue.q -N {rule} -m e -M your.email.@university.edu -pe local 12 " --configfile eur.yaml --jobs 10 & `
-        - `-pe local 12` allocates 12 CPUs on same node
-        - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
+    - `-pe local 12` allocates 12 CPUs on same node
+    - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
+
 4. `head eur/*/results.hap.tsv` ; `head eur/*/results.snp.tsv` ; `head eur/*/ibd.entropy.tsv`
 

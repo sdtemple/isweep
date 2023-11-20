@@ -70,8 +70,8 @@ I use the qsub system to manage cluster jobs.
 3. `snakemake -c1 -n -s Snakefile-scan.smk --configfile eur.yaml`
 
 4. `nohup snakemake -c1 -s Snakefile-scan.smk --keep-going --latency-wait 300 --cluster "qsub -q some-queue.q -N {rule} -m e -M your.email.@university.edu -pe local 12 " --configfile eur.yaml --jobs 22 & `
-        - `-pe local 12` allocates 12 CPUs on same node
-        - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
+    - `-pe local 12` allocates 12 CPUs on same node
+     - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
 
 5. `python terminalscripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3` 
 

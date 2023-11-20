@@ -1,5 +1,5 @@
 
-### What to do
+## What to do
 
 - Download the required software (if you haven't already) and put it in a folder location
   - See bottom of page
@@ -9,25 +9,31 @@
 - Modify text files yamls/
   - See README in this subfolder
 
-### How to perform simulation study
+## How to perform simulation study
 
-1. nohup snakemake -c1 -s Snakefile-simulate.smk --cluster "[options]" --jobs X --configfile *.yaml &
-  - I like to use the following snakemake options
-    - "-n" to do a dry-run (what will be done)
-    - "--keep-going"
-    - "--rerun-triggers mtime"
-    - "--rerun-incomplete"
-    - "--latency-wait 300"
-    - "nohup ... &" let's you run pipeline in background
-2. nohup snakemake -c1 -s Snakefile-ibd.smk --cluster "[options]" --jobs X --configfile *.yaml &
-  - For the qsub cluster manager, I pass "-V" into --cluster options and my activate environment is isweep
-3. Write some python/R scripts to summarize the data and make plots
+1. `conda activate isweep`
 
-### How to clean up files
+2. `nohup snakemake -c1 -s Snakefile-simulate.smk --cluster "[options]" --jobs X --configfile *.yaml & `
+ - I like to use the following snakemake options
+    - `-n` to do a dry-run (what will be done)
+    - `--keep-going`
+    - `--rerun-triggers mtime` (if things didn't finish)
+    - `--rerun-incomplete` (if things didn't finish)
+    - `--latency-wait 300`
+    - `nohup ... & ` let's you run pipeline in background
+
+3. ` nohup snakemake -c1 -s Snakefile-ibd.smk --cluster "[options]" --jobs X --configfile *.yaml & `
+  - For the qsub cluster manager, I pass `-V` into `--cluster` options and my active environment is isweep
+
+4. Write some python/R scripts to summarize the data and make plots
+
+The `Snakefile` solo does both `Snakefile-simulate.smk` + `Snakefile-ibd.smk`.
+
+## How to clean up files
 
 - You should only do this once you're done / finalized with your work.
   - This includes running any comparisons you care about (isafe, clues, etc.)
-- Linux command "rm"  
+- Linux command `rm`  
   - Use wildcards *
   - Don't remove these main data files:
     - large.chr1.vcf.gz
@@ -40,7 +46,7 @@
   - MICRO in your experiment file defines subfolders (a string)
   - REP in your experiment file defines subsubfolders (a number)
 
-### Required software
+## Required software
 - https://messerlab.org/slim/
 - https://github.com/browning-lab/hap-ibd
 - https://github.com/browning-lab/ibd-ends
