@@ -2,7 +2,8 @@ wildcard_constraints:
 	SIMNAME = '\w+',
 
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
-ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
 
@@ -82,7 +83,7 @@ rule filter_ibdends:
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        momcut=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        momcut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:

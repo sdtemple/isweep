@@ -1,22 +1,7 @@
-# results/
+# hidden files from programming
 .Rhistory
 .snakemake/
 .ipynb_checkpoints/
-jars/
-development/
-img/
-archive/
-# auxillary/
-old/
-fitsimstudy/
-src2/
-workflow/realDataRoi/
-workflow/realDataScan/
-READMEtest.md
-workflow/isafe/
-workflow/clues/
-clues/
-isafe/
 
 # taken from https://github.com/github/gitignore/blob/main/Python.gitignore
 

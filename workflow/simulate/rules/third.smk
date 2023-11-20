@@ -17,7 +17,7 @@ rule third_hap:
         freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
-        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
+        lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
@@ -67,9 +67,10 @@ rule third_hap_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
-        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
     shell:
         """
@@ -137,9 +138,10 @@ rule third_snp_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
-        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
     shell:
         """

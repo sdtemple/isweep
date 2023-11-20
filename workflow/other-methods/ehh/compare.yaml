@@ -1,0 +1,29 @@
+# Seth D. Temple, sdtemple@uw.edu
+# April 26, 2023
+
+# change these
+CHANGE:
+  # folders, file name of simulation study *.tsv
+  FOLDERS:
+    YAML: 'bottle.yaml'
+    # folder for macro experiments
+    MACRO: 'bottle'
+    # tsv file describing simulations
+    MICRO: 'experiments/simstudy.all.tsv'
+    # forlder where terminal scripts are
+    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/terminalscripts'
+    # folder where software is
+    SOFTWARE: '/projects/browning/brwnlab/seth/software'
+    SELSCANFOLDER: '~/brwn/seth/selscan'
+
+# keep these fixed
+FIXED:
+  # simulation study settings
+  SIMULATE:
+    LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+    BUFFER: '1200000'
+    SIZE: '8000000'
+    # LEFT: '3499999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+    # RIGHT: '4499999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+    # LEFTFILT: '1999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
+    # RIGHTFILT: '5999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation

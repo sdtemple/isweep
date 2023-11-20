@@ -1,0 +1,400 @@
+# comparing isweep in simulation study
+# Seth D. Temple, sdtemple@uw.edu
+# May 15, 2023 originally
+# October 2, 2023 added selscan
+
+# setup macro folder
+import os
+macro=str(config['CHANGE']['FOLDERS']['MACRO'])
+if not os.path.exists(macro):
+	os.mkdir(macro)
+
+# load in experiments, set up micro, simname folders
+import pandas as pd
+micro=str(config['CHANGE']["FOLDERS"]["MICRO"])
+sims = pd.read_csv(micro, sep='\t', header=0)
+J = sims.shape[0]
+for j in range(J):
+	row = sims.loc[j,]
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)):
+		os.mkdir(macro+'/'+str(row.MICROEXP))
+	if not os.path.exists(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME)):
+		os.mkdir(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME))
+sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
+sims['FILE'] = sims['FOLDER'] + '/second.ranks.tsv.gz' # after running isweep
+sims['EXISTS'] = sims['FILE'].apply(os.path.isfile)
+sims=sims[sims['EXISTS']]
+sims = sims.set_index("SIMNAME", drop=False)
+
+rule all:
+	input:
+        # isafe
+		[f"{sim.FOLDER}/isafe.ranks.tsv.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/isafe.rank.true.txt" for sim in sims.itertuples()],
+        # ihs
+		[f"{sim.FOLDER}/ihs.ranks.tsv.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/ihs.rank.true.txt" for sim in sims.itertuples()],
+        # ihh12
+		[f"{sim.FOLDER}/ihh12.ranks.tsv.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/ihh12.rank.true.txt" for sim in sims.itertuples()],
+        # nsl
+		[f"{sim.FOLDER}/nsl.ranks.tsv.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/nsl.rank.true.txt" for sim in sims.itertuples()],
+
+# get a subset of SNPs
+
+rule subset:
+    input:
+        vcf='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
+    output:
+        vcfout='{macro}/{micro}/{seed}/compare.chr1.vcf.gz',
+    params:
+        pm=str(config['FIXED']['SIMULATE']['BUFFER']),
+        center=str(config['FIXED']['SIMULATE']['LOC']),
+        folder='{macro}/{micro}/{seed}',
+    shell:
+        """
+        gunzip -c {input.vcf} | bgzip > {params.folder}/chrsubtemp.vcf.bgz
+        tabix -fp vcf {params.folder}/chrsubtemp.vcf.bgz
+        left=$(python -c "out = {params.center} - {params.pm} ; print(out)")
+        right=$(python -c "out = {params.center} + {params.pm} ; print(out)")
+        bcftools view {params.folder}/chrsubtemp.vcf.bgz \
+            -r 1:${{left}}-${{right}} \
+            -Oz -o {output.vcfout}
+        rm {params.folder}/chrsubtemp.vcf.bgz
+        """
+
+# this may be pointless with selscan --pmap
+rule make_map:
+    input:
+        vcf='{macro}/{micro}/{seed}/compare.chr1.vcf.gz',
+    output:
+        genmap='{macro}/{micro}/{seed}/compare.chr1.map',
+    params:
+        headersize='9',
+        denominator=str(config['FIXED']['SIMULATE']['SIZE']),
+        terminalscripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.terminalscripts}/map-for-selscan.py \
+            {input.vcf} \
+            {output.genmap} \
+            {params.headersize} \
+            {params.denominator}
+        """
+
+# running main programs
+
+rule isafe:
+    input:
+        vcf='{macro}/{micro}/{seed}/compare.chr1.vcf.gz',
+    output:
+        out='{macro}/{micro}/{seed}/isafe.ranks.iSAFE.out',
+    params:
+        head='{macro}/{micro}/{seed}/isafe.ranks',
+        center=str(config['FIXED']["SIMULATE"]["LOC"]),
+        pm=str(config['FIXED']["SIMULATE"]['BUFFER']),
+        # left=str(config['FIXED']["SIMULATE"]["LEFT"]),
+        # right=str(config['FIXED']["SIMULATE"]["RIGHT"]),
+    shell:
+        """
+        left=$(python -c "out = {params.center} - {params.pm} ; print(out)")
+        right=$(python -c "out = {params.center} + {params.pm} ; print(out)")
+        tabix -fp vcf {input.vcf}
+        isafe --input {input.vcf} --output {params.head} --format vcf --region 1:${{left}}-${{right}}
+        """
+
+rule ihs:
+    input:
+        vcfdat="{macro}/{micro}/{seed}/compare.chr1.vcf.gz",
+        genmap="{macro}/{micro}/{seed}/compare.chr1.map",
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihs.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.ihs.log',
+    params:
+        prefix='{macro}/{micro}/{seed}/slimulation',
+        selscanfolder=str(config['CHANGE']['FOLDERS']['SELSCANFOLDER']),
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/selscan --ihs \
+            --vcf {input.vcfdat} \
+            --out {params.prefix} \
+            --map {input.genmap} \
+            --pmap \
+        """
+
+rule ihh12:
+    input:
+        vcfdat="{macro}/{micro}/{seed}/compare.chr1.vcf.gz",
+        genmap="{macro}/{micro}/{seed}/compare.chr1.map",
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihh12.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.ihh12.log',
+    params:
+        prefix='{macro}/{micro}/{seed}/slimulation',
+        selscanfolder=str(config['CHANGE']['FOLDERS']['SELSCANFOLDER']),
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/selscan --ihh12 \
+            --vcf {input.vcfdat} \
+            --out {params.prefix} \
+            --map {input.genmap} \
+            --pmap \
+        """
+
+rule nsl:
+    input:
+        vcfdat="{macro}/{micro}/{seed}/compare.chr1.vcf.gz",
+        genmap="{macro}/{micro}/{seed}/compare.chr1.map",
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.nsl.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.nsl.log',
+    params:
+        prefix='{macro}/{micro}/{seed}/slimulation',
+        selscanfolder=str(config['CHANGE']['FOLDERS']['SELSCANFOLDER']),
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/selscan --nsl \
+            --vcf {input.vcfdat} \
+            --out {params.prefix} \
+            --map {input.genmap} \
+            --pmap \
+        """
+
+# normalizing
+
+rule nsl_norm:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.nsl.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.nsl.log',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.nsl.out.100bins.norm',
+        # check out the default file nomenclature
+    params:
+        selscanfolder=str(config['CHANGE']['FOLDERS']['SELSCANFOLDER']),
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/norm --nsl \
+            --files {input.infile} \
+        """
+
+rule ihs_norm:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.ihs.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.ihs.log',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihs.out.100bins.norm',
+        # check out the default file nomenclature
+    params:
+        selscanfolder=str(config['CHANGE']['FOLDERS']['SELSCANFOLDER']),
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/norm --nsl \
+            --files {input.infile} \
+        """
+
+rule ihh12_norm:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.ihh12.out',
+        logfile='{macro}/{micro}/{seed}/slimulation.ihh12.log',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihh12.out.norm',
+        # check out the default file nomenclature
+    params:
+        selscanfolder='~/brwn/seth/selscan',
+    shell:
+        """
+        {params.selscanfolder}/bin/linux/norm --ihh12 \
+            --files {input.infile} \
+        """
+
+# sorting
+
+rule isafe_sort:
+    input:
+        unsort='{macro}/{micro}/{seed}/isafe.ranks.iSAFE.out',
+    output:
+        sort='{macro}/{micro}/{seed}/isafe.ranks.tsv.gz',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.scripts}/sort-pandas.py {input.unsort} {output.sort}
+        """
+
+rule ihs_sort:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.ihs.out.100bins.norm',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihs.out.100bins.norm.sorted',
+    params:
+        ifheader='0',
+        importantcol='6',
+        terminalscripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.terminalscripts}/sort-selscan.py \
+            {input.infile} \
+            {params.ifheader} \
+            {params.importantcol}
+        """
+
+rule nsl_sort:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.nsl.out.100bins.norm',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.nsl.out.100bins.norm.sorted',
+    params:
+        ifheader='0',
+        importantcol='6',
+        terminalscripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.terminalscripts}/sort-selscan.py \
+            {input.infile} \
+            {params.ifheader} \
+            {params.importantcol}
+        """
+
+rule ihh12_sort:
+    input:
+        infile='{macro}/{micro}/{seed}/slimulation.ihh12.out.norm',
+    output:
+        outfile='{macro}/{micro}/{seed}/slimulation.ihh12.out.norm.sorted',
+    params:
+        ifheader='0',
+        importantcol='4',
+        terminalscripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+    shell:
+        """
+        python {params.terminalscripts}/sort-selscan.py \
+            {input.infile} \
+            {params.ifheader} \
+            {params.importantcol}
+        """
+
+
+# ranking
+
+rule rank_isafe:
+    input:
+        filein='{macro}/{micro}/{seed}/isafe.ranks.tsv.gz',
+    output:
+        fileout='{macro}/{micro}/{seed}/isafe.rank.true.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        loc=str(config['FIXED']['SIMULATE']['LOC']),
+    shell:
+        """
+        python {params.scripts}/truerank.py \
+            {input.filein} \
+            {output.fileout} \
+            {params.loc} \
+            1 \
+            1 \
+        """
+
+
+rule rank_nsl:
+    input:
+        filein='{macro}/{micro}/{seed}/slimulation.nsl.out.100bins.norm.sorted',
+    output:
+        fileout='{macro}/{micro}/{seed}/nsl.rank.true.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        loc=str(config['FIXED']['SIMULATE']['LOC']),
+    shell:
+        """
+        python {params.scripts}/truerank.py \
+            {input.filein} \
+            {output.fileout} \
+            {params.loc} \
+            1 \
+            1 \
+        """
+
+rule rank_ihh12:
+    input:
+        filein='{macro}/{micro}/{seed}/slimulation.ihh12.out.norm.sorted',
+    output:
+        fileout='{macro}/{micro}/{seed}/ihh12.rank.true.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        loc=str(config['FIXED']['SIMULATE']['LOC']),
+    shell:
+        """
+        python {params.scripts}/truerank.py \
+            {input.filein} \
+            {output.fileout} \
+            {params.loc} \
+            1 \
+            1 \
+        """
+
+rule rank_ihs:
+    input:
+        filein='{macro}/{micro}/{seed}/slimulation.ihs.out.100bins.norm.sorted',
+    output:
+        fileout='{macro}/{micro}/{seed}/ihs.rank.true.txt',
+    params:
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        loc=str(config['FIXED']['SIMULATE']['LOC']),
+    shell:
+        """
+        python {params.scripts}/truerank.py \
+            {input.filein} \
+            {output.fileout} \
+            {params.loc} \
+            1 \
+            1 \
+        """
+
+# renaming
+
+rule nsl_rename:
+    input:
+        ran='{macro}/{micro}/{seed}/slimulation.nsl.out.100bins.norm.sorted',
+        tru='{macro}/{micro}/{seed}/nsl.rank.true.txt',
+    output:
+        nam='{macro}/{micro}/{seed}/nsl.ranks.tsv.gz',
+    params:
+        ran='{macro}/{micro}/{seed}/slimulation.nsl.out',
+    shell:
+        """
+        cat {input.ran} | gzip > {output.nam}
+        rm {params.ran}
+        rm {params.ran}.100bins.norm
+        rm {params.ran}.100bins.norm.sorted
+        """
+
+rule ihh12_rename:
+    input:
+        ran='{macro}/{micro}/{seed}/slimulation.ihh12.out.norm.sorted',
+        tru='{macro}/{micro}/{seed}/ihh12.rank.true.txt',
+    output:
+        nam='{macro}/{micro}/{seed}/ihh12.ranks.tsv.gz',
+    params:
+        ran='{macro}/{micro}/{seed}/slimulation.ihh12.out',
+    shell:
+        """
+        cat {input.ran} | gzip > {output.nam}
+        rm {params.ran}
+        rm {params.ran}.norm
+        rm {params.ran}.norm.sorted
+        """
+
+rule ihs_rename:
+    input:
+        ran='{macro}/{micro}/{seed}/slimulation.ihs.out.100bins.norm.sorted',
+        tru='{macro}/{micro}/{seed}/ihs.rank.true.txt',
+    output:
+        nam='{macro}/{micro}/{seed}/ihs.ranks.tsv.gz',
+    params:
+        ran='{macro}/{micro}/{seed}/slimulation.ihs.out',
+    shell:
+        """
+        cat {input.ran} | gzip > {output.nam}
+        rm {params.ran}
+        rm {params.ran}.100bins.norm
+        rm {params.ran}.100bins.norm.sorted
+        """

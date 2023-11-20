@@ -1,38 +1,54 @@
-What to do
-  * Download Browning Lab software and put in same place as yaml definition
-  * Copy and modify simstudies.reference.yaml
-  * Or, use simstudies.*.yaml
-  * Run setup-snakemake-experiment.py to get define replicate studies
-    * Modify your yaml file accordingly
 
-Terminal commands
-  * snakemake -c1 -n
-    * Dry run of bioinformatics pipeline
-  * snakemake -c2
-    * Run with 2 cores
-  * yada
-    * Version for a computing cluster
+## What to do
 
-How to clean up
-  * Only do this after you have all desired results
-    * This means you may still want to compare to CLUES, iSAFE
-  * MACRO is the macro folder
-  * MICRO is the micro folder
-  * REP is a number
-  * rm MACRO/MICRO/REP/
-    * Any vcf.gz
-    * Any ibd.gz
-    * Any hbd.gz
-    * Any .tbi
-    * Any .csi
-    * Any .bgz
-    * Any firstpass.
+- Download the required software (if you haven't already) and put it in a folder location
+  - See bottom of page
+- Make an experiments file
+  - Use experiments/setup-snakemake-experiment.py
+  - python setup-snakemake-experiment.py
+- Modify text files yamls/
+  - See README in this subfolder
 
-What to keep
-  * .slim files
-  * .log files
-  * .tsz files
-    * Use this to conduct array-like studies
-  * .tsv files
-  * .tsv.gz files
-  * arguments.yaml
+## How to perform simulation study
+
+1. `conda activate isweep`
+
+2. `nohup snakemake -c1 -s Snakefile-simulate.smk --cluster "[options]" --jobs X --configfile *.yaml & `
+ - I like to use the following snakemake options
+    - `-n` to do a dry-run (what will be done)
+    - `--keep-going`
+    - `--rerun-triggers mtime` (if things didn't finish)
+    - `--rerun-incomplete` (if things didn't finish)
+    - `--latency-wait 300`
+    - `nohup ... & ` let's you run pipeline in background
+
+3. ` nohup snakemake -c1 -s Snakefile-ibd.smk --cluster "[options]" --jobs X --configfile *.yaml & `
+  - For the qsub cluster manager, I pass `-V` into `--cluster` options and my active environment is isweep
+
+4. Write some python/R scripts to summarize the data and make plots
+
+The `Snakefile` solo does both `Snakefile-simulate.smk` + `Snakefile-ibd.smk`.
+
+## How to clean up files
+
+- You should only do this once you're done / finalized with your work.
+  - This includes running any comparisons you care about (isafe, clues, etc.)
+- Linux command `rm`  
+  - Use wildcards *
+  - Don't remove these main data files:
+    - large.chr1.vcf.gz
+    - slimulation.trees.tsz
+    - slimulation.vcf.gz or slimulation.bcf or slimulation.bcf.gz
+    - results.hap.tsv
+    - results.snp.tsv
+    - ibd.entropy.tsv
+  - MACRO in your yamls/ is the main folder directory (a string)
+  - MICRO in your experiment file defines subfolders (a string)
+  - REP in your experiment file defines subsubfolders (a number)
+
+## Required software
+- https://messerlab.org/slim/
+- https://github.com/browning-lab/hap-ibd
+- https://github.com/browning-lab/ibd-ends
+- http://faculty.washington.edu/browning/add-uniform-err.jar
+- http://faculty.washington.edu/browning/filter-lines.jar

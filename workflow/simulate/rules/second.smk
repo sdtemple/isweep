@@ -2,7 +2,8 @@ wildcard_constraints:
 	SIMNAME = '\w+',
 
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
-ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
 
@@ -99,7 +100,7 @@ rule second_rank:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF2']),
+        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
     shell:
         """
@@ -132,3 +133,19 @@ rule second_outlier:
             {params.rulesigma}
         touch {output.fileout}
         """
+
+rule ibd_entropy:
+	input:
+		filein='{macro}/{micro}/second.outliers.txt',
+	output:
+		fileout='{macro}/{micro}/ibd.entropy.tsv',
+	params:
+		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+		samplesize=str(n*ploidy),
+	shell:
+		"""
+		python {params.scripts}/ibd-entropy.py \
+			{wildcards.macro}/{wildcards.micro} \
+			{output.fileout} \
+			{params.samplesize}
+		"""
