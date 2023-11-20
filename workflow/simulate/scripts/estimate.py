@@ -21,7 +21,7 @@ import gzip
 import sys
 
 # i/o
-fileout, ibdct, p_est, cutoff, n, Ne, ploidy, nboot = sys.argv[1:]
+fileout, ibdct, p_est, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
 
 # edit these manually
 inh='a'
