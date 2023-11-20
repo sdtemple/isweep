@@ -8,7 +8,8 @@ samplesize=0
 with open(cohort+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
-ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*samplesize*maf3)
 maf=float(config['FIXED']['ISWEEP']['MINAAF'])

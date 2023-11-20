@@ -3,6 +3,7 @@
 
 # change these
 CHANGE:
+
   FOLDERS:
     # folder for analysis
     STUDY: '/path-to-study/eur'
@@ -12,6 +13,7 @@ CHANGE:
     TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/scripts'
     # folder where software is
     SOFTWARE: '/path-to-software'
+
   # parameters, subsample file
   ISWEEP:
     # lowest chromosome number
@@ -21,6 +23,7 @@ CHANGE:
     SUBSAMPLE: '/path-to-subsample/inferred.european.txt'
     XMXMEM: '240' # in gb
     THREADS: '16'
+
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
@@ -30,6 +33,7 @@ CHANGE:
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
     IBDNE: 'ibdne.ne'
+
   EXISTING:
     # these are phased vcfs
     VCFS: '/path-to-topmed-data/phased-vcfs'
@@ -42,7 +46,9 @@ CHANGE:
 
 # keep these fixed
 FIXED:
+
   # hap-ibd.jar
+  # candidate ibd segments
   # these are inspired by Cai, Browning, and Browning (2023+)
   CANDHAPIBD: # candidate
     # min-seed
@@ -54,7 +60,9 @@ FIXED:
     # minimum minor allele frequency
     MINMAF: '0.40'
     # ploidy number
-    PLOIDY: '2'
+    # PLOIDY: '2'
+
+  # refined ibd segments
   # ibd-ends.jar
   IBDENDS:
     # quantiles from endpoint posterior
@@ -65,25 +73,22 @@ FIXED:
     ERRRATE: '1.5e-4'
     # minimum minor allele frequency
     MINMAF: '0.001'
+
   # isweep
   ISWEEP:
-    # in mega bp
-    GENOMEEND: '1000'
-    # in kilo bp
-    BY: '20'
-    # cutting cM at telomeres
-    TELOCUT: '2.0'
-    # ibd cM threshold for isweep method of moments
-    MOMCUTOFF: '3.0'
-    # ibd cM threshold for isweep scan
-    SCANCUTOFF: '2.0'
-    # cM gap when concatenating regions of excess IBD
-    CMGAP: '1.0'
+    # scanning parameters
+    SCANCUTOFF: '2.0' # ibd cM threshold
+    GENOMEEND: '1000' # in mega bp
+    BY: '20' # in kilo bp
+    TELOCUT: '0.5' # cutting cM at telomeres
+    CMGAP: '1.0' # cM gap when concatenating regions of excess IBD
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd
-    # excess ibd rate must extend this long in cM
-    CMCOVER: '1.0'
-    # region is extended w/ buffer if too small
-    CMSMALL: '2.0'
-    # mb buffer if cm not long enough
-    MBBUF: '2'
+    CMCOVER: '1.0' # excess ibd rate must extend this long in cM
+    CMSMALL: '2.0' # region is extended w/ buffer if too small
+    MBBUF: '2' # mb buffer if cm not long enough
+    # estimating selection coefficient
+    MLECUTOFF: '3.0' # ibd cM cutoff
+
+
+

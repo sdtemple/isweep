@@ -11,7 +11,8 @@ with open(subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 # samplesize=str(samplesize)
-ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
 maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
 mac1=int(ploidy*samplesize*maf1)
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
@@ -144,7 +145,7 @@ rule filter_ibdends_mom: # applying cutoffs
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-        momcut=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        momcut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     shell:
         """
         zcat {input.ibd} | \

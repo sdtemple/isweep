@@ -8,7 +8,8 @@ samplesize=0
 with open(cohort+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
-ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
+ploidy=2
+# ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
 samplesize_ploidy=samplesize*ploidy
 
 # extend Ne(t)
@@ -96,7 +97,8 @@ rule third_hap_infer:
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
-        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -168,7 +170,8 @@ rule third_snp_infer:
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
-        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)

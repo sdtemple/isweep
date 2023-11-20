@@ -17,6 +17,7 @@ CHANGE:
     TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/terminalscripts'
     # folder where software is
     SOFTWARE: '/projects/browning/brwnlab/seth/software'
+    
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
     HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
@@ -25,10 +26,12 @@ CHANGE:
     FILTER: 'filter-lines.jar' # http://faculty.washington.edu/browning/
     # RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
     # BEAGLE: 'beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
+
   CLUSTER:
     # controls memory resource to some rules
     # in Gb
     LARGEMEM: '100'
+
   SIMULATE:
     tNe: 'ne/bottleneck.ne' # true Ne file
     iNe: 'ne/bottleneck-1000G.ne' # Ne file for inference (tail should be last value in tNe)
@@ -48,16 +51,43 @@ CHANGE:
 
 # keep these fixed
 FIXED:
-  # simulation study settings
+
+  # isweep
+  ISWEEP:
+    # scanning parameters
+    SCANCUTOFF: '2.0' # ibd cM threshold
+    GENOMEEND: '1000' # in mega bp
+    BY: '20' # in kilo bp
+    TELOCUT: '0.5' # cutting cM at telomeres
+    # inferring outgroup
+    DIAMETER: '6' # any two nodes in community can reach other in this many edges
+    GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    # initiat focal location
+    MAXSPACING: '25000' # max position spacing in location initializing
+    QRANGE: '10' # num percentiles to sum over in location initializing
+    # estimating allele frequency
+    WINSIZE: '250000' # window size and step
+    WINSTEP: '50000'
+    HAPSIZE: '500000' # haplotype position size and step
+    HAPSTEP: '50000'
+    FREQSIZE: '0.100' # haplotype frequency size and step
+    FREQSTEP: '0.025'
+    NUMSNP: '5' # min number of SNPs in a haplotype rectangle
+    MINAAF: '0.10' # min allele frequency considered in estimating frequency
+    # estimating selection coefficient
+    MLECUTOFF: '3.0' # ibd cM cutoff
+
+  # simulation study setting
   SIMULATE:
     BUFFER: '1500000'
     SAMPLEONE: '1' # 1 to sample from 1 subpop, 0 to sample from all subpops
     SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
     NUMVAR: '1' # num adaptive mutations
-    PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
+    # PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
     a: '0.1' # min adaptive allele freq
     b: '0.9' # min adaptive allele freq
-  # hap-ibd.jar
+
+  # candidate ibd segments
   CANDHAPIBD:
     # min-seed
     MINSEED: '0.5'
@@ -68,8 +98,9 @@ FIXED:
     # minimum minor allele frequency
     MINMAF: '0.40'
     # ploidy number
-    PLOIDY: '2'
-  # ibd-ends.jar
+    # PLOIDY: '2'
+
+  # refined ibd segments
   IBDENDS:
     # quantiles from endpoint posterior
     QUANTILES: '0.5'
@@ -79,41 +110,8 @@ FIXED:
     ERRRATE: '2e-4'
     # minimum minor allele frequency
     MINMAF: '0.001'
-  # isweep
-  ISWEEP:
-    # in mega bp
-    GENOMEEND: '1000'
-    # in kilo bp
-    BY: '20'
-    # cutting cM at telomeres
-    TELOCUT: '0.5'
-    # ibd cM threshold for isweep method of moments
-    MLECUTOFF: '3.0'
-    # ibd cM threshold for isweep scan
-    SCANCUTOFF: '2.0'
-    # any two nodes in community can reach other in this many edges
-    DIAMETER: '6'
-    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    RULESIGMA: '3'
-    # window size and step
-    WINSIZE: '250000'
-    WINSTEP: '50000'
-    # haplotype position size and step
-    HAPSIZE: '500000'
-    HAPSTEP: '50000'
-    # haplotype frequency size and step
-    FREQSIZE: '0.100'
-    FREQSTEP: '0.025'
-    # min number of SNPs in a haplotype rectangle
-    NUMSNP: '5'
-    # min allele frequency considered in estimating frequency
-    MINAAF: '0.10'
-    # max position spacing in location initializing
-    MAXSPACING: '25000'
-    # num percentiles to sum over in location initializing
-    QRANGE: '10'
-
-  # hap-ibd for short
+    
+  # ibd group segments
   HAPIBD:
     # min-seed
     MINSEED: '0.5'
@@ -124,4 +122,4 @@ FIXED:
     # minimum minor allele frequency
     MINMAF: '0.10'
     # ploidy number
-    PLOIDY: '2'
+    # PLOIDY: '2'

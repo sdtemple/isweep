@@ -3,7 +3,8 @@ wildcard_constraints:UTOFF
 
 # some inputs, string managements, count sample size
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
-ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # subset vcf to region of interest

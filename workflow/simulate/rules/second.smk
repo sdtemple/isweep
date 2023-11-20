@@ -2,7 +2,8 @@ wildcard_constraints:
 	SIMNAME = '\w+',
 
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
-ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+ploidy=2
+# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
 

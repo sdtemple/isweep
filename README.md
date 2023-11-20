@@ -28,12 +28,9 @@ These steps are implemented automatically in a `snakemake` pipeline.
 
 - Whole genome sequences
   - Probably at least > 500 diploids
-  - Phased data
-    - Use Beagle (https://faculty.washington.edu/browning/beagle/beagle.html)
-  - No apparent population structure (i.e., admixture, diverged groups in same dataset)
+  - Phased data 0|1
+  - No apparent population structure
   - No apparent close relatedness
-    - Use IBDkin (https://github.com/YingZhou001/IBDkin)
-    - Or something else like plink (https://zzz.bwh.harvard.edu/plink/)
 - Access to cluster computing
   - You should have at least 25 Gb of RAM and 6 CPUs on a node
     - More for larger datasets
