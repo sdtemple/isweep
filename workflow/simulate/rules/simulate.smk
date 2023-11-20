@@ -23,7 +23,8 @@ rule uniform_map:
 rule forward_Ne:
     input:
         # str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
-        filein=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
+        # filein=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
+        nefile=str(config['CHANGE']['SIMULATE']['tNe']),
     output:
         # str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
         fileout=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
@@ -33,7 +34,7 @@ rule forward_Ne:
     shell:
         """
         python {params.scripts}/forwardNe.py \
-            {input.filein} \
+            {input.nefile} \
             {output.fileout}
         """
     # script:
