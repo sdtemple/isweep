@@ -1,8 +1,8 @@
-# isweep 
-
-incomplete Selective sweep With Extended haplotypes Estimation Procedure
-
 <img src="isweep-icon.png" align="center" width="400px"/>
+
+## Overview
+
+Acronym: incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
 This software presents statistical methods to study very recent, very strong positive selection.
 - By very recent, we mean within the last 500 generations
