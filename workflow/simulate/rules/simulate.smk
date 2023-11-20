@@ -6,7 +6,6 @@ rule uniform_map:
     output:
         mapout=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
     params:
-        # scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
         L=str(config['CHANGE']['SIMULATE']['CMLEN']),
@@ -17,19 +16,13 @@ rule uniform_map:
             {params.rho} \
             {params.L}
         """
-    # script:
-    #     '{params.scripts}/uniformMap.py'
 
 rule forward_Ne:
     input:
-        # str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
-        # filein=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
         nefile=str(config['CHANGE']['SIMULATE']['tNe']),
     output:
-        # str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
         fileout=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
     params:
-        # scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
@@ -37,8 +30,6 @@ rule forward_Ne:
             {input.nefile} \
             {output.fileout}
         """
-    # script:
-    #     '{params.scripts}/forwardNe.py'
 
 rule slim_script:
     input:
@@ -84,17 +75,6 @@ rule slim_script:
             {params.sampleone}
         """
 
-# rule slim_script:
-#     input:
-#         trueNe = str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
-#         map = str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
-#     output:
-#         [f"{sim.FOLDER}/slimulation.slim" for sim in sims.itertuples()],
-#     params:
-#         scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
-#     script:
-#         '{params.scripts}/writeSlimDemography.py'
-
 ### generate tree, vcf data ###
 
 # slim forward
@@ -105,7 +85,6 @@ rule slim:
         trees="{macro}/{micro}/{seed}/slimulation.trees",
         freq="{macro}/{micro}/{seed}/slimulation.freq",
     params:
-        # scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['SLiM']),
     resources:
@@ -120,11 +99,10 @@ rule msprime:
     output:
         bcf="{macro}/{micro}/{seed}/slimulation.bcf.gz",
     params:
-        # scripts=str(config['CHANGE']['FOLDERS']['SNAKESCRIPTS']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mu=str(config['CHANGE']['SIMULATE']['MU']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
-        ancNe=str(config['CHANGE']['SIMULATE']['ancNe']),
+        tNe=str(config['CHANGE']['SIMULATE']['tNe']),
         maf=str(config['CHANGE']['SIMULATE']['MSPMAF']),
         sampsize=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(2),
@@ -132,18 +110,17 @@ rule msprime:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
         """
+        ancNe=$(tail -n 1 | cut -f 2)
         python {params.scripts}/treeVCF.py \
             {output.bcf} \
             {input.trees} \
             {params.mu} \
             {params.rho} \
-            {params.ancNe} \
+            $ancNe \
             {params.maf} \
             {params.sampsize} \
             {params.ploidy}
         """
-    # script:
-    #     '{params.scripts}/treeVCF.py'
 
 # bcf, vcf magic
 rule vcf:

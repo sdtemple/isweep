@@ -1,32 +1,14 @@
 # This script writes SLiM demography files for simulations
 
 import sys
-
-macro, micro, Ne, n, ageSplit, V, L, m, q, rho, gcProp, gcMeanLength, a, b, equalSizes, sampleOneSubpop = sys.argv[1:]
-
-##### inputs #####
-
-# n=snakemake.config['CHANGE']['SIMULATE']['SAMPSIZE']
-# ageSplit=snakemake.config['CHANGE']['SIMULATE']['TSPLIT']
-# V=snakemake.config['FIXED']['SIMULATE']['NUMVAR']
-# L=snakemake.config['CHANGE']['SIMULATE']['CMLEN']
-# m=snakemake.config['CHANGE']['SIMULATE']['NUMSUBPOP']
-# q=snakemake.config['CHANGE']['SIMULATE']['MIGRRATE']
-# rho=snakemake.config['CHANGE']['SIMULATE']['RHO']
-# gcProp=snakemake.config['CHANGE']['SIMULATE']['GCPROP']
-# gcMeanLength=snakemake.config['CHANGE']['SIMULATE']['GCLEN']
-# Ne=snakemake.input.trueNe
-# a=snakemake.config['FIXED']['SIMULATE']['a']
-# b=snakemake.config['FIXED']['SIMULATE']['b']
-# equalSizes=snakemake.config['FIXED']['SIMULATE']['SAMPLEEQUAL']
-# sampleOneSubpop=snakemake.config['FIXED']['SIMULATE']['SAMPLEONE']
-
 from random import randint
 import numpy as np
 import pandas as pd
 
-# macro=str(snakemake.config['CHANGE']['FOLDERS']['MACRO'])
-# micro=str(snakemake.config['CHANGE']["FOLDERS"]["MICRO"])
+macro, micro, Ne, n, ageSplit, V, L, m, q, rho, gcProp, gcMeanLength, a, b, equalSizes, sampleOneSubpop = sys.argv[1:]
+
+
+
 sims = pd.read_csv(micro, sep='\t', header=0)
 J = sims.shape[0]
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]

@@ -1,0 +1,36 @@
+#!/bin/usr/env Rscript
+library(gdsfmt)
+library(SNPRelate)
+args=commandArgs(trailingOnly=TRUE)
+genofile=snpgdsOpen(args[1])
+num.threads=as.numeric(args[3])
+pca=snpgdsPCA(genofile,num.thread=num.threads)
+print(pca$varprop[1:20])
+tab=data.frame(sample.id=pca$sample.id,
+               EV1=pca$eigenvect[,1],
+               EV2=pca$eigenvect[,2],
+               EV3=pca$eigenvect[,3],
+               EV4=pca$eigenvect[,4],
+               EV5=pca$eigenvect[,5],
+               EV6=pca$eigenvect[,6],
+               EV7=pca$eigenvect[,7],
+               EV8=pca$eigenvect[,8],
+               EV9=pca$eigenvect[,9],
+               EV10=pca$eigenvect[,10],
+               EV11=pca$eigenvect[,11],
+               EV12=pca$eigenvect[,12],
+               EV13=pca$eigenvect[,13],
+               EV14=pca$eigenvect[,14],
+               EV15=pca$eigenvect[,15],
+               EV16=pca$eigenvect[,16],
+               EV17=pca$eigenvect[,17],
+               EV18=pca$eigenvect[,18],
+               EV19=pca$eigenvect[,19],
+               EV20=pca$eigenvect[,20],
+               stringsAsFactors=FALSE
+               )
+loads=snpgdsPCASNPLoading(pca,genofile,num.thread=num.threads)
+write.table(pca$varprop[1:20],file=paste(args[2],'.varprop',sep=''),row.names=F,col.names=F,quote=F)
+write.table(tab,file=paste(args[2],".pca",sep=""),sep='\t',row.names=FALSE,quote=FALSE)
+write.table(loads$snploading,file=paste(args[2],".loading",sep=""),row.names=FALSE,quote=FALSE)
+snpgdsClose(genofile)

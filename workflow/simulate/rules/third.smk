@@ -71,7 +71,7 @@ rule third_hap_infer:
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(2),
         # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
-        effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
+        effdemo=str(config['CHANGE']['SIMULATE']['tNe']),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -142,7 +142,7 @@ rule third_snp_infer:
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(2),
         # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
-        effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
+        effdemo=str(config['CHANGE']['SIMULATE']['tNe']),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)

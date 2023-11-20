@@ -1,3 +1,6 @@
+## Pre-processing data
+
+The whole point is to get a subsample from a larger dataset.
 
 Input data
   - Phased data
@@ -13,4 +16,34 @@ I will write put some pre-processing scripts in this folder, like
 - Running IBDkin
 - Phasing
 
-Examples w/ SLURM and qsub ???
+## Caution:
+- I don't remember when I last ran or edited these scripts.
+- Use them as inspiration for pre-processing your data.
+  - The point of these scripts is to address population structure and relatedness.
+  - Use the linux command `head -n 10` to look at inputs
+- For the Rscripts you probably need GENESIS and SNPRelate
+  - See our key resources table in paper
+  - https://bioconductor.org/packages/release/bioc/html/GENESIS.html
+  - https://bioconductor.org/packages/release/bioc/html/SNPRelate.html
+- You shouldn't do PCA or IBD calling or global ancestry w/ large samples on your personal laptop
+  - Use a computing cluster
+
+## Probably what some scripts do
+
+- The "meta" python scripts probably write R scripts for plotting w/ ggplot2
+  - The sns.*.py probably does the same but w/ matplotlib
+  - These probably assume you have a RACE and STUDY column
+- The "run-*.sh" bash scripts probably call your R or python scripts for cluster computing
+- In hapibd.o you can see how I ran hap-ibd.jar and how long it ran for 37k samples
+  - Ran this for ibdkin analysis
+- I probably used some commands like
+  - `bcftools query -l ... > file.txt`
+  - `bcftools query -f "%CHROM\t%POS" ... > file.txt`
+- I probably followed the instructions in admixture for global ancestry inference
+  - http://dalexander.github.io/admixture/
+
+See examples to run beagle.jar, hap-ibd.jar from Brian Browning
+
+## Citation
+
+You need to cite these software!

@@ -2,9 +2,6 @@ import sys
 out, rho, L = sys.argv[1:]
 rho = float(rho)
 L = float(L)
-# rho = float(snakemake.config['CHANGE']['SIMULATE']['RHO'])
-# L = float(snakemake.config['CHANGE']['SIMULATE']['CMLEN'])
-# out=snakemake.output.mapout
 rho = float(rho) * 100
 L = int(float(L))
 cM = L
