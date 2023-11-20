@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "isweep"
-version = "0.1.2"
+version = "0.2.0"
 authors = [
   { name="Seth D. Temple", email="sdtemple@uw.edu" },
 ]
@@ -18,7 +18,7 @@ dependencies = [
     "networkx",
     "matplotlib",
     "seaborn",
-    "snakemake",
+    # "snakemake",
     # "msprime",
     # "tskit",
     # "pyslim",

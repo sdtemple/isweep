@@ -1,8 +1,7 @@
-# results/
+# hidden files from programming
 .Rhistory
 .snakemake/
 .ipynb_checkpoints/
-jars/
 
 # taken from https://github.com/github/gitignore/blob/main/Python.gitignore
 
