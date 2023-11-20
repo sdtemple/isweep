@@ -1,0 +1,6 @@
+SCRIPT: '/path-to/isweep/workflow/other-methods/imagene/imagene-predict.py'
+SAMPSIZE: '500'
+EFFSIZE: '10000'
+MACRO: '/path-to/isweep/workflow/simulate/bottle'
+MICRO: '/path-to/isweep/workflow/simulate/experiments/simstudy.test2.tsv'
+MODEL: '/path-to/isweep/workflow/other-methods/Regression/LargeResults/model.h5'

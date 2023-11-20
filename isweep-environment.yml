@@ -20,10 +20,10 @@ dependencies:
   - jupyter
   - notebook
   - pip
-  # - pip:
-  #     - isweep
-  # - r-base
-  # - r-essentials
+  - pip:
+      - isweep
+  - r-base
+  - r-essentials
   - bcftools
 # if issues with bcftools: (https://github.com/alek0991/iSAFE/issues/17)
 # use separate isafe environment for simulation study

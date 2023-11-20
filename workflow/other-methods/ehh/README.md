@@ -1,10 +1,8 @@
-# isweep-simstudy-ehh
+## Simulation study for extended haplotype homozygosity method
+
 Pipeline for simulation study applying methods based on extended haplotype homozygosity
 - Assumes existing files from a forward simulation w/ selection
-	- Mainly, a file slimulation.trees
-	- An existing folder structure
-	- Made by snakemake pipeline in isweep package
-- Assumes a package isweep here (https://github.com/sdtemple/isweep)
+	- You make those existing files with the workflow/simulate/
 - Assumes a package selscan (https://github.com/szpiech/selscan)
 - Assumes a package isafe (https://github.com/alek0991/iSAFE)
 
@@ -18,7 +16,11 @@ Statistics computed (see their citations, manual):
 To run:
 - Create an environment with some standard python packages
 	- See isafe link
+		- if issues with bcftools: (https://github.com/alek0991/iSAFE/issues/17)
+		- use separate isafe environment for simulation study
+		- make this a separate environment from your isweep environment !
 	- Bring in snakemake as well
+		- pip install snakemake
 - Use pre-compiled selscan bin/linux/selscan, or compile according to their instructions
 
 Run the pipeline on a computing cluster w/ the command (qsub-based):

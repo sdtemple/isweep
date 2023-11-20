@@ -5,19 +5,20 @@
 Here are instructions.
 You run these after your isweep workflow/simulate/.
 
-1. conda env create -f clues-environment.yaml
-2. python coarse-coal.py (see args; put under main experiment directory)
-  * Use the same time epochs at in relate files. Too fine runs too slow.
-3. bcftools query -l some_vcf | head -n some_number > relate.subsample.txt (under main experiment directory)
-  * See clues, relate papers. May only want to do a few hundred.
+1. `conda env create -f clues-environment.yaml`
+2. `python coarse-coal.py` (see args; put under main experiment directory)
+  - Use the same time epochs at in relate files. Too fine runs too slow.
+3. `bcftools query -l some_vcf | head -n some_number > relate.subsample.txt` (under main experiment directory)
+  - See clues, relate papers. May only want to do a few hundred.
 4. Download clues/ from GitHub and place it somewhere on local.
-  * https://github.com/standard-aaron/clues
+  - https://github.com/standard-aaron/clues
 5. Use linux cp command to replace inference.py in clues/ with that in terminalscripts/.
 6. Download Relate software and place it somewhere on local.
   * https://myersgroup.github.io/relate/index.html
+  - Place it in your same software folder as other browning lab software
 7. Update the clues.yaml file to reflect file, folders on local.
-  * Very few changes.
-8. snakemake all -c1 -n --configfile clues.yaml
-  * Do a dry run of snakemake.
-9. nohup snakemake all -c1 --configfile clues.yaml --jobs 1 --keep-going --cluster "" &
-  * See snakemake documentation to modify options.
+  - Very few changes.
+8. `snakemake all -c1 -n --configfile clues.yaml`
+  - Do a dry run of snakemake.
+9. `nohup snakemake all -c1 --configfile clues.yaml --jobs 1 --keep-going --cluster "[options]" & ``
+  - See snakemake documentation to modify options.

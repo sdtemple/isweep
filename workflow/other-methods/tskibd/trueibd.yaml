@@ -7,10 +7,10 @@ CHANGE:
     # tsv file describing simulations
     MICRO: 'experiments/simstudy.test2.tsv'
     # forlder where terminal scripts are
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/simulate/terminalscripts'
+    TERMINALSCRIPTS: '/path-to/isweep/workflow/simulate/terminalscripts'
     # folder where software is
-    SOFTWARE: '/projects/browning/brwnlab/seth/software'
-    TSKIBDFOLDER: '~/brwn/seth/tskibd'
+    SOFTWARE: '/path-to/software'
+    TSKIBDFOLDER: '/path-to/tskibd'
   SIMULATE:
     iNe: 'ne/bottleneck-1000G.ne' # Ne file for inference (tail should be last value in tNe)
     ancNe: '10000'
