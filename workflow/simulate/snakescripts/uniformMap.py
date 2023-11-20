@@ -1,9 +1,3 @@
-"""
-Make uniform map file (cM distances)
-
-@author: sdtemple
-"""
-
 rho = float(snakemake.config['CHANGE']['SIMULATE']['RHO'])
 L = float(snakemake.config['CHANGE']['SIMULATE']['CMLEN'])
 out=snakemake.output.mapout

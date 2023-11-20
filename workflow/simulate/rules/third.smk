@@ -1,3 +1,6 @@
+wildcard_constraints:
+	SIMNAME = '\w+',
+
 ##### haplotype analysis #####
 
 rule third_hap:

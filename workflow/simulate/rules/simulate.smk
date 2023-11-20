@@ -1,3 +1,6 @@
+wildcard_constraints:
+    SIMNAME = '\w+',
+
 rule uniform_map:
     input:
     output:
