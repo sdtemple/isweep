@@ -8,11 +8,10 @@ samplesize=0
 with open(cohort+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
-# ploidy=int(float(config['FIXED']['ISWEEP']['PLOIDY']))
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*samplesize*maf3)
-maf=float(config['FIXED']['ISWEEP']['MINAAF1'])
+maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # # make an excludesamples.txt file (just in case)
 # rule touch_exclude:
@@ -119,7 +118,7 @@ rule first_rank:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF1']),
+        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
     shell:
         """

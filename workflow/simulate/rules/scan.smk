@@ -82,7 +82,7 @@ rule filter_ibdends:
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        momcut=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        momcut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:

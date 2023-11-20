@@ -1,8 +1,5 @@
 # isweep 
 
-CAUTION: THIS PACKAGE IS ACTIVELY BEING REORGANIZED, CLEANED FOR USER-FRIENDLINESS. 
-CHECK BACK IN EARLY DECEMBER 2023.
-
 incomplete Selective sweep With Extended haplotypes Estimation Procedure
 
 <img src="isweep-icon.png" align="center" width="400px"/>
@@ -25,8 +22,7 @@ There are ~ seven major ideas.
 6. Estimating selection coefficients (w/ nice statistical properties)
 7. Estimating a confidence interval (w/ nice statistical properties)
 
-(I plan to create some isolated bash scripts for these.
-Currently, they are built in snakemake pipelines.)
+These steps are implemented automatically in a `snakemake` pipeline.
 
 ## The input data is:
 
@@ -46,7 +42,7 @@ Currently, they are built in snakemake pipelines.)
 ## Installation
 
 1. ` git clone https://github.com/sdtemple/isweep.git `
-2. ` conda env create -f workflow/environment.yml `
+2. ` conda env create -f isweep-environment.yml `
   - ` conda activate isweep `
   - ` python -c 'import site; print(site.getsitepackages())' `
 3. Download other software
@@ -61,6 +57,12 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
 - The package ---> src/
 - The pipelines ---> workflow/
 
+You should run all `snakemake` pipelines in their `workflow/some-pipeline/`.
+
+You should be in the `conda activate isweep` environment for analyses.
+
+You should run the analyses using cluster jobs.
+
 We have made README.md files in most subfolders.
 
 ## Running the isweep procedure:
@@ -72,37 +74,41 @@ Phase data w/ Beagle or Shapeit beforehand.
 3. Run the selection scan
 - ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
 4. Estimate recent effective sizes
-- ` some command `
+- ` workflow/scan/terminalscripts/run-ibdne.sh `
 5. Make the Manhattan plot
-- ` some command `
+- ` workflow/scan/terminalscripts/manhattan.py `
 6. Checkout the roi.tsv file
   - ` cat roi.tsv `
   - Edit it with locus names if you want
 7. Run the region of interest analysis
   - ` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
 
-Refer to the README.md in "cd workflow/*"
+Refer to the README.md in ` cd workflow/some-pipeline ` for more instructions.
+
+Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 `
 
 ## Other software
 
-- Beagle
-- hap-ibd.jar
-- ibd-ends.jar
-- filter-lines.jar
-- ibdne.jar
+Put these in a common folder!
+
+- Beagle (https://faculty.washington.edu/browning/beagle/beagle.html)
+- hap-ibd.jar (https://github.com/browning-lab/hap-ibd)
+- ibd-ends.jar (https://github.com/browning-lab/ibd-ends)
+- filter-lines.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
+- ibdne.jar (https://faculty.washington.edu/browning/ibdne.html)
+- IBDkin (https://github.com/YingZhou001/IBDkin)
 - bcftools
 - tabix
 - gzip
 
-bcftools, tabix, gzip are in isweep conda environment.
+bcftools, tabix, gzip are in the isweep conda environment.
 
 If you perform simulation study, you require more software.
-- SLiM
-- add-uniform-err.jar
+- SLiM (https://messerlab.org/slim/)
+- add-uniform-err.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
 
 If you want to compare against other methods (using our pipelines), you require more software.
-See workflow/other-methods/ folder.
-
+See `workflow/other-methods/` folder.
 
 ## Citation
 
@@ -110,3 +116,11 @@ Please cite if you use this package.
 
 Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
 https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
+
+## Development things to do
+
+- Provide some scripts to summarize analyses
+- Give example commands, scripts for pre-processing steps
+- Change all snakescripts/ to terminalscripts/
+- Severely simplify the yaml files
+  - So many parameters for methods development, not user-friendly

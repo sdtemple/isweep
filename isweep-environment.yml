@@ -1,4 +1,4 @@
-name: isweep-simulate
+name: isweep
 channels:
   - conda-forge
   - bioconda
@@ -22,8 +22,8 @@ dependencies:
   - pip
   # - pip:
   #     - isweep
-  - r-base
-  - r-essentials
+  # - r-base
+  # - r-essentials
   - bcftools
 # if issues with bcftools: (https://github.com/alek0991/iSAFE/issues/17)
 # use separate isafe environment for simulation study

@@ -88,7 +88,7 @@ FIXED:
     # cutting cM at telomeres
     TELOCUT: '0.5'
     # ibd cM threshold for isweep method of moments
-    MOMCUTOFF: '3.0'
+    MLECUTOFF: '3.0'
     # ibd cM threshold for isweep scan
     SCANCUTOFF: '2.0'
     # any two nodes in community can reach other in this many edges

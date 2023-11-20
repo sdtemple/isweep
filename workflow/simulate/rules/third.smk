@@ -67,7 +67,7 @@ rule third_hap_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
@@ -137,7 +137,7 @@ rule third_snp_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['HAPIBD']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),

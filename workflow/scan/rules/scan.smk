@@ -191,7 +191,7 @@ rule scan: # conduct a manhattan scan
         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
     shell:
         """
-        python {params.scripts}/scan-isweep.py \
+        python {params.scripts}/scan.py \
             {params.folder} \
             {params.nextfolder} \
             {output.scandata} \

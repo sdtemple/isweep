@@ -94,9 +94,9 @@ rule third_hap_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
-        ploidy=str(config['FIXED']['ISWEEP']['PLOIDY'])
+        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -166,9 +166,9 @@ rule third_snp_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MOMCUTOFF']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
-        ploidy=str(config['FIXED']['ISWEEP']['PLOIDY'])
+        ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -190,7 +190,7 @@ rule entropy:
 	input:
 		filein='{cohort}/{hit}/outlier1.txt',
 	output:
-		fileout='{cohort}/{hit}/entropy.tsv',
+		fileout='{cohort}/{hit}/ibd.entropy.tsv',
 	params:
 		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
 		samplesizep=str(samplesize_ploidy),

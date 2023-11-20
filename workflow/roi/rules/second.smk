@@ -1,10 +1,10 @@
-wildcard_constraints:
+wildcard_constraints:UTOFF
 	NAME = '\w+',
 
 # some inputs, string managements, count sample size
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
 ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
-maf=float(config['FIXED']['ISWEEP']['MINAAF2'])
+maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # subset vcf to region of interest
 rule second_region: # focus vcf on region of interest
@@ -66,7 +66,7 @@ rule second_rank:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF2']),
+        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
     shell:
         """

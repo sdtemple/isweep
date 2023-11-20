@@ -1,41 +1,21 @@
+## Which are which pipelines
 
-THIS FILE HAS NOT BEEN UPDATED YET.
+There are multiple snakemake pipelines in these subfolders.
 
-These folders contain code to reproduce simulation studies and real data analyses for the paper.
+- `scan/` implements the genome-wide selection scan for real data
 
-coalsimstudy
-  * Simulation studies on coalescent IBD data
-  * Uses simulation scripts in isweep paradigm
-  * These simulation studies base the methodology on robust statistical inference
-  * And/or explainable biases in model-based inference under model misspecification
-  * Python files developed with Copy and Paste, modifying accordingly
-  * Separate README.md for results of coalescent IBD studies
-  
-forwsimstudy
-  * Workhorse simulation studies based on genetic data
-  * Forward simulate 1 de novo sweep variant with SLiM
-  * Recapitate and place mutations on coalescent tree with tskit, msprime
-  * Perform IBD-based inference steps
-  * Use isweep paradigm to conduct inference
-    * Create a separate conda environment for iSAFE comparison
-    * Create a separate conda environment for CLUES comparison
-      * These methods are from 2018-2020 and may downgrade versions required for isweep
+- `roi/` implements the loci-specific analyses for real data
 
-fitsimstudy
-  * Simple IPython notebook to see if length distribution can determine Mendelian inheritance model
-    * It cannot.
-      
-isweep inference on real genetic data
-  * realprepstudy
-    * Initial procedures to identify regions of interest
-      * Some data preprocessing
-      * Genome-wide IBD calls for IBDNe inference
-      * Genome-wide IBD calls for hap-ibd + ibd-ends
-      * Manhattan plot style inference
-      * Some plotting
-  realpoststudy
-    * Estimation procedures in the isweep paradigm
-      * Infer p(0) for allele frequency of putatively causal mutant
-      * Method-of-moments and parametric bootstrap for s | p(0), Ne(t), ...
-      * Some tables
-    * Do this after the realprepstudy, identifying regions of interest!!!
+- `simulate/` implements simulation study on genetic data
+  - `Snakefile-simulate.smk` will use SLiM to get `.trees` and `.vcf.gz`
+  - `Snakefile-ibd.smk` will run scripts like in `scan/` and `roi/`
+
+- `other-methods/` implements other methods to compare in simulation study
+
+- `coalescent/` has some python scripts for simulation study on coalescent data 
+
+You will likely use `scan/` and then `roi/`.
+
+There is documentation in each subfolder.
+
+You will edit the .yaml files to adjust settings and direct paths to where data is.

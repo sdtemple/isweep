@@ -5,20 +5,20 @@
 CHANGE:
   FOLDERS:
     # folder for analysis
-    STUDY: '/projects/browning/brwnlab/seth/topmed-isweep/eur1'
+    STUDY: '/path-to-study/eur'
     # the yaml file with scan analysis options
-    YAML: 'eur1.yaml'
+    YAML: 'eur.yaml'
     # folder where terminal scripts are
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/scan/terminalscripts'
+    TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/terminalscripts'
     # folder where software is
-    SOFTWARE: '/projects/browning/brwnlab/seth/software'
+    SOFTWARE: '/path-to-software'
   # parameters, subsample file
   ISWEEP:
     # lowest chromosome number
     CHRLOW: '1'
     # highest chromosome numbers
     CHRHIGH: '22'
-    SUBSAMPLE: '/projects/browning/brwnlab/seth/topmed/groups/inferred.european.10.ibdkin.txt'
+    SUBSAMPLE: '/path-to-subsample/inferred.european.txt'
     XMXMEM: '240' # in gb
     THREADS: '16'
   # download these software
@@ -32,11 +32,11 @@ CHANGE:
     IBDNE: 'ibdne.ne'
   EXISTING:
     # these are phased vcfs
-    VCFS: '/projects/browning/brwnlab/phase.paper/analysis/topmed/all3'
+    VCFS: '/path-to-topmed-data/phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
     # these are genetic maps
-    MAPS: '/projects/browning/maps/decode.2019.b38'
+    MAPS: '/path-to-genetic-maps/decode.2019.b38'
     MAPPRE: 'decode2019.chrchr'
     MAPSUF: '.GRCh38.map'
 
@@ -76,12 +76,14 @@ FIXED:
     # ibd cM threshold for isweep method of moments
     MOMCUTOFF: '3.0'
     # ibd cM threshold for isweep scan
-    SCANCUTOFF: '3.0'
+    SCANCUTOFF: '2.0'
     # cM gap when concatenating regions of excess IBD
     CMGAP: '1.0'
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
-    SCANSIGMA: '3.0' # sigma scalar to call excess ibd
-    # mb buffer
-    MBBUF: '2'
+    SCANSIGMA: '4.0' # sigma scalar to call excess ibd
+    # excess ibd rate must extend this long in cM
     CMCOVER: '1.0'
+    # region is extended w/ buffer if too small
     CMSMALL: '2.0'
+    # mb buffer if cm not long enough
+    MBBUF: '2'

@@ -44,5 +44,5 @@ rule all:
 		# for best haplotype analysis
 		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
 		# for entropy
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/entropy.tsv' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.entropy.tsv' for j in range(J)],
 

@@ -6,16 +6,17 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/projects/browning/brwnlab/seth/study'
+    STUDY: '/path-to-study/eur'
     # the yaml file with scan analysis options
-    YAML: 'VTEROI.yaml'
+    YAML: 'eur.yaml'
     # folder where terminal scripts are
-    TERMINALSCRIPTS: '/projects/browning/brwnlab/seth/isweep/workflow/roi/terminalscripts'
-    SOFTWARE: '/projects/browning/brwnlab/seth/software'
+    TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/terminalscripts'
+    # folder where software is
+    SOFTWARE: '/path-to-software'
   # parameters, subsample file
   ISWEEP:
     # region of interest file
-    ROI: 'final.roi.tsv'
+    ROI: 'roi.tsv'
     CHRPRE: 'chr' # either '' or 'chr' ; look at your vcf and map file
     # numeric first, last chromosome number
     CHRLOW: '1'
@@ -31,7 +32,7 @@ CHANGE:
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
   EXISTING:
-    VCFS: '/projects/browning/brwnlab/seth/study/vcfs'
+    VCFS: '/path-to-topmed-data/phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
 
@@ -52,25 +53,23 @@ FIXED:
     PLOIDY: '2'
   # isweep
   ISWEEP:
-    # in mega bp
-    GENOMEEND: '1000'
-    # in kilo bp
-    BY: '20'
-    # cutting cM at telomeres
-    TELOCUT: '0.5'
     # ibd cM threshold for isweep method of moments
-    MOMCUTOFF: '3.0'
-    # ibd cM threshold for isweep scan
-    SCANCUTOFF: '2.0'
-    # any two nodes in community can reach other in this many edges
-    DIAMETER: '6'
-    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    RULESIGMA: '3'
-    # min adaptive allele frequency,
-    # 1 - (this value) is max adaptive allele frequency
-    MINMAXAAF: '0.10'
-    # top order statistics for allele frequency estimator
-    # so you use basepairs with on this % of Delta stats
-    QUANT: '0.99'
+    MLECUTOFF: '3.0'
     # number of bootstraps
     NBOOT: '250'
+    # see descriptions in workflow/simulate/
+    MINAAF: '0.10'
+    PM: '1000000'
+    NUMSNP: '5'
+    QRANGE: '10'
+    MAXSPACING: '25000'
+    DIAMETER: '6'
+    RULESIGMA: '3'
+    WINSIZE: '250000'
+    WINSTEP: '50000'
+    HAPSIZE: '500000'
+    HAPSTEP: '50000'
+    FREQSIZE: '0.100'
+    FREQSTEP: '0.025'
+    # extend inferred ne file to this many generations
+    LASTNE: '2000'
