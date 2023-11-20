@@ -30,10 +30,17 @@ I will write put some pre-processing scripts in this folder, like
 
 ## Probably what some scripts do
 
-- The "meta" python scripts probably write R scripts for plotting w/ ggplot2
+- high-kinship.py filters the ibdkin output to only use 
+- keep-one-family-member.py
+  - I think this will form connected components that have inferred relation < 3 degrees
+  - Then keep only 1 individual from each connected component
+  - These connected components are like extended families
+    - So if you have a family reunion with all your first and second cousins
+- The "meta" python scripts probably writes R scripts for plotting w/ ggplot2
   - The sns.*.py probably does the same but w/ matplotlib
   - These probably assume you have a RACE and STUDY column
-- The "run-*.sh" bash scripts probably call your R or python scripts for cluster computing
+- The "run-*.sh" bash scripts probably calls your R or python scripts for cluster computing
+  - run-ibdkin.sh probably assumes you have some existing file about the chromosme beginning and ends
 - In hapibd.o you can see how I ran hap-ibd.jar and how long it ran for 37k samples
   - Ran this for ibdkin analysis
 - I probably used some commands like
