@@ -97,7 +97,7 @@ rule third_snp:
         lociout='{macro}/{micro}/{seed}/third.best.snp.txt',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        lowbnd=str(config['FIXED']['ISWEEP']['LOWBND']),
+        lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
         python {params.scripts}/snp.py \
