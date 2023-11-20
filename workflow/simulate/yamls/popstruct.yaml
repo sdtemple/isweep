@@ -76,6 +76,7 @@ FIXED:
     MINAAF: '0.10' # min allele frequency considered in estimating frequency
     # estimating selection coefficient
     MLECUTOFF: '3.0' # ibd cM cutoff
+    NBOOT: '100' # number of bootstrap samples
 
   # simulation study setting
   SIMULATE:
