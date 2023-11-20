@@ -1,5 +1,8 @@
 <img src="isweep-icon.png" align="center" width="400px"/>
 
+
+CAUTION: I did some re-organizing. Testing them out, debugging in late November.
+
 ## Overview
 
 Acronym: incomplete Selective sweep With Extended haplotypes Estimation Procedure
