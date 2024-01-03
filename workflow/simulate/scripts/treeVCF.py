@@ -8,17 +8,8 @@ import sys, os, subprocess, pyslim, msprime
 import tskit as ts
 import numpy as np
 import pandas as pd
-# from isweep import *
 
 filename, trees, mu, rho, ancNe, maf, n, ploidy = sys.argv[1:]
-
-# mu=snakemake.config['CHANGE']['SIMULATE']['MU']
-# rho=snakemake.config['CHANGE']['SIMULATE']['RHO']
-# trees=snakemake.input.trees
-# maf=snakemake.config['CHANGE']['SIMULATE']['MSPMAF']
-# n=snakemake.config['CHANGE']['SIMULATE']['SAMPSIZE']
-# ploidy=snakemake.config['FIXED']['HAPIBD']['PLOIDY']
-# filename=snakemake.output.bcf
 
 mu = float(mu)
 rho = float(rho)
@@ -29,9 +20,6 @@ N = n * ploidy
 mac = int(N * maf)
 mac = min(2, mac)
 Ne = int(float(ancNe))
-# Ne = int(float(str(snakemake.config['CHANGE']['SIMULATE']['ancNe'])))
-# Ne = read_Ne(Ne)
-# Ne = int(float(list(Ne.values())[-1]))
 
 orig_ts = ts.load(trees)
 orig_ts = pyslim.update(orig_ts) # pyslim, tskit new versions
@@ -106,7 +94,6 @@ def strip_adjacent_sites(treeseq, dist=1.5):
 # apply MAC, bp distance filter
 treeseq = strip_MAC(mut_ts, mac)
 treeseq = strip_adjacent_sites(treeseq)
-# treeseq = strip_adjacent_sites(treeseq, 10)
 
 # saving
 

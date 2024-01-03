@@ -132,14 +132,18 @@ It'd be nice if you have:
 - Sample from 1 generation
   - I.e., use other methods for flies, mosquitoes, worms
 
-You could test if there is enough IBD:
+#### You could test if there is enough IBD:
+
 - In python, use the `simulate_ibd` and `read_Ne` functions in `isweep`
   - Ne file is tab-separated w/ two columns: generation, Ne
   - You should make at least 500 generations
   - It is okay to have a guess of Ne size before inferring with IBDNe
-- Do you have # of ibd tracts >= 200? Then, probably yes.
+    - Use the different *_Ne() functions to make such an *.ne file
+- Do you have on average # of 3.0 cM ibd tracts >= 200?
+  - Then, yes, you probably have enough samples to run this analysis.
 
-Some species from `stdpopsim` that may apply:
+### Some species from `stdpopsim` that may apply:
+
 - Great apes
   - Pongo abelii
   - Pan troglodytes
@@ -149,11 +153,16 @@ Some species from `stdpopsim` that may apply:
 - Canis familiaris (dog)
   - Address population structure, admixture
 
+#### Should I use these methods on biobank datasets > 100k individuals?
+
+- No, unless you want to spend a lot on computing costs.
+  - The methods should scale, but you'd wait awhile and spend a lot.
+- If you downsample to ~10k, you should have more than enough data.
+ - (If IBD **were** binomially distributed, downsampling keeps same distributional properties.)
+
 ## Development things to do
 
 - Provide some scripts to summarize analyses
-- Give example commands, scripts for pre-processing steps
-- Change all snakescripts/ to terminalscripts/
 - Severely simplify the yaml files
   - So many parameters for methods development, not user-friendly
 - Test performance in array data, less dense sequence data

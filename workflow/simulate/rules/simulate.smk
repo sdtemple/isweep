@@ -1,6 +1,9 @@
 wildcard_constraints:
     SIMNAME = '\w+',
 
+ploidy=2
+# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+
 rule uniform_map:
     input:
     output:
@@ -93,6 +96,9 @@ rule slim:
         '{params.soft}/{params.prog} {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/slimulation.slim'
 
 # msprime backward
+g = open(str(config['CHANGE']['SIMULATE']['tNe']),'r')
+for line in g:
+    itr, ancNe = line.strip().split('\t')
 rule msprime:
     input:
         trees = "{macro}/{micro}/{seed}/slimulation.trees",
@@ -102,10 +108,10 @@ rule msprime:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mu=str(config['CHANGE']['SIMULATE']['MU']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
-        tNe=str(config['CHANGE']['SIMULATE']['tNe']),
+        tNe=str(ancNe),
         maf=str(config['CHANGE']['SIMULATE']['MSPMAF']),
         sampsize=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
-        ploidy=str(2),
+        ploidy=str(ploidy),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:

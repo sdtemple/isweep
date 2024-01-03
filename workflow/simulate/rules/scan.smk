@@ -3,7 +3,7 @@ wildcard_constraints:
 
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=2
-# ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
+# ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
 mac1=int(ploidy*n*maf1)
 

@@ -1,7 +1,3 @@
-# Seth D. Temple, sdtemple@uw.edu
-# April 26, 2023
-# updated November 17, 2023
-
 # change these
 CHANGE:
 
@@ -33,8 +29,7 @@ CHANGE:
 
   SIMULATE:
     tNe: 'ne/three-phase-500G.ne' # true Ne file
-    iNe: 'ne/three-phase-2000G.ne' # Ne file for inference (tail should be last value in tNe)
-    ancNe: '5000' # ancestral Ne (should be last in value in iNe)
+    iNe: 'ne/three-phase-2000G.ne' # Ne file for inference (tail should be last value in tNe)s
     SAMPSIZE: '5000' # num diploids
     MSPMAF: '0.001' # 0.001 for sequence data, >=0.01 for array data
     MIGRRATE: '0' # migration rate
@@ -83,7 +78,7 @@ FIXED:
     SAMPLEONE: '1' # 1 to sample from 1 subpop, 0 to sample from all subpops
     SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
     NUMVAR: '1' # num adaptive mutations
-    # PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
+    PLOIDY: '2' # ploidy of species (adjust SLiM accordingly if not diploid)
     a: '0.1' # min adaptive allele freq
     b: '0.9' # min adaptive allele freq
 
@@ -97,8 +92,6 @@ FIXED:
     MINOUT: '1.0'
     # minimum minor allele frequency
     MINMAF: '0.40'
-    # ploidy number
-    # PLOIDY: '2'
 
   # refined ibd segments
   IBDENDS:
@@ -121,5 +114,3 @@ FIXED:
     MINOUT: '1.0'
     # minimum minor allele frequency
     MINMAF: '0.10'
-    # ploidy number
-    # PLOIDY: '2'

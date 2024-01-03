@@ -42,7 +42,7 @@ There are two top levels: CHANGE and FIXED.
 
 Further comments
 - MSPMAF will affect the allele frequencies in all vcf files
-- You should only change MIGRRATE and NUMSUBPOP is you want to study cryptic population substructure
+- You should only change MIGRRATE and NUMSUBPOP if you want to study cryptic population substructure
 - You will throw errors if TSPLIT is not greater than the greatest time value in your experiments file
 - Have only worked w/ uniform recombination maps
 
