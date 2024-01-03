@@ -1,8 +1,3 @@
-# iSWEEP simulation studies
-# Seth D. Temple, sdtemple@uw.edu
-# November 17, 2023
-# editing to do simulate steps only
-
 # setup macro folder
 import os
 macro=str(config['CHANGE']['FOLDERS']['MACRO'])
@@ -27,5 +22,5 @@ include: 'rules/simulate.smk'
 
 rule all:
     input:
-        [f"{sim.FOLDER}/slimulation.trees.tsz" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/large.chr1.vcf.gz" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/slimulation.trees.tsz".rstrip() for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/large.chr1.vcf.gz".rstrip() for sim in sims.itertuples()],

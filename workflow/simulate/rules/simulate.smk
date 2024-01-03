@@ -1,6 +1,4 @@
-wildcard_constraints:
-    SIMNAME = '\w+',
-
+# inputs
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 
 rule uniform_map:

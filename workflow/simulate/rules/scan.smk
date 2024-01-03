@@ -1,6 +1,4 @@
-wildcard_constraints:
-	SIMNAME = '\w+',
-
+# inputs
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
