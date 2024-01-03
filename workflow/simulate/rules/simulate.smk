@@ -1,8 +1,7 @@
 wildcard_constraints:
     SIMNAME = '\w+',
 
-ploidy=2
-# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 
 rule uniform_map:
     input:
