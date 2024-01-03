@@ -22,5 +22,5 @@ include: 'rules/simulate.smk'
 
 rule all:
     input:
-        [f"{sim.FOLDER}/slimulation.trees.tsz".rstrip() for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/large.chr1.vcf.gz".rstrip() for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/slimulation.trees.tsz".replace(" ","") for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/large.chr1.vcf.gz".replace(" ","") for sim in sims.itertuples()],

@@ -36,7 +36,7 @@ rule slim_script:
         trueNe = str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
         map = str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
     output:
-        [f"{sim.FOLDER}/slimulation.slim" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/slimulation.slim".replace(" ","") for sim in sims.itertuples()],
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         macro=str(config['CHANGE']['FOLDERS']['MACRO']),
