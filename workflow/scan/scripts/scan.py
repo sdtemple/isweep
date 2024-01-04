@@ -6,8 +6,7 @@ import pandas as pd
 import numpy as np
 
 # inputtting
-folder,nextfolder,out1,out2,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
-folder += nextfolder
+folder,out1,out2,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
 
 # type casting
 chrlow=int(float(chrlow))
@@ -24,7 +23,6 @@ for i in range(chrlow+1,chrhigh+1):
     tab=pd.concat((tab,tabnow))
 # saving all
 tab.to_csv(out1,sep='\t',index=False)
-#tab.to_csv(firstfolder+'/scan.ibd.tsv',sep='\t',index=False)
 
 # calculating excess ibd
 medi=np.quantile(tab['COUNT'],0.5)
@@ -40,4 +38,3 @@ out=tab[tab['COUNT']>=b]
 
 # saving excess
 out.to_csv(out2,sep='\t',index=False)
-#out.to_csv(firstfolder+'/excess.ibd.tsv',sep='\t',index=False)

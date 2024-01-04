@@ -182,8 +182,7 @@ rule scan: # conduct a manhattan scan
         excessdata=macro+'/excess.ibd.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        folder=macro,
-        nextfolder=macro+'/ibdsegs/ibdends/scan/',
+        folder=macro+'/ibdsegs/ibdends/scan/',
         chrlow=str(low),
         chrhigh=str(high),
         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
@@ -192,7 +191,6 @@ rule scan: # conduct a manhattan scan
         """
         python {params.scripts}/scan.py \
             {params.folder} \
-            {params.nextfolder} \
             {output.scandata} \
             {output.excessdata} \
             {params.chrlow} \
