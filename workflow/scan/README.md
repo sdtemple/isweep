@@ -18,7 +18,7 @@ If you are studying a subset of a larger (biobank) dataset, create a subsample t
 You should do an initial run to set the inferred error rate in your *.yaml.
 - Study one of your smallest chromosomes.
 - Use hap-ibd.jar and ibd-ends.jar
-- Look at the `err` result in the log file from ibd-ends.jar
+- Look at the `err` result in the log file from ibd-ends.jar.
 
 ## The procedure:
 
