@@ -91,13 +91,13 @@ rule format_ibdends: # reformatting
     input:
         bigibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     output:
-        cutibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
+        cutibd='{cohort}/ibdsegs/ibdends/chr{num}.formatted.ibd.gz',
     shell:
         'zcat {input.bigibd} | tail -n +2 | cut -f 1-5,10,11,12 | gzip > {output.cutibd}'
 
 rule filter_ibdends_scan: # applying cutoffs
     input:
-        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
+        ibd='{cohort}/ibdsegs/ibdends/chr{num}.formatted.ibd.gz',
     output:
         fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
@@ -136,7 +136,7 @@ rule count_ibdends_scan: # computing counts over windows
 
 rule filter_ibdends_mle: # applying cutoffs
     input:
-        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
+        ibd='{cohort}/ibdsegs/ibdends/chr{num}.formatted.ibd.gz',
     output:
         fipass='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
     params:

@@ -55,14 +55,7 @@ rule yaml:
         macro+'/excess.ibd.tsv',
         macro+'/excess.region.ibd.tsv',
         macro+'/roi.tsv',
-        # macro+'/excess1.ibd.tsv',
-        # macro+'/excess1.region.ibd.tsv',
-        # macro+'/roi1.tsv',
-        # macro+'/excess2.ibd.tsv',
-        # macro+'/excess2.region.ibd.tsv',
-        # macro+'/roi2.tsv',
         macro+'/excludesamples.txt',
-        macro+'/ibdne.ne',
     output:
         yaml=macro+'/arguments.scan.yaml',
     params:
