@@ -67,7 +67,7 @@ rule third_hap_ibd:
     output:
         ibd='{cohort}/{hit}/third.hap.ibd.gz',
     params:
-        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mom',
+        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mle',
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
@@ -140,7 +140,7 @@ rule third_snp_ibd:
     output:
         ibd='{cohort}/{hit}/third.snp.ibd.gz',
     params:
-        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mom',
+        ibdfolder='{cohort}/ibdsegs/ibdends/modified/mle',
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
