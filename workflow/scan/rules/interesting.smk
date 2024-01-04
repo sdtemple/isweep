@@ -38,7 +38,7 @@ rule make_roi_table:
         python {params.scripts}/make-roi-table.py \ 
             {params.study} \ 
             {params.cmcover} \ 
-            {params.cmsmall} \
+            {params.cmsmall} \ 
             {params.mbbuf} \ 
             {params.mapfolder}
         """

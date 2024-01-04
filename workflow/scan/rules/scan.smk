@@ -194,7 +194,7 @@ rule scan: # conduct a manhattan scan
             {params.folder} \
             {params.nextfolder} \
             {output.scandata} \
-            {output.excessdata} \ 
+            {output.excessdata} \
             {params.chrlow} \
             {params.chrhigh} \
             {params.scansigma} \
