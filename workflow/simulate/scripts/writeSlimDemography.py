@@ -148,6 +148,7 @@ for j in range(J):
             f.write('\tfor (i in 1:subpopCount){\n')
             if equalSizes == '1':
                 f.write('\t\tsubpopSize=asInteger(effSize[itrGen] * ' + str(1/m) + ');\n')
+                f.write('\t\tsim.addSubpop(i,subpopSize);\n')
             else:
                 f.write('\t\tsubpopSize=asInteger(effSize[itrGen] * unequalSizes[i-1]);\n')
                 f.write('\t\tsim.addSubpop(i,subpopSize);\n')

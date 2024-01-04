@@ -148,4 +148,9 @@ It'd be nice if you have:
 
 - Provide some scripts to summarize analyses
 - Test performance in array data, less dense sequence data
+- Test performance when phase is inferred with beagle
+- Test performance with no gene conversion
 - Not designed for ploidy != 2 (yet)
+- Debug population structure simulation script
+  - Appears to fail when coming together is later than *.ne file
+- Debug when there is no excess IBD

@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 
 
 folder,cmcover,cmsmall,mbbuffer,mapfolder=sys.argv[1:]
-# folder,mbbuffer,mapfolder=sys.argv[1:]
 
 filein=folder+'/excess.region.ibd.tsv'
 folder1=folder+'/ibdsegs/ibdends/modified/scan/'
@@ -17,14 +16,19 @@ filesuf='.ibd.windowed.tsv.gz'
 fileout=folder+'/roi.tsv'
 mbbuffer=float(mbbuffer)*1000000
 
-### this stuff is new
 cmcover=float(cmcover)
 cmsmall=float(cmsmall)
-### this stuff is new
 
 roitab=pd.read_csv(filein,sep='\t')
 bpcenter=[]
 cmcenter=[]
+
+# if there is no excess IBD make a blank file
+if roitab.shape[0] == 0:
+    f=open(fileout,'w')
+    f.write('NAME\tCHROM\tMINIBD\tMAXIBD\tBPCENTER\tCMCENTER\tBPLEFTCENTER\tBPRIGHTCENTER\n')
+    f.close()
+    sys.exit()
 
 # make magic happen
 
@@ -120,19 +124,12 @@ for i in range(roitab.shape[0]):
 roitab['BPCENTER']=bpcenter
 roitab['CMCENTER']=cmcenter
 
-### this stuff is new
 roitab=roitab[(roitab['CMRIGHT']-roitab['CMLEFT'])>=cmcover]
 roitab['BPLEFTCENTER']=roitab['BPLEFT']
 roitab['BPRIGHTCENTER']=roitab['BPRIGHT']
 roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPLEFTCENTER']=roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPLEFTCENTER']-mbbuffer
 roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPRIGHTCENTER']=roitab.loc[(roitab['CMRIGHT']-roitab['CMLEFT'])<=cmsmall,'BPRIGHTCENTER']+mbbuffer
 roitab['BPLEFTCENTER']=roitab['BPLEFTCENTER'].clip(lower=1)
-### this stuff is new
-
-# ### this stuff it replaces
-# roitab['BPLEFTCENTER']=(roitab['BPLEFT']-mbbuffer).clip(lower=1)
-# roitab['BPRIGHTCENTER']=roitab['BPRIGHT']+mbbuffer
-# ### this stuff it replaces
 
 # sorting, giving generic names
 initcol=list(roitab.columns)
