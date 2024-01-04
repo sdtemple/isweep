@@ -1,3 +1,6 @@
+# simulating data
+# run snakemake -s Snakefile-simulate.smk --configfile *.yaml
+
 # setup macro folder
 import os
 macro=str(config['CHANGE']['FOLDERS']['MACRO'])

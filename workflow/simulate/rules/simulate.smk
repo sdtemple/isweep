@@ -105,7 +105,7 @@ rule msprime:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mu=str(config['CHANGE']['SIMULATE']['MU']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
-        tNe=str(ancNe),
+        ancNe=str(ancNe),
         maf=str(config['CHANGE']['SIMULATE']['MSPMAF']),
         sampsize=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(ploidy),
@@ -119,7 +119,7 @@ rule msprime:
             {input.trees} \
             {params.mu} \
             {params.rho} \
-            $ancNe \
+            {params.ancNe} \
             {params.maf} \
             {params.sampsize} \
             {params.ploidy}

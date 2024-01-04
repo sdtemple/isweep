@@ -1,3 +1,6 @@
+# if you download from bash get-software.sh
+software/
+
 # hidden files from programming
 .Rhistory
 .snakemake/

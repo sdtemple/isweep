@@ -1,7 +1,4 @@
-# iSWEEP simulation studies
-# Seth D. Temple, sdtemple@uw.edu
-# November 17, 2023
-# editing to do ibd analysis after simulating data
+# ibd analysis after simulating data
 # you have to have first run snakemake -s Snakefile-simulate.smk
 
 # setup macro folder
@@ -31,9 +28,9 @@ include: 'rules/third.smk'
 
 rule yaml:
     input:
-        [f"{sim.FOLDER}/results.snp.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/results.hap.tsv" for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/ibd.entropy.tsv" for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/results.snp.tsv".replace(" ","") for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/results.hap.tsv".replace(" ","") for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/ibd.entropy.tsv".replace(" ","") for sim in sims.itertuples()],
     output:
         yaml=macro+'/arguments.simulate.yaml',
     params:

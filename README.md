@@ -1,10 +1,8 @@
 <img src="isweep-icon.png" align="center" width="400px"/>
 
 CAUTION: I did some re-organizing. Testing them out, debugging in late November.
-- I believe the workflow/simulate/ is debugged
-  - Small issue with new string formatting for python 3.12
-- I believe the package src/ is debugged
 - Need to check the workflow/roi/ and workflow/scan/
+- Speaking w/ Brian Browning about making some utility JARs available
 
 ## Overview
 
@@ -96,6 +94,9 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 
 ## Other software
 
+You can run `bash get-software.sh software`
+- Where software is the folder you will make
+
 Put these in a common folder!
 
 - Beagle (https://faculty.washington.edu/browning/beagle/beagle.html)
@@ -113,6 +114,7 @@ bcftools, tabix, gzip are in the isweep conda environment.
 If you perform simulation study, you require more software.
 - SLiM (https://messerlab.org/slim/)
 - add-uniform-err.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
+- remove-phase.jar
 
 If you want to compare against other methods (using our pipelines), you require more software.
 See `workflow/other-methods/` folder.
