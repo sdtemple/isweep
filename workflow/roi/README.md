@@ -1,5 +1,6 @@
-## This is the second pipeline in a real data analysis.
-## You run this pipeline after the workflow/scan/ pipeline.
+## This is the second pipeline in a real data analysis:
+
+#### You run this pipeline after the workflow/scan/ pipeline.
 
 You should review the files:
 - roi.tsv from your selection scan

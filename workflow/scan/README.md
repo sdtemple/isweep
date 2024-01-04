@@ -1,13 +1,13 @@
-## This is the first pipeline you run for real data analysis
+## This is the first pipeline you run for real data analysis:
 
 You must phase your data beforehand (Beagle, Shapeit, etc.)
 - For Beagle, something like ` java -jar beagle.jar gt=chr.vcf.gz map=chr.map out=chr.phased `
     - Send this as a cluster job !
 
-You must remove close relatives beforehand (IBDkin, plink, etc.)
+You should remove close relatives beforehand (IBDkin, plink, etc.)
 - Recommendation: at least remove relations w/ kinship > 0.125
 
-You must subset to different "ancestry" groups (ADMIXTURE, principal components, etc.)
+You should subset to different "ancestry" groups (ADMIXTURE, principal components, etc.)
 - Recommendation: use subsets w/ at least 85% the same global ancestry inference
 
 If you are studying a subset of a larger (biobank) dataset, create a subsample text file.
@@ -15,7 +15,12 @@ If you are studying a subset of a larger (biobank) dataset, create a subsample t
 - If not, create an empty subsample.txt file
     - ` touch subsample.txt `
 
-## The procedure
+You should do an initial run to set the inferred error rate in your *.yaml.
+- Study one of your smallest chromosomes.
+- Use hap-ibd.jar and ibd-ends.jar
+- Look at the `err` result in the log file from ibd-ends.jar
+
+## The procedure:
 
 1. Edit the *.yaml file
 2. ` conda activate isweep `
