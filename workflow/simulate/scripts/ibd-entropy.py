@@ -1,3 +1,5 @@
+# compute ibd entropy
+
 # setup
 import sys
 import numpy as np

@@ -1,5 +1,5 @@
-wildcard_constraints:
-	NAME = '\w+',
+### estimating selection coefficients
+### estimating allele frequencies
 
 # some inputs, string managements, count sample size
 subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])

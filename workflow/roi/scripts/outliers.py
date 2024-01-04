@@ -1,3 +1,5 @@
+# find haplotype groups of excess ibd
+
 # importing
 import sys
 from isweep import *

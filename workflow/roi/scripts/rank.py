@@ -1,3 +1,5 @@
+# rank the variants based on haplotype/ibd groups
+
 # importing
 import sys
 from isweep import *

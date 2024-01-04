@@ -1,6 +1,4 @@
 # Manhattan IBD Counts
-# Seth Temple, sdtemple@uw.edu
-# April 25, 2023
 
 # setup, imports ----------------------------------------------------------
 

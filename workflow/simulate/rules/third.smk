@@ -1,5 +1,7 @@
 ##### haplotype analysis #####
 
+### estimating selection coefficients
+
 rule third_hap:
     input:
         rankin='{macro}/{micro}/{seed}/second.ranks.tsv.gz',

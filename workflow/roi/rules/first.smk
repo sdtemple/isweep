@@ -1,5 +1,4 @@
-wildcard_constraints:
-	NAME = '\w+',
+# zooming in on a region of interest
 
 # some inputs, string managements, count sample size
 subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])

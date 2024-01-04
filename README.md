@@ -168,3 +168,4 @@ It'd be nice if you have:
 - Severely simplify the yaml files
   - So many parameters for methods development, not user-friendly
 - Test performance in array data, less dense sequence data
+- Not designed for ploidy != 2 (yet)

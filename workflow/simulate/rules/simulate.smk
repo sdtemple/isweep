@@ -1,3 +1,5 @@
+### simulate data
+
 # inputs
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 

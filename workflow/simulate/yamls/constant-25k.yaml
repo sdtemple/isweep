@@ -9,9 +9,9 @@ CHANGE:
     # tsv file describing simulations
     MICRO: 'experiments/simstudy.test2.tsv'
     # forlder where terminal scripts are
-    TERMINALSCRIPTS: '/path-to/isweep/workflow/simulate/scripts'
+    TERMINALSCRIPTS: 'scripts'
     # folder where software is
-    SOFTWARE: '/path-to/software'
+    SOFTWARE: '../../software'
 
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/

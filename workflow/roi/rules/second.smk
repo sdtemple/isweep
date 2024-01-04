@@ -1,5 +1,4 @@
-wildcard_constraints:UTOFF
-	NAME = '\w+',
+### finding ibd groups
 
 # some inputs, string managements, count sample size
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])

@@ -7,8 +7,6 @@ import pandas as pd
 
 macro, micro, Ne, n, ageSplit, V, L, m, q, rho, gcProp, gcMeanLength, a, b, equalSizes, sampleOneSubpop = sys.argv[1:]
 
-
-
 sims = pd.read_csv(micro, sep='\t', header=0)
 J = sims.shape[0]
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]

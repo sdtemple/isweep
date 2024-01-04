@@ -1,8 +1,5 @@
-"""
-Put mutations on tree sequence
+# Put mutations on tree sequence
 
-@author: sdtemple
-"""
 
 import sys, os, subprocess, pyslim, msprime
 import tskit as ts

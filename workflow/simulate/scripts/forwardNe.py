@@ -1,16 +1,9 @@
-"""
-Format Ne for forward simulations
-
-@author: sdtemple
-"""
+# Format Ne for forward simulations
 
 import sys
 from math import floor
 
 filein, fileout = sys.argv[1:]
-
-# filein = str(snakemake.config["CHANGE"]["SIMULATE"]["tNe"])
-# fileout = snakemake.output[0]
 
 nes = [] # vector of effective population sizes
 

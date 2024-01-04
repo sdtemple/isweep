@@ -1,6 +1,5 @@
 # isweep real data analysis part 2 (roi)
-# Seth D. Temple, sdtemple@uw.edu
-# April 27, 2023
+# analyses of regions of interest
 
 import os
 import pandas as pd

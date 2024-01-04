@@ -1,6 +1,4 @@
 # Combine windows in a region of excess IBD
-# Seth D Temple, sdtemple@uw.edu
-# April 27, 2023
 
 import sys
 filein,fileout,cm=sys.argv[1:]

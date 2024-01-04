@@ -1,17 +1,6 @@
 # Purpose: estimate s from ibd data
 # Input: ibd data, p_est, cutoff, n, Ne, ploidy, nboot
 # Output: s_est, s_low, s_upp
-# Note: this is a new version w/o bias correction
-# Date: 2023 11 06
-
-# fileout : output file name
-# ibdct : number of ibd tracts
-# p_est : estimated p
-# cutoff : cutoff for ibd tracts
-# n : number of individuals
-# Ne : effective population size
-# ploidy : ploidy
-# nboot : number of bootstrapS
 
 # importing
 from isweep import *

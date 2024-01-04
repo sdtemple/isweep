@@ -1,8 +1,4 @@
-#!/bin/bash
-
 # First step: copy and paste genetic maps
-# Seth D. Temple, sdtemple@uw.edu
-# April 25, 2023
 
 ### fixed variables ###
 

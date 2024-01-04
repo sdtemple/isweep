@@ -11,9 +11,9 @@ CHANGE:
     # the yaml file with scan analysis options
     YAML: 'eur.yaml'
     # folder where terminal scripts are
-    TERMINALSCRIPTS: '/path-to/isweep/workflow/scan/scripts'
+    TERMINALSCRIPTS: 'scripts'
     # folder where software is
-    SOFTWARE: '/path-to-software'
+    SOFTWARE: '../../software'
 
   # parameters, subsample file
   ISWEEP:
@@ -33,7 +33,7 @@ CHANGE:
     # https://github.com/browning-lab/hap-ibd
     HAPIBD: 'hap-ibd.jar'
     # http://faculty.washington.edu/browning/
-    FILTER: 'filter-lines.jar'\
+    FILTER: 'filter-lines.jar'
 
   EXISTING:
     VCFS: '/path-to-topmed-data/phased-vcfs'

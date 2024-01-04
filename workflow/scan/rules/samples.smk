@@ -1,6 +1,4 @@
 # make excludesamples file for browning lab jar
-# seth temple, sdtemple@uw.edu
-# may 3, 2023
 
 # inputs, string management
 vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])

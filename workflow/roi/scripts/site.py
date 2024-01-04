@@ -1,6 +1,4 @@
 # Refine sweep site
-# seth d temple, sdtemple@uw.edu
-# june 30, 2023
 
 # imports
 import sys

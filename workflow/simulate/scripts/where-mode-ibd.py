@@ -1,3 +1,4 @@
+# find the position of the mode ibd segment count
 import sys
 import gzip
 input_file,output_file = sys.argv[1:]

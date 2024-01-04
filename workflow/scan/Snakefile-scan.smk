@@ -1,6 +1,4 @@
-# isweep real data analysis part 1 (scan)
-# Seth D. Temple, sdtemple@uw.edu
-# April 26, 2023
+# scanning for excess ibd
 
 # setup macro folder
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
@@ -22,15 +20,17 @@ folder_name = macro + '/ibdsegs/hapibd'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 folder_name = macro + '/ibdsegs/ibdends'
+# if not os.path.exists(folder_name):
+#     os.makedirs(folder_name)
+# folder_name = macro + '/ibdsegs/ibdends/modified'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs/ibdends/modified'
+# folder_name = macro + '/ibdsegs/ibdends/modified/mle'
+folder_name = macro + '/ibdsegs/ibdends/mle'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs/ibdends/modified/mom'
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs/ibdends/modified/scan'
+# folder_name = macro + '/ibdsegs/ibdends/modified/scan'
+folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 

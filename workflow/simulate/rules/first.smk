@@ -1,3 +1,6 @@
+### initializing regions of interest
+### some localizing
+
 # inputs
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))

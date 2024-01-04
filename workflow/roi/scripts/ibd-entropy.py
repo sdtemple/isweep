@@ -1,3 +1,5 @@
+# compute ibd entropy for haplotype groups
+
 # setup
 import sys
 import numpy as np

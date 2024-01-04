@@ -1,3 +1,5 @@
+# find outlier haplotype groups
+
 # importing
 import sys
 from isweep import *

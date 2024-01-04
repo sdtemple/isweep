@@ -1,6 +1,4 @@
-# haplotype frequency, position
-# seth d temple, sdtemple@uw.edu
-# june 17, 2023
+# estimate haplotype frequency, position
 
 import sys
 import pandas as pd

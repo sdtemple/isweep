@@ -1,3 +1,5 @@
+# rank variants based on ibd groups
+
 # importing
 import sys
 from isweep import *

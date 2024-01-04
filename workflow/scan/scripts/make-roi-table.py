@@ -1,6 +1,4 @@
 # Append info to region of interest
-# Seth D. Temple, sdtemple@uw.edu
-# May 2, 2023
 
 # setup
 import sys

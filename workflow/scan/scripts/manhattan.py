@@ -1,3 +1,5 @@
+# make a manhattan plot of IBD rates
+
 import sys
 import pandas as pd
 import numpy as np

@@ -1,3 +1,5 @@
+### refining location of analysis
+
 # inputs
 n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))

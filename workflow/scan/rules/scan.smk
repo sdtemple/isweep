@@ -1,6 +1,4 @@
 # conduct ibd calls and scan for isweep
-# seth temple, sdtemple@uw.edu
-# may 3, 2023
 
 # inputs, string management, count sample size, make mac
 subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
@@ -93,15 +91,15 @@ rule format_ibdends: # reformatting
     input:
         bigibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     output:
-        cutibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
+        cutibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     shell:
         'zcat {input.bigibd} | tail -n +2 | cut -f 1-5,10,11,12 | gzip > {output.cutibd}'
 
 rule filter_ibdends_scan: # applying cutoffs
     input:
-        ibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
+        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     output:
-        fipass='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',
+        fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
@@ -116,10 +114,10 @@ rule filter_ibdends_scan: # applying cutoffs
 
 rule count_ibdends_scan: # computing counts over windows
     input:
-        filein='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.gz',
+        filein='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
         mapin='{cohort}/maps/chr{num}.map',
     output:
-        fileout='{cohort}/ibdsegs/ibdends/modified/scan/chr{num}.ibd.windowed.tsv.gz',
+        fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
@@ -136,29 +134,29 @@ rule count_ibdends_scan: # computing counts over windows
             {params.tc}
         """
 
-rule filter_ibdends_mom: # applying cutoffs
+rule filter_ibdends_mle: # applying cutoffs
     input:
-        ibd='{cohort}/ibdsegs/ibdends/modified/chr{num}.ibd.gz',
+        ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     output:
-        fipass='{cohort}/ibdsegs/ibdends/modified/mom/chr{num}.ibd.gz',
+        fipass='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
     params:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-        momcut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        mlecut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     shell:
         """
         zcat {input.ibd} | \
-            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.momcut} | \
+            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.mlecut} | \
             gzip > {output.fipass}
         """
 
-rule count_ibdends_mom: # computing counts over windows
+rule count_ibdends_mle: # computing counts over windows
     input:
-        filein='{cohort}/ibdsegs/ibdends/modified/mom/chr{num}.ibd.gz',
+        filein='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
         mapin='{cohort}/maps/chr{num}.map',
     output:
-        fileout='{cohort}/ibdsegs/ibdends/modified/mom/chr{num}.ibd.windowed.tsv.gz',
+        fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
@@ -177,15 +175,15 @@ rule count_ibdends_mom: # computing counts over windows
 
 rule scan: # conduct a manhattan scan
     input:
-        [macro+'/ibdsegs/ibdends/modified/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
-        [macro+'/ibdsegs/ibdends/modified/mom/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
+        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
+        [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
     output:
         scandata=macro+'/scan.ibd.tsv',
         excessdata=macro+'/excess.ibd.tsv',
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         folder=macro,
-        nextfolder=macro+'/ibdsegs/ibdends/modified/scan/',
+        nextfolder=macro+'/ibdsegs/ibdends/scan/',
         chrlow=str(low),
         chrhigh=str(high),
         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),

@@ -1,6 +1,4 @@
 # Write locations where ibd exceeds a significance threshold
-# Seth D. Temple, sdtemple@uw.edu
-# April 26, 2023
 
 # importing
 import sys
@@ -10,9 +8,6 @@ import numpy as np
 # inputtting
 folder,nextfolder,out1,out2,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
 folder += nextfolder
-#folder,chrlow,chrhigh,cutoff1,cutoff2=sys.argv[1:]
-#firstfolder=folder
-#folder+='/ibdsegs/ibdends/modified/scan/'
 
 # type casting
 chrlow=int(float(chrlow))

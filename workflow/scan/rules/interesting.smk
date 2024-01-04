@@ -1,7 +1,5 @@
 # process the isweep scan
 # form table of roi
-# seth temple, sdtemple@uw.edu
-# may 3, 2023
 
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
