@@ -3,9 +3,9 @@
 #### You run this pipeline after the workflow/scan/ pipeline.
 
 You should review the files:
-- roi.tsv from your selection scan
+- `roi.tsv`` from your selection scan
     - You can rename the hit* to loci names if you know some
-- plots/
+- `plots/``
     - Check if there are lots of recombination hotspot
     - Check if there is low marker density
         - ibd-ends.jar should address this

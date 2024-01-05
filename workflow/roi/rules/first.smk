@@ -13,15 +13,6 @@ maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*samplesize*maf3)
 maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
-# # make an excludesamples.txt file (just in case)
-# rule touch_exclude:
-#     input:
-#         excludesamples="{cohort}/subsample.txt",
-#     output:
-#         excludesamples="{cohort}/excludesamples.txt",
-#     shell:
-#         'touch {output.excludesamples}'
-
 # subset vcf to region of interest
 rule first_region: # focus vcf on region of interest
     input:
@@ -35,6 +26,8 @@ rule first_region: # focus vcf on region of interest
         chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
+        vcfprefix=str(config['CHANGE']['EXISTING']['VCFPRE']),
+        vcfsuffix=str(config['CHANGE']['EXISTING']['VCFSUF']),
     resources:
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
@@ -42,7 +35,7 @@ rule first_region: # focus vcf on region of interest
         chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
         left=$(python {params.scripts}/lines.py {input.locus} 4 2)
         right=$(python {params.scripts}/lines.py {input.locus} 5 2)
-        vcf={params.vcfs}/chr${{chr}}.vcf.gz
+        vcf={params.vcfs}/{params.vcfprefix}}${{chr}}{params.vcfsuffix}
         bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
             bcftools view -q {params.qmaf}:nonmajor -Oz -o {output.subvcf}
@@ -119,7 +112,7 @@ rule first_rank:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['RULESIGMA']),
+        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
         python {params.scripts}/rank.py \

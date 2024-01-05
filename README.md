@@ -1,7 +1,7 @@
 <img src="isweep-icon.png" align="center" width="400px"/>
 
-CAUTION: I did some re-organizing. Testing them out, debugging in late November.
-- Need to check the workflow/roi/ and workflow/scan/
+See `announcements.md` for high-level updates on this repo.
+See `usage.md` to evaluate if this methodology fits your study.
 
 ## Citation
 
@@ -108,42 +108,6 @@ Phase data w/ Beagle or Shapeit beforehand.
 
 Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 `
 
-## Do these methods apply to my sample size?
-
-It'd be nice if you have:
-- Ancestral Ne >= 3000
-- No population bottleneck with Ne < 3000 in last 500 generations
-- Sample from 1 generation
-  - I.e., use other methods for flies, mosquitoes, worms
-
-#### You could test if there is enough IBD:
-
-- In python, use the `simulate_ibd` and `read_Ne` functions in `isweep`
-  - Ne file is tab-separated w/ two columns: generation, Ne
-  - You should make at least 500 generations
-  - It is okay to have a guess of Ne size before inferring with IBDNe
-    - Use the different *_Ne() functions to make such an *.ne file
-- Do you have on average # of 3.0 cM ibd tracts >= 200?
-  - Then, yes, you probably have enough samples to run this analysis.
-
-#### Some species from `stdpopsim` that may apply:
-
-- Great apes
-  - Pongo abelii
-  - Pan troglodytes
-  - Papio anubis
-- Anas platyrhynchos (duck)
-- Apis mellifera (bee)
-- Canis familiaris (dog)
-  - Address population structure, admixture
-
-#### Should I use these methods on biobank datasets > 100k individuals?
-
-- No, unless you want to spend a lot on computing costs.
-  - The methods should scale, but you'd wait awhile and spend a lot.
-- If you downsample to ~10k, you should have more than enough data.
- - (If IBD **were** binomially distributed, downsampling keeps same distributional properties.)
-
 ## Development things to do
 
 - Provide some scripts to summarize analyses
@@ -151,6 +115,3 @@ It'd be nice if you have:
 - Test performance when phase is inferred with beagle
 - Test performance with no gene conversion
 - Not designed for ploidy != 2 (yet)
-- Debug population structure simulation script
-  - Appears to fail when coming together is later than *.ne file
-- Debug when there is no excess IBD
