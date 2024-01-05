@@ -24,13 +24,6 @@ You should do an initial run to set the inferred error rate in your *.yaml.
 
 1. Edit the *.yaml file
 2. ` conda activate isweep `
-3. `bash maps.sh maps-folder map-prefix map-suffix study-name chrlow chrhigh`
-    - $1 : folder where genetic maps are
-    - $2 : the prefix before the chromosome number
-    - $3 : the suffix after the chromosome number
-    - $4 : define your study folder name (match to .yaml file)
-    - $5 : lowest chromosome number (e.g., 1)
-    - $6 : highest chromosome number (e.g., 22)
 
 3. ` snakemake -c1 -s Snakefile-scan.smk --configfile *.yaml `
     - "-n" option is the dry run
@@ -65,22 +58,22 @@ You should do an initial run to set the inferred error rate in your *.yaml.
         - $7 : prefix for outfiles 
     - You should do this with cluster computing. Send in a job!
 
-Steps 5. and 6. are if you want to estimate selection coefficients for loci.
+Step 5 is if you want to make a GWAS plot.
+Steps 6 is if you want to estimate selection coefficients for loci.
 
 ## Example
 
 I use the qsub system to manage cluster jobs.
 
 1. `conda activate isweep`
-2. ` bash maps.sh path-to-maps-folder/ decode.chr .map eur 1 22 `
-3. `snakemake -c1 -n -s Snakefile-scan.smk --configfile eur.yaml`
+2. `snakemake -c1 -n -s Snakefile-scan.smk --configfile eur.yaml`
 
-4. `nohup snakemake -c1 -s Snakefile-scan.smk --keep-going --latency-wait 300 --cluster "qsub -q some-queue.q -N {rule} -m e -M your.email.@university.edu -pe local 12 " --configfile eur.yaml --jobs 22 & `
+3. `nohup snakemake -c1 -s Snakefile-scan.smk --keep-going --latency-wait 300 --cluster "qsub -q some-queue.q -N {rule} -m e -M your.email.@university.edu -pe local 12 " --configfile eur.yaml --jobs 22 & `
     - `-pe local 12` allocates 12 CPUs on same node
-     - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
+    - `-m e -M your.email@university.edu` may send you 100s of emails ---> use an email filter
 
-5. `python scripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3` 
+4. `python scripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3` 
 
-6. ` echo "bash scripts/run-ibdne.sh ibdne.jar 100 eur ibdsegs/ibdends/modified/scan 1 22 ibdne " | qsub -q some-queue.q -N ibdne -m e -M your.email@university.edu `
+5. ` echo "bash scripts/run-ibdne.sh ibdne.jar 100 eur ibdsegs/ibdends/modified/scan 1 22 ibdne " | qsub -q some-queue.q -N ibdne -m e -M your.email@university.edu `
 
 You don't have to use my `manhattan.R` or `manhattan.py` files for plotting. Feel free to take inspiration from the scripts.

@@ -21,6 +21,10 @@ CHANGE:
     XMXMEM: '240' # in gb
     THREADS: '16'
 
+  IBDENDS:
+    # do a test run on 1 chromosome to set this
+    ERRRATE: '1.5e-4'
+
   # download these software
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
@@ -66,8 +70,8 @@ FIXED:
     QUANTILES: '0.5'
     # num samples from endpoint posterior
     NSAMPLES: '0'
-    # do a test run on 1 chromosome to set this
-    ERRRATE: '1.5e-4'
+    # # do a test run on 1 chromosome to set this
+    # ERRRATE: '1.5e-4'
     # minimum minor allele frequency
     MINMAF: '0.001'
 

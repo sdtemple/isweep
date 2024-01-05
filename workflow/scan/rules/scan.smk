@@ -70,7 +70,8 @@ rule ibdends: # ibd-ends.jar
         maf=str(config['FIXED']['IBDENDS']['MINMAF']),
         qua=str(config['FIXED']['IBDENDS']['QUANTILES']),
         sam=str(config['FIXED']['IBDENDS']['NSAMPLES']),
-        err=str(config['FIXED']['IBDENDS']['ERRRATE']),
+        err=str(config['CHANGE']['IBDENDS']['ERRRATE']),
+        # err=str(config['FIXED']['IBDENDS']['ERRRATE']),
     resources:
         mem_gb=mgb+1,
     shell:
