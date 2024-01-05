@@ -55,7 +55,8 @@ rule slim_script:
         a=str(config['FIXED']['SIMULATE']['a']),
         b=str(config['FIXED']['SIMULATE']['b']),
         sampleequal=str(config['FIXED']['SIMULATE']['SAMPLEEQUAL']),
-        sampleone=str(config['FIXED']['SIMULATE']['SAMPLEONE']),
+        sampleone='0', # there is a bug in msprime rule otherwise (recapitation issue)
+        # sampleone=str(config['FIXED']['SIMULATE']['SAMPLEONE']),
     shell:
         """
         python {params.scripts}/writeSlimDemography.py \

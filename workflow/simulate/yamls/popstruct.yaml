@@ -74,7 +74,7 @@ FIXED:
   # simulation study setting
   SIMULATE:
     BUFFER: '1500000'
-    SAMPLEONE: '1' # 1 to sample from 1 subpop, 0 to sample from all subpops
+    # SAMPLEONE: '0' # 1 to sample from 1 subpop, 0 to sample from all subpops
     SAMPLEEQUAL: '1' # 1 for equal sampling for subpops, 0 otherwise
     NUMVAR: '1' # num adaptive mutations
     a: '0.1' # min adaptive allele freq

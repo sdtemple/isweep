@@ -35,10 +35,10 @@ rule make_roi_table:
         """
         mkdir -p {params.study}/plots
         mkdir -p {params.study}/stats
-        python {params.scripts}/make-roi-table.py \ 
-            {params.study} \ 
-            {params.cmcover} \ 
-            {params.cmsmall} \ 
-            {params.mbbuf} \ 
+        python {params.scripts}/make-roi-table.py \
+            {params.study} \
+            {params.cmcover} \
+            {params.cmsmall} \
+            {params.mbbuf} \
             {params.mapfolder}
         """

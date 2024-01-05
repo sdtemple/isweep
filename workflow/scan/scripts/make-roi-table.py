@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 folder,cmcover,cmsmall,mbbuffer,mapfolder=sys.argv[1:]
 
 filein=folder+'/excess.region.ibd.tsv'
-folder1=folder+'/ibdsegs/ibdends/modified/scan/'
+folder1=folder+'/ibdsegs/ibdends/scan/'
 filepre='chr'
 filesuf='.ibd.windowed.tsv.gz'
 fileout=folder+'/roi.tsv'
