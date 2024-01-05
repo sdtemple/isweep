@@ -43,7 +43,9 @@ destination_file = "path/to/destination/file"
 for i in range(low,high+1):
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     destination_file = macro+'/maps/chr'+str(i)+'.map'
-    shutil.copy(source_file, destination_file)
+    if not os.path.exists(destination_file):
+        shutil.copy(source_file, destination_file)
+    # shutil.copy(source_file, destination_file)
 
 # include .smk files with rules
 include: 'rules/scan.smk'
