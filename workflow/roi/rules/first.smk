@@ -35,7 +35,7 @@ rule first_region: # focus vcf on region of interest
         chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
         left=$(python {params.scripts}/lines.py {input.locus} 4 2)
         right=$(python {params.scripts}/lines.py {input.locus} 5 2)
-        vcf={params.vcfs}/{params.vcfprefix}}${{chr}}{params.vcfsuffix}
+        vcf={params.vcfs}/{params.vcfprefix}${{chr}}{params.vcfsuffix}
         bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
             bcftools view -q {params.qmaf}:nonmajor -Oz -o {output.subvcf}

@@ -115,3 +115,6 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 - Test performance when phase is inferred with beagle
 - Test performance with no gene conversion
 - Not designed for ploidy != 2 (yet)
+- Clean up some scripts to be more developer friendly?
+  - writeSlimDemography.py is particularly poor form
+  - make-roi-table.py is poor form
