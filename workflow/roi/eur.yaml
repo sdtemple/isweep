@@ -17,9 +17,6 @@ CHANGE:
     # region of interest file
     ROI: 'roi.tsv'
     CHRPRE: 'chr' # either '' or 'chr' ; look at your vcf and map file
-    # numeric first, last chromosome number
-    CHRLOW: '1'
-    CHRHIGH: '22'
     XMXMEM: '100' # in gb
     # inferred Ne(t) to use
     NE: 'ibdne.ne'

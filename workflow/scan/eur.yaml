@@ -33,7 +33,6 @@ CHANGE:
     IBDENDS: 'ibd-ends.jar'
     # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar'
-    IBDNE: 'ibdne.ne'
 
   EXISTING:
     # these are phased vcfs

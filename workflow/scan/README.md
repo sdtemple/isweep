@@ -12,8 +12,9 @@ You should subset to different "ancestry" groups (ADMIXTURE, principal component
 
 If you are studying a subset of a larger (biobank) dataset, create a subsample text file.
 - Link to it in your yaml file
-- If not, create an empty subsample.txt file
-    - ` touch subsample.txt `
+If you are using the entire dataset,
+- ` bcftools query -l your-smallest-chr.vcf.gz > subsample.txt `
+- Link this in your yaml file
 
 You should do an initial run to set the inferred error rate in your *.yaml.
 - Study one of your smallest chromosomes.
