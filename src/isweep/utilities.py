@@ -261,7 +261,7 @@ def extend_Ne(file, maxg, output):
         lines = f.readlines()
         g, size = lines[-1].strip().split('\t')[:2]
 
-    g = int(g)
+    g = int(g) + 1
     if maxg >= g:
         with open(output, 'w') as o:
             for line in lines:

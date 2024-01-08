@@ -1,4 +1,4 @@
-<img src="isweep-icon.png" align="center" width="400px"/>
+<img src="isweep-icon.png" align="center" width="600px"/>
 
 See `announcements.md` for high-level updates on this repo.
 
@@ -55,6 +55,7 @@ Use IBDkin (https://github.com/YingZhou001/IBDkin) to remove close relatives.
 Use PCA or ADMIXTURE to subset based on ancestry.
 
 If you want to compare against other methods (using our pipelines), you require more software.
+
 See `workflow/other-methods/` folder.
   
 ## Overview
@@ -125,7 +126,8 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 - I somehow inserted a bug in the simulation study when reworking the repo.
   - This could be in the `writeSlimDemography.py` ?
   - Doesn't handle population structure well
-  - Too many ibd segments --> overestimating sel coef
-  - Go back and look at changes in late Nov, early Dec
 - The `plots/` and `stats/` output file names in `workflow/scan/`.
   - It appears to be with the recombination plots
+- In package missing `+1` in `extend_Ne`.
+  - Updated for later release
+  - Does not impact results 

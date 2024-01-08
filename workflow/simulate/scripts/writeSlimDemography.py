@@ -5,7 +5,7 @@ from random import randint
 import numpy as np
 import pandas as pd
 
-macro, micro, Ne, n, ageSplit, V, L, m, q, rho, gcProp, gcMeanLength, a, b, equalSizes, sampleOneSubpop = sys.argv[1:]
+macro, micro, Ne, n, timeSplit, V, L, m, q, rho, gcProp, gcMeanLength, a, b, equalSizes = sys.argv[1:]
 
 sims = pd.read_csv(micro, sep='\t', header=0)
 J = sims.shape[0]
@@ -33,7 +33,7 @@ us = us[:-1]
 us += ')'
 
 # recombination, gene conversion
-ageSplit = int(float(ageSplit))
+timeSplit = int(float(timeSplit))
 RHO = float(rho)
 assert RHO >= 0, 'rho is nonnegative'
 GCP = float(gcProp)
@@ -75,17 +75,20 @@ for j in range(J):
     tau = int(float(tau))
 
     # determine variants
-    nG = sum([1 for _ in open(Ne)])
+    nG = sum([1 for _ in open(Ne)]) - 2
     assert tau > 0, 'tau is positive'
     assert tau < nG, 'tau is less than number of generations in population history file'
     if nG - tau > 1:
         assert V < 2, 'V cannot be positive integer greater than 1 if age of adaptive allele is not end of population history'
-    assert ageSplit > 0, 'ageSplit is positive'
-    if (ageSplit + 1) >= nG:
-        splitStart = 1
+    assert timeSplit > 0, 'timeSplit is positive'
+    if timeSplit >= nG:
+        startSplit = 0
     else:
-        splitStart = nG - ageSplit
-    assert ageSplit > tau, 'age of population substructure is greater than age of adaptive variant'
+        startSplit = max(nG - timeSplit,2)
+    assert timeSplit > tau, 'age of population substructure is greater than age of adaptive variant'
+
+    # these are for loops in slim script
+    # early() and late() statements
     tauf=str(nG-tau)
     taufplus=str(nG-tau+1)
     nG = str(nG)
@@ -137,7 +140,7 @@ for j in range(J):
     f.write('\n')
 
     ### create population ###
-    if splitStart <= 1:
+    if startSplit < 1:
         f.write('// create population\n')
         f.write('1 {\n')
         f.write('\tdefineConstant("simID", getSeed());\n')
@@ -179,7 +182,7 @@ for j in range(J):
         f.write('\n')
 
     ### size updates ###
-    if splitStart <= 1: # substructure split from the beginning
+    if startSplit < 1: # substructure split from the beginning
         f.write('// size updates\n')
         f.write('2:' + nG + ' early() {\n')
         f.write('\tsubpopCount=' + str(m) + ';\n')
@@ -197,26 +200,23 @@ for j in range(J):
     else: # substructure split midway
         # before substructure split
         f.write('// size updates\n')
-        if (splitStart - 1) < 2:
-            pass
-        else:
-            f.write('2:' + str(splitStart-1) + ' early() {\n')
-            f.write('\tsubpopSize=' + 'asInteger(effSize[itrGen]);\n')
-            f.write('\tsim.subpopulations[0].setSubpopulationSize(subpopSize);\n')
-            f.write('\titrGen = itrGen + 1;\n')
-            f.write('}\n')
+        f.write('2:' + str(startSplit) + ' early() {\n')
+        f.write('\tsubpopSize=' + 'asInteger(effSize[itrGen]);\n')
+        f.write('\tsim.subpopulations[0].setSubpopulationSize(subpopSize);\n')
+        f.write('\titrGen = itrGen + 1;\n')
+        f.write('}\n')
         # substructure split
-        f.write(str(splitStart) + ' early() {\n')
+        f.write(str(startSplit+1) + ' early() {\n')
         f.write('\tsubpopCount=' + str(m) + ';\n')
         if m > 1:
             f.write('\tunequalSizes=' + us + ';\n')
             f.write('\tfor (i in 2:subpopCount){\n')
             if equalSizes == '1':
                 f.write('\t\tsubpopSize=asInteger(effSize[itrGen] * ' + str(1/m) + ');\n')
-                f.write('\t\tsim.addSubpop(i,subpopSize);\n')
+                f.write('\t\tsim.addSubpopSplit(i,subpopSize,1);\n')
             else:
                 f.write('\t\tsubpopSize=asInteger(effSize[itrGen] * unequalSizes[i-1]);\n')
-                f.write('\t\tsim.addSubpop(i,subpopSize);\n')
+                f.write('\t\tsim.addSubpopSplit(i,subpopSize,1);\n')
             f.write('\t}\n')
             if equalSizes == '1':
                 f.write('\tsubpopSize=asInteger(effSize[itrGen] * ' + str(1/m) + ');\n')
@@ -236,7 +236,7 @@ for j in range(J):
         f.write('\titrGen = itrGen + 1;\n')
         f.write('}\n')
         # after substructure split
-        f.write(str(splitStart+1) + ':' + nG + ' early() {\n')
+        f.write(str(startSplit+2) + ':' + nG + ' early() {\n') # ideally startSplit+2 <= nG
         f.write('\tsubpopCount=' + str(m) + ';\n')
         f.write('\tunequalSizes=' + us + ';\n')
         f.write('\tfor (i in 1:subpopCount){\n')
@@ -295,27 +295,17 @@ for j in range(J):
     ### sample current ###
     f.write('// sample current \n')
     f.write(str(int(nG) + 1) + ' early() {\n')
-    if sampleOneSubpop == '1':
-        # draw all from one subpop
-        f.write('\tsubpopCount=' + str(m) + ';\n')
-        f.write('\tsubpop=' + str(randint(1,m)) + ';\n')
-        f.write('\tsubpopSize=asInteger(' + str(n) + ');\n')
-        f.write('\tfor (i in 1:subpopCount){\n')
-        f.write('\t\tsim.subpopulations[i-1].setSubpopulationSize(1);\n') # a cheap hack
-        f.write('\t}\n')
-        f.write('\tsim.subpopulations[subpop-1].setSubpopulationSize(subpopSize);\n')
+    # draw proportionally from all subpops
+    f.write('\tsubpopCount=' + str(m) + ';\n')
+    f.write('\tunequalSizes=' + us + ';\n')
+    f.write('\tfor (i in 1:subpopCount){\n')
+    if equalSizes == '1':
+        f.write('\t\tsubpopSize=asInteger(' + str(n) + ' * ' + str(1/m) + ');\n')
+        f.write('\t\tsim.subpopulations[i-1].setSubpopulationSize(subpopSize);\n')
     else:
-        # draw proportionally from all subpops
-        f.write('\tsubpopCount=' + str(m) + ';\n')
-        f.write('\tunequalSizes=' + us + ';\n')
-        f.write('\tfor (i in 1:subpopCount){\n')
-        if equalSizes == '1':
-            f.write('\t\tsubpopSize=asInteger(' + str(n) + ' * ' + str(1/m) + ');\n')
-            f.write('\t\tsim.subpopulations[i-1].setSubpopulationSize(subpopSize);\n')
-        else:
-            f.write('\t\tsubpopSize=asInteger(' + str(n) + ' * ' + ' unequalSizes[i-1]);\n')
-            f.write('\t\tsim.subpopulations[i-1].setSubpopulationSize(subpopSize);\n')
-        f.write('\t}\n')
+        f.write('\t\tsubpopSize=asInteger(' + str(n) + ' * ' + ' unequalSizes[i-1]);\n')
+        f.write('\t\tsim.subpopulations[i-1].setSubpopulationSize(subpopSize);\n')
+    f.write('\t}\n')
     f.write('\tsim.chromosome.setRecombinationRate(0);\n')
     f.write('}\n')
     f.write('\n')
