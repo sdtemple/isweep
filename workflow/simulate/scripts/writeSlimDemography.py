@@ -68,7 +68,6 @@ for j in range(J):
     row = sims.loc[j,]
     s = row.SELCOEF
     tau = row.TIMEMUT
-    # n = row.SAMPSIZE
     prefix = str(row.FOLDER) + '/slimulation'
 
     # selection, age, recombination, gene conversion

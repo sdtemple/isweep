@@ -44,6 +44,7 @@ rule third_hap_ibd:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
@@ -54,6 +55,8 @@ rule third_hap_ibd:
             "I" 6 0.00 ${{thecenter}} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
             "I" 7 ${{thecenter}} 10000000000 | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" -8 0.00 {params.mlecutoff} | \
             gzip > {output.ibd}
         """
 
@@ -66,7 +69,7 @@ rule third_hap_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['SIMULATE']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
@@ -79,7 +82,7 @@ rule third_hap_infer:
             ${{ibdest}} \
             ${{freqest}} \
             {params.nboot} \
-            {params.cm} \
+            {params.mlecutoff} \
             {params.n} \
             {params.effdemo} \
             {params.ploidy}
@@ -114,6 +117,7 @@ rule third_snp_ibd:
         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
         prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
@@ -124,6 +128,8 @@ rule third_snp_ibd:
             "I" 6 0.00 ${{thecenter}} | \
             java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
             "I" 7 ${{thecenter}} 10000000000 | \
+            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+            "I" -8 0.00 {params.mlecutoff} | \
             gzip > {output.ibd}
         """
 
@@ -136,7 +142,7 @@ rule third_snp_infer:
     params:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['SIMULATE']['PLOIDY']),
         effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
@@ -149,7 +155,7 @@ rule third_snp_infer:
             ${{ibdest}} \
             ${{freqest}} \
             {params.nboot} \
-            {params.cm} \
+            {params.mlecutoff} \
             {params.n} \
             {params.effdemo} \
             {params.ploidy}
