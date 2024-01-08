@@ -19,8 +19,8 @@ CHANGE:
     IBDENDS: 'ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
     GTERR: 'add-uniform-err.jar' # http://faculty.washington.edu/browning/
     FILTER: 'filter-lines.jar' # http://faculty.washington.edu/browning/
-    # RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
-    # BEAGLE: 'beagle.05May22.33a.jar' # http://faculty.washington.edu/browning/
+    RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
+    BEAGLE: 'beagle.jar' # http://faculty.washington.edu/browning/
 
   CLUSTER:
     # controls memory resource to some rules

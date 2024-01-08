@@ -141,6 +141,8 @@ rule vcf:
         bcftools view {input.bcf} -Oz -m2 -M2 -o {output.vcf}
         """
 
+# true phase
+
 rule genotyping_error:
     input:
         vcf='{macro}/{micro}/{seed}/slimulation.vcf.gz',
@@ -156,6 +158,59 @@ rule genotyping_error:
             java -jar {params.soft}/{params.prog} {params.gter} | \
             gzip > {output.out}
         """
+
+# # infer phase
+
+# rule genotyping_error:
+#     input:
+#         vcf='{macro}/{micro}/{seed}/slimulation.vcf.gz',
+#     output:
+#         out='{macro}/{micro}/{seed}/large.chr1.gterr.vcf.gz',
+#     params:
+#         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+#         prog=str(config['CHANGE']['PROGRAMS']['GTERR']),
+#         gter=str(config['CHANGE']['SIMULATE']['GTERR']),
+#     shell:
+#         """
+#         zcat {input.vcf} | \
+#             java -jar {params.soft}/{params.prog} {params.gter} | \
+#             gzip > {output.out}
+#         """
+
+# rule remove_phase:
+#     input:
+#         vcf='{macro}/{micro}/{seed}/large.chr1.gterr.vcf.gz',
+#     output:
+#         out='{macro}/{micro}/{seed}/large.chr1.unphased.vcf.gz',
+#     params:
+#         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+#         prog=str(config['CHANGE']['PROGRAMS']['RMPHASE']),
+#     shell:
+#         """
+#         zcat {input.vcf} | \
+#             java -jar {params.soft}/{params.prog} | \
+#             gzip > {output.out}
+#         """
+
+# rule beagle:
+#     input:
+#         vcf='{macro}/{micro}/{seed}/large.chr1.unphased.vcf.gz',
+#         map = str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
+#     output:
+#         out='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
+#     params:
+#         soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+#         prog=str(config['CHANGE']['PROGRAMS']['BEAGLE']),
+#         out='{macro}/{micro}/{seed}/large.chr1',
+#     resources:
+#         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
+#     shell:
+#         """
+#         java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+#             gt={input.vcf} \
+#             map={input.map} \
+#             out={params.out}
+#         """
 
 ### zip tree sequence ###
 
