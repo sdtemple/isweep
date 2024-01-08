@@ -122,12 +122,3 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
   - make-roi-table.py is poor form
 
 ## Current bugs
-
-- I somehow inserted a bug in the simulation study when reworking the repo.
-  - This could be in the `writeSlimDemography.py` ?
-  - Doesn't handle population structure well
-- The `plots/` and `stats/` output file names in `workflow/scan/`.
-  - It appears to be with the recombination plots
-- In package missing `+1` in `extend_Ne`.
-  - Updated for later release
-  - Does not impact results 

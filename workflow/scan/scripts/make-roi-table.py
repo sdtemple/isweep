@@ -167,7 +167,7 @@ for j in range(J):
     plt.xlabel('bp position')
     namestr=str(row.NAME)
     chrotit=str(int(float(row.CHROM)))
-    meBP=str(int(float(row.BPCENTER)))
+    moBP=str(int(float(row.BPCENTER)))
     plotout=folder+'/plots/chr'+ chrotit + '.mode' + str(moBP) + '.recomb.png'
     plt.title('Chromosome '+chrotit)
     plt.savefig(plotout,dpi=300)
