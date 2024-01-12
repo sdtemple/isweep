@@ -1,5 +1,8 @@
 # if you download from bash get-software.sh
 software/
+workflow/other-methods/clues/clues/
+workflow/other-methods/clues/utils/
+workflow/other-methods/clues/terminalscripts/inference.py
 
 # hidden files from programming
 .Rhistory

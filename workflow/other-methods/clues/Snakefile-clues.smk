@@ -158,6 +158,8 @@ rule clues:
         clues=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['CLUES']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
         loc=str(config['FIXED']['SIMULATE']['LOC']),
+        thin=str(config['CHANGE']['CLUES']['THIN']),
+        burn=str(config['CHANGE']['CLUES']['BURNIN']),
     shell:
         """
         daf=$(python {params.freqscript}/get-daf.py {input.frq})
@@ -165,7 +167,9 @@ rule clues:
             --times {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample \
             --coal {input.coa} \
             --out {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/clues \
-            --popFreq $daf
+            --popFreq $daf \
+            --thin {params.thin} \
+            --burnin {params.burn}
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.anc || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mut || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.haps || true

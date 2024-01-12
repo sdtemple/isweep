@@ -1,9 +1,7 @@
-#### running clues for simulation study
-#### seth d temple, sdtemple at uw dot edu
-#### may 23, 2023
+## Running clues for simulation study
 
 Here are instructions.
-You run these after your isweep workflow/simulate/.
+You run these after your isweep `workflow/simulate/`.
 
 1. `conda env create -f clues-environment.yaml`
 2. `python coarse-coal.py` (see args; put under main experiment directory)
@@ -22,3 +20,7 @@ You run these after your isweep workflow/simulate/.
   - Do a dry run of snakemake.
 9. `nohup snakemake all -c1 --configfile clues.yaml --jobs 1 --keep-going --cluster "[options]" & ``
   - See snakemake documentation to modify options.
+
+**Note that** the `terminalscripts/inference.py` is from the CLUES developers.
+https://github.com/standard-aaron/clues
+https://github.com/avaughn271/CLUES2/tree/main

@@ -97,11 +97,13 @@ Phase data w/ Beagle or Shapeit beforehand.
 2. Edit yaml files in the different workflow directories
 3. Run the selection scan (workflow/scan)
 - ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
+- Recommendation: Do a test run with your 2 smallest chromosomes.
 - Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
+- Then, run with all your chromosomes.
 4. Estimate recent effective sizes (workflow/scan)
-- ` workflow/scan/terminalscripts/run-ibdne.sh `
+- ` workflow/scan/scripts/run-ibdne.sh `
 5. Make the Manhattan plot (workflow/scan)
-- ` workflow/scan/terminalscripts/manhattan.py `
+- ` workflow/scan/scripts/manhattan.py `
 6. Checkout the roi.tsv file
   - ` cat roi.tsv `
   - Edit it with locus names if you want
@@ -117,8 +119,5 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 - Test performance when phase is inferred with beagle
 - Test performance with no gene conversion
 - Not designed for ploidy != 2 (yet)
-- Clean up some scripts to be more developer friendly?
-  - writeSlimDemography.py is particularly poor form
-  - make-roi-table.py is poor form
 
 ## Current bugs

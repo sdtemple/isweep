@@ -60,7 +60,7 @@ It'd be nice if you have:
 
 ## Modeling choices
 
-#### Can I assume/fit a non-additive model?
+### Can I assume/fit a non-additive model?
 
 You do not have to assume additivity. There are 4 models available.
 - 'a' Additive 1:(1+s):(1+2s)
@@ -76,7 +76,7 @@ See snakemake pipeline for example input.
 
 Also, `python -c "from isweep import *; help(simulate_ibd_isweep); help(chi2_isweep)"`
 
-#### Can I assume a sweep from de novo mutation?
+### Can I assume a sweep from de novo mutation?
 
 Yes, review the standing variation parameter in the above `help()`.
 
@@ -84,7 +84,7 @@ You can define a frequency at which selection began.
 
 The method looks at recent relatedness, being relatively robust at **estimating a selection coefficient**.
 
-#### Can I assume an ongoing sweep?
+### Can I assume an ongoing sweep?
 
 Yes, review the `tau0` parameter in the above `help()`.
 

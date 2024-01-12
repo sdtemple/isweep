@@ -12,7 +12,7 @@ CHANGE:
     # tsv file describing simulations
     MICRO: '/path-to/workflow/simulate/experiments/simstudy.test2.tsv'
     # forlder where terminal scripts are
-    TERMINALSCRIPTS: '/path-to-here/workflow/clues/terminalscripts'
+    TERMINALSCRIPTS: 'terminalscripts'
     # folder where software is
     SOFTWARE: '/path-to/software'
   PROGRAMS:
@@ -21,7 +21,7 @@ CHANGE:
     CLUES: 'clues' # where is clues
   RELATE:
     BUFFER: '100000' # choose buffer size in bp
-    NUMSAM: '500' # choose num of mcmc branch lengths
+    NUMSAM: '10200' # choose num of mcmc branch lengths
     COAL: 'coarse.coal' # file made beforehand of --coal input to Relate
     # you can change this
     # i suggest running coarse-coal.py on Ne file in simulation study
@@ -29,6 +29,9 @@ CHANGE:
     # https://zenodo.org/record/3234689
     SAMPLE: 'relate.subsample.v2.txt' # file made beforehand of individual names
     # use linux head command and bcftools query -l
+  CLUES:
+    THIN: '5'
+    BURNIN: '200'
 
 # keep these fixed
 FIXED:

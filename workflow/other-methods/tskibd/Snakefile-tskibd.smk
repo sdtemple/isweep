@@ -28,8 +28,8 @@ sims = sims.set_index("SIMNAME", drop=False)
 rule all:
 	input:
         	# tskibd
-		[f"{sim.FOLDER}/results.tskibd.tsv" for sim in sims.itertuples()],
-		[f"{sim.FOLDER}/tskibd.been.zipped" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/results.tskibd.tsv".replace(" ","") for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/tskibd.been.zipped".replace(" ","") for sim in sims.itertuples()],
 
 # unzip a tree that had tszip applied
 rule unzip_tree:
@@ -57,7 +57,7 @@ rule recap_tree:
             {input.trees} \
             {output.trees} \
             {params.rho} \
-            {params.ancNe} \
+            {params.ancNe}
         """
 
 # # not implemented
@@ -76,7 +76,7 @@ rule recap_tree:
 #         python {params.terminalscripts}/subset-interval-trees.py \
 #             {input.trees} \ 
 #             {output.trees} \
-#             {params.left} \ 
+#             {params.left} \
 #             {params.right}
 #         """
 
@@ -99,7 +99,7 @@ rule tskibd_run:
             1000000 \
             10000 \
             {params.thresh} \
-            recap.trees \       
+            recap.trees      
         """
 
 rule tskibd_gzip:
