@@ -117,7 +117,7 @@ rule relate_branch:
     shell:
         """
         {params.relate}/scripts/SampleBranchLengths/SampleBranchLengths.sh \
-            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate \
+            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc \
             --output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp \
             -m {params.mu} \
             --coal {input.coa} \
