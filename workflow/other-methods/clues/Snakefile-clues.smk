@@ -46,6 +46,7 @@ rule relate_vcf:
         """
         left=$(python -c "out = {params.loc} - {params.pm} ; print(out)")
         right=$(python -c "out = {params.loc} + {params.pm} ; print(out)")
+        tabix -fp vcf {input.vcfin}
         bcftools view {input.vcfin} \
             -r 1:${{left}}-${{right}} \
             -S {input.subsample}  \
