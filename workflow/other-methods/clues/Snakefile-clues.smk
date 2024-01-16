@@ -1,6 +1,4 @@
-# isweep simulation studies - clues / relate
-# Seth D. Temple, sdtemple@uw.edu
-# May 23, 2023
+# clues v1 analysis pipeline
 
 # setup macro folder
 import os
@@ -20,15 +18,15 @@ for j in range(J):
 	if not os.path.exists(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME)):
 		os.mkdir(macro+'/'+str(row.MICROEXP)+'/'+str(row.SIMNAME))
 sims['FOLDER'] = [macro + '/' + sims.loc[j].MICROEXP + '/' + str(sims.loc[j].SIMNAME) for j in range(J)]
-sims['FILE'] = sims['FOLDER'] + '/isweep.inference.tsv'
+sims['FILE'] = sims['FOLDER'] + '/results.hap.tsv'
 sims['EXISTS'] = sims['FILE'].apply(os.path.isfile)
 sims=sims[sims['EXISTS']]
 sims = sims.set_index("SIMNAME", drop=False)
 
 rule all:
 	input:
-		[f"{sim.FOLDER}/clues.selcoef" for sim in sims.itertuples()],
-		[f"{sim.FOLDER}/relate.chr1.vcf.gz" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/clues.mcmc.selcoef" for sim in sims.itertuples()],
+		[f"{sim.FOLDER}/relate.mcmc.chr1.vcf.gz" for sim in sims.itertuples()],
 
 ##### relate ---> clues #####
 
@@ -40,7 +38,7 @@ rule relate_vcf:
         vcfin='{macro}/{micro}/{seed}/small.chr1.vcf.gz',
         subsample=macro+'/'+str(config['CHANGE']['RELATE']['SAMPLE']),
     output:
-        vcfout='{macro}/{micro}/{seed}/relate.chr1.vcf.gz',
+        vcfout='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf.gz',
     params:
         loc=str(config['FIXED']['SIMULATE']['LOC']),
         pm=str(config['CHANGE']['RELATE']['BUFFER']),
@@ -57,10 +55,10 @@ rule relate_vcf:
 # set up input files from vcf
 rule relate_input:
     input:
-        vcfin='{macro}/{micro}/{seed}/relate.chr1.vcf.gz',
+        vcfin='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf.gz',
     output:
-        hapsout='{macro}/{micro}/{seed}/relate.haps',
-        sampout='{macro}/{micro}/{seed}/relate.sample',
+        hapsout='{macro}/{micro}/{seed}/relate.mcmc.haps',
+        sampout='{macro}/{micro}/{seed}/relate.mcmc.sample',
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
     shell:
@@ -69,19 +67,19 @@ rule relate_input:
             --mode ConvertFromVcf \
             --haps {output.hapsout} \
             --sample {output.sampout} \
-            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.chr1
+            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.chr1
         """
 
 # run relate for first time
 rule relate_run:
     input:
-        hapsout='{macro}/{micro}/{seed}/relate.haps',
-        sampout='{macro}/{micro}/{seed}/relate.sample',
+        hapsout='{macro}/{micro}/{seed}/relate.mcmc.haps',
+        sampout='{macro}/{micro}/{seed}/relate.mcmc.sample',
         genmap='{macro}/uniform.map',
         coa=macro+'/'+str(config['CHANGE']['RELATE']['COAL']),
     output:
-        anc='{macro}/{micro}/{seed}/relate.anc',
-        mut='{macro}/{micro}/{seed}/relate.mut',
+        anc='{macro}/{micro}/{seed}/relate.mcmc.anc',
+        mut='{macro}/{micro}/{seed}/relate.mcmc.mut',
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
@@ -93,18 +91,18 @@ rule relate_run:
             --sample {input.sampout} \
             -m {params.mu} \
             --coal {input.coa} \
-            -o relate.{wildcards.micro}.{wildcards.seed}.temp \
+            -o relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp \
             --map {input.genmap} \
             || true
-        cp relate.{wildcards.micro}.{wildcards.seed}.temp.anc {output.anc}
-        cp relate.{wildcards.micro}.{wildcards.seed}.temp.mut {output.mut}
+        cp relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.anc {output.anc}
+        cp relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.mut {output.mut}
         """
 
 # resample the branch lengths
 rule relate_branch:
     input:
-        anc='{macro}/{micro}/{seed}/relate.anc',
-        mut='{macro}/{micro}/{seed}/relate.mut',
+        anc='{macro}/{micro}/{seed}/relate.mcmc.anc',
+        mut='{macro}/{micro}/{seed}/relate.mcmc.mut',
         coa=macro+'/'+str(config['CHANGE']['RELATE']['COAL']),
     output:
         anc='{macro}/{micro}/{seed}/resample.anc',
@@ -128,9 +126,9 @@ rule relate_branch:
         cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.anc {output.anc}
         cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.mut {output.mut}
         cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.timeb {output.tmb}
-        rm -r relate.{wildcards.micro}.{wildcards.seed}.temp/ || true
-        rm relate.{wildcards.micro}.{wildcards.seed}.temp.anc || true
-        rm relate.{wildcards.micro}.{wildcards.seed}.temp.mut || true
+        rm -r relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp/ || true
+        rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.anc || true
+        rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.mut || true
         rm -r {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp/ || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.anc || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.mut || true
@@ -148,11 +146,11 @@ rule clues:
         frq='{macro}/{micro}/{seed}/slimulation.freq',
         coa=macro+'/'+str(config['CHANGE']['RELATE']['COAL']),
     output:
-        anc='{macro}/{micro}/{seed}/clues.epochs.npy',
-        mut='{macro}/{micro}/{seed}/clues.freqs.npy',
-        pst='{macro}/{micro}/{seed}/clues.post.npy',
+        anc='{macro}/{micro}/{seed}/clues.mcmc.epochs.npy',
+        mut='{macro}/{micro}/{seed}/clues.mcmc.freqs.npy',
+        pst='{macro}/{micro}/{seed}/clues.mcmc.post.npy',
         # modify clues inference.py to output this
-        sel='{macro}/{micro}/{seed}/clues.selcoef',
+        sel='{macro}/{micro}/{seed}/clues.mcmc.selcoef',
     params:
         freqscript=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         clues=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['CLUES']),
@@ -170,10 +168,10 @@ rule clues:
             --popFreq $daf \
             --thin {params.thin} \
             --burnin {params.burn}
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mut || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.haps || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.sample || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.anc || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.mut || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.haps || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.sample || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.anc || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mut || true
         """
