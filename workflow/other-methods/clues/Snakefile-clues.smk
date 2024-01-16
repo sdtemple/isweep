@@ -35,7 +35,7 @@ rule all:
 # downsample, subset to region near causal mutation
 rule relate_vcf:
     input:
-        vcfin='{macro}/{micro}/{seed}/small.chr1.vcf.gz',
+        vcfin='{macro}/{micro}/{seed}/second.chr1.vcf.gz',
         subsample=macro+'/'+str(config['CHANGE']['RELATE']['SAMPLE']),
     output:
         vcfout='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf.gz',
@@ -105,9 +105,9 @@ rule relate_branch:
         mut='{macro}/{micro}/{seed}/relate.mcmc.mut',
         coa=macro+'/'+str(config['CHANGE']['RELATE']['COAL']),
     output:
-        anc='{macro}/{micro}/{seed}/resample.anc',
-        mut='{macro}/{micro}/{seed}/resample.mut',
-        tmb='{macro}/{micro}/{seed}/resample.timeb',
+        anc='{macro}/{micro}/{seed}/resample.mcmc.anc',
+        mut='{macro}/{micro}/{seed}/resample.mcmc.mut',
+        tmb='{macro}/{micro}/{seed}/resample.mcmc.timeb',
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
@@ -117,23 +117,23 @@ rule relate_branch:
         """
         {params.relate}/scripts/SampleBranchLengths/SampleBranchLengths.sh \
             --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate \
-            --output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp \
+            --output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp \
             -m {params.mu} \
             --coal {input.coa} \
             --format b \
             --num_samples {params.num} \
             --first_bp {params.loc} --last_bp {params.loc}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.anc {output.anc}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.mut {output.mut}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.timeb {output.tmb}
+        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.anc {output.anc}
+        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.mut {output.mut}
+        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.timeb {output.tmb}
         rm -r relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp/ || true
         rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.anc || true
         rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.mut || true
-        rm -r {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp/ || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.mut || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.timeb || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.temp.dist || true
+        rm -r {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp/ || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.anc || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.mut || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.timeb || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.dist || true
         """
 
 # I use || to try to remove temporary files that could be large
@@ -142,7 +142,7 @@ rule relate_branch:
 # modify the inference file
 rule clues:
     input:
-        tmb='{macro}/{micro}/{seed}/resample.timeb',
+        tmb='{macro}/{micro}/{seed}/resample.mcmc.timeb',
         frq='{macro}/{micro}/{seed}/slimulation.freq',
         coa=macro+'/'+str(config['CHANGE']['RELATE']['COAL']),
     output:
@@ -172,8 +172,8 @@ rule clues:
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.mut || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.haps || true
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.sample || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mut || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.anc || true
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.mut || true
         """
 
 # I have to put the clues/utils/ in the current directory
