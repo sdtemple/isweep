@@ -85,7 +85,7 @@ rule relate_run:
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
-        mid='{micro}/{seed}',
+        mid='{micro}.{seed}',
     shell:
         """
         {params.relate}/bin/Relate \
@@ -116,8 +116,8 @@ rule relate_branch:
         mu=str(config['FIXED']['SIMULATE']['MU']),
         loc=str(config['FIXED']['SIMULATE']['LOC']),
         num=str(config['CHANGE']['RELATE']['NUMSAM']),
-        mid='{macro}/{micro}/{seed}',
-        midd='{micro}/{seed}',
+        mid='{macro}.{micro}.{seed}',
+        midd='{micro}.{seed}',
     shell:
         """
         {params.relate}/scripts/SampleBranchLengths/SampleBranchLengths.sh \
