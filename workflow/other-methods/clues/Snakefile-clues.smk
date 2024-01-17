@@ -38,7 +38,7 @@ rule relate_vcf:
         vcfin='{macro}/{micro}/{seed}/second.chr1.vcf.gz',
         subsample=macro+'/'+str(config['CHANGE']['RELATE']['SAMPLE']),
     output:
-        vcfout='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf.gz',
+        vcfout='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf',
     params:
         loc=str(config['FIXED']['SIMULATE']['LOC']),
         pm=str(config['CHANGE']['RELATE']['BUFFER']),
@@ -57,7 +57,7 @@ rule relate_vcf:
 # set up input files from vcf
 rule relate_input:
     input:
-        vcfin='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf.gz',
+        vcfin='{macro}/{micro}/{seed}/relate.mcmc.chr1.vcf',
     output:
         hapsout='{macro}/{micro}/{seed}/relate.mcmc.haps',
         sampout='{macro}/{micro}/{seed}/relate.mcmc.sample',
