@@ -63,13 +63,14 @@ rule relate_input:
         sampout='{macro}/{micro}/{seed}/relate.mcmc.sample',
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
+        prefix='{macro}/{micro}/{seed}/relate.mcmc.chr1',
     shell:
         """
         {params.relate}/bin/RelateFileFormats \
             --mode ConvertFromVcf \
             --haps {output.hapsout} \
             --sample {output.sampout} \
-            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.chr1
+            --input {params.prefix}
         """
 
 # run relate for first time
@@ -85,6 +86,7 @@ rule relate_run:
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
+        mid='{macro}/{micro}/{seed}',
     shell:
         """
         {params.relate}/bin/Relate \
@@ -96,8 +98,8 @@ rule relate_run:
             -o relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp \
             --map {input.genmap} \
             || true
-        cp relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.anc {output.anc}
-        cp relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.mut {output.mut}
+        cp relate.mcmc.{params.mid}.temp.anc {output.anc}
+        cp relate.mcmc.{params.mid}.temp.mut {output.mut}
         """
 
 # resample the branch lengths
@@ -114,28 +116,29 @@ rule relate_branch:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
         loc=str(config['FIXED']['SIMULATE']['LOC']),
-        num=str(config['CHANGE']['RELATE']['NUMSAM'])
+        num=str(config['CHANGE']['RELATE']['NUMSAM']),
+        mid='{macro}/{micro}/{seed}',
     shell:
         """
         {params.relate}/scripts/SampleBranchLengths/SampleBranchLengths.sh \
-            --input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc \
-            --output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp \
+            --input {params.mid}/relate.mcmc \
+            --output {params.mid}/resample.mcmc.temp \
             -m {params.mu} \
             --coal {input.coa} \
             --format b \
             --num_samples {params.num} \
             --first_bp {params.loc} --last_bp {params.loc}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.anc {output.anc}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.mut {output.mut}
-        cp {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.timeb {output.tmb}
-        rm -r relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp/ || true
-        rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.anc || true
-        rm relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp.mut || true
-        rm -r {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp/ || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.mut || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.timeb || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.temp.dist || true
+        cp {params.mid}/resample.mcmc.temp.anc {output.anc}
+        cp {params.mid}/resample.mcmc.temp.mut {output.mut}
+        cp {params.mid}/resample.mcmc.temp.timeb {output.tmb}
+        rm -r relate.mcmc.{params.mid}.temp/ || true
+        rm relate.mcmc.{params.mid}.temp.anc || true
+        rm relate.mcmc.{params.mid}.temp.mut || true
+        rm -r {params.mid}/resample.mcmc.temp/ || true
+        rm {params.mid}/resample.mcmc.temp.anc || true
+        rm {params.mid}/resample.mcmc.temp.mut || true
+        rm {params.mid}/resample.mcmc.temp.timeb || true
+        rm {params.mid}/resample.mcmc.temp.dist || true
         """
 
 # I use || to try to remove temporary files that could be large
@@ -160,22 +163,23 @@ rule clues:
         loc=str(config['FIXED']['SIMULATE']['LOC']),
         thin=str(config['CHANGE']['CLUES']['THIN']),
         burn=str(config['CHANGE']['CLUES']['BURNIN']),
+        mid='{macro}/{micro}/{seed}',
     shell:
         """
         daf=$(python {params.freqscript}/get-daf.py {input.frq})
         python {params.clues}/inference.py \
-            --times {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample \
+            --times {params.mid}/resample \
             --coal {input.coa} \
-            --out {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/clues \
+            --out {params.mid}/clues \
             --popFreq $daf \
             --thin {params.thin} \
             --burnin {params.burn}
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.mut || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.haps || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/relate.mcmc.sample || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.anc || true
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/resample.mcmc.mut || true
+        rm {params.mid}/relate.mcmc.anc || true
+        rm {params.mid}/relate.mcmc.mut || true
+        rm {params.mid}/relate.mcmc.haps || true
+        rm {params.mid}/relate.mcmc.sample || true
+        rm {params.mid}/resample.mcmc.anc || true
+        rm {params.mid}/resample.mcmc.mut || true
         """
 
 # I have to put the clues/utils/ in the current directory
