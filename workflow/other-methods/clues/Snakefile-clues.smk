@@ -167,10 +167,11 @@ rule clues:
     shell:
         """
         daf=$(python {params.freqscript}/get-daf.py {input.frq})
-        python {params.clues}/inference.py \
-            --times {params.mid}/resample \
+        cd {params.clues}/
+        python inference.py \
+            --times {params.mid}/resample.mcmc \
             --coal {input.coa} \
-            --out {params.mid}/clues \
+            --out {params.mid}/clues.mcmc \
             --popFreq $daf \
             --thin {params.thin} \
             --burnin {params.burn}
