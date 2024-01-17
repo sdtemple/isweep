@@ -50,7 +50,8 @@ rule relate_vcf:
         bcftools view {input.vcfin} \
             -r 1:${{left}}-${{right}} \
             -S {input.subsample}  \
-            -Oz -o {output.vcfout}
+            -Ov -o {output.vcfout}
+        tabix -fp vcf {output.vcfout}
         """
 
 # set up input files from vcf
