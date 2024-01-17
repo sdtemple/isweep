@@ -85,7 +85,7 @@ rule relate_run:
     params:
         relate=str(config['CHANGE']['FOLDERS']['SOFTWARE'])+'/'+str(config['CHANGE']['PROGRAMS']['RELATE']),
         mu=str(config['FIXED']['SIMULATE']['MU']),
-        mid='{macro}/{micro}/{seed}',
+        mid='{micro}/{seed}',
     shell:
         """
         {params.relate}/bin/Relate \
@@ -94,7 +94,7 @@ rule relate_run:
             --sample {input.sampout} \
             -m {params.mu} \
             --coal {input.coa} \
-            -o relate.mcmc.{wildcards.micro}.{wildcards.seed}.temp \
+            -o relate.mcmc.{params.mid}.temp \
             --map {input.genmap} \
             || true
         cp relate.mcmc.{params.mid}.temp.anc {output.anc}
@@ -117,6 +117,7 @@ rule relate_branch:
         loc=str(config['FIXED']['SIMULATE']['LOC']),
         num=str(config['CHANGE']['RELATE']['NUMSAM']),
         mid='{macro}/{micro}/{seed}',
+        midd='{micro}/{seed}',
     shell:
         """
         {params.relate}/scripts/SampleBranchLengths/SampleBranchLengths.sh \
@@ -130,9 +131,9 @@ rule relate_branch:
         cp {params.mid}/resample.mcmc.temp.anc {output.anc}
         cp {params.mid}/resample.mcmc.temp.mut {output.mut}
         cp {params.mid}/resample.mcmc.temp.timeb {output.tmb}
-        rm -r relate.mcmc.{params.mid}.temp/ || true
-        rm relate.mcmc.{params.mid}.temp.anc || true
-        rm relate.mcmc.{params.mid}.temp.mut || true
+        rm -r relate.mcmc.{params.midd}.temp/ || true
+        rm relate.mcmc.{params.midd}.temp.anc || true
+        rm relate.mcmc.{params.midd}.temp.mut || true
         rm -r {params.mid}/resample.mcmc.temp/ || true
         rm {params.mid}/resample.mcmc.temp.anc || true
         rm {params.mid}/resample.mcmc.temp.mut || true
