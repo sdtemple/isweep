@@ -114,10 +114,11 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 
 ## Development things to do
 
+- Provide option for model selection, standing variation, etc. in `roi.tsv` 
 - Provide some scripts to summarize analyses
 - Test performance in array data, less dense sequence data
-- Test performance when phase is inferred with beagle
-- Test performance with no gene conversion
+- Test performance in dominance selection (sequence data)
+- Time varying selection coefficients?
 - Not designed for ploidy != 2 (yet)
 
 ## Current bugs

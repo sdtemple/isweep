@@ -39,7 +39,6 @@ CHANGE:
     GCLEN: '300' # mean length of gene conversion
     GCPROP: '0.66666666666666' # proportion of recombinations that are crossovers
     CMLEN: '8' # in cM length, region size
-    LOC: '3999999' # CMLEN / RHO / 100 - 1, location of adaptive mutation
     GTERR: '0.0002' # genotype errors
     TSPLIT: '1000' # time backwards of population split
 

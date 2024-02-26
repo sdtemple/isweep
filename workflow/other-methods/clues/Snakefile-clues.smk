@@ -171,7 +171,7 @@ rule clues:
         python inference.py \
             --times {params.mid}/resample.mcmc \
             --coal {input.coa} \
-            --out {params.mid}/clues.mcmc \
+            --out {params.mid}/clues.mcmc. \
             --popFreq $daf \
             --thin {params.thin} \
             --burnin {params.burn}

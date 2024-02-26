@@ -6,3 +6,5 @@
 - Writing `plots/` and `stats/`
     - File name was the mode of last region of interest
     - Simple typo of "meBP" versus "moBP" variable name
+- Double checked that dominance and recessive selection were implemented correctly.
+- Incorporated opportunity for more MCMC, thinning, and burn-in for CLUES pipe.
