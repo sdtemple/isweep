@@ -112,6 +112,11 @@ Phase data w/ Beagle or Shapeit beforehand.
 
 Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 `
 
+## Considerations
+
+- Positive selection
+  - s >= 0 for estimation (use bounds in scipy.optimize.minimize_scalar) 
+
 ## Development things to do
 
 - Provide option for model selection, standing variation, etc. in `roi.tsv` 
