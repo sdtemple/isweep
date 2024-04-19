@@ -1,8 +1,10 @@
 <img src="isweep-icon.png" align="center" width="600px"/>
 
-See `announcements.md` for high-level updates on this repo.
+See `misc/announcements.md` for high-level updates on this repo.
 
-See `usage.md` to evaluate if this methodology fits your study.
+See `misc/fixes.md` for any major bug fixes.
+
+See `misc/usage.md` to evaluate if this methodology fits your study.
 
 ## Citation
 
@@ -37,15 +39,17 @@ These steps are implemented automatically in a `snakemake` pipeline.
 
 ## Installation
 
+See `misc/installing-mamba.md` to get a Python package manager.
+
 1. ` git clone https://github.com/sdtemple/isweep.git `
-2. ` conda env create -f isweep-environment.yml `
-  - ` conda activate isweep `
+2. ` mamba env create -f isweep-environment.yml `
+  - ` mamba activate isweep `
   - ` python -c 'import site; print(site.getsitepackages())' `
 3. Download software
   - You need to cite these software
   - ` bash get-software.sh software `
     - Puts these in a folder called `software/`
-    - Requires wget
+    - Requires `wget`
   - For simulation study, download SLiM yourself
     - Put in `software/`
     - https://messerlab.org/slim/
@@ -66,7 +70,7 @@ This repository contains a Python package and some Snakemake bioinformatics pipe
 
 You should run all `snakemake` pipelines in their `workflow/some-pipeline/`.
 
-You should be in the `conda activate isweep` environment for analyses.
+You should be in the `mamba activate isweep` environment for analyses.
 
 You should run the analyses using cluster jobs.
 
@@ -97,6 +101,7 @@ Phase data w/ Beagle or Shapeit beforehand.
 2. Edit yaml files in the different workflow directories
 3. Run the selection scan (workflow/scan)
 - ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
+  - See the file `misc/cluster-options.md` for support
 - Recommendation: Do a test run with your 2 smallest chromosomes.
 - Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
 - Then, run with all your chromosomes.
@@ -119,11 +124,13 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 
 ## Development things to do
 
+- Provide some scripts to summarize analyses !!!
 - Provide option for model selection, standing variation, etc. in `roi.tsv` 
-- Provide some scripts to summarize analyses
 - Test performance in array data, less dense sequence data
 - Test performance in dominance selection (sequence data)
-- Time varying selection coefficients?
 - Not designed for ploidy != 2 (yet)
 
 ## Current bugs
+
+- Errors simulating IBD w/ constant Ne < 3000
+  - I have no intention of fixing this unless someone posts an issue due to their dataset
