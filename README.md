@@ -6,6 +6,8 @@ See `misc/fixes.md` for any major bug fixes.
 
 See `misc/usage.md` to evaluate if this methodology fits your study.
 
+See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
+
 ## Citation
 
 Please cite if you use this package.
