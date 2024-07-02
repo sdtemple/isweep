@@ -1,5 +1,9 @@
 <img src="isweep-icon.png" align="center" width="600px"/>
 
+
+BRANCHING AND MAKING UPDATES IN JULY 2024
+NEW FEATURES AS A PART OF THIRD THESIS PROJECT
+
 See `misc/announcements.md` for high-level updates on this repo.
 
 See `misc/fixes.md` for any major bug fixes.
