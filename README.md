@@ -16,8 +16,21 @@ See `misc/cluster-options.md` for some suggested cluster options to use in pipel
 
 Please cite if you use this package.
 
+#### Methods to model selection:
+
 Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
 https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
+
+#### Methods to simulate IBD segments and our central limit theorems:
+
+Temple, S.D., Thompson, E.A. (2024) "Identity-by-descent in large samples" https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1
+
+#### Multiple testing correction for selection scan
+
+PhD dissertation at University of Washington
+
+Temple, S.D. (2024) "Statistical inference using identity-by-descent segments"
+
 
 ## Methodology
 
@@ -60,13 +73,7 @@ See `misc/installing-mamba.md` to get a Python package manager.
     - Put in `software/`
     - https://messerlab.org/slim/
 
-Use IBDkin (https://github.com/YingZhou001/IBDkin) to remove close relatives.
-
-Use PCA or ADMIXTURE to subset based on ancestry.
-
-If you want to compare against other methods (using our pipelines), you require more software.
-
-See `workflow/other-methods/` folder.
+See `workflow/other-methods/` folder for how we run methods we compare to.
   
 ## Overview
 
@@ -90,18 +97,27 @@ We have made README.md files in most subfolders.
   - No apparent population structure
   - No apparent close relatedness
   - A genetic map (bp ---> cM)
+    - If not available, create genetic maps w/ uniform rate
   - Recombining diploid chromosomes
-    - Not extended to human X chromosome (yet?)
+    - Not extended to human X chromosome
 - Access to cluster computing
-  - You should have at least 25 Gb of RAM and 6 CPUs on a node
-    - More for larger datasets
-  - Have not extended to cloud computing (yet?)
+  - For human-scale data, you should have at least 25 Gb of RAM and 6 CPUs on a node.
+    - More for TOPMed or UKBB-like sequence datasets
+  - Not extended to cloud computing
 
 ## Running the procedure:
 
 This is the overall procedure. You will see more details for each step in workflow/some-pipeline/README.md files.
 
+### Pre-processing
+
 Phase data w/ Beagle or Shapeit beforehand.
+Subset data in light of global ancestry and close relatedness.
+- Here is a pipeline we built for this purpose: `https://github.com/sdtemple/flare-pipeline`
+- You can use IBDkin to detect close relatedness: `https://github.com/YingZhou001/IBDkin`
+- You could also use PCA or ADMIXTURE to determine global ancestry. 
+
+### Main analysis
 
 1. Make pointers to large (phased) vcf files
 2. Edit yaml files in the different workflow directories
@@ -121,12 +137,12 @@ Phase data w/ Beagle or Shapeit beforehand.
 7. Run the region of interest analysis (workflow/roi)
   - ` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
 
-Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 `
+Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo $variable1 ` 
 
-## Considerations
+## Picture of selection scan workflow
 
-- Positive selection
-  - s >= 0 for estimation (use bounds in scipy.optimize.minimize_scalar) 
+## Picture of selection modeling workflow
+
 
 ## Development things to do
 
@@ -135,8 +151,3 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 - Test performance in array data, less dense sequence data
 - Test performance in dominance selection (sequence data)
 - Not designed for ploidy != 2 (yet)
-
-## Current bugs
-
-- Errors simulating IBD w/ constant Ne < 3000
-  - I have no intention of fixing this unless someone posts an issue due to their dataset
