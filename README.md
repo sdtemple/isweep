@@ -12,6 +12,8 @@ See `misc/usage.md` to evaluate if this methodology fits your study.
 
 See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
 
+See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline. 
+
 ## Citation
 
 Please cite if you use this package.
@@ -150,4 +152,3 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 - Provide option for model selection, standing variation, etc. in `roi.tsv` 
 - Test performance in array data, less dense sequence data
 - Test performance in dominance selection (sequence data)
-- Not designed for ploidy != 2 (yet)
