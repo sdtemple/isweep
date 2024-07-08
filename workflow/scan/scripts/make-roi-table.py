@@ -137,8 +137,10 @@ finacol=['NAME']+initcol
 roitab.sort_values(by='MAXIBD',ascending=False,inplace=True)
 nrow=roitab.shape[0]
 roitab['NAME']=['hit'+str(i) for i in range(1,nrow+1)]
+roitab['MODEL']=['a' for i in range(1,nrow+1)]
+roitab['ALPHA']=[0.95 for i in range(1,nrow+1)]
 roitab=roitab[finacol]
-roitab.to_csv(fileout,sep='\t',index=False,columns=['NAME','CHROM','MINIBD','MAXIBD','BPCENTER','CMCENTER','BPLEFTCENTER','BPRIGHTCENTER'])
+roitab.to_csv(fileout,sep='\t',index=False,columns=['NAME','CHROM','MINIBD','MAXIBD','BPCENTER','CMCENTER','BPLEFTCENTER','BPRIGHTCENTER','MODEL','ALPHA'])
 
 # plotting recombination variability
 J=roitab.shape[0]

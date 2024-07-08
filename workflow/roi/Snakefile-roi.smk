@@ -27,6 +27,11 @@ for j in range(J):
 	f.write('RIGHT\t')
 	f.write(str(int(row.BPRIGHTCENTER)))
 	f.write('\n')
+	f.write('MODEL\t')
+	f.write(str(int(row.MODEL)))
+	f.write('\n')
+	f.write('ALPHA\t')
+	f.write(str(int(row.ALPHA)))
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
@@ -43,5 +48,5 @@ rule all:
 		# for best haplotype analysis
 		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
 		# for entropy
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.entropy.tsv' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
 

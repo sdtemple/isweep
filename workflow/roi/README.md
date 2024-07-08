@@ -1,17 +1,24 @@
 ## Second pipeline in data analysis:
 
-#### Run this pipeline after the `workflow/scan/` pipeline.
+#### Run after the `workflow/scan/` pipeline.
 
 You should review the files:
 - `roi.tsv` from your selection scan
-    - You can rename the hit* to loci names if you know some
+    - You may wish to copy/rename this file and make some of the following suggestions.
+    - You can rename the hit* to loci names if you know some.
+    - You can set values under column `ALPHA` to choose your one minus the confidence level.
+    - You can use a different sweep model (column `MODEL`):
+        - Default 'a' for additive
+        - 'm' for multiplicative
+        - 'd' for dominance
+        - 'r' for recessive
 - `plots/`
     - Check if there are lots of recombination hotspot
     - Check if there is low marker density
         - ibd-ends.jar should address this
         - Read the paper about how sparsity could affect results
 
-The pipeline uses hap-ibd.jar. You can use different IBD segment detection methods if you wish.
+The pipeline uses `hap-ibd.jar`. You can use different IBD segment detection methods if you wish.
 
 In this case, refer to the scripts in `rules/` for how to run the commands with different IBD segment methods.
 
