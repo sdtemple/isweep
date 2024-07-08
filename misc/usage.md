@@ -1,5 +1,20 @@
 ## Do these methods apply to my study and dataset?
 
+### Genetic maps
+
+If you don't have a genetic maps, assume a uniform recombination rate.
+
+If you don't have an estimate of the uniform recombination rate, the methods do not apply.
+
+To make a uniform map, you need four columns without a header.
+- Let 1e-8 be the the recombination rate. 
+- Let there be 100 Mb of data on a chromosome.
+- Let chr1 be the name of the chromosome
+- The first row is `chr1  . 0 1`
+- The second row is `chr1 . 100 100000000`
+
+Make a uniform rate genetic map for each chromosome.
+
 ### Sample size
 
 It'd be nice if you have:

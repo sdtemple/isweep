@@ -189,7 +189,7 @@ rule third_snp_infer:
 
 ### write entropy ###
 
-rule entropy:
+rule gini_impurity:
 	input:
 		filein='{cohort}/{hit}/outlier1.txt',
 	output:
@@ -199,7 +199,7 @@ rule entropy:
 		samplesizep=str(samplesize_ploidy),
 	shell:
 		"""
-		python {params.scripts}/ibd-entropy.py \
+		python {params.scripts}/ibd-gini-entropy.py \
 			{wildcards.cohort}/{wildcards.hit} \
 			{output.fileout} \
 			{params.samplesizep}

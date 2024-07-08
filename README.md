@@ -143,12 +143,14 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 
 ## Picture of selection scan workflow
 
+<img src="dag-scan.png" align="center" width="600px"/>
+
 ## Picture of selection modeling workflow
 
+<img src="dag-roi.png" align="center" width="600px"/>
 
 ## Development things to do
 
 - Provide some scripts to summarize analyses !!!
 - Provide option for model selection, standing variation, etc. in `roi.tsv` 
-- Test performance in array data, less dense sequence data
 - Test performance in dominance selection (sequence data)
