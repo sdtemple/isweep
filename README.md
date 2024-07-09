@@ -2,6 +2,7 @@
 
 
 BRANCHING AND MAKING UPDATES IN JULY 2024
+
 NEW FEATURES AS A PART OF THIRD THESIS PROJECT
 
 See `misc/announcements.md` for high-level updates on this repo.
@@ -49,10 +50,11 @@ We assume 1 selected allele at a biallelic locus.
 There are ~ seven major ideas.
 
 1. A genome-wide selection scan that looks for anomalously large IBD rates
+<!-- - With multiple testing correction -->
 2. Inferring anomalously large IBD clusters
 3. Ranking alleles based on evidence for selection
-4. Computing a measure of cluster agglomeration (an IBD information entropy)
-5. Estimating allele frequency of unknown sweeping allele
+4. Computing a measure of cluster agglomeration (Gini impurity index)
+5. Estimating allele frequency and location of unknown sweeping allele
 6. Estimating selection coefficients (w/ nice statistical properties)
 7. Estimating a confidence interval (w/ nice statistical properties)
 
@@ -107,6 +109,10 @@ We have made README.md files in most subfolders.
     - More for TOPMed or UKBB-like sequence datasets
   - Not extended to cloud computing
 
+The chromosome numbers in genetic maps should match the chromosome numbers in VCFs.
+
+The genetic maps should be tab-separated.
+
 ## Running the procedure:
 
 This is the overall procedure. You will see more details for each step in workflow/some-pipeline/README.md files.
@@ -151,6 +157,7 @@ Tip: define variables for file, folder names, e.g., `variable1=1224 ` then `echo
 
 ## Development things to do
 
-- Provide some scripts to summarize analyses !!!
-- Provide option for model selection, standing variation, etc. in `roi.tsv` 
 - Test performance in dominance selection (sequence data)
+- Test performance in MAF >= 0.01 case
+- Add multiple testing correction
+- Add vignettes
