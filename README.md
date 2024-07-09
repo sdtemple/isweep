@@ -100,24 +100,32 @@ We have made README.md files in most subfolders.
 
 See `misc/installing-mamba.md` to get a Python package manager.
 
-1. ``` git clone https://github.com/sdtemple/isweep.git ```
-2. ``` mamba env create -f isweep-environment.yml ```
-  - ``` mamba activate isweep ```
-  - ``` python -c 'import site; print(site.getsitepackages())' ```
+1. Clone the repository
+``` 
+git clone https://github.com/sdtemple/isweep.git 
+```
+2. Get the Python package
+``` 
+mamba env create -f isweep-environment.yml
+mamba activate isweep
+python -c 'import site; print(site.getsitepackages())'
+```
 3. Download software.
-  - You need to cite these software.
-  - ``` bash get-software.sh software ```
-    - Puts these in a folder called `software/`.
-    - Requires `wget`.
+``` 
+bash get-software.sh software 
+```
+  - Puts these in a folder called `software/`.
+  - Requires `wget`.
   - For simulation study, download SLiM yourself.
     - Put in `software/`.
     - https://messerlab.org/slim/
+  - You need to cite these software.
 
 See `workflow/other-methods/` folder for how we run methods we compare to.
 
 ## Running the procedure:
 
-This is the overall procedure. You will see more details for each step in workflow/some-pipeline/README.md files.
+This is the overall procedure. You will see more details for each step in `workflow/some-pipeline/README.md` files.
 
 ### Pre-processing
 
@@ -129,25 +137,25 @@ Subset data in light of global ancestry and close relatedness.
 
 ### Main analysis
 
-1. Make pointers to large (phased) vcf files
-2. Edit YAML files in the different workflow directories
-3. Run the selection scan (`workflow/scan`)
+1. Make pointers to large (phased) vcf files.
+2. Edit YAML files in the different workflow directories.
+3. Run the selection scan (`workflow/scan`).
 ``` 
 nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ```
-  - See the file `misc/cluster-options.md` for support
+  - See the file `misc/cluster-options.md` for support.
 - Recommendation: Do a test run with your 2 smallest chromosomes.
 - Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
 - Then, run with all your chromosomes.
-4. Estimate recent effective sizes.
-- ` workflow/scan/scripts/run-ibdne.sh `
-5. Make the Manhattan plot,
-- ` workflow/scan/scripts/manhattan.py `
-6. Checkout the `roi.tsv` file
-  - Edit with locus names if you want
-  - Edit to change defaults: additive model and 95% confidence intervals
-7. Run the region of interest analysis (`workflow/roi`)
-  - ``` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & ``` 
+4. Estimate recent effective sizes :` workflow/scan/scripts/run-ibdne.sh `.
+5. Make the Manhattan plot: ` workflow/scan/scripts/manhattan.py `.
+6. Checkout the `roi.tsv` file.
+  - Edit with locus names if you want.
+  - Edit to change defaults: additive model and 95% confidence intervals.
+7. Run the region of interest analysis (`workflow/roi`).
+``` 
+nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
+``` 
 
 ## Picture of selection scan workflow
 
