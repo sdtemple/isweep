@@ -85,12 +85,12 @@ The genetic maps should be tab-separated.
 ## Repository overview
 
 This repository contains a Python package and some Snakemake bioinformatics pipelines.
-- The package ---> src/
-- The pipelines ---> workflow/
+- The package ---> `src/`
+- The pipelines ---> `workflow/`
 
 You should run all `snakemake` pipelines in their `workflow/some-pipeline/`.
 
-You should be in the `mamba activate isweep` environment for analyses.
+You should be in the ```mamba activate isweep``` environment for analyses.
 
 You should run the analyses using cluster jobs.
 
@@ -100,17 +100,17 @@ We have made README.md files in most subfolders.
 
 See `misc/installing-mamba.md` to get a Python package manager.
 
-1. ` git clone https://github.com/sdtemple/isweep.git `
-2. ` mamba env create -f isweep-environment.yml `
-  - ` mamba activate isweep `
-  - ` python -c 'import site; print(site.getsitepackages())' `
-3. Download software
-  - You need to cite these software
-  - ` bash get-software.sh software `
-    - Puts these in a folder called `software/`
-    - Requires `wget`
-  - For simulation study, download SLiM yourself
-    - Put in `software/`
+1. ``` git clone https://github.com/sdtemple/isweep.git ```
+2. ``` mamba env create -f isweep-environment.yml ```
+  - ``` mamba activate isweep ```
+  - ``` python -c 'import site; print(site.getsitepackages())' ```
+3. Download software.
+  - You need to cite these software.
+  - ``` bash get-software.sh software ```
+    - Puts these in a folder called `software/`.
+    - Requires `wget`.
+  - For simulation study, download SLiM yourself.
+    - Put in `software/`.
     - https://messerlab.org/slim/
 
 See `workflow/other-methods/` folder for how we run methods we compare to.
@@ -132,7 +132,7 @@ Subset data in light of global ancestry and close relatedness.
 1. Make pointers to large (phased) vcf files
 2. Edit YAML files in the different workflow directories
 3. Run the selection scan (`workflow/scan`)
-- ` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & `
+- ``` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & ```
   - See the file `misc/cluster-options.md` for support
 - Recommendation: Do a test run with your 2 smallest chromosomes.
 - Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
@@ -145,7 +145,7 @@ Subset data in light of global ancestry and close relatedness.
   - Edit with locus names if you want
   - Edit to change defaults: additive model and 95% confidence intervals
 7. Run the region of interest analysis (`workflow/roi`)
-  - ` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & ` 
+  - ``` nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & ``` 
 
 ## Picture of selection scan workflow
 

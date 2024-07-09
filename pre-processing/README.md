@@ -46,13 +46,14 @@ You need to cite these software!
 
 ## Caution:
 
-- I don't remember when I last ran or edited these scripts.
-- Use them as inspiration for pre-processing your data.
-  - The point of these scripts is to address population structure and relatedness.
-  - Use the linux command `head -n 10` to look at inputs.
-- For the Rscripts you probably need GENESIS and SNPRelate.
+I don't remember when I last ran or edited these scripts.
+
+Use them as inspiration for pre-processing your data.
+  <!-- - The point of these scripts is to address population structure and relatedness.
+  - Use the linux command `head -n 10` to look at inputs. -->
+<!-- - For the R scripts you need `GENESIS` and `SNPRelate`.
   - See our key resources table in paper.
     - https://bioconductor.org/packages/release/bioc/html/GENESIS.html
-    - https://bioconductor.org/packages/release/bioc/html/SNPRelate.html
+    - https://bioconductor.org/packages/release/bioc/html/SNPRelate.html -->
 <!-- - You shouldn't do PCA or IBD calling or global ancestry w/ large samples on your personal laptop
   - Use a computing cluster -->
