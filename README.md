@@ -132,7 +132,9 @@ Subset data in light of global ancestry and close relatedness.
 1. Make pointers to large (phased) vcf files
 2. Edit YAML files in the different workflow directories
 3. Run the selection scan (`workflow/scan`)
-- ``` nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & ```
+``` 
+nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
+```
   - See the file `misc/cluster-options.md` for support
 - Recommendation: Do a test run with your 2 smallest chromosomes.
 - Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
