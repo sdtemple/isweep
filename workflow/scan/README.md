@@ -25,15 +25,21 @@ You should do an initial run to set the inferred error rate in your `*.yaml`.
 1. Edit the YAML file.
 2. ` mamba activate isweep `
 
-3. ` snakemake -c1 -s Snakefile-scan.smk --configfile *.yaml `
-    - "-n" option is the dry run
+3. Dry-run of the pipeline.
+```
+snakemake -c1 -s Snakefile-scan.smk --configfile *.yaml
+```
+- "-n" option is the dry run
 
-4. `nohup snakemake -c1 -s Snakefile-scan.smk --cluster "[options]" --jobs X --configfile *.yaml & `
-    - See `misc/cluster-options.md` to choose SLURM or QSUB options.
-    - Make sure to pass in the isweep environment to cluster.
-    - Search for other snakemake options if you so wish.
+4. Run the pipeline for real.
+```
+nohup snakemake -c1 -s Snakefile-scan.smk --cluster "[options]" --jobs X --configfile *.yaml &
+```
+- See `misc/cluster-options.md` to choose SLURM or QSUB options.
+- Make sure to pass in the `isweep` environment to cluster.
+- Search for other `snakemake` options if you so wish.
 
-5. Make a manhattan plot.
+5. Make a Manhattan plot.
     - Put a path to my plot script.
     - ` python scripts/manhattan.py [options]`
         - $1 : tsv file name for ibd at each window
@@ -105,6 +111,7 @@ In our simulation studies, we have evaluated our methods for sequence data.
 
 The recommended sequence parameters in the YAML file are:
 
+```
   CANDHAPIBD: # hap-ibd.ar candidate segments for input to ibd-ends
 
     MINSEED: '0.5' # min-seed
@@ -126,6 +133,7 @@ The recommended sequence parameters in the YAML file are:
   ISWEEP: # scanning parameters
 
     SCANCUTOFF: '2.0' # ibd cM threshold
+```
 
 #### Array data
 
@@ -135,6 +143,7 @@ You could use the `workflow/simulate` pipeline, adjust settings for your data, a
 
 The recommended array settings in the YAML file are:
 
+```
   CANDHAPIBD: # hap-ibd.ar candidate segments for input to ibd-ends
 
     MINSEED: '1.8' # min-seed
@@ -156,3 +165,4 @@ The recommended array settings in the YAML file are:
   ISWEEP: # scanning parameters
 
     SCANCUTOFF: '2.0' # ibd cM threshold
+```

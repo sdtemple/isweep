@@ -4,11 +4,17 @@
 
 1. Edit the YAML file.
 2. ` mamba activate isweep `
-3. ` snakemake -c1 -s Snakefile-roi.smk --configfile *.yaml `
-    - ` -n ` option is the dry run
-4. ` nohup snakemake -c1 -s Snakefile-roi.smk --cluster "[options]" --jobs X --configfile *.yaml & `
-    - See `misc/cluster-options.md` to choose SLURM or QSUB options.
-    - Make sure to pass in the isweep environment to cluster.
+3. Dry-run of the pipeline. Check what rules will run.
+```
+snakemake -c1 -s Snakefile-roi.smk --configfile *.yaml 
+```
+- ` -n ` option is the dry run
+4. Run the pipeline for real.
+```
+nohup snakemake -c1 -s Snakefile-roi.smk --cluster "[options]" --jobs X --configfile *.yaml & 
+```
+- See `misc/cluster-options.md` to choose SLURM or QSUB options.
+- Make sure to pass in the isweep environment to cluster.
 
 <!-- ## Example
 

@@ -107,7 +107,11 @@ git clone https://github.com/sdtemple/isweep.git
 2. Get the Python package
 ``` 
 mamba env create -f isweep-environment.yml
+```
+```
 mamba activate isweep
+```
+```
 python -c 'import site; print(site.getsitepackages())'
 ```
 3. Download software.
