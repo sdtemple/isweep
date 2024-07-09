@@ -39,7 +39,7 @@ Temple, S.D. (2024) "Statistical inference using identity-by-descent segments"
 
 ## Methodology
 
-Acronym: Incomplete Selective sweep With Extended haplotypes Estimation Procedure
+Acronym: *i*ncomplete *S*elective sweep *W*ith *E*xtended haplotypes *E*stimation *P*rocedure
 
 This software presents methods to study recent, strong positive selection.
 - By recent, we mean within the last 500 generations
