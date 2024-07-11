@@ -148,8 +148,8 @@ Subset data in light of global ancestry and close relatedness.
 nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ```
   - See the file `misc/cluster-options.md` for support.
-- Recommendation: Do a test run with your 2 smallest chromosomes.
-- Check the *.log files from ibd-ends. If it recommends an estimated err, change the error rate in yaml.
+- Recommendation: do a test run with your 2 smallest chromosomes.
+- Check `*.log` files from `ibd-ends`. If it recommends an estimated err, change error rate in YAML file.
 - Then, run with all your chromosomes.
 4. Estimate recent effective sizes :` workflow/scan/scripts/run-ibdne.sh `.
 5. Make the Manhattan plot: ` workflow/scan/scripts/manhattan.py `.
