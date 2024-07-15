@@ -8,14 +8,19 @@ import gzip
 import sys
 
 # edit these manually
-inhs=['a'] # different inheritance models
+# inhs=['a'] # different inheritance models
 svmaf=[0.05,0.02] # different standing variation
-alpha=0.95
-alpha1=(1-alpha)/2
-alpha2=1-alpha1
+# alpha=0.95
+# alpha1=(1-alpha)/2
+# alpha2=1-alpha1
 
 # i/o
-fileout, ibdct, p_est, nboot, cutoff, n, Ne, ploidy = sys.argv[1:]
+fileout, ibdct, p_est, nboot, cutoff, n, Ne, model, alpha, ploidy = sys.argv[1:]
+
+alpha=float(alpha)
+alpha1=(1-alpha)/2
+alpha2=1-alpha1
+inhs=[model]
 
 # setting up
 B=int(float(nboot))

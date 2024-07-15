@@ -135,7 +135,7 @@ def cut_Ne(Ne, cut):
     dict
         Effective population sizes
     '''
-    return {k:v for k,v in Ne.items() if v > cut}
+    return {k:v for k,v in Ne.items() if k <= cut}
 
 def fill_Ne(Ne):
     '''Fill in effective sizes for non-specified generations

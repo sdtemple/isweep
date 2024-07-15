@@ -89,6 +89,7 @@ rule third_hap_infer:
     input:
         long='{cohort}/{hit}/third.hap.ibd.gz',
         freq='{cohort}/{hit}/third.best.hap.txt',
+        loci='{cohort}/{hit}/locus.txt',
         longNe='{cohort}/extended.ne',
     output:
         fileout='{cohort}/{hit}/results.hap.tsv',
@@ -103,6 +104,8 @@ rule third_hap_infer:
         """
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
+        model=$(python {params.scripts}/lines.py {input.loci} 6 2)
+        alpha=$(python {params.scripts}/lines.py {input.loci} 7 2)
         python {params.scripts}/estimate.py \
             {output.fileout} \
             ${{ibdest}} \
@@ -111,6 +114,8 @@ rule third_hap_infer:
             {params.cm} \
             {params.n} \
             {input.longNe} \
+            ${{model}} \
+            ${{alpha}} \
             {params.ploidy}
         """
 
@@ -162,6 +167,7 @@ rule third_snp_infer:
     input:
         long='{cohort}/{hit}/third.snp.ibd.gz',
         freq='{cohort}/{hit}/third.best.snp.txt',
+        loci='{cohort}/{hit}/locus.txt',
         longNe='{cohort}/extended.ne',
     output:
         fileout='{cohort}/{hit}/results.snp.tsv',
@@ -176,6 +182,8 @@ rule third_snp_infer:
         """
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
+        model=$(python {params.scripts}/lines.py {input.loci} 6 2)
+        alpha=$(python {params.scripts}/lines.py {input.loci} 7 2)
         python {params.scripts}/estimate.py \
             {output.fileout} \
             ${{ibdest}} \
@@ -184,22 +192,24 @@ rule third_snp_infer:
             {params.cm} \
             {params.n} \
             {input.longNe} \
+            ${{model}} \
+            ${{alpha}} \
             {params.ploidy}
         """
 
 ### write entropy ###
 
-rule entropy:
+rule gini_impurity:
 	input:
 		filein='{cohort}/{hit}/outlier1.txt',
 	output:
-		fileout='{cohort}/{hit}/ibd.entropy.tsv',
+		fileout='{cohort}/{hit}/ibd.gini.tsv',
 	params:
 		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
 		samplesizep=str(samplesize_ploidy),
 	shell:
 		"""
-		python {params.scripts}/ibd-entropy.py \
+		python {params.scripts}/ibd-gini-entropy.py \
 			{wildcards.cohort}/{wildcards.hit} \
 			{output.fileout} \
 			{params.samplesizep}

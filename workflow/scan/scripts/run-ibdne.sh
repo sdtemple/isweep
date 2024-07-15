@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # run the IBDNe program on a set of chromosomes
 
 # inputs
