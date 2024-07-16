@@ -133,7 +133,7 @@ roitab['BPLEFTCENTER']=roitab['BPLEFTCENTER'].clip(lower=1)
 
 # sorting, giving generic names
 initcol=list(roitab.columns)
-finacol=['NAME']+initcol
+finacol=['NAME']+initcol+['MODEL','ALPHA']
 roitab.sort_values(by='MAXIBD',ascending=False,inplace=True)
 nrow=roitab.shape[0]
 roitab['NAME']=['hit'+str(i) for i in range(1,nrow+1)]
