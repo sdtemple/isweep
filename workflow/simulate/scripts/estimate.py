@@ -17,6 +17,8 @@ inh='a'
 alpha=0.05
 alpha2=(1-alpha/2)
 alpha1=alpha/2
+
+# irrelevant with code commenting of time section
 svmaf=[0.05,0.02] # different standing variation
 
 # setting up
@@ -69,16 +71,17 @@ with open(fileout,'w') as f:
     f.write('SelCoefEst\t')
     f.write('SelCoefLow\t')
     f.write('SelCoefUpp\t')
-    f.write('Model\t')
-    f.write('TimeSV5Est\t')
-    f.write('TimeSV5Low\t')
-    f.write('TimeSV5Upp\t')
-    f.write('TimeSV2Est\t')
-    f.write('TimeSV2Low\t')
-    f.write('TimeSV2Upp\t')
-    f.write('TimeDeNovoEst\t')
-    f.write('TimeDeNovoLow\t')
-    f.write('TimeDeNovoUpp\n')
+    # f.write('Model\t')
+    # f.write('TimeSV5Est\t')
+    # f.write('TimeSV5Low\t')
+    # f.write('TimeSV5Upp\t')
+    # f.write('TimeSV2Est\t')
+    # f.write('TimeSV2Low\t')
+    # f.write('TimeSV2Upp\t')
+    # f.write('TimeDeNovoEst\t')
+    # f.write('TimeDeNovoLow\t')
+    # f.write('TimeDeNovoUpp\n')
+    f.write('Model\n')
 
     # correct, interval estimate
     # estimator is unbiased from beginning
@@ -89,65 +92,67 @@ with open(fileout,'w') as f:
     f.write(str(sm)); f.write('\t')
     f.write(str(sl)); f.write('\t')
     f.write(str(su)); f.write('\t')
-    f.write(str(inh)); f.write('\t')
+    f.write(str(inh)); f.write('\n')
 
-    svs=[[] for i in range(len(svmaf)+1)] # 1 more for de novo
-    for i in range(len(svmaf)):
-        # writing time until standing variation
-        sv=svmaf[i]
-        themeantime=when_freq(sv,
-                              s_est,
-                              p_est,
-                              Ne,
-                              one_step_model=inh,
-                              ploidy=ploidy,
-                              random_walk=False
-                              )
-        for k in range(len(sbs)):
-            # bootstrap once
-            sb=sbs[k]
-            thetime=when_freq(sv,
-                              sb,
-                              p_est,
-                              Ne,
-                              one_step_model=inh,
-                              ploidy=ploidy,
-                              random_walk=True
-                              )
-            svs[i].append(thetime)
-        # time estimates
-        tl = np.quantile(svs[i],alpha1)
-        tu = np.quantile(svs[i],alpha2)
-        # tm=themeantime
-        tm = np.quantile(svs[i],0.5)
-        f.write(str(tm)); f.write('\t')
-        f.write(str(tl)); f.write('\t')
-        f.write(str(tu)); f.write('\t')
+    # svs=[[] for i in range(len(svmaf)+1)] # 1 more for de novo
+    # for i in range(len(svmaf)):
+    #     # writing time until standing variation
+    #     sv=svmaf[i]
+    #     themeantime=when_freq(sv,
+    #                           s_est,
+    #                           p_est,
+    #                           Ne,
+    #                           one_step_model=inh,
+    #                           ploidy=ploidy,
+    #                           random_walk=False
+    #                           )
+    #     for k in range(len(sbs)):
+    #         # bootstrap once
+    #         sb=sbs[k]
+    #         thetime=when_freq(sv,
+    #                           sb,
+    #                           p_est,
+    #                           Ne,
+    #                           one_step_model=inh,
+    #                           ploidy=ploidy,
+    #                           random_walk=True
+    #                           )
+    #         svs[i].append(thetime)
+    #     # time estimates
+    #     tl = np.quantile(svs[i],alpha1)
+    #     tu = np.quantile(svs[i],alpha2)
+    #     # tm=themeantime
+    #     tm = np.quantile(svs[i],0.5)
+    #     f.write(str(tm)); f.write('\t')
+    #     f.write(str(tl)); f.write('\t')
+    #     f.write(str(tu)); f.write('\t')
     
-    themeantime=when_count(1,
-                           s_est,
-                           p_est,
-                           Ne,
-                           one_step_model=inh,
-                           ploidy=ploidy,
-                           random_walk=False
-                           )
-    for k in range(len(sbs)):
-        sb=sbs[k]
-        thetime=when_count(1,
-                           sb,
-                           p_est,
-                           Ne,
-                           one_step_model=inh,
-                           ploidy=ploidy,
-                           random_walk=True
-                           )
-        svs[-1].append(thetime)
-    # time estimates
-    tl = np.quantile(svs[-1],alpha1) # hall method
-    tu = np.quantile(svs[-1],alpha2)
-    # tm=themeantime
-    tm = np.quantile(svs[-1],0.5)
-    f.write(str(tm)); f.write('\t')
-    f.write(str(tl)); f.write('\t')
-    f.write(str(tu)); f.write('\n')
+    # themeantime=when_count(1,
+    #                        s_est,
+    #                        p_est,
+    #                        Ne,
+    #                        one_step_model=inh,
+    #                        ploidy=ploidy,
+    #                        random_walk=False
+    #                        )
+    # for k in range(len(sbs)):
+    #     sb=sbs[k]
+    #     thetime=when_count(1,
+    #                        sb,
+    #                        p_est,
+    #                        Ne,
+    #                        one_step_model=inh,
+    #                        ploidy=ploidy,
+    #                        random_walk=True
+    #                        )
+    #     svs[-1].append(thetime)
+    # # time estimates
+    # tl = np.quantile(svs[-1],alpha1) # hall method
+    # tu = np.quantile(svs[-1],alpha2)
+    # # tm=themeantime
+    # tm = np.quantile(svs[-1],0.5)
+    # f.write(str(tm)); f.write('\t')
+    # f.write(str(tl)); f.write('\t')
+    # f.write(str(tu)); f.write('\n')
+
+f.close()

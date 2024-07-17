@@ -9,10 +9,12 @@ import sys
 
 # edit these manually
 # inhs=['a'] # different inheritance models
-svmaf=[0.05,0.02] # different standing variation
 # alpha=0.95
 # alpha1=(1-alpha)/2
 # alpha2=1-alpha1
+
+# irrelevant with code commenting of time section
+svmaf=[0.05,0.02] # different standing variation
 
 # i/o
 fileout, ibdct, p_est, nboot, cutoff, n, Ne, model, alpha, ploidy = sys.argv[1:]
@@ -68,16 +70,17 @@ f.write('VarFreqEst\t')
 f.write('SelCoefEst\t')
 f.write('SelCoefLow\t')
 f.write('SelCoefUpp\t')
-f.write('Model\t')
-f.write('TimeSV5Est\t')
-f.write('TimeSV5Low\t')
-f.write('TimeSV5Upp\t')
-f.write('TimeSV2Est\t')
-f.write('TimeSV2Low\t')
-f.write('TimeSV2Upp\t')
-f.write('TimeDeNovoEst\t')
-f.write('TimeDeNovoLow\t')
-f.write('TimeDeNovoUpp\n')
+# f.write('Model\t')
+# f.write('TimeSV5Est\t')
+# f.write('TimeSV5Low\t')
+# f.write('TimeSV5Upp\t')
+# f.write('TimeSV2Est\t')
+# f.write('TimeSV2Low\t')
+# f.write('TimeSV2Upp\t')
+# f.write('TimeDeNovoEst\t')
+# f.write('TimeDeNovoLow\t')
+# f.write('TimeDeNovoUpp\n')
+f.write('Model\n')
 
 # correct, interval estimate
 for j in range(len(inhs)):
@@ -90,34 +93,36 @@ for j in range(len(inhs)):
     f.write(str(sm)); f.write('\t')
     f.write(str(sl)); f.write('\t')
     f.write(str(su)); f.write('\t')
-    f.write(str(inh)); f.write('\t')
-    svs=[[] for i in range(len(svmaf)+1)] # 1 more for de novo
-    for i in range(len(svmaf)):
-        # writing time until standing variation
-        sv=svmaf[i]
-        themeantime=when_freq(sv,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False)
-        for k in range(len(sbsinh)):
-            # bootstrap once
-            sb=sbsinh[k]
-            thetime=when_freq(sv,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
-            svs[i].append(thetime)
-        # time estimates
-        tl = np.quantile(svs[i],alpha1)
-        tu = np.quantile(svs[i],alpha2)
-        tm=themeantime
-        f.write(str(tm)); f.write('\t')
-        f.write(str(tl)); f.write('\t')
-        f.write(str(tu)); f.write('\t')
-    themeantime=when_count(1,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False)
-    for k in range(len(sbsinh)):
-        sb=sbsinh[k]
-        thetime=when_count(1,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
-        svs[-1].append(thetime)
-    # time estimates
-    tl = np.quantile(svs[-1],alpha1) # hall method
-    tu = np.quantile(svs[-1],alpha2)
-    tm=themeantime
-    f.write(str(tm)); f.write('\t')
-    f.write(str(tl)); f.write('\t')
-    f.write(str(tu)); f.write('\n')
+    f.write(str(inh)); f.write('\n')
+    # f.write(str(inh)); f.write('\t')
+    # svs=[[] for i in range(len(svmaf)+1)] # 1 more for de novo
+    # for i in range(len(svmaf)):
+    #     # writing time until standing variation
+    #     sv=svmaf[i]
+    #     themeantime=when_freq(sv,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False)
+    #     for k in range(len(sbsinh)):
+    #         # bootstrap once
+    #         sb=sbsinh[k]
+    #         thetime=when_freq(sv,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
+    #         svs[i].append(thetime)
+    #     # time estimates
+    #     tl = np.quantile(svs[i],alpha1)
+    #     tu = np.quantile(svs[i],alpha2)
+    #     tm=themeantime
+    #     f.write(str(tm)); f.write('\t')
+    #     f.write(str(tl)); f.write('\t')
+    #     f.write(str(tu)); f.write('\t')
+    # themeantime=when_count(1,sinh,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=False)
+    # for k in range(len(sbsinh)):
+    #     sb=sbsinh[k]
+    #     thetime=when_count(1,sb,p_est,Ne,one_step_model=inh,ploidy=ploidy,random_walk=True)
+    #     svs[-1].append(thetime)
+    # # time estimates
+    # tl = np.quantile(svs[-1],alpha1) # hall method
+    # tu = np.quantile(svs[-1],alpha2)
+    # tm=themeantime
+    # f.write(str(tm)); f.write('\t')
+    # f.write(str(tl)); f.write('\t')
+    # f.write(str(tu)); f.write('\n')
+
 f.close()

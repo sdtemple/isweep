@@ -28,10 +28,10 @@ for j in range(J):
 	f.write(str(int(row.BPRIGHTCENTER)))
 	f.write('\n')
 	f.write('MODEL\t')
-	f.write(str(int(row.MODEL)))
+	f.write(str(row.MODEL))
 	f.write('\n')
 	f.write('ALPHA\t')
-	f.write(str(int(row.ALPHA)))
+	f.write(str(float(row.ALPHA)))
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
