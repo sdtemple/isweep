@@ -88,7 +88,7 @@ for j in range(len(inhs)):
     sinh=sinhs[j]
     sbsinh=sbsinhs[j]
     inh=inhs[j]
-    sl,sm,su=bootstrap_standard_bc(sinh, sbsinh, alpha1, alpha2)
+    sl,sm,su=bootstrap_standard(sinh, sbsinh, alpha1, alpha2)
     f.write(str(p_est)); f.write('\t')
     f.write(str(sm)); f.write('\t')
     f.write(str(sl)); f.write('\t')

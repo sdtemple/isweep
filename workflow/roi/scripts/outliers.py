@@ -17,7 +17,7 @@ graph = make_ibd_graph(segs)
 communities = diameter_communities(graph, K=K, max_communities=np.inf)
 
 # write clusters to file
-def write_outliers(communities, folderout, scalar=5):
+def write_outliers(communities, folderout, scalar=3):
     '''Write haplotypes in outlier big communities
 
     Parameters
