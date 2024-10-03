@@ -54,6 +54,20 @@ def main():
         default=22, 
         help="(default: 22) Highest chromosome number."
     )
+
+    parser.add_argument(
+        '--prefix',
+        type=str,
+        default='chr',
+        help="(default: chr) Prefix of chromosome files."
+    )
+
+    parser.add_argument(
+        '--suffix',
+        type=str,
+        default='.ibd.windowed.tsv.gz',
+        help="(default: .ibd.windowed.tsv.gz) Suffix of chromosome files."
+    )
     
     parser.add_argument(
         '--heuristic_cutoff', 
@@ -76,10 +90,10 @@ def main():
     excess_genome = f"{args.study}/{args.excess_genome}" 
 
     # Reading in data
-    tab = pd.read_csv(f"{args.study}/{args.folder}/chr{args.chrlow}.ibd.windowed.tsv.gz", sep='\t')
+    tab = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{args.chrlow}{args.suffix}", sep='\t')
     tab['CHROM'] = args.chrlow
     for i in range(args.chrlow + 1, args.chrhigh + 1):
-        tabnow = pd.read_csv(f"{args.study}/{args.folder}/chr{i}.ibd.windowed.tsv.gz", sep='\t')
+        tabnow = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{i}{args.suffix}", sep='\t')
         tabnow['CHROM'] = i
         tab = pd.concat((tab, tabnow))
     

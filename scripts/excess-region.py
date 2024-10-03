@@ -27,7 +27,7 @@ def main():
         '--cm', 
         type=float,
         default=1.0, 
-        help="(default: ) Threshold for combining windows in centiMorgans (cM)."
+        help="(default: 1.0) Threshold for combining windows in centiMorgans (cM)."
     )
     
     # Parse the arguments

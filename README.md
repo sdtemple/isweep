@@ -2,10 +2,11 @@
 
 <img src="isweep-icon.png" align="center" width="600px"/>
 
-
-BRANCHING AND MAKING UPDATES IN JULY 2024
-
-NEW FEATURES AS A PART OF THIRD THESIS PROJECT
+New features are actively under construction (Fall 2024).
+- Integrating multiple testing correction to be user-friendly
+- The applet filter-lines.jar gets corrupted. Will write a .py script.
+- Documenting simulation results for upcoming papers
+Contact sethtem@umich.edu or Github issues for troubleshooting.
 
 See `misc/announcements.md` for high-level updates on this repo.
 
@@ -23,18 +24,15 @@ Please cite if you use this package.
 
 #### Methods to model selection:
 
-Temple, S.D., Waples, R.K., Browning, S.R. (2023) "Modeling recent positive selection in Americans of European ancestry"
-https://www.biorxiv.org/content/10.1101/2023.11.13.566947v1
+Temple, S.D., Waples, R.K., Browning, S.R. (2024). Modeling recent positive selection using identity-by-descent segments. The American Journal of Human Genetics. <a href="https://doi.org/10.1016/j.ajhg.2024.08.023">https://doi.org/10.1016/j.ajhg.2024.08.023</a>. 
 
 #### Methods to simulate IBD segments and our central limit theorems:
 
-Temple, S.D., Thompson, E.A. (2024) "Identity-by-descent in large samples" https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1
+Temple, S.D., Thompson, E.A. (2024). Identity-by-descent in large samples. Preprint at bioRxiv, 2024.06.05.597656. <a href="https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1">https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1</a>.
 
 #### Multiple testing correction for selection scan
 
-PhD dissertation at University of Washington
-
-Temple, S.D. (2024) "Statistical inference using identity-by-descent segments"
+Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection. PhD thesis (University of Washington). <a href="https://www. proquest.com/docview/3105584569?sourcetype¼Dissertations %20&%20Theses">https://www. proquest.com/docview/3105584569?sourcetype¼Dissertations %20&%20Theses</a>.
 
 
 ## Methodology
@@ -52,7 +50,7 @@ We assume 1 selected allele at a locus.
 ### Our methods are implemented automatically in a `snakemake` pipeline:
 
 1. A genome-wide selection scan for anomalously large IBD rates
-<!-- - With multiple testing correction -->
+ - With multiple testing correction
 2. Inferring anomalously large IBD clusters
 3. Ranking alleles based on evidence for selection
 4. Computing a measure of cluster agglomeration (Gini impurity index)
@@ -177,8 +175,8 @@ See `dag-roi.png` for the steps in the sweep modeling pipeline.
 
 ## Development things to do
 
-- Add vignettes
-- Add multiple testing correction
-- Further simulation studies (maybe)
-  - Test performance in dominance selection (sequence data)
-  - Test performance in MAF >= 0.01 data
+- cM, not bp, windowing
+- Replace filter-lines.jar with a python script
+- - Applet prone to corruption
+- Integrate multiple testing correction into pipeline
+- Extension to IBD mapping

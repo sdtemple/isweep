@@ -82,12 +82,33 @@ def main():
         default=22, 
         help="(default: 22) Highest chromosome number."
     )
+
+    parser.add_argument(
+        '--statistic',
+        type=str,
+        default="COUNT",
+        help="(default: COUNT) Statistic to plot."
+    )
     
     parser.add_argument(
         '--title', 
         type=str,
         default=None, 
         help="(default: None) Title of the plot."
+    )
+
+    parser.add_argument(
+        '--xlabel',
+        type=str,
+        default='Base pair along genome',
+        help="(default: Base pair) X-axis label."
+    )
+
+    parser.add_argument(
+        '--ylabel',
+        type=str,
+        default='IBD rate',
+        help="(default: IBD rate) Y-axis label."
     )
 
     parser.add_argument(
@@ -133,18 +154,20 @@ def main():
     else:
         M = 1
 
+    statistic = args.statistic
+
 
     # Maths
-    medi = ibd["COUNT"].median()
-    stdv = ibd["COUNT"].std()
+    medi = ibd[statistic].median()
+    stdv = ibd[statistic].std()
     a = medi - stdv * args.outlier_cutoff
     b = medi + stdv * args.outlier_cutoff
     low = a
-    newibd = ibd[(ibd["COUNT"] >= a) & (ibd["COUNT"] <= b)].copy()
+    newibd = ibd[(ibd[statistic] >= a) & (ibd[statistic] <= b)].copy()
 
     # Compute browning and browning 2020 cutoff
-    medi = newibd["COUNT"].median(numeric_only=True)
-    stdv = newibd["COUNT"].std(numeric_only=True)
+    medi = newibd[statistic].median(numeric_only=True)
+    stdv = newibd[statistic].std(numeric_only=True)
     upp = medi + stdv * args.heuristic_cutoff
     md = medi
     md = md / M
@@ -168,26 +191,33 @@ def main():
 
     # Plotting
     plt.figure(figsize=(args.width, args.height))
-    mxy = ibd['COUNT'].max() * 1.1
+    mxy = ibd[statistic].max() * 1.1
     mxy = mxy / M
     for chrom, group in ibd.groupby("CHROM"):
         clr = "black" if chrom % 2 == 0 else "gray"
-        plt.plot(group["CUMPOS"], group["COUNT"]/M, c=clr)
-
-    plt.axhline(y=md, color="tab:blue", linestyle="--", label="Median")
-    plt.axhline(y=upp, color="tab:orange", linestyle="--", label='Heuristic')
+        plt.plot(group["CUMPOS"], group[statistic]/M, c=clr)
+        # plt.plot(group["CUMPOS"], group[statistic], c=clr)
+        
+    plt.axhline(y=md, color="tab:blue", linestyle="solid", label="Median", linewidth=2)
+    # plt.axhline(y=upp, color="tab:orange", linestyle="--", label='Heuristic')
+    plt.axhline(y=upp, color="tab:orange", linestyle='dashed', label='Heuristic',alpha=0.75)
 
     if args.analytical_cutoff is not None:
         ac = args.analytical_cutoff / M
-        plt.axhline(y=ac, color="tab:green", linestyle="--", label="Analytical")
+        # plt.axhline(y=ac, color="tab:green", linestyle="--", label="Analytical")
+        plt.axhline(y=ac, color="tab:green", linestyle=(0,(5,10)), label="Analytical",linewidth=1,alpha=0.75)
     if args.sim_cutoff is not None:
         sc = args.sim_cutoff / M
-        plt.axhline(y=sc, color="tab:red", linestyle="--", label='Simulation')
+        # plt.axhline(y=sc, color="tab:red", linestyle="--", label='Simulation')
+        plt.axhline(y=sc, color="tab:red", linestyle='dotted', label='Simulation',linewidth=2,alpha=0.75)
 
-    if args.ploidy <= 2:
-        plt.ylabel("IBD rate")
-    else:
-        plt.ylabel("IBD count")
+    # if args.ploidy <= 2:
+    #     plt.ylabel("IBD rate")
+    # else:
+    #     plt.ylabel("IBD count")
+
+    plt.xlabel(args.xlabel,loc='left')
+    plt.ylabel(args.ylabel)
 
     if args.yupp is not None:
         plt.ylim(0, args.yupp)
