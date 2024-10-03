@@ -5,7 +5,8 @@
 New features are actively under construction (Fall 2024).
 - Integrating multiple testing correction to be user-friendly
 - The applet filter-lines.jar gets corrupted. Will write a .py script.
-- Documenting simulation results for upcoming papers
+- Documenting simulation results for upcoming paper
+
 Contact sethtem@umich.edu or Github issues for troubleshooting.
 
 See `misc/announcements.md` for high-level updates on this repo.
