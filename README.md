@@ -33,7 +33,7 @@ Temple, S.D., Thompson, E.A. (2024). Identity-by-descent in large samples. Prepr
 
 #### Multiple testing correction for selection scan
 
-Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection. PhD thesis (University of Washington). <a href="https://www. proquest.com/docview/3105584569?sourcetype¼Dissertations %20&%20Theses">https://www. proquest.com/docview/3105584569?sourcetype¼Dissertations %20&%20Theses</a>.
+Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection. PhD thesis (University of Washington). <a href="https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses">https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses</a>.
 
 
 ## Methodology
