@@ -148,7 +148,7 @@ def main():
     numsamples = args.sample_size
     m = numsamples * args.ploidy
     if args.ploidy == 2:
-        M =  m * (m-1) / 2
+        M =  m * (m-1) / 2 - m
     elif args.ploidy == 1:
         M =  m * (m-1) / 2
     else:

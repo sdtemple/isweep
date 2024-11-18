@@ -2,11 +2,12 @@ import numpy as np
 from scipy.stats import shapiro
 import sys
 
-filein, fileout, cutidx, stopidx = sys.argv[1:]
+filein, fileout, cutidx, stopidx, validx = sys.argv[1:]
 
 alphas = [0.10,0.05,0.01]
 cutidx = int(cutidx)
 stopidx = int(stopidx)
+validx = int(validx)
 
 g = open(fileout, 'w')
 g.write('mean\tmedian\tstddev\tleftend\trightend\tshapirostat\tpvalue')
@@ -17,9 +18,12 @@ g.write('\n')
 
 ctr = 0
 with open(filein, 'r') as f:
+    f.readline()
+    f.readline()
+    f.readline()
     for line in f:
         vals = line.strip().split('\t')
-        vals = [int(val) for val in vals]
+        vals = [float(val.split(',')[validx]) for val in vals]
         vals = vals[:cutidx]
         vals = np.array(vals)
         av = vals.mean()
