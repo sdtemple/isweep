@@ -66,8 +66,9 @@ if args.gzipped:
     with gzip.open(args.input_file,'rb') as f:
 
         for line in f:
-            if line[0] == comment:
-                pass
+            first_letter = chr(line[0])
+            if first_letter == comment:
+                g.write(line)
 
             # complement applied
             elif c:
