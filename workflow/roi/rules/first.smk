@@ -84,21 +84,37 @@ rule first_filt:
     output:
         ibd='{cohort}/{hit}/first.filt.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
+        # soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
+        # prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     resources:
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
         thecenter=$(python {params.scripts}/lines.py {input.locus} 3 2)
-        zcat {input.ibd} | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 $thecenter | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 $thecenter 10000000000 | \
-            gzip > {output.ibd}
+        python {params.scripts}/filter-lines.py {input.ibd} \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --column_index 6 \
+            --upper_bound $thecenter \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {output.ibd} \
+            --column_index 7 \
+            --lower_bound $thecenter \
+            --upper_bound 10000000000 \
+            --complement 0
+        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
         """
+        # """
+        # thecenter=$(python {params.scripts}/lines.py {input.locus} 3 2)
+        # zcat {input.ibd} | \
+        #     java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 6 0.00 $thecenter | \
+        #     java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
+        #     "I" 7 $thecenter 10000000000 | \
+        #     gzip > {output.ibd}
+        # """
 
 ### rank snps ###
 
