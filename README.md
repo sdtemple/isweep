@@ -119,12 +119,7 @@ bash get-software.sh software
 ```
   - Puts these in a folder called `software/`.
   - Requires `wget`.
-  - For simulation study, download SLiM yourself.
-    - Put in `software/`.
-    - https://messerlab.org/slim/
   - You need to cite these software.
-
-See `workflow/other-methods/` folder for how we run methods we compare to.
 
 ## Running the procedure:
 
@@ -134,6 +129,7 @@ This is the overall procedure. You will see more details for each step in `workf
 
 Phase data w/ Beagle or Shapeit beforehand.
 Subset data in light of global ancestry and close relatedness.
+Example scripts are in `scripts/pre-processing/`.
 - Here is a pipeline we built for these purposes: `https://github.com/sdtemple/flare-pipeline`
 - You could use IBDkin to detect close relatedness: `https://github.com/YingZhou001/IBDkin`
 - You could use PCA, ADMIXTURE, or FLARE to determine global ancestry. 
