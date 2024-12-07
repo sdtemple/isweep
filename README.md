@@ -38,13 +38,11 @@ Acronym: *i*ncomplete *S*elective sweep *W*ith *E*xtended haplotypes *E*stimatio
 
 This software presents methods to study recent, strong positive selection.
 - By recent, we mean within the last 500 generations
-- By strong, we mean selection coefficient s >= 0.015 (1.5%)
+- By strong, we mean selection coefficient s >= 0.015 (1.5%) 
 
-The methods relate lengths of IBD segments to a coalescent model under selection. 
+In modeling a sweep, we assume 1 selected allele at a locus.
 
-We assume 1 selected allele at a locus.
-
-### Our methods are implemented automatically in a `snakemake` pipeline:
+### Automated analysis pipeline(s):
 
 1. A genome-wide selection scan for anomalously large IBD rates
  - With multiple testing correction
@@ -55,6 +53,8 @@ We assume 1 selected allele at a locus.
 6. Estimating a selection coefficient
 7. Estimating a confidence interval
 
+Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-7).)
+
 ### The input data is:
 
 See `misc/usage.md`.
@@ -64,18 +64,12 @@ See `misc/usage.md`.
   - Phased vcf data 0|1
   - No apparent population structure
   - No apparent close relatedness
-  - A genetic map (bp ---> cM)
-    - If not available, create genetic maps w/ uniform rate
-  - Recombining diploid chromosomes
-    - Not extended to human X chromosome
+  - Tab-separated genetic map (bp ---> cM) 
+  - Recombining diploid autosomes
 - Access to cluster computing
-  - For human-scale data, you should have at least 25 Gb of RAM and 6 CPUs on a node.
-    - More memory and cores for TOPMed or UKBB-like sequence datasets
   - Not extended to cloud computing
 
-The chromosome numbers in genetic maps should match the chromosome numbers in VCFs.
-
-The genetic maps should be tab-separated.
+Chromosome numbers in genetic maps should match chromosome numbers in VCFs.
 
 ## Repository overview
 
@@ -88,8 +82,6 @@ You should run all `snakemake` pipelines in their `workflow/some-pipeline/`.
 You should be in the ```mamba activate isweep``` environment for analyses.
 
 You should run the analyses using cluster jobs.
-
-We have made README.md files in most subfolders.
 
 ## Installation
 
@@ -117,11 +109,7 @@ bash get-software.sh software
   - Requires `wget`.
   - You need to cite these software.
 
-## Running the procedure:
-
-This is the overall procedure. You will see more details for each step in `workflow/some-pipeline/README.md` files.
-
-### Pre-processing
+## Pre-processing
 
 Phase data w/ Beagle or Shapeit beforehand.
 Subset data in light of global ancestry and close relatedness.
@@ -130,11 +118,17 @@ Example scripts are in `scripts/pre-processing/`.
 - You could use IBDkin to detect close relatedness: `https://github.com/YingZhou001/IBDkin`
 - You could use PCA, ADMIXTURE, or FLARE to determine global ancestry. 
 
-### Main analysis
+## Main analysis
 
+You will see more details for each step in `workflow/some-pipeline/README.md` files.
+
+### For all workflows
 1. Make pointers to large (phased) vcf files.
 2. Edit YAML files in the different workflow directories.
-3. Run the selection scan (`workflow/scan-selection`).
+
+### Detecting recent selection
+
+Run the selection scan (`workflow/scan-selection`).
 ``` 
 nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ```
@@ -142,12 +136,16 @@ nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --confi
 - Recommendation: do a test run with your 2 smallest chromosomes.
 - Check `*.log` files from `ibd-ends`. If it recommends an estimated err, change error rate in YAML file.
 - Then, run with all your chromosomes.
-4. Estimate recent effective sizes :` workflow/scan-selection/scripts/run-ibdne.sh `.
-5. Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
-6. Checkout the `roi.tsv` file.
+
+Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
+
+### Modeling putative sweeps
+
+1. Estimate recent effective sizes :` workflow/scan-selection/scripts/run-ibdne.sh `.
+2. Checkout the `roi.tsv` file.
   - Edit with locus names if you want.
   - Edit to change defaults: additive model and 95% confidence intervals.
-7. Run the region of interest analysis (`workflow/model-selection`).
+3. Run the region of interest analysis (`workflow/model-selection`).
 ``` 
 nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ``` 
