@@ -41,9 +41,6 @@ rule second_filt:
     output:
         ibd='{cohort}/{hit}/second.filt.ibd.gz',
     params:
-        # soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        # prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        # script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
@@ -62,15 +59,6 @@ rule second_filt:
             --complement 0
         rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
         """
-        # """
-        # thecenter=$(python {params.script} {input.locus} 1 2)
-        # zcat {input.ibd} | \
-        #     java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-        #     "I" 6 0.00 $thecenter | \
-        #     java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-        #     "I" 7 $thecenter 10000000000 | \
-        #     gzip > {output.ibd}
-        # """
 
 ### rank snps ###
 
