@@ -96,18 +96,18 @@ rule first_filt:
         """
         thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py {input.ibd} \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
         """
 
 ### rank snps ###

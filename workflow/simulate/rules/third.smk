@@ -50,23 +50,23 @@ rule third_hap_ibd:
         thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         python {params.scripts}/filter-lines.py \
             {input.ibd} \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             {output.ibd} \
             --upper_bound {params.mlecutoff}
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
         """
 
 rule third_hap_infer:
@@ -132,23 +132,23 @@ rule third_snp_ibd:
         thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         python {params.scripts}/filter-lines.py \
             {input.ibd} \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             {output.ibd} \
             --upper_bound {params.mlecutoff}
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
         """
 
 rule third_snp_infer:
