@@ -9,10 +9,6 @@ New features are actively under construction (Fall 2024).
 
 Contact sethtem@umich.edu or Github issues for troubleshooting.
 
-See `misc/announcements.md` for high-level updates on this repo.
-
-See `misc/fixes.md` for any major bug fixes.
-
 See `misc/usage.md` to evaluate if this methodology fits your study.
 
 See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
