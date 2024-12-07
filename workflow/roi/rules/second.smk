@@ -44,8 +44,9 @@ rule second_filt:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 3 2)
-        python {params.scripts}/filter-lines.py {input.ibd} \
+        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \

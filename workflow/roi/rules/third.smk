@@ -74,7 +74,8 @@ rule third_hap_ibd:
         chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
         thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python {params.scripts}/filter-lines.py $ibd \
+        python {params.scripts}/filter-lines.py \
+            $ibd \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
@@ -157,7 +158,8 @@ rule third_snp_ibd:
         chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
         thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python {params.scripts}/filter-lines.py $ibd \
+        python {params.scripts}/filter-lines.py \
+            $ibd \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
