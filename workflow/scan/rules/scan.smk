@@ -102,15 +102,14 @@ rule filter_ibdends_scan: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        zcat {input.ibd} | \
-            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.scancut} | \
-            gzip > {output.fipass}
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
+            {output.fipass} \
+            --upper_bound {params.scancut}
         """
 
 rule count_ibdends_scan: # computing counts over windows
@@ -141,15 +140,14 @@ rule filter_ibdends_mle: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         mlecut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        zcat {input.ibd} | \
-            java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.mlecut} | \
-            gzip > {output.fipass}
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
+            {output.fipass} \
+            --upper_bound {params.mlecut}
         """
 
 rule count_ibdends_mle: # computing counts over windows

@@ -26,8 +26,6 @@ CHANGE:
   PROGRAMS:
     # https://github.com/browning-lab/hap-ibd
     HAPIBD: 'hap-ibd.jar'
-    # http://faculty.washington.edu/browning/
-    FILTER: 'filter-lines.jar'
 
   EXISTING:
     VCFS: '/path-to-topmed-data/phased-vcfs'

@@ -3,9 +3,9 @@
 <img src="isweep-icon.png" align="center" width="600px"/>
 
 New features are actively under construction (Fall 2024).
-- Integrating multiple testing correction to be user-friendly
-- The applet filter-lines.jar gets corrupted. Will write a .py script.
-- Documenting simulation results for upcoming paper
+- cM, not bp, windowing
+- Integrate multiple testing correction into pipeline
+- Extension to IBD mapping
 
 Contact sethtem@umich.edu or Github issues for troubleshooting.
 
@@ -173,11 +173,3 @@ See `dag-roi.png` for the steps in the sweep modeling pipeline.
 <!-- ## Picture of selection modeling workflow
 
 <img src="dag-roi.png" align="center" width="600px"/> -->
-
-## Development things to do
-
-- cM, not bp, windowing
-- Replace filter-lines.jar with a python script
-- - Applet prone to corruption
-- Integrate multiple testing correction into pipeline
-- Extension to IBD mapping

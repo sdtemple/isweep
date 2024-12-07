@@ -68,20 +68,26 @@ rule third_hap_ibd:
         ibd='{cohort}/{hit}/third.hap.ibd.gz',
     params:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        chr=$(python {params.script} {input.locus} 2 2)
-        thecenter=$(python {params.script} {input.best} 1 2)
+        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
+        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        zcat $ibd | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 ${{thecenter}} | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 ${{thecenter}} 10000000000 | \
-            gzip > {output.ibd}
+        python {params.scripts}/filter-lines.py \
+            $ibd \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --column_index 6 \
+            --upper_bound $thecenter \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {output.ibd} \
+            --column_index 7 \
+            --lower_bound $thecenter \
+            --upper_bound 10000000000 \
+            --complement 0
+        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
         """
 
 
@@ -146,20 +152,26 @@ rule third_snp_ibd:
         ibd='{cohort}/{hit}/third.snp.ibd.gz',
     params:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        chr=$(python {params.script} {input.locus} 2 2)
-        thecenter=$(python {params.script} {input.best} 1 2)
+        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
+        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        zcat $ibd | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 ${{thecenter}} | \
-            java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 ${{thecenter}} 10000000000 | \
-            gzip > {output.ibd}
+        python {params.scripts}/filter-lines.py \
+            $ibd \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --column_index 6 \
+            --upper_bound $thecenter \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            {output.ibd} \
+            --column_index 7 \
+            --lower_bound $thecenter \
+            --upper_bound 10000000000 \
+            --complement 0
+        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
         """
 
 

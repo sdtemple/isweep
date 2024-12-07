@@ -41,23 +41,32 @@ rule third_hap_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/third.chr1.hap.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.script} {input.locus} 1 2)
-        zcat {input.ibd} | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 ${{thecenter}} | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 ${{thecenter}} 10000000000 | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" -8 0.00 {params.mlecutoff} | \
-            gzip > {output.ibd}
+        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --column_index 6 \
+            --upper_bound $thecenter \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --column_index 7 \
+            --lower_bound $thecenter \
+            --upper_bound 10000000000 \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            {output.ibd} \
+            --upper_bound {params.mlecutoff}
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
         """
 
 rule third_hap_infer:
@@ -114,23 +123,32 @@ rule third_snp_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/third.chr1.snp.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.script} {input.locus} 1 2)
-        zcat {input.ibd} | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 6 0.00 ${{thecenter}} | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" 7 ${{thecenter}} 10000000000 | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
-            "I" -8 0.00 {params.mlecutoff} | \
-            gzip > {output.ibd}
+        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --column_index 6 \
+            --upper_bound $thecenter \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --column_index 7 \
+            --lower_bound $thecenter \
+            --upper_bound 10000000000 \
+            --complement 0
+        python {params.scripts}/filter-lines.py \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            {output.ibd} \
+            --upper_bound {params.mlecutoff}
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
         """
 
 rule third_snp_infer:

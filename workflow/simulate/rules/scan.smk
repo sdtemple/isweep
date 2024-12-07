@@ -80,16 +80,16 @@ rule filter_ibdends:
     output:
         fipass='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
     params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['FILTER']),
-        momcut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        zcat {input.ibd} | \
-            java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} "I" -8 0.00 {params.momcut} | \
-            gzip > {output.fipass}
+        python {params.scripts}/filter-lines.py \
+            {input.ibd} \
+            {output.fipass} \
+            --upper_bound {params.scancut}
         """
 
 rule count_ibdends:

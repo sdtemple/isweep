@@ -31,8 +31,6 @@ CHANGE:
     HAPIBD: 'hap-ibd.jar'
     # https://github.com/browning-lab/ibd-ends
     IBDENDS: 'ibd-ends.jar'
-    # http://faculty.washington.edu/browning/
-    FILTER: 'filter-lines.jar'
 
   EXISTING:
     # these are phased vcfs
@@ -69,8 +67,6 @@ FIXED:
     QUANTILES: '0.5'
     # num samples from endpoint posterior
     NSAMPLES: '0'
-    # # do a test run on 1 chromosome to set this
-    # ERRRATE: '1.5e-4'
     # minimum minor allele frequency
     MINMAF: '0.001'
 
