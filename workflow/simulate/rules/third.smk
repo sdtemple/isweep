@@ -47,7 +47,7 @@ rule third_hap_ibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
+        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py \
             {input.ibd} \
             {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
@@ -129,7 +129,7 @@ rule third_snp_ibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
+        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py \
             {input.ibd} \
             {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
