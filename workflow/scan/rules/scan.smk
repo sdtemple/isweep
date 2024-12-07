@@ -109,7 +109,7 @@ rule filter_ibdends_scan: # applying cutoffs
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/filter-lines.py {input.ibd} {output}.fipass --upper_bound {params.scancut}
+        python {params.scripts}/filter-lines.py {input.ibd} {output.fipass} --upper_bound {params.scancut}
         """
         # """
         # zcat {input.ibd} | \
@@ -152,7 +152,7 @@ rule filter_ibdends_mle: # applying cutoffs
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/filter-lines.py {input.ibd} {output}.fipass --upper_bound {params.mlecut}
+        python {params.scripts}/filter-lines.py {input.ibd} {output.fipass} --upper_bound {params.mlecut}
         """
         # """
         # zcat {input.ibd} | \
