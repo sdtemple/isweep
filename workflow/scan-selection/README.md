@@ -69,26 +69,6 @@ nohup snakemake -c1 -s Snakefile-scan.smk --cluster "[options]" --jobs X --confi
 Step 5 is **if** you want to make a GWAS plot.
 Steps 6 is **if** you want to estimate selection coefficients for loci.
 
-<!-- ## Example
-
-I use the qsub system to manage cluster jobs.
-
-1. `conda activate isweep`
-
-2. `snakemake -c1 -n -s Snakefile-scan.smk --configfile eur.yaml`
-
-3. `nohup snakemake -c1 -s Snakefile-scan.smk --keep-going --latency-wait 300 --cluster "qsub -q some-queue.q -N {rule} -m e -M your.email.@university.edu -pe local 12 " --configfile eur.yaml --jobs 22 & `
-    - `-pe local 12` allocates 12 CPUs on same node
-    - `-m e -M your.email@university.edu` may send you 100s of emails
-
-4. `python scripts/manhattan.py scan.ibd.tsv eur.manhattan 1 22 4. 3. "TOPMed European Americans" 12 3`
-- This makes a plot. 
-
-5. ` echo "bash scripts/run-ibdne.sh ibdne.jar 100 eur ibdsegs/ibdends/modified/scan 1 22 ibdne " | qsub -q some-queue.q -N ibdne -m e -M your.email@university.edu `
-- Or modify this for a SBATCH command.
-
-You don't have to use my `manhattan.R` or `manhattan.py` files for plotting. Feel free to take inspiration from the scripts. -->
-
 ## Other considerations
 
 The pipeline uses `hap-ibd.jar` and `ibd-ends.jar`. 

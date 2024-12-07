@@ -134,7 +134,7 @@ Example scripts are in `scripts/pre-processing/`.
 
 1. Make pointers to large (phased) vcf files.
 2. Edit YAML files in the different workflow directories.
-3. Run the selection scan (`workflow/scan`).
+3. Run the selection scan (`workflow/scan-selection`).
 ``` 
 nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ```
@@ -142,12 +142,12 @@ nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --confi
 - Recommendation: do a test run with your 2 smallest chromosomes.
 - Check `*.log` files from `ibd-ends`. If it recommends an estimated err, change error rate in YAML file.
 - Then, run with all your chromosomes.
-4. Estimate recent effective sizes :` workflow/scan/scripts/run-ibdne.sh `.
-5. Make the Manhattan plot: ` workflow/scan/scripts/manhattan.py `.
+4. Estimate recent effective sizes :` workflow/scan-selection/scripts/run-ibdne.sh `.
+5. Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
 6. Checkout the `roi.tsv` file.
   - Edit with locus names if you want.
   - Edit to change defaults: additive model and 95% confidence intervals.
-7. Run the region of interest analysis (`workflow/roi`).
+7. Run the region of interest analysis (`workflow/model-selection`).
 ``` 
 nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ``` 
