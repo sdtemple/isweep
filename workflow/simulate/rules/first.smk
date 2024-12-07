@@ -89,7 +89,7 @@ rule first_filt:
     output:
         ibd='{macro}/{micro}/{seed}/first.filt.chr1.ibd.gz',
     params:
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
