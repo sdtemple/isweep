@@ -12,6 +12,18 @@ ploidy=2
 # ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
 samplesize_ploidy=samplesize*ploidy
 
+import os
+import pandas as pd
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+micro=str(config['CHANGE']["ISWEEP"]["ROI"])
+sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
+J = sims.shape[0]
+for j in range(J):
+	row = sims.iloc[j]
+	if not os.path.exists(macro+'/'+str(row.NAME)):
+		os.mkdir(macro+'/'+str(row.NAME))
+sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
+
 # extend Ne(t)
 rule third_Ne:
     input:
@@ -155,6 +167,46 @@ rule third_hap_infer_perc:
             --ploidy {params.ploidy} \
         """
 
+rule summary_hap_norm:
+    input:
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.norm.tsv' for j in range(J)],
+    output:
+        fileout=macro+'/summary.hap.norm.tsv',
+    params:
+        study=macro,
+        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        typ='hap',
+        unc='norm',
+    shell:
+        """
+        python ../../scripts/summary-table.py \
+            --file_output {output.fileout} \
+            --folder {params.study} \
+            --roi {params.roi} \
+            --file_type {params.typ} \
+            --uncertainty_type {params.unc} \
+        """
+
+rule summary_hap_perc:
+    input:
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.perc.tsv' for j in range(J)],
+    output:
+        fileout=macro+'/summary.hap.perc.tsv',
+    params:
+        study=macro,
+        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        typ='snp',
+        unc='perc',
+    shell:
+        """
+        python ../../scripts/summary-table.py \
+            --file_output file \
+            --folder {params.study} \
+            --roi {params.roi} \
+            --file_type {params.typ} \
+            --uncertainty_type {params.unc} \
+        """
+
 ##### snp analysis #####
 
 rule third_snp:
@@ -236,7 +288,7 @@ rule third_snp_infer_norm:
             --ploidy {params.ploidy} \
         """
 
-rule third_snp_infer_norm:
+rule third_snp_infer_perc:
     input:
         long='{cohort}/{hit}/third.snp.ibd.gz',
         freq='{cohort}/{hit}/third.best.snp.txt',
@@ -267,6 +319,46 @@ rule third_snp_infer_norm:
             --model ${{model}} \
             --alpha ${{alpha}} \
             --ploidy {params.ploidy} \
+        """
+
+rule summary_snp_norm:
+    input:
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.norm.tsv' for j in range(J)],
+    output:
+        fileout=macro+'/summary.snp.norm.tsv',
+    params:
+        study=macro,
+        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        typ='snp',
+        unc='norm',
+    shell:
+        """
+        python ../../scripts/summary-table.py \
+            --file_output file \
+            --folder {params.study} \
+            --roi {params.roi} \
+            --file_type {params.typ} \
+            --uncertainty_type {params.unc} \
+        """
+
+rule summary_snp_perc:
+    input:
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.perc.tsv' for j in range(J)],
+    output:
+        fileout=macro+'/summary.snp.perc.tsv',
+    params:
+        study=macro,
+        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        typ='snp',
+        unc='perc',
+    shell:
+        """
+        python ../../scripts/summary-table.py \
+            --file_output file \
+            --folder {params.study} \
+            --roi {params.roi} \
+            --file_type {params.typ} \
+            --uncertainty_type {params.unc} \
         """
 
 ### write entropy ###

@@ -29,3 +29,8 @@ Review these files:
         - 'm' for multiplicative
         - 'd' for dominance
         - 'r' for recessive
+
+You can do an analysis with percentile-based confidence intervals.
+- Go into `Snakefile-roi.smk` for rule `all` and uncomment list with percentile output
+- Making percentile-based intervals takes much longer
+- Modify the `NBOOTPERC` parameter as desired.

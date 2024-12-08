@@ -23,7 +23,11 @@ parser.add_argument('--roi',
 parser.add_argument('--file_type', 
                     type=str, 
                     required=True, 
-                    help='Type of file to read for analysis')
+                    help='Haplotype or SNP-based analysis')
+parser.add_argument('--uncertainty_type', 
+                    type=str, 
+                    required=True, 
+                    help='Normal or percentile bootstrap intervals')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -31,6 +35,10 @@ file_output = args.file_output
 folder = args.folder
 roi = args.roi
 file_type = args.file_type
+uncertainty_type = args.uncertainty_type
+
+assert file_type in ['hap','snp']
+assert uncertainty_type in ['norm','perc']
 
 # Read the region of interest file
 tablein = pd.read_csv(f"{folder}/{roi}", sep='\t')
@@ -51,7 +59,7 @@ for nm in nms:
         bp = int(float(line[1]))
     bs.append(bp)
 
-    restab = pd.read_csv(f"{folder}/{nm}/results.{file_type}.tsv", sep='\t')
+    restab = pd.read_csv(f"{folder}/{nm}/results.{file_type}.{uncertainty_type}.tsv", sep='\t')
     p0.append(restab['VarFreqEst'][0])
     se.append(restab['SelCoefEst'][0])
     sl.append(restab['SelCoefLow'][0])
