@@ -195,12 +195,12 @@ rule summary_hap_perc:
     params:
         study=macro,
         roi=str(config['CHANGE']['ISWEEP']['ROI']),
-        typ='snp',
+        typ='hap',
         unc='perc',
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output file \
+            --file_output {output.fileout} \
             --folder {params.study} \
             --roi {params.roi} \
             --file_type {params.typ} \
@@ -334,7 +334,7 @@ rule summary_snp_norm:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output file \
+            --file_output {output.fileout} \
             --folder {params.study} \
             --roi {params.roi} \
             --file_type {params.typ} \
@@ -354,7 +354,7 @@ rule summary_snp_perc:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output file \
+            --file_output {output.fileout} \
             --folder {params.study} \
             --roi {params.roi} \
             --file_type {params.typ} \

@@ -203,12 +203,12 @@ rule scan: # conduct a manhattan scan
 
 rule make_histogram:
     input:
-        scandata=macro+'scan.ibd.tsv'
+        scandata=macro+'/scan.ibd.tsv'
     output:
-        histogram=macro+'zhistogram.png'
+        histogram=macro+'/zhistogram.png'
     shell:
         """
-        python ../../scripts/make_histogram.py \
+        python ../../scripts/make-histogram.py \
             --file_input {input.scandata} \
             --file_output {output.histogram} \
             --chr_high 100 \

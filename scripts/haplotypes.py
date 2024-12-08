@@ -58,7 +58,7 @@ parser.add_argument('--low_freq',
 # Parse the arguments
 args = parser.parse_args()
 snpin = args.snp_file_input
-folderout = args.folder_out
+folderout = args.folder_output
 winidx = args.window_index
 freqidx = args.freq_index
 scoreidx = args.score_index

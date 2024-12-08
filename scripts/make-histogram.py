@@ -122,7 +122,7 @@ def main():
     # read and process input
     statistic = args.statistic
     chrom = args.chrom
-    table = pd.read_csv(args.filein,sep='\t')
+    table = pd.read_csv(args.file_input,sep='\t')
     subtable = table[(table[args.chrom] >= args.chr_low) & 
                      (table[args.chrom] <= args.chr_high)] # control which chromosomes
     y = subtable[statistic]
@@ -151,7 +151,7 @@ def main():
     plt.xlim(-args.xupp,args.xupp)
 
     # saving
-    plt.savefig(args.fileout)
+    plt.savefig(args.file_output)
 
 if __name__ == "__main__":
     main()

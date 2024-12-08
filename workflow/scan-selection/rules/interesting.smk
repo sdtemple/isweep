@@ -26,7 +26,7 @@ rule make_roi_table:
     output:
         fileout=macro+'/roi.tsv',
     params:
-        folder=macro+'/ibdsegs/ibdends/scan'
+        folder=macro+'/ibdsegs/ibdends/scan',
         mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
         cmcover=str(config['FIXED']['ISWEEP']['CMCOVER']),
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),

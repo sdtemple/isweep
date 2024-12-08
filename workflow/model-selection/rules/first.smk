@@ -81,7 +81,7 @@ rule first_filt:
         ibd='{cohort}/{hit}/first.filt.ibd.gz',
     shell:
         """
-        thecenter=../../scripts/lines.py {input.locus} 3 2)
+        thecenter=$(python ../../scripts/lines.py {input.locus} 3 2)
         python ../../scripts/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
