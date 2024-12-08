@@ -181,7 +181,7 @@ rule scan: # conduct a manhattan scan
         excessdata=macro+'/excess.ibd.tsv',
     params:
         study=macro,
-        folder='/ibdsegs/ibdends/scan/',
+        folder='/ibdsegs/ibdends/scan',
         chrlow=str(low),
         chrhigh=str(high),
         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
@@ -191,8 +191,8 @@ rule scan: # conduct a manhattan scan
         python ../../scripts/scan.py \
             {params.study} \
             --folder {params.folder} \
-            --all_genome {output.scandata} \
-            --excess_genome {output.excessdata} \
+            --all_genome scan.ibd.tsv \
+            --excess_genome excess.ibd.tsv \
             --chrlow {params.chrlow} \
             --chrhigh {params.chrhigh} \
             --prefix chr \

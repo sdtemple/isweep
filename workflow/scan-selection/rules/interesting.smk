@@ -26,17 +26,16 @@ rule make_roi_table:
     output:
         fileout=macro+'/roi.tsv',
     params:
-        study=macro,
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
+        folder=macro+'/ibdsegs/ibdends/scan'
         mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
         cmcover=str(config['FIXED']['ISWEEP']['CMCOVER']),
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
     shell:
         """
-        python ../../make-roi-table.py \
+        python ../../scripts/make-roi-table.py \
             {input.filein} \
             {output.fileout} \
-            chr \
+            {params.folder}/chr \
             .ibd.windowed.tsv.gz \
             --cmcover {params.cmcover} \
             --cmsmall {params.cmsmall} \
