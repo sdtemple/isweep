@@ -4,10 +4,10 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Apply one filter to tabular data.")
 
-parser.add_argument('input_file', 
+parser.add_argument('--input_file', 
                     type=str, 
                     help='Input tabular data file')
-parser.add_argument('output_file', 
+parser.add_argument('--output_file', 
                     type=str, 
                     help='Output tabular data file')
 parser.add_argument('--column_index',

@@ -36,7 +36,7 @@ rule make_excludesamples:
     shell:
         """
         python ../../scripts/exclude-samples.py \
-            {input.sample} \
-            {input.subsample} \
-            {output.exclsample}
+            --sample_file {input.sample} \
+            --subsample_file {input.subsample} \
+            --exclude_sample_file {output.exclsample}
         """

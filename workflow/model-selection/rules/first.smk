@@ -84,14 +84,15 @@ rule first_filt:
     shell:
         """
         thecenter=../../scripts/lines.py {input.locus} 3 2)
-        python ../../scripts/filter-lines.py {input.ibd} \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+        python ../../scripts/filter-lines.py \
+            --input_file {input.ibd} \
+            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {output.ibd} \
+            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
@@ -114,9 +115,9 @@ rule first_rank:
     shell:
         """
         python ../../scripts/rank.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
+            --ibd_file {input.short} \
+            --vcf {input.vcf} \
+            --file_out {output.fileout} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
@@ -139,8 +140,8 @@ rule first_score:
     shell:
         """
         python ../../scripts/site.py \
-            {input.snps} \
-            {params.folderout} \
+            --snp_file_in {input.snps} \
+            --folder_out {params.folderout} \
             --window_index 0 \
             --freq_index 1 \
             --window_size {params.windowsize} \

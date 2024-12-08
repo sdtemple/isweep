@@ -52,6 +52,7 @@ rule yaml:
         macro+'/excess.region.ibd.tsv',
         macro+'/roi.tsv',
         macro+'/excludesamples.txt',
+        macro+'/zhistogram.png',
     output:
         yaml=macro+'/arguments.scan.yaml',
     params:

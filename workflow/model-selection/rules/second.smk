@@ -43,14 +43,14 @@ rule second_filt:
         """
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
         python ../../scripts/filter-lines.py \
-            {input.ibd} \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --input_file {input.ibd} \
+            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {output.ibd} \
+            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
@@ -73,12 +73,12 @@ rule second_rank:
     shell:
         """
         python ../../scripts/rank.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
+            --ibd_file {input.short} \
+            --vcf {input.vcf} \
+            --file_out {output.fileout} \
+            --graph_diameter {params.diameter} \
+            --group_cutoff {params.rulesigma} \
+            --lowest_freq {params.q1} \
         """
 
 ### write outliers ###
@@ -95,10 +95,10 @@ rule second_outlier:
     shell:
         """
         python ../../scripts/outliers.py \
-            {input.short} \
-            {wildcards.cohort}/{wildcards.hit} \
-            {params.diameter} \
-            {params.rulesigma}
+            --ibd_file {input.short} \
+            --folder_out {wildcards.cohort}/{wildcards.hit} \
+            --graph_diameter {params.diameter} \
+            --group_cutoff {params.rulesigma}
         touch {output.fileout}
         touch {output.out1}
         """

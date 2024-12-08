@@ -15,25 +15,25 @@ def main():
     )
 
     parser.add_argument(
-        'file_input',
+        '--file_input',
         type=str,
         help="Input file containing IBD regions data."
     )
 
     parser.add_argument(
-        'file_output',
+        '--file_output',
         type=str,
         help="Output file for saving region of interest."
     )
 
     parser.add_argument(
-        'file_prefix',
+        '--file_prefix',
         type=str,
         help="Prefix of chromosome files."
     )
 
     parser.add_argument(
-        'file_suffix',
+        '--file_suffix',
         type=str,
         help="Suffix of chromosome files."
     )

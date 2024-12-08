@@ -79,14 +79,14 @@ rule second_filt:
         """
         thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_input {input.ibd} \
+            --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {output.ibd} \
+            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_output {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \

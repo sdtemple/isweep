@@ -9,30 +9,30 @@ import matplotlib.pyplot as plt
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Refine sweep site from SNP data.')
 
-parser.add_argument('snp_file_in', 
+parser.add_argument('--snp_file_in', 
                     type=str, 
                     help='Path to the input SNP file (table 1)')
-parser.add_argument('folder_out', 
+parser.add_argument('--folder_out', 
                     type=str, 
                     help='Folder for output')
-parser.add_argument('window_index', 
+parser.add_argument('--window_index', 
                     type=int,
                     default=0, 
                     help='Column index for distance unit')
-parser.add_argument('freq_index', 
+parser.add_argument('--freq_index', 
                     type=int,
                     default=1, 
                     help='Column index for frequency')
-parser.add_argument('window_size', 
+parser.add_argument('--window_size', 
                     type=float, 
                     help='Size of sliding window')
-parser.add_argument('window_step', 
+parser.add_argument('--window_step', 
                     type=float, 
                     help='Step of sliding window')
-parser.add_argument('quantile_sum', 
+parser.add_argument('--quantile_sum', 
                     type=int, 
                     help='Sum 1... quantiles')
-parser.add_argument('max_spacing', 
+parser.add_argument('--max_spacing', 
                     type=float, 
                     help='Max spacing filter')
 

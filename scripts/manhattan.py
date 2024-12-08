@@ -70,14 +70,14 @@ def main():
     )
 
     parser.add_argument(
-        '--chrlow', 
+        '--chr_low', 
         type=int,
         default=1, 
         help="(default: 1) Lowest chromosome number."
     )
     
     parser.add_argument(
-        '--chrhigh', 
+        '--chr_high', 
         type=int,
         default=22, 
         help="(default: 22) Highest chromosome number."
@@ -176,11 +176,11 @@ def main():
     # Chromosome maths
     ibd["CUMPOS"] = None
     s = 0
-    mbp = [0] * (args.chrhigh + 1)
-    chr = {i: i for i in range(args.chrlow, args.chrhigh + 1)}
+    mbp = [0] * (args.chr_high + 1)
+    chr = {i: i for i in range(args.chr_low, args.chr_high + 1)}
     nchr = len(chr)
 
-    for i in range(args.chrlow, args.chrhigh + 1):
+    for i in range(args.chr_low, args.chr_high + 1):
         try:
             mbp[i] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"].max()
             ibd.loc[ibd["CHROM"] == chr[i], "CUMPOS"] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"] + s

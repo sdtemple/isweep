@@ -2,13 +2,13 @@ import argparse
 
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Exclude samples not in sub-sample list.')
-parser.add_argument('sample_file', 
+parser.add_argument('--sample_file', 
                     type=str, 
                     help='Path to the sample file')
-parser.add_argument('subsample_file', 
+parser.add_argument('--subsample_file', 
                     type=str, 
                     help='Path to the sub-sample file')
-parser.add_argument('exclude_sample_file', 
+parser.add_argument('--exclude_sample_file', 
                     type=str, 
                     help='Path to the output file for excluded samples')
 

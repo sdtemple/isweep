@@ -49,21 +49,21 @@ rule third_hap_ibd:
         """
         thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_input {input.ibd} \
+            --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
-            {output.ibd} \
+            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --file_output {output.ibd} \
             --upper_bound {params.mlecutoff}
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
@@ -131,21 +131,21 @@ rule third_snp_ibd:
         """
         thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
         python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_input {input.ibd} \
+            --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
         python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
-            {output.ibd} \
+            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --file_output {output.ibd} \
             --upper_bound {params.mlecutoff}
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz

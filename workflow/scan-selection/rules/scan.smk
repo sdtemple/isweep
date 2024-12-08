@@ -110,8 +110,8 @@ rule filter_ibdends_scan: # applying cutoffs
     shell:
         """
         python ../../scripts/filter-lines.py \
-            {input.ibd} \
-            {output.fipass} \
+            --input_file {input.ibd} \
+            --output_file {output.fipass} \
             --upper_bound {params.scancut}
         """
 
@@ -146,8 +146,8 @@ rule filter_ibdends_mle: # applying cutoffs
     shell:
         """
         python ../../scripts/filter-lines.py \
-            {input.ibd} \
-            {output.fipass} \
+            --input_file {input.ibd} \
+            --output_file {output.fipass} \
             --upper_bound {params.mlecut}
         """
 
@@ -189,15 +189,31 @@ rule scan: # conduct a manhattan scan
     shell:
         """
         python ../../scripts/scan.py \
-            {params.study} \
+            --study {params.study} \
             --folder {params.folder} \
             --all_genome scan.ibd.tsv \
             --excess_genome excess.ibd.tsv \
-            --chrlow {params.chrlow} \
-            --chrhigh {params.chrhigh} \
+            --chr_low {params.chrlow} \
+            --chr_high {params.chrhigh} \
             --prefix chr \
             --suffix .ibd.windowed.tsv.gz \
             --heuristic_cutoff {params.scansigma} \
             --outlier_cutoff {params.telosigma}
+        """
+
+rule make_histogram:
+    input:
+        scandata=macro+'scan.ibd.tsv'
+    output:
+        histogram=macro+'zhistogram.png'
+    shell:
+        """
+        python ../../scripts/make_histogram.py \
+            --file_input {input.scandata} \
+            --file_output {output.histogram} \
+            --chr_high 100 \
+            --statistic Z \
+            --xlabel z-score \
+            --xupp 6. \
         """
 

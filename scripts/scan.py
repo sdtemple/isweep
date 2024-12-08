@@ -15,7 +15,7 @@ def main():
     # Define arguments
 
     parser.add_argument(
-        'study',
+        '--study',
         type=str,
         help="Study name. The main folder."
     )
@@ -42,14 +42,14 @@ def main():
     )
     
     parser.add_argument(
-        '--chrlow', 
+        '--chr_low', 
         type=int,
         default=1, 
         help="(default: 1) Lowest chromosome number."
     )
     
     parser.add_argument(
-        '--chrhigh', 
+        '--chr_high', 
         type=int,
         default=22, 
         help="(default: 22) Highest chromosome number."
@@ -90,15 +90,12 @@ def main():
     excess_genome = f"{args.study}/{args.excess_genome}" 
 
     # Reading in data
-    tab = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{args.chrlow}{args.suffix}", sep='\t')
-    tab['CHROM'] = args.chrlow
-    for i in range(args.chrlow + 1, args.chrhigh + 1):
+    tab = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{args.chr_low}{args.suffix}", sep='\t')
+    tab['CHROM'] = args.chr_low
+    for i in range(args.chr_low + 1, args.chr_high + 1):
         tabnow = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{i}{args.suffix}", sep='\t')
         tabnow['CHROM'] = i
         tab = pd.concat((tab, tabnow))
-    
-    # Saving all data
-    tab.to_csv(all_genome, sep='\t', index=False)
 
     # Calculating excess IBD
     medi = np.quantile(tab['COUNT'], 0.5)
@@ -107,11 +104,17 @@ def main():
     b = medi + stdv * args.outlier_cutoff
     sub = tab[(tab['COUNT'] >= a) & (tab['COUNT'] <= b)]
     medi = np.quantile(sub['COUNT'], 0.5)
+    avg = np.mean(sub['COUNT'])
     stdv = sub['COUNT'].std()
     b = medi + stdv * args.heuristic_cutoff
     out = tab[tab['COUNT'] >= b]
 
+    # Saving all data
+    tab['Z'] = (tab['COUNT'] - avg) / stdv
+    tab.to_csv(all_genome, sep='\t', index=False)
+
     # Saving excess IBD data
+    out['Z'] = (out['COUNT'] - avg) / stdv
     out.to_csv(excess_genome, sep='\t', index=False)
 
 if __name__ == "__main__":

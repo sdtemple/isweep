@@ -73,14 +73,14 @@ rule third_hap_ibd:
         thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
         python ../../scripts/filter-lines.py \
-            $ibd \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --input_file $ibd \
+            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {output.ibd} \
+            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
@@ -154,14 +154,14 @@ rule third_snp_ibd:
         thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
         python ../../scripts/filter-lines.py \
-            $ibd \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --input_file $ibd \
+            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
-            {output.ibd} \
+            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
@@ -215,7 +215,7 @@ rule gini_impurity:
 	shell:
 		"""
 		python ../../scripts/ibd-gini-entropy.py \
-			{wildcards.cohort}/{wildcards.hit} \
-			{output.fileout} \
-			{params.samplesizep}
+			--folder {wildcards.cohort}/{wildcards.hit} \
+			--file_out {output.fileout} \
+			--sample_size {params.samplesizep}
 		"""
