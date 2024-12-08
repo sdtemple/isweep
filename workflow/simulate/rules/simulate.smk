@@ -80,9 +80,6 @@ rule slim:
     output:
         trees="{macro}/{micro}/{seed}/slimulation.trees",
         freq="{macro}/{micro}/{seed}/slimulation.freq",
-    params:
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['SLiM']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
@@ -144,7 +141,6 @@ rule genotyping_error:
         out='{macro}/{micro}/{seed}/large.chr1.vcf.gz',
     params:
         gter=str(config['CHANGE']['SIMULATE']['GTERR']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])
     shell:
         """
         python ../../scripts/add-uniform-err.py \
