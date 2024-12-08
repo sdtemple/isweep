@@ -117,9 +117,9 @@ rule first_rank:
             {input.short} \
             {input.vcf} \
             {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
+            --graph_diameter {params.diameter} \
+            --group_cutoff {params.rulesigma} \
+            --lowest_freq {params.q1} \
         """
 
 rule first_score:
@@ -141,10 +141,10 @@ rule first_score:
         python ../../scripts/site.py \
             {input.snps} \
             {params.folderout} \
-            0 \
-            1 \
-            {params.windowsize} \
-            {params.windowstep} \
-            {params.qrng} \
-            {params.maxspace}
+            --window_index 0 \
+            --freq_index 1 \
+            --window_size {params.windowsize} \
+            --window_step {params.windowstep} \
+            --quantile_sum {params.qrng} \
+            --max_spacing {params.maxspace}
         """

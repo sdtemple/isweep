@@ -122,6 +122,7 @@ Example scripts are in `scripts/pre-processing/`.
 You will see more details for each step in `workflow/some-pipeline/README.md` files.
 
 ### For all workflows
+
 1. Make pointers to large (phased) vcf files.
 2. Edit YAML files in the different workflow directories.
 

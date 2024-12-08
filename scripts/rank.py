@@ -32,14 +32,14 @@ def main():
     )
     
     parser.add_argument(
-        '--K', 
+        '--graph_diameter', 
         type=int,
         default=6, 
         help="(default: 6) The graph diameter."
     )
     
     parser.add_argument(
-        '--scalar', 
+        '--group_cutoff', 
         type=float,
         default=3.0, 
         help="(default: 3.0) Scalar for community size cutoff."
@@ -56,10 +56,10 @@ def main():
     args = parser.parse_args()
     
     # Adjust values as needed
-    K = int(args.K / 2)
+    K = int(args.graph_diameter / 2)
     Q1 = args.lowest_freq
     Q2 = 1 - Q1
-    scalar = args.scalar
+    scalar = args.group_cutoff
 
     # Form graph
     segs = read_ibd_file(args.ibd, header=0, include_length=0)
