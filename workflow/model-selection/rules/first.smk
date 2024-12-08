@@ -79,8 +79,6 @@ rule first_filt:
         locus='{cohort}/{hit}/locus.txt',
     output:
         ibd='{cohort}/{hit}/first.filt.ibd.gz',
-    resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
         thecenter=../../scripts/lines.py {input.locus} 3 2)

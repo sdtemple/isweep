@@ -8,12 +8,11 @@ rule uniform_map:
     output:
         mapout=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/uniform.map',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
         L=str(config['CHANGE']['SIMULATE']['CMLEN']),
     shell:
         """
-        python {params.scripts}/uniformMap.py \
+        python scripts/uniformMap.py \
             {output.mapout} \
             {params.rho} \
             {params.L}
@@ -24,11 +23,9 @@ rule forward_Ne:
         nefile=str(config['CHANGE']['SIMULATE']['tNe']),
     output:
         fileout=str(config["CHANGE"]["FOLDERS"]["MACRO"]) + '/forward.ne',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/forwardNe.py \
+        python scripts/forwardNe.py \
             {input.nefile} \
             {output.fileout}
         """
@@ -40,7 +37,6 @@ rule slim_script:
     output:
         [f"{sim.FOLDER}/slimulation.slim".replace(" ","") for sim in sims.itertuples()],
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         macro=str(config['CHANGE']['FOLDERS']['MACRO']),
         micro=str(config['CHANGE']['FOLDERS']['MICRO']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
@@ -57,7 +53,7 @@ rule slim_script:
         sampleequal=str(config['FIXED']['SIMULATE']['SAMPLEEQUAL']),
     shell:
         """
-        python {params.scripts}/writeSlimDemography.py \
+        python scripts/writeSlimDemography.py \
             {params.macro} \
             {params.micro} \
             {input.trueNe} \
@@ -90,7 +86,10 @@ rule slim:
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
-        '{params.soft}/{params.prog} {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/slimulation.slim'
+        '''
+        ../../software/slim \
+            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/slimulation.slim \
+        '''
 
 # msprime backward
 g = open(str(config['CHANGE']['SIMULATE']['tNe']),'r')
@@ -102,7 +101,6 @@ rule msprime:
     output:
         bcf="{macro}/{micro}/{seed}/slimulation.bcf.gz",
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mu=str(config['CHANGE']['SIMULATE']['MU']),
         rho=str(config['CHANGE']['SIMULATE']['RHO']),
         ancNe=str(ancNe),
@@ -114,7 +112,7 @@ rule msprime:
     shell:
         """
         ancNe=$(tail -n 1 | cut -f 2)
-        python {params.scripts}/treeVCF.py \
+        python scripts/treeVCF.py \
             {output.bcf} \
             {input.trees} \
             {params.mu} \
@@ -149,9 +147,9 @@ rule genotyping_error:
         scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])
     shell:
         """
-        python {params.scripts}/add-uniform-err.py \
-            {input.vcf} \
-            {output.out} \
+        python ../../scripts/add-uniform-err.py \
+            --input_file {input.vcf} \
+            --output_file {output.out} \
             --unif_err_rate {params.gter}
         """
 

@@ -5,11 +5,11 @@ import numpy as np
 
 parser = argparse.ArgumentParser(description="Add genotype errors by switching alleles. No dosages. Biallelic only.")
 
-parser.add_argument('input_file', 
+parser.add_argument('--input_file', 
                     type=str,
                     required=True, 
                     help='Input gzipped VCF file')
-parser.add_argument('output_file', 
+parser.add_argument('--output_file', 
                     type=str,
                     required=True, 
                     help='Output gzipped VCF file with genotyped errors')

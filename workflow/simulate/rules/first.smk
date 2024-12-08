@@ -14,13 +14,11 @@ rule first_mode:
         ibd='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     output:
         ibd='{macro}/{micro}/{seed}/first.mode.txt',
-    params:
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/where-mode-ibd.py',
-    resources:
-        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        python {params.script} {input.ibd} {output.ibd}
+        python scripts/where-mode-ibd.py \
+            {input.ibd} \
+            {output.ibd} \
         """
 
 ### filter vcf ###
@@ -34,10 +32,9 @@ rule first_region:
     params:
         folder='{macro}/{micro}/{seed}',
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python {params.script} {input.ibdwin} 1 2)
+        thecenter=$(python ../../scripts/lines.py {input.ibdwin} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -57,8 +54,6 @@ rule first_hapibd:
     params:
         minmac=str(mac3),
         out='{macro}/{micro}/{seed}/first.chr1',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['HAPIBD']),
         minsee=str(config['FIXED']['HAPIBD']['MINSEED']),
         minext=str(config['FIXED']['HAPIBD']['MINEXT']),
         minout=str(config['FIXED']['HAPIBD']['MINOUT']),
@@ -70,7 +65,7 @@ rule first_hapibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
         """
-        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={input.map} \
             out={params.out} \
@@ -88,20 +83,16 @@ rule first_filt:
         locus='{macro}/{micro}/{seed}/first.mode.txt',
     output:
         ibd='{macro}/{micro}/{seed}/first.filt.chr1.ibd.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-    resources:
-        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
-        python {params.scripts}/filter-lines.py \
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        python ../../scripts/filter-lines.py \
             --file_input {input.ibd} \
             --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --file_output {output.ibd} \
             --column_index 7 \
@@ -120,19 +111,18 @@ rule first_rank:
     output:
         fileout='{macro}/{micro}/{seed}/first.ranks.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/rank.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
+        python ../../scripts/rank.py \
+            --ibd_file {input.short} \
+            --vcf {input.vcf} \
+            --file_out {output.fileout} \
+            --graph_diameter {params.diameter} \
+            --low_freq {params.q1} \
+            --group_cutoff {params.rulesigma} \
         """
 
 rule first_score:
@@ -145,17 +135,16 @@ rule first_score:
         windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
         qrng=str(config['FIXED']['ISWEEP']['QRANGE']),
         maxspace=str(config['FIXED']['ISWEEP']['MAXSPACING']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         folderout='{macro}/{micro}/{seed}',
     shell:
         """
-        python {params.scripts}/site.py \
-            {input.snps} \
-            {params.folderout} \
-            0 \
-            1 \
-            {params.windowsize} \
-            {params.windowstep} \
-            {params.qrng} \
-            {params.maxspace}
+        python ../../scripts/site.py \
+            --snp_file_in {input.snps} \
+            --folder_out {params.folderout} \
+            --window_index 0 \
+            --freq_index 1 \
+            --window_size {params.windowsize} \
+            --window_step {params.windowstep} \
+            --quantile_sum {params.qrng} \
+            --max_spacing {params.maxspace} \
         """
