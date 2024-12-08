@@ -17,39 +17,40 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        'fileout', 
+        '--file_output', 
         type=str, 
         help="Output file to save the results."
     )
 
     parser.add_argument(
-        'sample_size', 
+        '--sample_size', 
         type=int, 
         help="Number of samples."
     )
     
     parser.add_argument(
-        'Ne_est', 
+        '--Ne_est', 
         type=str, 
         help="Estimated effective population size file."
     )
 
     parser.add_argument(
-        'p_est', 
+        '--p_est', 
         type=float, 
         help="Estimated allele frequency."
     )
     
     parser.add_argument(
-        'ibd_count', 
+        '--ibd_count', 
         type=int, 
         help="The count of detected IBD segments."
     )
     
     parser.add_argument(
-        'ibd_cutoff', 
-        type=float, 
-        help="The cutoff value for IBD sgements."
+        '--ibd_cutoff', 
+        type=float,
+        default=3., 
+        help="(default: 3.0) The cutoff value for IBD sgements."
     )
     
     parser.add_argument(
@@ -74,7 +75,7 @@ def main():
     )
 
     parser.add_argument(
-        '--nboot', 
+        '--num_bootstraps', 
         type=int,
         default=2000, 
         help="(default: 2000) Number of bootstrap samples."
@@ -89,7 +90,7 @@ def main():
     inhs = [args.model]
 
     # Setting up
-    B = args.nboot
+    B = args.num_bootstraps
     CUTOFF = args.ibd_cutoff
     long_ibd = CUTOFF
     short_ibd = long_ibd
@@ -136,7 +137,7 @@ def main():
             sbsinhs[j].append(sb)
 
     # Writing results
-    with open(args.fileout, 'w') as f:
+    with open(args.file_output, 'w') as f:
         f.write('VarFreqEst\t')
         f.write('SelCoefEst\t')
         f.write('SelCoefLow\t')
