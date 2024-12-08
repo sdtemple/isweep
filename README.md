@@ -103,9 +103,8 @@ python -c 'import site; print(site.getsitepackages())'
 ```
 3. Download software.
 ``` 
-bash get-software.sh software 
+bash get-software.sh 
 ```
-  - Puts these in a folder called `software/`.
   - Requires `wget`.
   - You need to cite these software.
 
@@ -149,6 +148,8 @@ Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
 ``` 
 nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ``` 
+
+The script to estimate recent Ne can be replaced with any method to estimate recent Ne, as it happens before the `snakemake` command. This method [HapNe](https://palamaralab.github.io/software/hapne/) is one such option.
 
 ## Picture of selection scan workflow
 

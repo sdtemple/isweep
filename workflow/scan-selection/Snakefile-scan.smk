@@ -20,16 +20,11 @@ folder_name = macro + '/ibdsegs/hapibd'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 folder_name = macro + '/ibdsegs/ibdends'
-# if not os.path.exists(folder_name):
-#     os.makedirs(folder_name)
-# folder_name = macro + '/ibdsegs/ibdends/modified'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
-# folder_name = macro + '/ibdsegs/ibdends/modified/mle'
 folder_name = macro + '/ibdsegs/ibdends/mle'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
-# folder_name = macro + '/ibdsegs/ibdends/modified/scan'
 folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
@@ -45,7 +40,6 @@ for i in range(low,high+1):
     destination_file = macro+'/maps/chr'+str(i)+'.map'
     if not os.path.exists(destination_file):
         shutil.copy(source_file, destination_file)
-    # shutil.copy(source_file, destination_file)
 
 # include .smk files with rules
 include: 'rules/scan.smk'

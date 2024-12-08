@@ -43,7 +43,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
         mem_gb=mgb+1,
     shell:
         """
-        java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
+        java -Xmx{params.xmx}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={input.map} \
             out={params.out} \
@@ -75,7 +75,7 @@ rule ibdends: # ibd-ends.jar
         mem_gb=mgb+1,
     shell:
         """
-        java -Xmx{params.xmx}g -jar {params.soft}/{params.prog} \
+        java -Xmx{params.xmx}g -jar ../../software/ibd-ends.jar \
             gt={input.vcf} \
             ibd={input.ibd} \
             map={input.map} \

@@ -4,13 +4,9 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/path-to-study/eur'
+    STUDY: '/path-to-study/test'
     # the yaml file with scan analysis options
-    YAML: 'eur.yaml'
-    # folder where terminal scripts are
-    TERMINALSCRIPTS: 'scripts'
-    # folder where software is
-    SOFTWARE: '../../software'
+    YAML: 'test.yaml'
 
   # parameters, subsample file
   ISWEEP:
@@ -21,11 +17,6 @@ CHANGE:
     # inferred Ne(t) to use
     NE: 'ibdne.ne'
     SUBSAMPLE: 'subsample.txt'
-
-  # download these software
-  PROGRAMS:
-    # https://github.com/browning-lab/hap-ibd
-    HAPIBD: 'hap-ibd.jar'
 
   EXISTING:
     VCFS: '/path-to-topmed-data/phased-vcfs'

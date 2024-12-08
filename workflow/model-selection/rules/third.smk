@@ -42,10 +42,9 @@ rule third_hap:
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/haplotypes.py \
+        python ../../scripts/haplotypes.py \
             {input.rankin} \
             {wildcards.cohort}/{wildcards.hit} \
             0 \
@@ -68,19 +67,18 @@ rule third_hap_ibd:
         ibd='{cohort}/{hit}/third.hap.ibd.gz',
     params:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
-        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
+        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             $ibd \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             {output.ibd} \
             --column_index 7 \
@@ -100,7 +98,6 @@ rule third_hap_infer:
     output:
         fileout='{cohort}/{hit}/results.hap.tsv',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
@@ -109,10 +106,10 @@ rule third_hap_infer:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
-        model=$(python {params.scripts}/lines.py {input.loci} 6 2)
-        alpha=$(python {params.scripts}/lines.py {input.loci} 7 2)
-        python {params.scripts}/estimate.py \
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
+        python ../../scripts/estimate.py \
             {output.fileout} \
             ${{ibdest}} \
             ${{freqest}} \
@@ -134,11 +131,10 @@ rule third_snp:
     output:
         lociout='{cohort}/{hit}/third.best.snp.txt',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python {params.scripts}/snp.py \
+        python ../../scripts/snp.py \
             {input.rankin} \
             {output.lociout} \
             {params.lowbnd}
@@ -152,19 +148,18 @@ rule third_snp_ibd:
         ibd='{cohort}/{hit}/third.snp.ibd.gz',
     params:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
-        thecenter=$(python {params.scripts}/lines.py {input.best} 1 2)
+        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             $ibd \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             {output.ibd} \
             --column_index 7 \
@@ -184,7 +179,6 @@ rule third_snp_infer:
     output:
         fileout='{cohort}/{hit}/results.snp.tsv',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
@@ -193,10 +187,10 @@ rule third_snp_infer:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
-        model=$(python {params.scripts}/lines.py {input.loci} 6 2)
-        alpha=$(python {params.scripts}/lines.py {input.loci} 7 2)
-        python {params.scripts}/estimate.py \
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
+        python ../../scripts/estimate.py \
             {output.fileout} \
             ${{ibdest}} \
             ${{freqest}} \
@@ -217,11 +211,10 @@ rule gini_impurity:
 	output:
 		fileout='{cohort}/{hit}/ibd.gini.tsv',
 	params:
-		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
 		samplesizep=str(samplesize_ploidy),
 	shell:
 		"""
-		python {params.scripts}/ibd-gini-entropy.py \
+		python ../../scripts/ibd-gini-entropy.py \
 			{wildcards.cohort}/{wildcards.hit} \
 			{output.fileout} \
 			{params.samplesizep}

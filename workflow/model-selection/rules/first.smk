@@ -24,7 +24,6 @@ rule first_region: # focus vcf on region of interest
     params:
         qmaf=maf,
         chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
         vcfprefix=str(config['CHANGE']['EXISTING']['VCFPRE']),
         vcfsuffix=str(config['CHANGE']['EXISTING']['VCFSUF']),
@@ -32,9 +31,9 @@ rule first_region: # focus vcf on region of interest
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
-        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
-        left=$(python {params.scripts}/lines.py {input.locus} 4 2)
-        right=$(python {params.scripts}/lines.py {input.locus} 5 2)
+        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        left=$(python ../../scripts/lines.py {input.locus} 4 2)
+        right=$(python ../../scripts/lines.py {input.locus} 5 2)
         vcf={params.vcfs}/{params.vcfprefix}${{chr}}{params.vcfsuffix}
         bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
@@ -50,12 +49,9 @@ rule first_hapibd:
     params:
         minmac=str(mac3),
         out='{cohort}/{hit}/first',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['HAPIBD']),
         minsee=str(config['FIXED']['HAPIBD']['MINSEED']),
         minext=str(config['FIXED']['HAPIBD']['MINEXT']),
         minout=str(config['FIXED']['HAPIBD']['MINOUT']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     output:
         ibd='{cohort}/{hit}/first.ibd.gz',
         hbd='{cohort}/{hit}/first.hbd.gz',
@@ -64,8 +60,8 @@ rule first_hapibd:
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
     shell:
         """
-        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
-        java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar {params.soft}/{params.prog} \
+        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={wildcards.cohort}/maps/chr${{chr}}.map \
             out={params.out} \
@@ -83,19 +79,17 @@ rule first_filt:
         locus='{cohort}/{hit}/locus.txt',
     output:
         ibd='{cohort}/{hit}/first.filt.ibd.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     resources:
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 3 2)
-        python {params.scripts}/filter-lines.py {input.ibd} \
+        thecenter=../../scripts/lines.py {input.locus} 3 2)
+        python ../../scripts/filter-lines.py {input.ibd} \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             {output.ibd} \
             --column_index 7 \
@@ -114,13 +108,12 @@ rule first_rank:
     output:
         fileout='{cohort}/{hit}/first.ranks.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/rank.py \
+        python ../../scripts/rank.py \
             {input.short} \
             {input.vcf} \
             {output.fileout} \
@@ -142,11 +135,10 @@ rule first_score:
         windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
         qrng=str(config['FIXED']['ISWEEP']['QRANGE']),
         maxspace=str(config['FIXED']['ISWEEP']['MAXSPACING']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         folderout='{cohort}/{hit}',
     shell:
         """
-        python {params.scripts}/site.py \
+        python ../../scripts/site.py \
             {input.snps} \
             {params.folderout} \
             0 \

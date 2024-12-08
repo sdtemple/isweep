@@ -18,12 +18,11 @@ rule second_region: # focus vcf on region of interest
     params:
         qmaf=maf,
         chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         pm=str(config['FIXED']['ISWEEP']['PM']),
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
-        chr=$(python {params.scripts}/lines.py {input.locus} 2 2)
-        center=$(python {params.scripts}/lines.py {input.focus} 1 2)
+        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        center=$(python ../../scripts/lines.py {input.focus} 1 2)
         left=$(python -c "out = $center - {params.pm} ; print(max(out,2))")
         right=$(python -c "out = $center + {params.pm} ; print(out)")
         tabix -fp vcf {input.vcf}
@@ -40,18 +39,16 @@ rule second_filt:
         locus='{cohort}/{hit}/first.pos.txt',
     output:
         ibd='{cohort}/{hit}/second.filt.ibd.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
-        python {params.scripts}/filter-lines.py \
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        python ../../scripts/filter-lines.py \
             {input.ibd} \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             {output.ibd} \
             --column_index 7 \
@@ -70,13 +67,12 @@ rule second_rank:
     output:
         fileout='{cohort}/{hit}/second.ranks.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/rank.py \
+        python ../../scripts/rank.py \
             {input.short} \
             {input.vcf} \
             {output.fileout} \
@@ -94,12 +90,11 @@ rule second_outlier:
         fileout='{cohort}/{hit}/second.outliers.txt',
         out1='{cohort}/{hit}/outlier1.txt',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/outliers.py \
+        python ../../scripts/outliers.py \
             {input.short} \
             {wildcards.cohort}/{wildcards.hit} \
             {params.diameter} \
