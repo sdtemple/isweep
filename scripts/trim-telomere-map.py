@@ -4,10 +4,12 @@ import argparse
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Trim telomeres from genetic map.')
 parser.add_argument('--map_input', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Input genetic map')
 parser.add_argument('--map_output', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Output genetic map')
 parser.add_argument('--telo_trim', 
                     type=float,

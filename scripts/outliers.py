@@ -15,13 +15,15 @@ def main():
     # Define arguments with defaults
     parser.add_argument(
         '--ibd_file', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
         '--folder_out', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Output folder for writing results."
     )
     

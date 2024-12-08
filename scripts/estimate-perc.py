@@ -18,31 +18,36 @@ def main():
     # Define arguments
     parser.add_argument(
         '--file_output', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Output file to save the results."
     )
 
     parser.add_argument(
         '--sample_size', 
-        type=int, 
+        type=int,
+        required=True, 
         help="Number of samples."
     )
     
     parser.add_argument(
         '--Ne_est', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Estimated effective population size file."
     )
 
     parser.add_argument(
         '--p_est', 
-        type=float, 
+        type=float,
+        required=True, 
         help="Estimated allele frequency."
     )
     
     parser.add_argument(
         '--ibd_count', 
-        type=int, 
+        type=int,
+        required=True, 
         help="The count of detected IBD segments."
     )
     

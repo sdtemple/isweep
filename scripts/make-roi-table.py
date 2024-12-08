@@ -11,30 +11,34 @@ import sys
 def main():
     # Set up argparse
     parser = argparse.ArgumentParser(
-        description="Append info to region of interest."
+        description="Filter, append, format info to region of interest."
     )
 
     parser.add_argument(
         '--file_input',
         type=str,
+        required=True,
         help="Input file containing IBD regions data."
     )
 
     parser.add_argument(
         '--file_output',
         type=str,
+        required=True,
         help="Output file for saving region of interest."
     )
 
     parser.add_argument(
         '--file_prefix',
         type=str,
+        required=True,
         help="Prefix of chromosome files."
     )
 
     parser.add_argument(
         '--file_suffix',
         type=str,
+        required=True,
         help="Suffix of chromosome files."
     )
     

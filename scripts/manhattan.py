@@ -18,20 +18,23 @@ def main():
     # Define arguments
     parser.add_argument(
         'filein', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Input file with IBD data."
     )
     
     parser.add_argument(
         'fileout', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Output file prefix for saving the plot."
     )
 
     parser.add_argument(
         'sample_size', 
-        type=int, 
-        help="Sample size"
+        type=int,
+        required=True, 
+        help="Sample size. Try 1 if not dividing by a count variable."
     )
 
     parser.add_argument(

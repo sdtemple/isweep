@@ -10,10 +10,12 @@ import matplotlib.pyplot as plt
 parser = argparse.ArgumentParser(description='Refine sweep site from SNP data.')
 
 parser.add_argument('--snp_file_in', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Path to the input SNP file (table 1)')
 parser.add_argument('--folder_out', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Folder for output')
 parser.add_argument('--window_index', 
                     type=int,

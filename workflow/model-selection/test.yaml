@@ -52,7 +52,8 @@ FIXED:
     # estimating selection coefficient
     MLECUTOFF: '3.0' # ibd cM cutoff
     LASTNE: '2000' # extend inferred ne file to this many generations
-    NBOOT: '250' # number of bootstraps
+    NBOOTNORM: '100' # number of bootstraps for standard normal intervals
+    NBOOTPERC: '2000' # number of bootstraps for percentile intervals
 
   # hap-ibd.jar
   # these are for ibd group segments

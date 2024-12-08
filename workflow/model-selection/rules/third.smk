@@ -45,17 +45,17 @@ rule third_hap:
     shell:
         """
         python ../../scripts/haplotypes.py \
-            {input.rankin} \
-            {wildcards.cohort}/{wildcards.hit} \
-            0 \
-            1 \
-            -1 \
-            {params.freqsize} \
-            {params.freqstep} \
-            {params.windowsize} \
-            {params.windowstep} \
-            {params.numsnp} \
-            {params.lowbnd}
+            --snp_file_input {input.rankin} \
+            --folder_output {wildcards.cohort}/{wildcards.hit} \
+            --window_index 0 \
+            --freq_index 1 \
+            --score_index -1 \
+            --freq_size {params.freqsize} \
+            --freq_step {params.freqstep} \
+            --window_size {params.windowsize} \
+            --window_step {params.windowstep} \
+            --num_snp {params.numsnp} \
+            --low_freq {params.lowbnd}
         """
 
 
@@ -89,16 +89,16 @@ rule third_hap_ibd:
         """
 
 
-rule third_hap_infer:
+rule third_hap_infer_norm:
     input:
         long='{cohort}/{hit}/third.hap.ibd.gz',
         freq='{cohort}/{hit}/third.best.hap.txt',
         loci='{cohort}/{hit}/locus.txt',
         longNe='{cohort}/extended.ne',
     output:
-        fileout='{cohort}/{hit}/results.hap.tsv',
+        fileout='{cohort}/{hit}/results.hap.norm.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
+        nboot=str(config['FIXED']['ISWEEP']['NBOOTNORM']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
         ploidy=str(2),
@@ -109,17 +109,50 @@ rule third_hap_infer:
         freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate.py \
-            {output.fileout} \
-            ${{ibdest}} \
-            ${{freqest}} \
-            {params.nboot} \
-            {params.cm} \
-            {params.n} \
-            {input.longNe} \
-            ${{model}} \
-            ${{alpha}} \
-            {params.ploidy}
+        python ../../scripts/estimate-norm.py \
+            --file_output {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.cm} \
+            --sample_size {params.n} \
+            --Ne_est {input.longNe} \
+            --model ${{model}} \
+            --alpha ${{alpha}} \
+            --ploidy {params.ploidy} \
+        """
+
+rule third_hap_infer_perc:
+    input:
+        long='{cohort}/{hit}/third.hap.ibd.gz',
+        freq='{cohort}/{hit}/third.best.hap.txt',
+        loci='{cohort}/{hit}/locus.txt',
+        longNe='{cohort}/extended.ne',
+    output:
+        fileout='{cohort}/{hit}/results.hap.perc.tsv',
+    params:
+        nboot=str(config['FIXED']['ISWEEP']['NBOOTPERC']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        n=str(samplesize),
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
+    shell:
+        """
+        ibdest=$(zcat {input.long} | wc -l)
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
+        python ../../scripts/estimate-perc.py \
+            --file_output {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.cm} \
+            --sample_size {params.n} \
+            --Ne_est {input.longNe} \
+            --model ${{model}} \
+            --alpha ${{alpha}} \
+            --ploidy {params.ploidy} \
         """
 
 ##### snp analysis #####
@@ -135,9 +168,9 @@ rule third_snp:
     shell:
         """
         python ../../scripts/snp.py \
-            {input.rankin} \
-            {output.lociout} \
-            {params.lowbnd}
+            --snp_file_input {input.rankin} \
+            --file_output {output.lociout} \
+            --low_freq {params.lowbnd}
         """
 
 rule third_snp_ibd:
@@ -170,16 +203,16 @@ rule third_snp_ibd:
         """
 
 
-rule third_snp_infer:
+rule third_snp_infer_norm:
     input:
         long='{cohort}/{hit}/third.snp.ibd.gz',
         freq='{cohort}/{hit}/third.best.snp.txt',
         loci='{cohort}/{hit}/locus.txt',
         longNe='{cohort}/extended.ne',
     output:
-        fileout='{cohort}/{hit}/results.snp.tsv',
+        fileout='{cohort}/{hit}/results.snp.norm.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
+        nboot=str(config['FIXED']['ISWEEP']['NBOOTNORM']),
         cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(samplesize),
         ploidy=str(2),
@@ -190,17 +223,50 @@ rule third_snp_infer:
         freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate.py \
-            {output.fileout} \
-            ${{ibdest}} \
-            ${{freqest}} \
-            {params.nboot} \
-            {params.cm} \
-            {params.n} \
-            {input.longNe} \
-            ${{model}} \
-            ${{alpha}} \
-            {params.ploidy}
+        python ../../scripts/estimate-norm.py \
+            --file_output {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.cm} \
+            --sample_size {params.n} \
+            --Ne_est {input.longNe} \
+            --model ${{model}} \
+            --alpha ${{alpha}} \
+            --ploidy {params.ploidy} \
+        """
+
+rule third_snp_infer_norm:
+    input:
+        long='{cohort}/{hit}/third.snp.ibd.gz',
+        freq='{cohort}/{hit}/third.best.snp.txt',
+        loci='{cohort}/{hit}/locus.txt',
+        longNe='{cohort}/extended.ne',
+    output:
+        fileout='{cohort}/{hit}/results.snp.perc.tsv',
+    params:
+        nboot=str(config['FIXED']['ISWEEP']['NBOOTPERC']),
+        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        n=str(samplesize),
+        ploidy=str(2),
+        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
+    shell:
+        """
+        ibdest=$(zcat {input.long} | wc -l)
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
+        python ../../scripts/estimate-perc.py \
+            --file_output {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.cm} \
+            --sample_size {params.n} \
+            --Ne_est {input.longNe} \
+            --model ${{model}} \
+            --alpha ${{alpha}} \
+            --ploidy {params.ploidy} \
         """
 
 ### write entropy ###

@@ -6,10 +6,12 @@ import scipy.interpolate as spi
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Interpolate genetic map by cM step size.')
 parser.add_argument('--map_input', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Path to the input genetic map')
 parser.add_argument('--file_output', 
-                    type=str, 
+                    type=str,
+                    required=True, 
                     help='Path to the output genetic map')
 parser.add_argument('--cm_step_size', 
                     type=float,

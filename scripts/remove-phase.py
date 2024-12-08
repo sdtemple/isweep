@@ -4,11 +4,13 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Unphase a gzipped phased VCF file.")
 
-parser.add_argument('phased_file', 
-                    type=str, 
+parser.add_argument('--phased_file', 
+                    type=str,
+                    required=True, 
                     help='Input gzipped VCF file with phased genotypes')
-parser.add_argument('unphased_file', 
-                    type=str, 
+parser.add_argument('--unphased_file', 
+                    type=str,
+                    required=True, 
                     help='Output gzipped VCF file with unphased genotypes')
 
 args = parser.parse_args()

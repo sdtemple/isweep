@@ -13,13 +13,15 @@ def main():
     # Define arguments
     parser.add_argument(
         '--file_input', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Input file containing IBD data."
     )
     
     parser.add_argument(
         '--file_output', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Output file for saving combined windows of excess IBD."
     )
     

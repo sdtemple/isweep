@@ -15,19 +15,22 @@ def main():
     # Define arguments
     parser.add_argument(
         '--ibd_file', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
         '--vcf', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Path to the input VCF file."
     )
     
     parser.add_argument(
         '--file_out', 
-        type=str, 
+        type=str,
+        required=True, 
         help="Output file to save the scored variants."
     )
     
