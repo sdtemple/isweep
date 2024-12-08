@@ -35,7 +35,7 @@ rule make_excludesamples:
         exclsample=macro+'/excludesamples.txt',
     shell:
         """
-        python ../../exclude-samples.py \
+        python ../../scripts/exclude-samples.py \
             {input.sample} \
             {input.subsample} \
             {output.exclsample}
