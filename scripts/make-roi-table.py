@@ -116,17 +116,6 @@ def main():
         bpcenter.append(moBP)
         cmcenter.append(moCM)
 
-        # reading
-        rowing = roitab.iloc[i]
-        filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
-        tab = pd.read_csv(filein1, sep='\t')
-
-        left = int(float(rowing.BPLEFT)) - mbbuffer
-        right = int(float(rowing.BPRIGHT)) + mbbuffer
-
-        tab = tab[(tab['BPWINDOW'] >= left) & (tab['BPWINDOW'] <= right)]
-
-
     # adding bp, cm centrality to roi table
     roitab['BPCENTER'] = bpcenter
     roitab['CMCENTER'] = cmcenter

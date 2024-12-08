@@ -71,7 +71,6 @@ rule ibdends: # ibd-ends.jar
         qua=str(config['FIXED']['IBDENDS']['QUANTILES']),
         sam=str(config['FIXED']['IBDENDS']['NSAMPLES']),
         err=str(config['CHANGE']['IBDENDS']['ERRRATE']),
-        # err=str(config['FIXED']['IBDENDS']['ERRRATE']),
     resources:
         mem_gb=mgb+1,
     shell:
@@ -94,7 +93,12 @@ rule format_ibdends: # reformatting
     output:
         cutibd='{cohort}/ibdsegs/ibdends/chr{num}.formatted.ibd.gz',
     shell:
-        'zcat {input.bigibd} | tail -n +2 | cut -f 1-5,10,11,12 | gzip > {output.cutibd}'
+        '''
+        zcat {input.bigibd} | \
+            tail -n +2 | \
+            cut -f 1-5,10,11,12 | \
+            gzip > {output.cutibd}
+        '''
 
 rule filter_ibdends_scan: # applying cutoffs
     input:
@@ -103,10 +107,9 @@ rule filter_ibdends_scan: # applying cutoffs
         fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {input.ibd} \
             {output.fipass} \
             --upper_bound {params.scancut}
@@ -119,19 +122,18 @@ rule count_ibdends_scan: # computing counts over windows
     output:
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
     shell:
         """
-        python {params.scripts}/ibd-windowed.py \
+        python ../../scripts/ibd-windowed.py \
             {input.filein} \
             {output.fileout} \
             {input.mapin} \
-            {params.by} \
-            {params.ge} \
-            {params.tc}
+            --by {params.by} \
+            --end {params.ge} \
+            --telocut {params.tc}
         """
 
 rule filter_ibdends_mle: # applying cutoffs
@@ -141,10 +143,9 @@ rule filter_ibdends_mle: # applying cutoffs
         fipass='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
     params:
         mlecut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/filter-lines.py \
+        python ../../scripts/filter-lines.py \
             {input.ibd} \
             {output.fipass} \
             --upper_bound {params.mlecut}
@@ -157,19 +158,18 @@ rule count_ibdends_mle: # computing counts over windows
     output:
         fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
     shell:
         """
-        python {params.scripts}/ibd-windowed.py \
+        python ../../scripts/ibd-windowed.py \
             {input.filein} \
             {output.fileout} \
             {input.mapin} \
-            {params.by} \
-            {params.ge} \
-            {params.tc}
+            --by {params.by} \
+            --end {params.ge} \
+            --telocut {params.tc}
         """
 
 rule scan: # conduct a manhattan scan
@@ -180,21 +180,24 @@ rule scan: # conduct a manhattan scan
         scandata=macro+'/scan.ibd.tsv',
         excessdata=macro+'/excess.ibd.tsv',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-        folder=macro+'/ibdsegs/ibdends/scan/',
+        study=macro,
+        folder='/ibdsegs/ibdends/scan/',
         chrlow=str(low),
         chrhigh=str(high),
         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
     shell:
         """
-        python {params.scripts}/scan.py \
-            {params.folder} \
-            {output.scandata} \
-            {output.excessdata} \
-            {params.chrlow} \
-            {params.chrhigh} \
-            {params.scansigma} \
-            {params.telosigma}
+        python ../../scripts/scan.py \
+            {params.study} \
+            --folder {params.folder} \
+            --all_genome {output.scandata} \
+            --excess_genome {output.excessdata} \
+            --chrlow {params.chrlow} \
+            --chrhigh {params.chrhigh} \
+            --prefix chr \
+            --suffix .ibd.windowed.tsv.gz \
+            --heuristic_cutoff {params.scansigma} \
+            --outlier_cutoff {params.telosigma}
         """
 

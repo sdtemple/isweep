@@ -33,11 +33,9 @@ rule make_excludesamples:
         subsample=macro+'/subsample.txt',
     output:
         exclsample=macro+'/excludesamples.txt',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/exclude-samples.py \
+        python ../../exclude-samples.py \
             {input.sample} \
             {input.subsample} \
             {output.exclsample}
