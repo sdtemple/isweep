@@ -54,4 +54,10 @@ rule all:
 		#[macro+'/summary.hap.perc.tsv'], # best haplotype, percentile intervals
 		[macro+'/summary.snp.norm.tsv'], # best snp, normal intervals
 		#[macro+'/summary.snp.perc.tsv'], # best snp, percentile intervals
+    output:
+        yaml=macro+'/arguments.roi.yaml',
+    params:
+        yaml=str(config['CHANGE']['FOLDERS']['YAML']),
+    shell:
+        'cp {params.yaml} {output.yaml}'
 
