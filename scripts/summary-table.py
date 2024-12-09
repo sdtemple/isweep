@@ -8,15 +8,15 @@ import pandas as pd
 parser = argparse.ArgumentParser(description='Summarize all region-specific analyses.')
 
 # Define required arguments with named options
-parser.add_argument('--file_output', 
+parser.add_argument('--output_file', 
                     type=str, 
                     required=True, 
                     help='Path to the output file')
-parser.add_argument('--folder', 
+parser.add_argument('--input_folder', 
                     type=str, 
                     required=True, 
                     help='Path to the folder containing region data')
-parser.add_argument('--roi', 
+parser.add_argument('--input_roi_file', 
                     type=str, 
                     required=True, 
                     help='Region of interest file name')
@@ -31,9 +31,9 @@ parser.add_argument('--uncertainty_type',
 
 # Parse the arguments
 args = parser.parse_args()
-file_output = args.file_output
-folder = args.folder
-roi = args.roi
+file_output = args.output_file
+folder = args.input_folder
+roi = args.input_roi_file
 file_type = args.file_type
 uncertainty_type = args.uncertainty_type
 

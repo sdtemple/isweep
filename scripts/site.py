@@ -9,11 +9,11 @@ import matplotlib.pyplot as plt
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Refine sweep site from SNP data.')
 
-parser.add_argument('--snp_file_in', 
+parser.add_argument('--input_snp_file', 
                     type=str,
                     required=True, 
                     help='Path to the input SNP file (table 1)')
-parser.add_argument('--folder_out', 
+parser.add_argument('--output_folder', 
                     type=str,
                     required=True, 
                     help='Folder for output')
@@ -40,8 +40,8 @@ parser.add_argument('--max_spacing',
 
 # Parse the arguments
 args = parser.parse_args()
-snpin = args.snp_file_in
-folderout = args.folder_out
+snpin = args.input_snp_file
+folderout = args.output_folder
 winidx = args.window_index
 freqidx = args.freq_index
 winsize = args.window_size

@@ -57,8 +57,8 @@ rule third_hap:
     shell:
         """
         python ../../scripts/haplotypes.py \
-            --snp_file_input {input.rankin} \
-            --folder_output {wildcards.cohort}/{wildcards.hit} \
+            --input_snp_file {input.rankin} \
+            --output_folder {wildcards.cohort}/{wildcards.hit} \
             --window_index 0 \
             --freq_index 1 \
             --score_index -1 \
@@ -67,7 +67,7 @@ rule third_hap:
             --window_size {params.windowsize} \
             --window_step {params.windowstep} \
             --num_snp {params.numsnp} \
-            --low_freq {params.lowbnd}
+            --lowest_freq {params.lowbnd}
         """
 
 
@@ -122,7 +122,7 @@ rule third_hap_infer_norm:
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
         python ../../scripts/estimate-norm.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \
@@ -155,7 +155,7 @@ rule third_hap_infer_perc:
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
         python ../../scripts/estimate-perc.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \
@@ -180,9 +180,9 @@ rule summary_hap_norm:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output {output.fileout} \
-            --folder {params.study} \
-            --roi {params.roi} \
+            --output_file {output.fileout} \
+            --input_folder {params.study} \
+            --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
         """
@@ -200,9 +200,9 @@ rule summary_hap_perc:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output {output.fileout} \
-            --folder {params.study} \
-            --roi {params.roi} \
+            --output_file {output.fileout} \
+            --input_folder {params.study} \
+            --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
         """
@@ -220,9 +220,9 @@ rule third_snp:
     shell:
         """
         python ../../scripts/snp.py \
-            --snp_file_input {input.rankin} \
-            --file_output {output.lociout} \
-            --low_freq {params.lowbnd}
+            --input_snp_file {input.rankin} \
+            --output_file {output.lociout} \
+            --lowest_freq {params.lowbnd}
         """
 
 rule third_snp_ibd:
@@ -276,7 +276,7 @@ rule third_snp_infer_norm:
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
         python ../../scripts/estimate-norm.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \
@@ -309,7 +309,7 @@ rule third_snp_infer_perc:
         model=$(python ../../scripts/lines.py {input.loci} 6 2)
         alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
         python ../../scripts/estimate-perc.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \
@@ -334,9 +334,9 @@ rule summary_snp_norm:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output {output.fileout} \
-            --folder {params.study} \
-            --roi {params.roi} \
+            --output_file {output.fileout} \
+            --input_folder {params.study} \
+            --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
         """
@@ -354,9 +354,9 @@ rule summary_snp_perc:
     shell:
         """
         python ../../scripts/summary-table.py \
-            --file_output {output.fileout} \
-            --folder {params.study} \
-            --roi {params.roi} \
+            --output_file {output.fileout} \
+            --input_folder {params.study} \
+            --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
         """
@@ -373,7 +373,7 @@ rule gini_impurity:
 	shell:
 		"""
 		python ../../scripts/ibd-gini-entropy.py \
-			--folder {wildcards.cohort}/{wildcards.hit} \
-			--file_out {output.fileout} \
+			--input_folder {wildcards.cohort}/{wildcards.hit} \
+			--output_folder {output.fileout} \
 			--sample_size {params.samplesizep}
 		"""

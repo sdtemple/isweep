@@ -7,11 +7,11 @@ import numpy as np
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Compute IBD entropy from outlier files.')
 
-parser.add_argument('--folder', 
+parser.add_argument('--input_folder', 
                     type=str,
                     required=True, 
                     help='Path to the folder containing outlier files')
-parser.add_argument('--file_out', 
+parser.add_argument('--output_file', 
                     type=str,
                     required=True, 
                     help='Path to the output file')
@@ -22,8 +22,8 @@ parser.add_argument('--sample_size',
 
 # Parse the arguments
 args = parser.parse_args()
-folder = args.folder
-fileout = args.file_out
+folder = args.input_folder
+fileout = args.output_file
 samplesize = args.sample_size
 
 # read outlier files

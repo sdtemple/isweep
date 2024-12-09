@@ -12,14 +12,14 @@ def main():
 
     # Define arguments
     parser.add_argument(
-        '--file_input', 
+        '--input_file', 
         type=str,
         required=True, 
         help="Input file with IBD data."
     )
 
     parser.add_argument(
-        '--file_output', 
+        '--output_file', 
         type=str,
         required=True, 
         help="Output file prefix for saving the plot."
@@ -122,7 +122,7 @@ def main():
     # read and process input
     statistic = args.statistic
     chrom = args.chrom
-    table = pd.read_csv(args.file_input,sep='\t')
+    table = pd.read_csv(args.input_file,sep='\t')
     subtable = table[(table[args.chrom] >= args.chr_low) & 
                      (table[args.chrom] <= args.chr_high)] # control which chromosomes
     y = subtable[statistic]
@@ -151,7 +151,7 @@ def main():
     plt.xlim(-args.xupp,args.xupp)
 
     # saving
-    plt.savefig(args.file_output)
+    plt.savefig(args.output_file)
 
 if __name__ == "__main__":
     main()

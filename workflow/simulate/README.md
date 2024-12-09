@@ -1,4 +1,10 @@
 
+## Remark
+
+This workflow exists to reproduce the results in our original AJHG paper: "Modeling recent positive selection using identity-by-descent segments". Updated versions of this package use a multiple-testing correction and cM-based spacings.
+
+The file `Snakefile-simulate.smk` should be broadly useful to create simulated data.
+
 ## What to do:
 
 - Make an experiments file
@@ -43,7 +49,3 @@ The `Snakefile` solo does both `Snakefile-simulate.smk` + `Snakefile-ibd.smk`.
   - MACRO in your yamls/ is the main folder directory (a string)
   - MICRO in your experiment file defines subfolders (a string)
   - REP in your experiment file defines subsubfolders (a number)
-
-### Special for method developers
-
-You can comment out `rule genotyping_error` under true phase, and comment in the three rules under infer phase. This change makes your simulation study based on genotypes phased by the Beagle software. `bash get-software.sh` to get `beagle.jar` and the `remove-phase.jar` programs.

@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Estimate haplotype frequency and position.')
 
-parser.add_argument('--snp_file_input', 
+parser.add_argument('--input_snp_file', 
                     type=str, 
                     required=True, 
                     help='Input SNP file')
-parser.add_argument('--folder_output', 
+parser.add_argument('--output_folder', 
                     type=str, 
                     required=True, 
                     help='Output folder')
@@ -50,15 +50,15 @@ parser.add_argument('--num_snp',
                     type=int, 
                     default=5, 
                     help='(default: 5) Min number of SNPs in haplotype')
-parser.add_argument('--low_freq', 
+parser.add_argument('--lowest_freq', 
                     type=float, 
                     default=0.1, 
                     help='(default: 0.1) Lower bound of frequency to filter haplotypes')
 
 # Parse the arguments
 args = parser.parse_args()
-snpin = args.snp_file_input
-folderout = args.folder_output
+snpin = args.input_snp_file
+folderout = args.output_folder
 winidx = args.window_index
 freqidx = args.freq_index
 scoreidx = args.score_index
@@ -67,7 +67,7 @@ freqstep = args.freq_step
 winsize = args.window_size
 winstep = args.window_step
 numsnp = args.num_snp
-low = args.low_freq
+low = args.lowest_freq
 
 def haplotypes(table,
                freqsize=0.04,

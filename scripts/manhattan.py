@@ -17,21 +17,21 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        'filein', 
+        '--input_file', 
         type=str,
         required=True, 
         help="Input file with IBD data."
     )
     
     parser.add_argument(
-        'fileout', 
+        '--output_prefix', 
         type=str,
         required=True, 
         help="Output file prefix for saving the plot."
     )
 
     parser.add_argument(
-        'sample_size', 
+        '--sample_size', 
         type=int,
         required=True, 
         help="Sample size. Try 1 if not dividing by a count variable."
@@ -146,7 +146,7 @@ def main():
     args = parser.parse_args()
     
     # Reading in data
-    ibd = pd.read_table(args.filein, sep='\t')
+    ibd = pd.read_table(args.input_file, sep='\t')
 
     numsamples = args.sample_size
     m = numsamples * args.ploidy
@@ -241,7 +241,7 @@ def main():
 
     # Saving plots
     for pic in ['jpeg', 'png', 'tiff']:
-        plt.savefig(f"{args.fileout}.{pic}")
+        plt.savefig(f"{args.output_prefix}.{pic}")
 
 if __name__ == "__main__":
     main()

@@ -20,8 +20,8 @@ rule third_hap:
     shell:
         """
         python ../../scripts/haplotypes.py \
-            --snp_file_input {input.rankin} \
-            --folder_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            --input_snp_file {input.rankin} \
+            --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --window_index 0 \
             --freq_index 1 \
             --score_index -1 \
@@ -30,7 +30,7 @@ rule third_hap:
             --window_size {params.windowsize} \
             --window_step {params.windowstep} \
             --num_snp {params.numsnp} \
-            --low_freq {params.lowbnd}
+            --lowest_freq {params.lowbnd}
         """
 
 rule third_hap_ibd:
@@ -84,7 +84,7 @@ rule third_hap_infer:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
         python ../../scripts/estimate-norm.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \
@@ -109,9 +109,9 @@ rule third_snp:
     shell:
         """
         python ../../scripts/snp.py \
-            --snp_file_input {input.rankin} \
-            --file_output {output.lociout} \
-            --low_freq {params.lowbnd}
+            --input_snp_file {input.rankin} \
+            --output_file {output.lociout} \
+            --lowest_freq {params.lowbnd}
         """
 
 rule third_snp_ibd:
@@ -167,7 +167,7 @@ rule third_snp_infer:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
         python ../../scripts/estimate-norm.py \
-            --file_output {output.fileout} \
+            --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
             --num_bootstraps {params.nboot} \

@@ -5,24 +5,24 @@ import pandas as pd
 parser = argparse.ArgumentParser(description='Find the best scored SNP position and frequency.')
 
 # Define required arguments with named options
-parser.add_argument('--snp_file_input', 
+parser.add_argument('--input_snp_file', 
                     type=str, 
                     required=True, 
                     help='Input table file')
-parser.add_argument('--file_output', 
+parser.add_argument('--output_file', 
                     type=str, 
                     required=True, 
                     help='Output file')
-parser.add_argument('--low_freq', 
+parser.add_argument('--lowest_freq', 
                     type=float, 
                     default=0.1, 
                     help='(default: 0.1) Lower frequency bound of AAF to filter rows')
 
 # Parse the arguments
 args = parser.parse_args()
-snp_file_input = args.snp_file_input
-file_output = args.file_output
-low_freq = args.low_freq
+snp_file_input = args.input_snp_file
+file_output = args.output_file
+low_freq = args.lowest_freq
 
 # Read the input table
 table = pd.read_csv(snp_file_input, sep='\t')

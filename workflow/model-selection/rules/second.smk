@@ -73,9 +73,9 @@ rule second_rank:
     shell:
         """
         python ../../scripts/rank.py \
-            --ibd_file {input.short} \
-            --vcf {input.vcf} \
-            --file_out {output.fileout} \
+            --input_ibd_file {input.short} \
+            --input_vcf_file {input.vcf} \
+            --output_folder {output.fileout} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
@@ -95,8 +95,8 @@ rule second_outlier:
     shell:
         """
         python ../../scripts/outliers.py \
-            --ibd_file {input.short} \
-            --folder_out {wildcards.cohort}/{wildcards.hit} \
+            --input_ibd_file {input.short} \
+            --output_folder {wildcards.cohort}/{wildcards.hit} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
         touch {output.fileout}

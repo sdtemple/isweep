@@ -103,9 +103,9 @@ rule second_rank:
     shell:
         """
         python ../../scripts/rank.py \
-            --ibd_file {input.short} \
-            --vcf {input.vcf} \
-            --file_out {output.fileout} \
+            --input_ibd_file {input.short} \
+            --input_vcf_file {input.vcf} \
+            --output_file {output.fileout} \
             --graph_diameter {params.diameter} \
             --lowest_freq {params.q1} \
             --group_cutoff {params.rulesigma} \
@@ -125,8 +125,8 @@ rule second_outlier:
     shell:
         """
         python ../../scripts/outliers.py \
-            --ibd_file {input.short} \
-            --folder_out {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            --input_ibd_file {input.short} \
+            --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
         touch {output.fileout}
@@ -143,7 +143,7 @@ rule gini_impurity:
 	shell:
 		"""
 		python ../../scripts/ibd-gini-entropy.py \
-			--folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
-			--file_out {output.fileout} \
+			--input_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+			--output_file {output.fileout} \
 			--sample_size {params.samplesizep}
 		"""

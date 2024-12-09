@@ -14,21 +14,21 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        '--ibd_file', 
+        '--input_ibd_file', 
         type=str,
         required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
-        '--vcf', 
+        '--input_vcf_file', 
         type=str,
         required=True, 
         help="Path to the input VCF file."
     )
     
     parser.add_argument(
-        '--file_out', 
+        '--output_file', 
         type=str,
         required=True, 
         help="Output file to save the scored variants."
@@ -65,7 +65,7 @@ def main():
     scalar = args.group_cutoff
 
     # Form graph
-    segs = read_ibd_file(args.ibd_file, header=0, include_length=0)
+    segs = read_ibd_file(args.input_ibd_file, header=0, include_length=0)
     graph = make_ibd_graph(segs)
 
     # Detect communities
@@ -73,7 +73,7 @@ def main():
     outliers = outlier_communities(communities, scalar=scalar)
 
     # Compute adaptive allele frequencies
-    tup = labeled_allele_frequencies(args.vcf, outliers)
+    tup = labeled_allele_frequencies(args.input_vcf_file, outliers)
 
     # Make table
     pos = tup[0]
@@ -84,7 +84,7 @@ def main():
     table = table[table['AAF'] >= Q1]
     table = table[table['AAF'] <= Q2]
     table.reset_index(inplace=True, drop=True)
-    table.to_csv(args.file_out, sep='\t', index=False)
+    table.to_csv(args.output_file, sep='\t', index=False)
 
 if __name__ == "__main__":
     main()

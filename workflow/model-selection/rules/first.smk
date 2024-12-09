@@ -113,9 +113,9 @@ rule first_rank:
     shell:
         """
         python ../../scripts/rank.py \
-            --ibd_file {input.short} \
-            --vcf {input.vcf} \
-            --file_out {output.fileout} \
+            --input_ibd_file {input.short} \
+            --input_vcf_file {input.vcf} \
+            --output_file {output.fileout} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
@@ -138,8 +138,8 @@ rule first_score:
     shell:
         """
         python ../../scripts/site.py \
-            --snp_file_in {input.snps} \
-            --folder_out {params.folderout} \
+            --input_snp_file {input.snps} \
+            --output_folder {params.folderout} \
             --window_index 0 \
             --freq_index 1 \
             --window_size {params.windowsize} \

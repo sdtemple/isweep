@@ -15,9 +15,9 @@ rule excess_region: # concatenate regions of excess IBD
     shell:
         '''
         python ../../scripts/excess-region.py \
-            --file_input {input.filein} \
-            --file_output {output.fileout} \
-            --min_cm_region {params.cMgap}
+            --input_file {input.filein} \
+            --output_file {output.fileout} \
+            --min_cM_region {params.cMgap}
         '''
 
 rule make_roi_table:
@@ -33,11 +33,11 @@ rule make_roi_table:
     shell:
         """
         python ../../scripts/make-roi-table.py \
-            --file_input {input.filein} \
-            --file_output {output.fileout} \
-            --file_prefix {params.folder}/chr \
-            --file_suffix .ibd.windowed.tsv.gz \
-            --cmcover {params.cmcover} \
-            --cmsmall {params.cmsmall} \
-            --mbbuffer {params.mbbuf}
+            --input_file {input.filein} \
+            --output_file {output.fileout} \
+            --input_prefix {params.folder}/chr \
+            --input_suffix .ibd.windowed.tsv.gz \
+            --cM_cover {params.cmcover} \
+            --cM_small {params.cmsmall} \
+            --Mb_buffer {params.mbbuf}
         """

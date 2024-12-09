@@ -3,24 +3,24 @@ import argparse
 
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Trim telomeres from genetic map.')
-parser.add_argument('--map_input', 
+parser.add_argument('--input_map_file', 
                     type=str,
                     required=True, 
                     help='Input genetic map')
-parser.add_argument('--map_output', 
+parser.add_argument('--output_map_file', 
                     type=str,
                     required=True, 
                     help='Output genetic map')
-parser.add_argument('--telo_trim', 
+parser.add_argument('--cM_telo_trim', 
                     type=float,
                     default=2., 
                     help='Cut this many cM from map ends')
 
 # Parse the arguments
 args = parser.parse_args()
-map_in = args.map_input
-map_out = args.map_output
-telocut = args.telo_trim
+map_in = args.input_map_file
+map_out = args.output_map_file
+telocut = args.cM_telo_trim
 
 # Load the table
 table = pd.read_csv(map_in, sep='\t', header=None)

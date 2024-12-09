@@ -189,14 +189,14 @@ rule scan: # conduct a manhattan scan
     shell:
         """
         python ../../scripts/scan.py \
-            --study {params.study} \
-            --folder {params.folder} \
-            --all_genome scan.ibd.tsv \
-            --excess_genome excess.ibd.tsv \
+            --input_study {params.study} \
+            --input_folder {params.folder} \
+            --output_all_genome_file scan.ibd.tsv \
+            --output_excess_genome_file excess.ibd.tsv \
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
-            --prefix chr \
-            --suffix .ibd.windowed.tsv.gz \
+            --input_prefix chr \
+            --input_suffix .ibd.windowed.tsv.gz \
             --heuristic_cutoff {params.scansigma} \
             --outlier_cutoff {params.telosigma}
         """
@@ -209,8 +209,8 @@ rule make_histogram:
     shell:
         """
         python ../../scripts/make-histogram.py \
-            --file_input {input.scandata} \
-            --file_output {output.histogram} \
+            --input_file {input.scandata} \
+            --output_file {output.histogram} \
             --chr_high 100 \
             --statistic Z \
             --xlabel z-score \

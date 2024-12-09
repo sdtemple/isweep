@@ -15,27 +15,27 @@ def main():
     # Define arguments
 
     parser.add_argument(
-        '--study',
+        '--input_study',
         type=str,
         help="Study name. The main folder."
     )
 
     parser.add_argument(
-        '--folder', 
+        '--input_folder', 
         type=str,
         default='ibdsegs/ibdends/scan', 
         help="Folder path to IBD data."
     )
     
     parser.add_argument(
-        '--all_genome', 
+        '--output_all_genome_file', 
         type=str,
         default='scan.ibd.tsv', 
         help="Output file for saving all IBD data."
     )
     
     parser.add_argument(
-        '--excess_genome', 
+        '--output_excess_genome_file', 
         type=str,
         default='excess.ibd.tsv', 
         help="Output file for saving excess IBD data."
@@ -56,14 +56,14 @@ def main():
     )
 
     parser.add_argument(
-        '--prefix',
+        '--input_prefix',
         type=str,
         default='chr',
         help="(default: chr) Prefix of chromosome files."
     )
 
     parser.add_argument(
-        '--suffix',
+        '--input_suffix',
         type=str,
         default='.ibd.windowed.tsv.gz',
         help="(default: .ibd.windowed.tsv.gz) Suffix of chromosome files."
@@ -86,14 +86,14 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
 
-    all_genome = f"{args.study}/{args.all_genome}" 
-    excess_genome = f"{args.study}/{args.excess_genome}" 
+    all_genome = f"{args.input_study}/{args.output_all_genome_file}" 
+    excess_genome = f"{args.input_study}/{args.output_excess_genome_file}" 
 
     # Reading in data
-    tab = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{args.chr_low}{args.suffix}", sep='\t')
+    tab = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{args.chr_low}{args.input_suffix}", sep='\t')
     tab['CHROM'] = args.chr_low
     for i in range(args.chr_low + 1, args.chr_high + 1):
-        tabnow = pd.read_csv(f"{args.study}/{args.folder}/{args.prefix}{i}{args.suffix}", sep='\t')
+        tabnow = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{i}{args.input_suffix}", sep='\t')
         tabnow['CHROM'] = i
         tab = pd.concat((tab, tabnow))
 

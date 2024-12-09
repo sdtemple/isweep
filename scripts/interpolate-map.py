@@ -5,24 +5,24 @@ import scipy.interpolate as spi
 
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Interpolate genetic map by cM step size.')
-parser.add_argument('--map_input', 
+parser.add_argument('--input_map_file', 
                     type=str,
                     required=True, 
                     help='Path to the input genetic map')
-parser.add_argument('--file_output', 
+parser.add_argument('--output_map_file',
                     type=str,
                     required=True, 
                     help='Path to the output genetic map')
-parser.add_argument('--cm_step_size', 
+parser.add_argument('--cM_step_size', 
                     type=float,
                     default=0.02, 
                     help='cM increment for scan')
 
 # Parse the arguments
 args = parser.parse_args()
-map_in = args.map_input
-cm_step_size = args.cm_step_size
-file_out = args.file_out
+map_in = args.input_map_file
+cm_step_size = args.cM_step_size
+file_out = args.output_map_file
 increment = float(cm_step_size)
 
 mapping = pd.read_csv(map_in, header=None, sep='\t')

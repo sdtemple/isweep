@@ -12,21 +12,21 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        '--file_input', 
+        '--input_file', 
         type=str,
         required=True, 
         help="Input file containing IBD data."
     )
     
     parser.add_argument(
-        '--file_output', 
+        '--output_file', 
         type=str,
         required=True, 
         help="Output file for saving combined windows of excess IBD."
     )
     
     parser.add_argument(
-        '--min_cm_region', 
+        '--min_cM_region', 
         type=float,
         default=1.0, 
         help="(default: 1.0) Threshold for combining windows in centiMorgans (cM)."
@@ -36,11 +36,11 @@ def main():
     args = parser.parse_args()
 
     # File handling and computation
-    cm = args.min_cm_region
-    g = open(args.file_output, 'w')
+    cm = args.min_cM_region
+    g = open(args.output_file, 'w')
     g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\tMINIBD\tMAXIBD\n')
     try:
-        with open(args.file_input, 'r') as f:
+        with open(args.input_file, 'r') as f:
             f.readline()
             line = f.readline()
             row = line.strip().split('\t')

@@ -17,7 +17,7 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        '--file_output', 
+        '--output_file', 
         type=str,
         required=True, 
         help="Output file to save the results."
@@ -141,7 +141,7 @@ def main():
             sbsinhs[j].append(sb)
 
     # Writing results
-    with open(args.file_output, 'w') as f:
+    with open(args.output_file, 'w') as f:
         f.write('VarFreqEst\t')
         f.write('SelCoefEst\t')
         f.write('SelCoefLow\t')

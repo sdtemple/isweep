@@ -14,14 +14,14 @@ def main():
     
     # Define arguments with defaults
     parser.add_argument(
-        '--ibd_file', 
+        '--input_ibd_file', 
         type=str,
         required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
-        '--folder_out', 
+        '--output_folder', 
         type=str,
         required=True, 
         help="Output folder for writing results."
@@ -49,7 +49,7 @@ def main():
     scalar = args.group_cutoff
 
     # Form graph
-    segs = read_ibd_file(args.ibd_file, header=0, include_length=0)
+    segs = read_ibd_file(args.input_ibd_file, header=0, include_length=0)
     graph = make_ibd_graph(segs)
 
     # Detect communities
@@ -85,7 +85,7 @@ def main():
                 idx += 1
 
     # Saving
-    write_outliers(communities, args.folder_out, scalar)
+    write_outliers(communities, args.output_folder, scalar)
 
 if __name__ == "__main__":
     main()
