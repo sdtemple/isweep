@@ -374,6 +374,6 @@ rule gini_impurity:
 		"""
 		python ../../scripts/ibd-gini-entropy.py \
 			--input_folder {wildcards.cohort}/{wildcards.hit} \
-			--output_folder {output.fileout} \
+			--output_file {output.fileout} \
 			--sample_size {params.samplesizep}
 		"""
