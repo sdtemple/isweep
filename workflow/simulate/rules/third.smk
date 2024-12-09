@@ -21,7 +21,7 @@ rule third_hap:
         """
         python ../../scripts/haplotypes.py \
             --snp_file_input {input.rankin} \
-            --folder_output {wildcards.cohort}/{wildcards.hit} \
+            --folder_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --window_index 0 \
             --freq_index 1 \
             --score_index -1 \
