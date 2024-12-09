@@ -121,7 +121,7 @@ rule first_rank:
             --vcf {input.vcf} \
             --file_out {output.fileout} \
             --graph_diameter {params.diameter} \
-            --low_freq {params.q1} \
+            --lowest_freq {params.q1} \
             --group_cutoff {params.rulesigma} \
         """
 
