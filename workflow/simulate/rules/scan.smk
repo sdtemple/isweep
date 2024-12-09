@@ -81,7 +81,7 @@ rule filter_ibdends:
         """
         python ../../scripts/filter-lines.py \
             --input_file {input.ibd} \
-            --file_output {output.fipass} \
+            --output_file {output.fipass} \
             --upper_bound {params.scancut}
         """
 
