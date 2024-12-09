@@ -87,13 +87,13 @@ rule first_filt:
         """
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
         python ../../scripts/filter-lines.py \
-            --file_input {input.ibd} \
+            --input_file {input.ibd} \
             --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --file_output {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \

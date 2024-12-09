@@ -7,19 +7,11 @@ CHANGE:
     MACRO: 'popstruct1'
     # tsv file describing simulations
     MICRO: 'experiments/simstudy.test2.tsv'
-    # forlder where terminal scripts are
-    TERMINALSCRIPTS: 'scripts'
-    # folder where software is
-    SOFTWARE: '../../software'
     
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
     HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
     IBDENDS: 'ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
-    GTERR: 'add-uniform-err.jar' # http://faculty.washington.edu/browning/
-    FILTER: 'filter-lines.jar' # http://faculty.washington.edu/browning/
-    RMPHASE: 'remove-phase.jar' # http://faculty.washington.edu/browning/
-    BEAGLE: 'beagle.jar' # http://faculty.washington.edu/browning/
 
   CLUSTER:
     # controls memory resource to some rules

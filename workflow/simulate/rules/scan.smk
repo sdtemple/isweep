@@ -31,7 +31,7 @@ rule hapibd:
             min-seed={params.minsee} \
             min-extend={params.minext} \
             min-output={params.minout} \
-            min-mac={params.minmac}
+            min-mac={params.minmac} \
         """
 
 rule ibdends:
@@ -80,7 +80,7 @@ rule filter_ibdends:
     shell:
         """
         python ../../scripts/filter-lines.py \
-            --file_input {input.ibd} \
+            --input_file {input.ibd} \
             --file_output {output.fipass} \
             --upper_bound {params.scancut}
         """
@@ -92,7 +92,6 @@ rule count_ibdends:
     output:
         fileout='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),

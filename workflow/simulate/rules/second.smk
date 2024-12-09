@@ -5,6 +5,7 @@ n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
+samplesize_ploidy=n*ploidy
 
 ### filter vcf ###
 
@@ -17,7 +18,6 @@ rule second_region:
     params:
         folder='{macro}/{micro}/{seed}',
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     shell: # to bgz and back is being consertative
         """
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
@@ -73,13 +73,13 @@ rule second_filt:
         """
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
         python ../../scripts/filter-lines.py \
-            --file_input {input.ibd} \
+            --input_file {input.ibd} \
             --file_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            --file_input {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --file_output {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
@@ -107,7 +107,7 @@ rule second_rank:
             --vcf {input.vcf} \
             --file_out {output.fileout} \
             --graph_diameter {params.diameter} \
-            --low_freq {params.q1} \
+            --lowest_freq {params.q1} \
             --group_cutoff {params.rulesigma} \
         """
         
@@ -118,17 +118,19 @@ rule second_outlier:
         short='{macro}/{micro}/{seed}/second.filt.chr1.ibd.gz',
     output:
         fileout='{macro}/{micro}/{seed}/second.outliers.txt',
+        out1='{macro}/{micro}/{seed}/outlier1.txt',
     params:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
         python ../../scripts/outliers.py \
-            --file_input {input.short} \
-            --folder_output {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            --ibd_file {input.short} \
+            --folder_out {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
         touch {output.fileout}
+        touch {output.out1}
         """
 
 rule gini_impurity:
