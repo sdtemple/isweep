@@ -2,6 +2,10 @@
 
 <img src="isweep-icon.png" align="center" width="600px"/>
 
+There is a major methodological update for multiple-testing corrections.
+
+Please read `misc/multiple-testing.md`. You should read our citation below for more details.
+
 New features are actively under construction (Fall 2024).
 - cM, not bp, windowing
 - Integrate multiple testing correction into pipeline
@@ -13,7 +17,9 @@ See `misc/usage.md` to evaluate if this methodology fits your study.
 
 See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
 
-See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline. 
+See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline.
+
+See `telomeres.md` for comments on very small chromosomes.
 
 ## Citation
 ---

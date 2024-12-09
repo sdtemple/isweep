@@ -33,8 +33,6 @@ rule hapibd: # candidate segments from hap-ibd.jar
     params:
         minmac=str(mac1),
         out='{cohort}/ibdsegs/hapibd/chr{num}',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['HAPIBD']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         minsee=str(config['FIXED']['CANDHAPIBD']['MINSEED']),
         minext=str(config['FIXED']['CANDHAPIBD']['MINEXT']),
@@ -64,8 +62,6 @@ rule ibdends: # ibd-ends.jar
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     params:
         out='{cohort}/ibdsegs/ibdends/chr{num}',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['IBDENDS']),
         xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
         maf=str(config['FIXED']['IBDENDS']['MINMAF']),
         qua=str(config['FIXED']['IBDENDS']['QUANTILES']),

@@ -240,18 +240,18 @@ rule third_snp_ibd:
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
         python ../../scripts/filter-lines.py \
             --input_file $ibd \
-            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --output_file {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
+            --input_file {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        rm {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz
+        rm {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz
         """
 
 

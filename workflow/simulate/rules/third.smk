@@ -129,23 +129,23 @@ rule third_snp_ibd:
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
         python ../../scripts/filter-lines.py \
             --input_file {input.ibd} \
-            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
         python ../../scripts/filter-lines.py \
-            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
         python ../../scripts/filter-lines.py \
-            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
             --output_file {output.ibd} \
             --upper_bound {params.mlecutoff}
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz
         """
 
 rule third_snp_infer:

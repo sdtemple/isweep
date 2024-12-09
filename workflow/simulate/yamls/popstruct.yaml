@@ -10,8 +10,6 @@ CHANGE:
     
   PROGRAMS:
     SLiM: 'slim' # https://messerlab.org/slim/
-    HAPIBD: 'hap-ibd.jar' # https://github.com/browning-lab/hap-ibd
-    IBDENDS: 'ibd-ends.jar' # https://github.com/browning-lab/ibd-ends
 
   CLUSTER:
     # controls memory resource to some rules
