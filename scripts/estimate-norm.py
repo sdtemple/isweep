@@ -17,39 +17,45 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        'fileout', 
-        type=str, 
+        '--output_file', 
+        type=str,
+        required=True, 
         help="Output file to save the results."
     )
 
     parser.add_argument(
-        'sample_size', 
-        type=int, 
+        '--sample_size', 
+        type=int,
+        required=True, 
         help="Number of samples."
     )
     
     parser.add_argument(
-        'Ne_est', 
-        type=str, 
+        '--Ne_est', 
+        type=str,
+        required=True, 
         help="Estimated effective population size file."
     )
 
     parser.add_argument(
-        'p_est', 
-        type=float, 
+        '--p_est', 
+        type=float,
+        required=True, 
         help="Estimated allele frequency."
     )
     
     parser.add_argument(
-        'ibd_count', 
-        type=int, 
+        '--ibd_count', 
+        type=int,
+        required=True, 
         help="The count of detected IBD segments."
     )
     
     parser.add_argument(
-        'ibd_cutoff', 
-        type=float, 
-        help="The cutoff value for IBD sgements."
+        '--ibd_cutoff', 
+        type=float,
+        default=3., 
+        help="(default: 3.0) The cutoff value for IBD sgements."
     )
     
     parser.add_argument(
@@ -74,7 +80,7 @@ def main():
     )
 
     parser.add_argument(
-        '--nboot', 
+        '--num_bootstraps', 
         type=int,
         default=100, 
         help="(default: 100) Number of bootstrap samples."
@@ -89,10 +95,9 @@ def main():
     inhs = [args.model]
 
     # Setting up
-    B = args.nboot
+    B = args.num_bootstraps
     CUTOFF = args.ibd_cutoff
     long_ibd = CUTOFF
-    short_ibd = long_ibd
     Ne = read_Ne(args.Ne_est)
     ab = [CUTOFF, np.inf]
     n = args.sample_size
@@ -136,7 +141,7 @@ def main():
             sbsinhs[j].append(sb)
 
     # Writing results
-    with open(args.fileout, 'w') as f:
+    with open(args.output_file, 'w') as f:
         f.write('VarFreqEst\t')
         f.write('SelCoefEst\t')
         f.write('SelCoefLow\t')

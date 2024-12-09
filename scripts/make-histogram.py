@@ -12,26 +12,28 @@ def main():
 
     # Define arguments
     parser.add_argument(
-        'filein', 
-        type=str, 
+        '--input_file', 
+        type=str,
+        required=True, 
         help="Input file with IBD data."
     )
 
     parser.add_argument(
-        'fileout', 
-        type=str, 
+        '--output_file', 
+        type=str,
+        required=True, 
         help="Output file prefix for saving the plot."
     )
 
     parser.add_argument(
-        '--chrlow', 
+        '--chr_low', 
         type=int,
         default=1, 
         help="(default: 1) Lowest chromosome number."
     )
     
     parser.add_argument(
-        '--chrhigh', 
+        '--chr_high', 
         type=int,
         default=22, 
         help="(default: 22) Highest chromosome number."
@@ -120,9 +122,9 @@ def main():
     # read and process input
     statistic = args.statistic
     chrom = args.chrom
-    table = pd.read_csv(args.filein,sep='\t')
-    subtable = table[(table[args.chrom] >= args.chrlow) & 
-                     (table[args.chrom] <= args.chrhigh)] # control which chromosomes
+    table = pd.read_csv(args.input_file,sep='\t')
+    subtable = table[(table[args.chrom] >= args.chr_low) & 
+                     (table[args.chrom] <= args.chr_high)] # control which chromosomes
     y = subtable[statistic]
     z = (y - y.mean()) / y.std() # normalize
 
@@ -149,7 +151,7 @@ def main():
     plt.xlim(-args.xupp,args.xupp)
 
     # saving
-    plt.savefig(args.fileout)
+    plt.savefig(args.output_file)
 
 if __name__ == "__main__":
     main()

@@ -13,24 +13,75 @@ from scipy.stats import norm
 import argparse
 
 # Argument parser setup
-parser = argparse.ArgumentParser(description='Append info to region of interest')
-parser.add_argument('s', type=float, help='Selection coefficient')
-parser.add_argument('su', type=float, help='Selection coefficient upper limit')
-parser.add_argument('z', type=float, help='Z value for normal distribution -based confidence intervals')
-parser.add_argument('p', type=float, help='Present-day allele frequency')
-parser.add_argument('Ne', type=str, help='Effective population sizes file')
-parser.add_argument('--standing_variation', type=float, default=-0.01, help='(default: -0.01) Standing variation frequency')
-parser.add_argument('--genetic_model', type=str, default='a', help='(default: additive) Genetic selection model')
-parser.add_argument('--ploidy', type=int, default=2, help='(default: 2) Ploidy level')
-parser.add_argument('--nboot', type=int, default=1000, help='(default: 1000) Number of Wright-Fisher bootstraps')
-parser.add_argument('--upper_quantile', type=float, default=0.99, help='(default: 0.99) Upper quantile of bootstraps')
-parser.add_argument('--lower_quantile', type=float, default=0.01, help='(default: 0.01) Lower quantile of bootstraps')
-parser.add_argument('--xaxis_length', type=int, default=150, help='(default: 150) Length of the time axis (generations)')
-parser.add_argument('--line_color', type=str, default='k', help='(default: black) Color for plotting')
-parser.add_argument('--font_size', type=int, default=14, help='(default: 14) Font size for plotting')
-parser.add_argument('--alpha', type=float, default=0.33, help='Alpha for grid lines in plotting')
-parser.add_argument('--title', type=str, default=None, help='Title for the plot')
-parser.add_argument('fileout', type=str, help='Output file for the plot')
+parser = argparse.ArgumentParser(description='Plot a selective sweep with uncertainty')
+parser.add_argument('--output_file', 
+                    type=str,
+                    required=True, 
+                    help='Output file for the plot')
+parser.add_argument('--s', 
+                    type=float, 
+                    required=True,
+                    help='Selection coefficient')
+parser.add_argument('--su', 
+                    type=float,
+                    required=True, 
+                    help='Selection coefficient upper limit')
+parser.add_argument('--z', 
+                    type=float,
+                    required=True, 
+                    help='Z value for normal distribution -based confidence intervals')
+parser.add_argument('--p', 
+                    type=float,
+                    required=True, 
+                    help='Present-day allele frequency')
+parser.add_argument('--Ne', 
+                    type=str,
+                    required=True, 
+                    help='Effective population sizes file')
+parser.add_argument('--standing_variation', 
+                    type=float, 
+                    default=-0.01, 
+                    help='(default: -0.01) Standing variation frequency')
+parser.add_argument('--genetic_model', 
+                    type=str, 
+                    default='a', 
+                    help='(default: additive) Genetic selection model')
+parser.add_argument('--ploidy', 
+                    type=int, 
+                    default=2, 
+                    help='(default: 2) Ploidy level')
+parser.add_argument('--nboot', 
+                    type=int, 
+                    default=1000, 
+                    help='(default: 1000) Number of Wright-Fisher bootstraps')
+parser.add_argument('--upper_quantile', 
+                    type=float, 
+                    default=0.99, 
+                    help='(default: 0.99) Upper quantile of bootstraps')
+parser.add_argument('--lower_quantile', 
+                    type=float, 
+                    default=0.01, 
+                    help='(default: 0.01) Lower quantile of bootstraps')
+parser.add_argument('--xaxis_length', 
+                    type=int, 
+                    default=150, 
+                    help='(default: 150) Length of the time axis (generations)')
+parser.add_argument('--line_color', 
+                    type=str, 
+                    default='k', 
+                    help='(default: black) Color for plotting')
+parser.add_argument('--font_size', 
+                    type=int, 
+                    default=14, 
+                    help='(default: 14) Font size for plotting')
+parser.add_argument('--alpha', 
+                    type=float, 
+                    default=0.33, 
+                    help='Alpha for grid lines in plotting')
+parser.add_argument('--title', 
+                    type=str, 
+                    default=None, 
+                    help='Title for the plot')
 
 args = parser.parse_args()
 
@@ -196,4 +247,4 @@ plt.xlabel("Time (generations)")
 plt.ylabel('Allele frequency')
 plt.title(args.title)
 plt.grid(alpha=args.alpha)
-plt.savefig(args.fileout)
+plt.savefig(args.output_file)

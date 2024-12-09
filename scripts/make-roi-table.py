@@ -11,49 +11,53 @@ import sys
 def main():
     # Set up argparse
     parser = argparse.ArgumentParser(
-        description="Append info to region of interest."
+        description="Filter, append, format info to region of interest."
     )
 
     parser.add_argument(
-        'file_input',
+        '--input_file',
         type=str,
+        required=True,
         help="Input file containing IBD regions data."
     )
 
     parser.add_argument(
-        'file_output',
+        '--output_file',
         type=str,
+        required=True,
         help="Output file for saving region of interest."
     )
 
     parser.add_argument(
-        'file_prefix',
+        '--input_prefix',
         type=str,
+        required=True,
         help="Prefix of chromosome files."
     )
 
     parser.add_argument(
-        'file_suffix',
+        '--input_suffix',
         type=str,
+        required=True,
         help="Suffix of chromosome files."
     )
     
     parser.add_argument(
-        '--cmcover', 
+        '--cM_cover', 
         type=float,
         default=1.0, 
         help="(default: 1.0) Threshold for covering centiMorgans (cM)."
     )
     
     parser.add_argument(
-        '--cmsmall', 
+        '--cM_small', 
         type=float,
         default=2.0, 
         help="(default: 2.0) Threshold for small centiMorgans (cM)."
     )
     
     parser.add_argument(
-        '--mbbuffer', 
+        '--Mb_buffer', 
         type=float,
         default=2.0, 
         help="(default: 2) Buffer size in megabases (Mb)."
@@ -63,14 +67,14 @@ def main():
     args = parser.parse_args()
     
     # Extracting arguments
-    cmcover = args.cmcover
-    cmsmall = args.cmsmall
-    mbbuffer = args.mbbuffer * 1000000
+    cmcover = args.cM_cover
+    cmsmall = args.cM_small
+    mbbuffer = args.Mb_buffer * 1000000
     
-    filein = f"{args.file_input}"
-    filepre = f"{args.file_prefix}"
-    filesuf = f"{args.file_suffix}"
-    fileout = f"{args.file_output}"
+    filein = f"{args.input_file}"
+    filepre = f"{args.input_prefix}"
+    filesuf = f"{args.input_suffix}"
+    fileout = f"{args.output_file}"
     
     roitab = pd.read_csv(filein, sep='\t')
     bpcenter = []
@@ -115,17 +119,6 @@ def main():
         mdBP = tab[tab['CUMSUM'] >= 0.5]['BPWINDOW'].tolist()[0]
         bpcenter.append(moBP)
         cmcenter.append(moCM)
-
-        # reading
-        rowing = roitab.iloc[i]
-        filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
-        tab = pd.read_csv(filein1, sep='\t')
-
-        left = int(float(rowing.BPLEFT)) - mbbuffer
-        right = int(float(rowing.BPRIGHT)) + mbbuffer
-
-        tab = tab[(tab['BPWINDOW'] >= left) & (tab['BPWINDOW'] <= right)]
-
 
     # adding bp, cm centrality to roi table
     roitab['BPCENTER'] = bpcenter

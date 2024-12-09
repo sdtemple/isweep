@@ -17,8 +17,6 @@ rule hapibd:
     params:
         minmac=str(mac1),
         out='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['HAPIBD']),
         minsee=str(config['FIXED']['CANDHAPIBD']['MINSEED']),
         minext=str(config['FIXED']['CANDHAPIBD']['MINEXT']),
         minout=str(config['FIXED']['CANDHAPIBD']['MINOUT']),
@@ -26,14 +24,14 @@ rule hapibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={input.map} \
             out={params.out} \
             min-seed={params.minsee} \
             min-extend={params.minext} \
             min-output={params.minout} \
-            min-mac={params.minmac}
+            min-mac={params.minmac} \
         """
 
 rule ibdends:
@@ -43,8 +41,6 @@ rule ibdends:
         ibd='{macro}/{micro}/{seed}/large.chr1.hapibd.candidate.ibd.gz'
     params:
         out='{macro}/{micro}/{seed}/large.chr1.ibdends',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['IBDENDS']),
         maf=str(config['FIXED']['IBDENDS']['MINMAF']),
         qua=str(config['FIXED']['IBDENDS']['QUANTILES']),
         sam=str(config['FIXED']['IBDENDS']['NSAMPLES']),
@@ -55,7 +51,7 @@ rule ibdends:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar ../../software/ibd-ends.jar \
             gt={input.vcf} \
             ibd={input.ibd} \
             map={input.map} \
@@ -80,15 +76,12 @@ rule filter_ibdends:
     output:
         fipass='{macro}/{micro}/{seed}/scan.chr1.ibd.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
-    resources:
-        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {output.fipass} \
+        python ../../scripts/filter-lines.py \
+            --input_file {input.ibd} \
+            --output_file {output.fipass} \
             --upper_bound {params.scancut}
         """
 
@@ -99,13 +92,12 @@ rule count_ibdends:
     output:
         fileout='{macro}/{micro}/{seed}/scan.chr1.windowed.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         by=str(config['FIXED']['ISWEEP']['BY']),
         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
     shell:
         """
-        python {params.scripts}/ibd-windowed.py \
+        python scripts/ibd-windowed.py \
             {input.filein} \
             {output.fileout} \
             {input.mapin} \

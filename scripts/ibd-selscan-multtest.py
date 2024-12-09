@@ -31,17 +31,21 @@ def OU_approx_cont(z, beta, length, chr, center, test="one-sided"):
 
 # Set up argument parser
 parser = argparse.ArgumentParser(description="Estimate a multiple testing correction using the Ornstein-Uhlenbeck approximation.")
-parser.add_argument('file_out_test', 
-                    type=str, 
+parser.add_argument('--output_testing_file', 
+                    type=str,
+                    required=True, 
                     help='Output file with multiple testing results')
-parser.add_argument('file_out_cov', 
-                    type=str, 
+parser.add_argument('--output_autocov_file', 
+                    type=str,
+                    required=True,
                     help='Output file with covariance estimates')
-parser.add_argument('chr_prefix', 
-                    type=str, 
+parser.add_argument('--chr_prefix', 
+                    type=str,
+                    required=True, 
                     help='Prefix of chromosome files')
-parser.add_argument('chr_suffix', 
-                    type=str, 
+parser.add_argument('--chr_suffix', 
+                    type=str,
+                    required=True, 
                     help='Suffix of chromosome files')
 parser.add_argument('--chr_start', 
                     type=int, 
@@ -79,8 +83,8 @@ parser.add_argument('--counts_column',
 args = parser.parse_args()
 
 # Assign arguments to variables
-fileout = args.file_out_test
-fileout2 = args.file_out_cov
+fileout = args.output_testing_file
+fileout2 = args.output_autocov_file
 prefix = args.chr_prefix
 suffix = args.chr_suffix
 st = args.chr_start

@@ -4,25 +4,27 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Unphase a gzipped phased VCF file.")
 
-parser.add_argument('phased_file', 
-                    type=str, 
+parser.add_argument('--phased_vcf_file', 
+                    type=str,
+                    required=True, 
                     help='Input gzipped VCF file with phased genotypes')
-parser.add_argument('unphased_file', 
-                    type=str, 
+parser.add_argument('--unphased_vcf_file', 
+                    type=str,
+                    required=True, 
                     help='Output gzipped VCF file with unphased genotypes')
 
 args = parser.parse_args()
 
-g = gzip.open(args.unphased_file,'wb')
+g = gzip.open(args.unphased_vcf_file,'wt')
 
 header = True
 
-with gzip.open(args.phased_file,'rb') as f:
+with gzip.open(args.phased_vcf_file,'rt') as f:
 
     # process the header
     while header:
         line = f.readline()
-        if line[0] == b'#':
+        if line[0] == '#':
             g.write(line)
         else:
             header = False
@@ -31,20 +33,20 @@ with gzip.open(args.phased_file,'rb') as f:
     full_row = line.split()
     info_data = full_row[:9]
     geno_data = full_row[9:]
-    geno_data = [geno.replace(b'|',b'/') for geno in geno_data]
-    g.write(b'\t'.join(info_data))
-    g.write(b'\t')
-    g.write(b'\t'.join(geno_data))
-    g.write(b'\n')
+    geno_data = [geno.replace('|','/') for geno in geno_data]
+    g.write('\t'.join(info_data))
+    g.write('\t')
+    g.write('\t'.join(geno_data))
+    g.write('\n')
 
     for line in f:
         full_row = line.split()
         info_data = full_row[:9]
         geno_data = full_row[9:]
-        geno_data = [geno.replace(b'|',b'/') for geno in geno_data]
-        g.write(b'\t'.join(info_data))
-        g.write(b'\t')
-        g.write(b'\t'.join(geno_data))
-        g.write(b'\n')
+        geno_data = [geno.replace('|','/') for geno in geno_data]
+        g.write('\t'.join(info_data))
+        g.write('\t')
+        g.write('\t'.join(geno_data))
+        g.write('\n')
             
 g.close()

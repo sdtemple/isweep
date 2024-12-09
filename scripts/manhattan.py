@@ -17,21 +17,24 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        'filein', 
-        type=str, 
+        '--input_file', 
+        type=str,
+        required=True, 
         help="Input file with IBD data."
     )
     
     parser.add_argument(
-        'fileout', 
-        type=str, 
+        '--output_prefix', 
+        type=str,
+        required=True, 
         help="Output file prefix for saving the plot."
     )
 
     parser.add_argument(
-        'sample_size', 
-        type=int, 
-        help="Sample size"
+        '--sample_size', 
+        type=int,
+        required=True, 
+        help="Sample size. Try 1 if not dividing by a count variable."
     )
 
     parser.add_argument(
@@ -70,14 +73,14 @@ def main():
     )
 
     parser.add_argument(
-        '--chrlow', 
+        '--chr_low', 
         type=int,
         default=1, 
         help="(default: 1) Lowest chromosome number."
     )
     
     parser.add_argument(
-        '--chrhigh', 
+        '--chr_high', 
         type=int,
         default=22, 
         help="(default: 22) Highest chromosome number."
@@ -143,7 +146,7 @@ def main():
     args = parser.parse_args()
     
     # Reading in data
-    ibd = pd.read_table(args.filein, sep='\t')
+    ibd = pd.read_table(args.input_file, sep='\t')
 
     numsamples = args.sample_size
     m = numsamples * args.ploidy
@@ -176,11 +179,11 @@ def main():
     # Chromosome maths
     ibd["CUMPOS"] = None
     s = 0
-    mbp = [0] * (args.chrhigh + 1)
-    chr = {i: i for i in range(args.chrlow, args.chrhigh + 1)}
+    mbp = [0] * (args.chr_high + 1)
+    chr = {i: i for i in range(args.chr_low, args.chr_high + 1)}
     nchr = len(chr)
 
-    for i in range(args.chrlow, args.chrhigh + 1):
+    for i in range(args.chr_low, args.chr_high + 1):
         try:
             mbp[i] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"].max()
             ibd.loc[ibd["CHROM"] == chr[i], "CUMPOS"] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"] + s
@@ -238,7 +241,7 @@ def main():
 
     # Saving plots
     for pic in ['jpeg', 'png', 'tiff']:
-        plt.savefig(f"{args.fileout}.{pic}")
+        plt.savefig(f"{args.output_prefix}.{pic}")
 
 if __name__ == "__main__":
     main()

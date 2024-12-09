@@ -4,13 +4,9 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/path-to-study/eur'
+    STUDY: '/path-to-study/test'
     # the yaml file with scan analysis options
-    YAML: 'eur.yaml'
-    # folder where terminal scripts are
-    TERMINALSCRIPTS: 'scripts'
-    # folder where software is
-    SOFTWARE: '../../software'
+    YAML: 'test.yaml'
 
   # parameters, subsample file
   ISWEEP:
@@ -21,11 +17,6 @@ CHANGE:
     # inferred Ne(t) to use
     NE: 'ibdne.ne'
     SUBSAMPLE: 'subsample.txt'
-
-  # download these software
-  PROGRAMS:
-    # https://github.com/browning-lab/hap-ibd
-    HAPIBD: 'hap-ibd.jar'
 
   EXISTING:
     VCFS: '/path-to-topmed-data/phased-vcfs'
@@ -61,7 +52,8 @@ FIXED:
     # estimating selection coefficient
     MLECUTOFF: '3.0' # ibd cM cutoff
     LASTNE: '2000' # extend inferred ne file to this many generations
-    NBOOT: '250' # number of bootstraps
+    NBOOTNORM: '100' # number of bootstraps for standard normal intervals
+    NBOOTPERC: '2000' # number of bootstraps for percentile intervals
 
   # hap-ibd.jar
   # these are for ibd group segments

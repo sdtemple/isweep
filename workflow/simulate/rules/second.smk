@@ -5,6 +5,7 @@ n=int(float(config['CHANGE']['SIMULATE']['SAMPSIZE']))
 ploidy=int(float(config['FIXED']['SIMULATE']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*n*maf3)
+samplesize_ploidy=n*ploidy
 
 ### filter vcf ###
 
@@ -17,10 +18,9 @@ rule second_region:
     params:
         folder='{macro}/{micro}/{seed}',
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
-        script=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS'])+'/lines.py',
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python {params.script} {input.locus} 1 2)
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -40,8 +40,6 @@ rule second_hapibd:
     params:
         minmac=str(mac3),
         out='{macro}/{micro}/{seed}/second.chr1',
-        soft=str(config['CHANGE']['FOLDERS']['SOFTWARE']),
-        prog=str(config['CHANGE']['PROGRAMS']['HAPIBD']),
         minsee=str(config['FIXED']['HAPIBD']['MINSEED']),
         minext=str(config['FIXED']['HAPIBD']['MINEXT']),
         minout=str(config['FIXED']['HAPIBD']['MINOUT']),
@@ -53,7 +51,7 @@ rule second_hapibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}',
     shell:
         """
-        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar {params.soft}/{params.prog} \
+        java -Xmx{config[CHANGE][CLUSTER][LARGEMEM]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={input.map} \
             out={params.out} \
@@ -71,22 +69,18 @@ rule second_filt:
         locus='{macro}/{micro}/{seed}/first.pos.txt',
     output:
         ibd='{macro}/{micro}/{seed}/second.filt.chr1.ibd.gz',
-    params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-    resources:
-        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
-        python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        python ../../scripts/filter-lines.py \
+            --input_file {input.ibd} \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {output.ibd} \
+        python ../../scripts/filter-lines.py \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --output_file {output.ibd} \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
@@ -103,19 +97,18 @@ rule second_rank:
     output:
         fileout='{macro}/{micro}/{seed}/second.ranks.tsv.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/rank.py \
-            {input.short} \
-            {input.vcf} \
-            {output.fileout} \
-            {params.diameter} \
-            {params.q1} \
-            {params.rulesigma}
+        python ../../scripts/rank.py \
+            --input_ibd_file {input.short} \
+            --input_vcf_file {input.vcf} \
+            --output_file {output.fileout} \
+            --graph_diameter {params.diameter} \
+            --lowest_freq {params.q1} \
+            --group_cutoff {params.rulesigma} \
         """
         
 ### write outliers ###
@@ -125,32 +118,32 @@ rule second_outlier:
         short='{macro}/{micro}/{seed}/second.filt.chr1.ibd.gz',
     output:
         fileout='{macro}/{micro}/{seed}/second.outliers.txt',
+        out1='{macro}/{micro}/{seed}/outlier1.txt',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python {params.scripts}/outliers.py \
-            {input.short} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
-            {params.diameter} \
-            {params.rulesigma}
+        python ../../scripts/outliers.py \
+            --input_ibd_file {input.short} \
+            --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            --graph_diameter {params.diameter} \
+            --group_cutoff {params.rulesigma}
         touch {output.fileout}
+        touch {output.out1}
         """
 
-rule ibd_entropy:
+rule gini_impurity:
 	input:
-		filein='{macro}/{micro}/second.outliers.txt',
+		filein='{macro}/{micro}/{seed}/outlier1.txt',
 	output:
-		fileout='{macro}/{micro}/ibd.entropy.tsv',
+		fileout='{macro}/{micro}/{seed}/ibd.gini.tsv',
 	params:
-		scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
-		samplesize=str(n*ploidy),
+		samplesizep=str(samplesize_ploidy),
 	shell:
 		"""
-		python {params.scripts}/ibd-entropy.py \
-			{wildcards.macro}/{wildcards.micro} \
-			{output.fileout} \
-			{params.samplesize}
+		python ../../scripts/ibd-gini-entropy.py \
+			--input_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+			--output_file {output.fileout} \
+			--sample_size {params.samplesizep}
 		"""

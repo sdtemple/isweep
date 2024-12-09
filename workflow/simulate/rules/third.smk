@@ -17,21 +17,20 @@ rule third_hap:
         freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
         numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
     shell:
         """
-        python {params.scripts}/haplotypes.py \
-            {input.rankin} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
-            0 \
-            1 \
-            -1 \
-            {params.freqsize} \
-            {params.freqstep} \
-            {params.windowsize} \
-            {params.windowstep} \
-            {params.numsnp} \
-            {params.lowbnd}
+        python ../../scripts/haplotypes.py \
+            --input_snp_file {input.rankin} \
+            --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
+            --window_index 0 \
+            --freq_index 1 \
+            --score_index -1 \
+            --freq_size {params.freqsize} \
+            --freq_step {params.freqstep} \
+            --window_size {params.windowsize} \
+            --window_step {params.windowstep} \
+            --num_snp {params.numsnp} \
+            --lowest_freq {params.lowbnd}
         """
 
 rule third_hap_ibd:
@@ -41,29 +40,26 @@ rule third_hap_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/third.chr1.hap.ibd.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
-    resources:
-        mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
-        python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        python ../../scripts/filter-lines.py \
+            --input_file {input.ibd} \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+        python ../../scripts/filter-lines.py \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
-            {output.ibd} \
+        python ../../scripts/filter-lines.py \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+            --output_file {output.ibd} \
             --upper_bound {params.mlecutoff}
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
         rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
@@ -76,25 +72,28 @@ rule third_hap_infer:
     output:
         fileout='{macro}/{micro}/{seed}/results.hap.tsv',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['SIMULATE']['PLOIDY']),
-        effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
+        longNe=str(config['CHANGE']['SIMULATE']['iNe']),
+        model='a',
+        alpha=0.05,
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
-        python {params.scripts}/estimate.py \
-            {output.fileout} \
-            ${{ibdest}} \
-            ${{freqest}} \
-            {params.nboot} \
-            {params.mlecutoff} \
-            {params.n} \
-            {params.effdemo} \
-            {params.ploidy}
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        python ../../scripts/estimate-norm.py \
+            --output_file {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.mlecutoff} \
+            --sample_size {params.n} \
+            --Ne_est {params.longNe} \
+            --model {params.model} \
+            --alpha {params.alpha} \
+            --ploidy {params.ploidy} \
         """
 
 ##### snp analysis #####
@@ -106,14 +105,13 @@ rule third_snp:
     output:
         lociout='{macro}/{micro}/{seed}/third.best.snp.txt',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python {params.scripts}/snp.py \
-            {input.rankin} \
-            {output.lociout} \
-            {params.lowbnd}
+        python ../../scripts/snp.py \
+            --input_snp_file {input.rankin} \
+            --output_file {output.lociout} \
+            --lowest_freq {params.lowbnd}
         """
 
 rule third_snp_ibd:
@@ -123,32 +121,31 @@ rule third_snp_ibd:
     output:
         ibd='{macro}/{micro}/{seed}/third.chr1.snp.ibd.gz',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     resources:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python {params.scripts}/lines.py {input.locus} 1 2)
-        python {params.scripts}/filter-lines.py \
-            {input.ibd} \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
+        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        python ../../scripts/filter-lines.py \
+            --input_file {input.ibd} \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
+        python ../../scripts/filter-lines.py \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
+            --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        python {params.scripts}/filter-lines.py \
-            {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
-            {output.ibd} \
+        python ../../scripts/filter-lines.py \
+            --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
+            --output_file {output.ibd} \
             --upper_bound {params.mlecutoff}
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz
-        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz
+        rm {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz
         """
 
 rule third_snp_infer:
@@ -158,24 +155,27 @@ rule third_snp_infer:
     output:
         fileout='{macro}/{micro}/{seed}/results.snp.tsv',
     params:
-        scripts=str(config['CHANGE']['FOLDERS']['TERMINALSCRIPTS']),
         nboot=str(config['FIXED']['ISWEEP']['NBOOT']),
         mlecutoff=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
         n=str(config['CHANGE']['SIMULATE']['SAMPSIZE']),
         ploidy=str(config['FIXED']['SIMULATE']['PLOIDY']),
-        effdemo=str(config['CHANGE']['SIMULATE']['iNe']),
+        longNe=str(config['CHANGE']['SIMULATE']['iNe']),
+        model='a',
+        alpha=0.05,
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python {params.scripts}/lines.py {input.freq} 2 2)
-        python {params.scripts}/estimate.py \
-            {output.fileout} \
-            ${{ibdest}} \
-            ${{freqest}} \
-            {params.nboot} \
-            {params.mlecutoff} \
-            {params.n} \
-            {params.effdemo} \
-            {params.ploidy}
+        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
+        python ../../scripts/estimate-norm.py \
+            --output_file {output.fileout} \
+            --ibd_count ${{ibdest}} \
+            --p_est ${{freqest}} \
+            --num_bootstraps {params.nboot} \
+            --ibd_cutoff {params.mlecutoff} \
+            --sample_size {params.n} \
+            --Ne_est {params.longNe} \
+            --model {params.model} \
+            --alpha {params.alpha} \
+            --ploidy {params.ploidy} \
         """
 

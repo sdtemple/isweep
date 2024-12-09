@@ -71,12 +71,6 @@ Steps 6 is **if** you want to estimate selection coefficients for loci.
 
 ## Other considerations
 
-The pipeline uses `hap-ibd.jar` and `ibd-ends.jar`. 
-
-You can use different IBD segment detection methods if you wish. 
-
-Refer to the scripts in `rules/` for how to run the commands with different IBD segment methods.
-
 #### Cohort-specific analyses 
 
 If you are studying a subset of a larger (biobank) dataset, create a subsample text file.

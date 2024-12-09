@@ -29,10 +29,8 @@ Review these files:
         - 'm' for multiplicative
         - 'd' for dominance
         - 'r' for recessive
-- `plots/`
-    - Check if there are lots of recombination hotspot
-    - Check if there is low marker density
 
-The pipeline uses `hap-ibd.jar`. You can use different IBD segment detection methods if you wish.
-
-Refer to the scripts in `rules/` for how to run the commands with different IBD segment methods.
+You can do an analysis with percentile-based confidence intervals.
+- Go into `Snakefile-roi.smk` for rule `all` and uncomment list with percentile output
+- Making percentile-based intervals takes much longer
+- Modify the `NBOOTPERC` parameter as desired.

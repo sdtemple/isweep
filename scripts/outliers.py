@@ -14,26 +14,28 @@ def main():
     
     # Define arguments with defaults
     parser.add_argument(
-        'ibd', 
-        type=str, 
+        '--input_ibd_file', 
+        type=str,
+        required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
-        'folderout', 
-        type=str, 
+        '--output_folder', 
+        type=str,
+        required=True, 
         help="Output folder for writing results."
     )
     
     parser.add_argument(
-        '--K', 
+        '--graph_diameter', 
         type=int,
         default=6, 
         help="(default: 6) The graph diameter."
     )
     
     parser.add_argument(
-        '--scalar', 
+        '--group_cutoff', 
         type=float,
         default=3.0, 
         help="(default: 3.0) Scalar for community size cutoff."
@@ -43,11 +45,11 @@ def main():
     args = parser.parse_args()
     
     # Adjust values as needed
-    K = int(args.K / 2)
-    scalar = args.scalar
+    K = int(args.graph_diameter / 2)
+    scalar = args.group_cutoff
 
     # Form graph
-    segs = read_ibd_file(args.ibd, header=0, include_length=0)
+    segs = read_ibd_file(args.input_ibd_file, header=0, include_length=0)
     graph = make_ibd_graph(segs)
 
     # Detect communities
@@ -83,7 +85,7 @@ def main():
                 idx += 1
 
     # Saving
-    write_outliers(communities, args.folderout, scalar)
+    write_outliers(communities, args.output_folder, scalar)
 
 if __name__ == "__main__":
     main()

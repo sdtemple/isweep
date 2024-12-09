@@ -14,32 +14,35 @@ def main():
     
     # Define arguments
     parser.add_argument(
-        'ibd', 
-        type=str, 
+        '--input_ibd_file', 
+        type=str,
+        required=True, 
         help="Path to the input IBD file."
     )
     
     parser.add_argument(
-        'vcf', 
-        type=str, 
+        '--input_vcf_file', 
+        type=str,
+        required=True, 
         help="Path to the input VCF file."
     )
     
     parser.add_argument(
-        'fileout', 
-        type=str, 
+        '--output_file', 
+        type=str,
+        required=True, 
         help="Output file to save the scored variants."
     )
     
     parser.add_argument(
-        '--K', 
+        '--graph_diameter', 
         type=int,
         default=6, 
         help="(default: 6) The graph diameter."
     )
     
     parser.add_argument(
-        '--scalar', 
+        '--group_cutoff', 
         type=float,
         default=3.0, 
         help="(default: 3.0) Scalar for community size cutoff."
@@ -56,13 +59,13 @@ def main():
     args = parser.parse_args()
     
     # Adjust values as needed
-    K = int(args.K / 2)
+    K = int(args.graph_diameter / 2)
     Q1 = args.lowest_freq
     Q2 = 1 - Q1
-    scalar = args.scalar
+    scalar = args.group_cutoff
 
     # Form graph
-    segs = read_ibd_file(args.ibd, header=0, include_length=0)
+    segs = read_ibd_file(args.input_ibd_file, header=0, include_length=0)
     graph = make_ibd_graph(segs)
 
     # Detect communities
@@ -70,7 +73,7 @@ def main():
     outliers = outlier_communities(communities, scalar=scalar)
 
     # Compute adaptive allele frequencies
-    tup = labeled_allele_frequencies(args.vcf, outliers)
+    tup = labeled_allele_frequencies(args.input_vcf_file, outliers)
 
     # Make table
     pos = tup[0]
@@ -81,7 +84,7 @@ def main():
     table = table[table['AAF'] >= Q1]
     table = table[table['AAF'] <= Q2]
     table.reset_index(inplace=True, drop=True)
-    table.to_csv(args.fileout, sep='\t', index=False)
+    table.to_csv(args.output_file, sep='\t', index=False)
 
 if __name__ == "__main__":
     main()

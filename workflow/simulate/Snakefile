@@ -30,7 +30,7 @@ rule yaml:
     input:
         [f"{sim.FOLDER}/results.snp.tsv".replace(" ","") for sim in sims.itertuples()],
         [f"{sim.FOLDER}/results.hap.tsv".replace(" ","") for sim in sims.itertuples()],
-        [f"{sim.FOLDER}/ibd.entropy.tsv".replace(" ","") for sim in sims.itertuples()],
+        [f"{sim.FOLDER}/ibd.gini.tsv".replace(" ","") for sim in sims.itertuples()],
     output:
         yaml=macro+'/arguments.simulate.yaml',
     params:

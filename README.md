@@ -2,6 +2,10 @@
 
 <img src="isweep-icon.png" align="center" width="600px"/>
 
+There is a major methodological update for multiple-testing corrections.
+
+Please read `misc/multiple-testing.md`. You should read our citation below for more details.
+
 New features are actively under construction (Fall 2024).
 - cM, not bp, windowing
 - Integrate multiple testing correction into pipeline
@@ -13,9 +17,12 @@ See `misc/usage.md` to evaluate if this methodology fits your study.
 
 See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
 
-See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline. 
+See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline.
+
+See `telomeres.md` for comments on very small chromosomes.
 
 ## Citation
+---
 
 Please cite if you use this package.
 
@@ -33,6 +40,7 @@ Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: 
 
 
 ## Methodology
+---
 
 Acronym: *i*ncomplete *S*elective sweep *W*ith *E*xtended haplotypes *E*stimation *P*rocedure
 
@@ -43,6 +51,7 @@ This software presents methods to study recent, strong positive selection.
 In modeling a sweep, we assume 1 selected allele at a locus.
 
 ### Automated analysis pipeline(s):
+---
 
 1. A genome-wide selection scan for anomalously large IBD rates
  - With multiple testing correction
@@ -56,6 +65,7 @@ In modeling a sweep, we assume 1 selected allele at a locus.
 Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-7).)
 
 ### The input data is:
+---
 
 See `misc/usage.md`.
 
@@ -66,12 +76,14 @@ See `misc/usage.md`.
   - No apparent close relatedness
   - Tab-separated genetic map (bp ---> cM) 
   - Recombining diploid autosomes
+    - For haploids, see issue 5 "Not designed for ploidy != 2"
 - Access to cluster computing
   - Not extended to cloud computing
 
 Chromosome numbers in genetic maps should match chromosome numbers in VCFs.
 
 ## Repository overview
+---
 
 This repository contains a Python package and some Snakemake bioinformatics pipelines.
 - The package ---> `src/`
@@ -84,6 +96,7 @@ You should be in the ```mamba activate isweep``` environment for analyses.
 You should run the analyses using cluster jobs.
 
 ## Installation
+---
 
 See `misc/installing-mamba.md` to get a Python package manager.
 
@@ -103,13 +116,13 @@ python -c 'import site; print(site.getsitepackages())'
 ```
 3. Download software.
 ``` 
-bash get-software.sh software 
+bash get-software.sh 
 ```
-  - Puts these in a folder called `software/`.
   - Requires `wget`.
   - You need to cite these software.
 
 ## Pre-processing
+---
 
 Phase data w/ Beagle or Shapeit beforehand.
 Subset data in light of global ancestry and close relatedness.
@@ -119,14 +132,18 @@ Example scripts are in `scripts/pre-processing/`.
 - You could use PCA, ADMIXTURE, or FLARE to determine global ancestry. 
 
 ## Main analysis
+---
 
 You will see more details for each step in `workflow/some-pipeline/README.md` files.
 
 ### For all workflows
+---
+
 1. Make pointers to large (phased) vcf files.
 2. Edit YAML files in the different workflow directories.
 
 ### Detecting recent selection
+---
 
 Run the selection scan (`workflow/scan-selection`).
 ``` 
@@ -140,6 +157,7 @@ nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --confi
 Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
 
 ### Modeling putative sweeps
+---
 
 1. Estimate recent effective sizes :` workflow/scan-selection/scripts/run-ibdne.sh `.
 2. Checkout the `roi.tsv` file.
@@ -150,7 +168,10 @@ Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
 nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --configfile *.yaml & 
 ``` 
 
+The script to estimate recent Ne can be replaced with any method to estimate recent Ne, as it happens before the `snakemake` command. This method [HapNe](https://palamaralab.github.io/software/hapne/) is one such option.
+
 ## Picture of selection scan workflow
+---
 
 The flow chart below shows the steps ("rules") in the selection scan pipeline.
 
