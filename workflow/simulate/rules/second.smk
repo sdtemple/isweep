@@ -143,7 +143,7 @@ rule gini_impurity:
 	shell:
 		"""
 		python ../../scripts/ibd-gini-entropy.py \
-			--folder {wildcards.cohort}/{wildcards.hit} \
+			--folder {wildcards.macro}/{wildcards.micro}/{seed} \
 			--file_out {output.fileout} \
 			--sample_size {params.samplesizep}
 		"""
