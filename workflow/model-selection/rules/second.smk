@@ -75,7 +75,7 @@ rule second_rank:
         python ../../scripts/rank.py \
             --input_ibd_file {input.short} \
             --input_vcf_file {input.vcf} \
-            --output_folder {output.fileout} \
+            --output_file {output.fileout} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
