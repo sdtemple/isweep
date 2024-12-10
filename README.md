@@ -6,9 +6,7 @@ There is a major methodological update for multiple-testing corrections.
 
 Please read `misc/multiple-testing.md`. You should read our citation below for more details.
 
-New features are actively under construction (Fall 2024).
-- cM, not bp, windowing
-- Integrate multiple testing correction into pipeline
+New features are actively under construction (December 2024).
 - Extension to IBD mapping
 
 Contact sethtem@umich.edu or Github issues for troubleshooting.
