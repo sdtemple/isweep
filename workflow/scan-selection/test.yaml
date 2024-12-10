@@ -20,7 +20,7 @@ CHANGE:
     GENOMESIZE: '3300' # in cM (all chromosomes summed)
     PVALUE: '0.05'
     SIMS: '0' # simulations to derive OU threshold
-    # with 0, simulation approach will not run
+    # with 0, simulation approach will give Z score of -100
 
   IBDENDS:
     # do a test run on 1 chromosome to set this

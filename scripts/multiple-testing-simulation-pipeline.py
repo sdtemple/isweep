@@ -45,7 +45,10 @@ def main(input_file, output_file, numsims):
     # Compute multiple testing correction
     # I.e., find the 1 - pvalue quantile of the maximums
     maxs = np.array(maxs)
-    out = np.quantile(maxs, 1 - pvalue)
+    if len(maxs) > 0:
+        out = np.quantile(maxs, 1 - pvalue)
+    else:
+        out = -100
     print(out)
 
     with open(output_file,'w') as f:
