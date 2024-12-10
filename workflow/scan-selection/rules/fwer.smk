@@ -6,7 +6,7 @@ macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 pval = float(str(config['CHANGE']['ISWEEP']['PVALUE']))
 # you should choose one and stick with it. no p hacking.
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
-stepsize =/ 100 # in morgans
+stepsize /= 100 # in morgans
 genomesize = float(str(config['CHANGE']['ISWEEP']['GENOMESIZE']))
 chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
 chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
@@ -30,13 +30,13 @@ rule analytical_method:
        covlen=str(covlen),
        pval=str(pval),
        stepsize=str(stepsize),
-       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA'])
-       pre=macro+'/ibdsegs/ibdends/scan/chr'
+       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+       pre=macro+'/ibdsegs/ibdends/scan/chr',
     shell:
         """
         python ../../scripts/multiple-testing-analytical.py \
-            --output_testing_file {params.testing} \
-            --output_autocov_file {params.autocov} \
+            --output_testing_file {output.testing} \
+            --output_autocov_file {output.autocov} \
             --input_prefix {params.pre}\
             --input_suffix .ibd.windowed.tsv.gz \
             --chr_low {params.chrlow} \
@@ -52,7 +52,7 @@ rule analytical_method:
 # simulate ornstein-uhlenbeck processes to get significance level
 rule simulation_method:
     input:
-        analytical=macro+'/fwer.analytical.tsv,
+        analytical=macro+'/fwer.analytical.tsv',
     output:
         simulation=macro+'/fwer.simulation.txt',
     params:
@@ -68,7 +68,7 @@ rule simulation_method:
 rule significance:
     input:
         analytical=macro+'/fwer.analytical.tsv',
-        simulation=macro+'/fwer.simulation.tsv',
+        simulation=macro+'/fwer.simulation.txt',
         scan=macro+'/scan.ibd.tsv',
     output:
         scan=macro+'/scan.modified.ibd.tsv',
