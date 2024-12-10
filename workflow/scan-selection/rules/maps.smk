@@ -8,7 +8,7 @@ rule interpolate_map:
         stepsize=str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']),
     shell:
         '''
-        python ../../scripts/interpolate-map.py \
+        python ../../scripts/utilities/interpolate-map.py \
             --input_map_file {input.mapfile} \
             --output_map_file {output.mapfile} \
             --cM_step_size {params.stepsize} \
@@ -24,7 +24,7 @@ rule trim_telomeres:
         trim=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     shell:
         '''
-        python ../../scripts/trim-telomere-map.py \
+        python ../../scripts/utilities/trim-telomere-map.py \
             --input_map_file {input.mapfile} \
             --output_map_file {output.mapfile} \
             --cM_telo_trim {params.trim} \

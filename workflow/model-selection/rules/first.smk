@@ -31,9 +31,9 @@ rule first_region: # focus vcf on region of interest
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
-        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
-        left=$(python ../../scripts/lines.py {input.locus} 4 2)
-        right=$(python ../../scripts/lines.py {input.locus} 5 2)
+        chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
+        left=$(python ../../scripts/utilities/lines.py {input.locus} 4 2)
+        right=$(python ../../scripts/utilities/lines.py {input.locus} 5 2)
         vcf={params.vcfs}/{params.vcfprefix}${{chr}}{params.vcfsuffix}
         bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
@@ -60,7 +60,7 @@ rule first_hapibd:
         mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
     shell:
         """
-        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
+        chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
         java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={wildcards.cohort}/maps/chr${{chr}}.map \
@@ -81,14 +81,14 @@ rule first_filt:
         ibd='{cohort}/{hit}/first.filt.ibd.gz',
     shell:
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 3 2)
-        python ../../scripts/filter-lines.py \
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 3 2)
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -112,7 +112,7 @@ rule first_rank:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/rank.py \
+        python ../../scripts/model/rank.py \
             --input_ibd_file {input.short} \
             --input_vcf_file {input.vcf} \
             --output_file {output.fileout} \
@@ -137,7 +137,7 @@ rule first_score:
         folderout='{cohort}/{hit}',
     shell:
         """
-        python ../../scripts/site.py \
+        python ../../scripts/model/site.py \
             --input_snp_file {input.snps} \
             --output_folder {params.folderout} \
             --window_index 0 \

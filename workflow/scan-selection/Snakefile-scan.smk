@@ -55,6 +55,8 @@ rule yaml:
         macro+'/roi.tsv',
         macro+'/excludesamples.txt',
         macro+'/zhistogram.png',
+        macro+'/autocovariance.png',
+        macro+'/scan.png'
     output:
         yaml=macro+'/arguments.scan.yaml',
     params:

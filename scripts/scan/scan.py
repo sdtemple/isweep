@@ -34,13 +34,6 @@ def main():
         help="Output file for saving all IBD data."
     )
     
-    # parser.add_argument(
-    #     '--output_excess_genome_file', 
-    #     type=str,
-    #     default='excess.ibd.tsv', 
-    #     help="Output file for saving excess IBD data."
-    # )
-    
     parser.add_argument(
         '--chr_low', 
         type=int,
@@ -69,13 +62,6 @@ def main():
         help="(default: .ibd.windowed.tsv.gz) Suffix of chromosome files."
     )
     
-    # parser.add_argument(
-    #     '--heuristic_cutoff', 
-    #     type=float,
-    #     default=4.0, 
-    #     help="(default: 4.0) Heuristic cutoff value for extreme IBD rates. First pass."
-    # )
-    
     parser.add_argument(
         '--outlier_cutoff', 
         type=float,
@@ -86,8 +72,7 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
 
-    all_genome = f"{args.input_study}/{args.output_all_genome_file}" 
-    # excess_genome = f"{args.input_study}/{args.output_excess_genome_file}" 
+    all_genome = f"{args.input_study}/{args.output_all_genome_file}"
 
     # Reading in data
     tab = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{args.chr_low}{args.input_suffix}", sep='\t')
@@ -98,7 +83,7 @@ def main():
         tab = pd.concat((tab, tabnow))
 
     # Calculating excess IBD
-    medi = np.mean(tab['COUNT'])
+    medi = np.median(tab['COUNT'])
     # medi = np.quantile(tab['COUNT'], 0.5)
     stdv = tab['COUNT'].std()
     a = medi - stdv * args.outlier_cutoff
@@ -107,16 +92,10 @@ def main():
     # medi = np.quantile(sub['COUNT'], 0.5)
     avg = np.mean(sub['COUNT'])
     stdv = sub['COUNT'].std()
-    # b = medi + stdv * args.heuristic_cutoff
-    # out = tab[tab['COUNT'] >= b]
 
     # Saving all data
     tab['Z'] = (tab['COUNT'] - avg) / stdv
     tab.to_csv(all_genome, sep='\t', index=False)
-
-    # # Saving excess IBD data
-    # out['Z'] = (out['COUNT'] - avg) / stdv
-    # out.to_csv(excess_genome, sep='\t', index=False)
 
 if __name__ == "__main__":
     main()

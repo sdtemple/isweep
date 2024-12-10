@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 def main():
     # Set up argparse
     parser = argparse.ArgumentParser(
-        description="Make a Manhattan plot of IBD rates."
+        description="Make a Manhattan plot of IBD rates (for automated workflow)."
     )
     
     # Define arguments
@@ -42,33 +42,19 @@ def main():
         default=2, 
         help="(default: 2) Ploidy number"
     )
-
-    parser.add_argument(
-        '--sim_cutoff', 
-        type=float,
-        default=None, 
-        help="(default: None) Simulation cutoff value for extreme IBD rates."
-    )
-
-    parser.add_argument(
-        '--analytical_cutoff', 
-        type=float,
-        default=None, 
-        help="(default: None) Analytical cutoff value for extreme IBD rates."
-    )
-    
-    parser.add_argument(
-        '--outlier_cutoff', 
-        type=float,
-        default=3.0, 
-        help="(default: 3.0) Heuristic cutoff value for outlier IBD rates. First pass."
-    )
     
     parser.add_argument(
         '--heuristic_cutoff', 
         type=float,
         default=4.0, 
         help="(default: 4.0) Heuristic cutoff value for extreme IBD rates. Second pass."
+    )
+
+    parser.add_argument(
+        '--num_sims', 
+        type=int,
+        default=0, 
+        help="(default: 0) If 0, no simulation threshold will be drawn."
     )
 
     parser.add_argument(
@@ -127,6 +113,12 @@ def main():
         help="(default: None) Upper bound on y-scale."
     )
 
+    parser.add_argument('--alpha',
+                        type=float,
+                        default=0.25,
+                        help="(0. for no grid lines) Intensity of grid lines."
+                        )
+
     parser.add_argument(
         '--fontsize',
         type=int,
@@ -145,7 +137,7 @@ def main():
         '--height', 
         type=float,
         default=4.0, 
-        help="(default: 3.0) Height of the plot."
+        help="(default: 4.0) Height of the plot."
     )
     
     # Parse the arguments
@@ -167,18 +159,12 @@ def main():
 
     statistic = args.statistic
 
-
     # Maths
-    medi = ibd[statistic].median()
-    stdv = ibd[statistic].std()
-    a = medi - stdv * args.outlier_cutoff
-    b = medi + stdv * args.outlier_cutoff
-    low = a
-    newibd = ibd[(ibd[statistic] >= a) & (ibd[statistic] <= b)].copy()
-
-    # Compute browning and browning 2020 cutoff
-    medi = newibd[statistic].median(numeric_only=True)
-    stdv = newibd[statistic].std(numeric_only=True)
+    lowbnd = float(ibd.INIT_LOWER_BOUND[0])
+    uppbnd = float(ibd.INIT_UPPER_BOUND[0])
+    less_ibd = ibd[(ibd.COUNT >= lowbnd)&(ibd.COUNT <= uppbnd)]
+    medi = less_ibd.median()
+    stdv = float(ibd['ADJ_STDDEV'][0])
     upp = medi + stdv * args.heuristic_cutoff
     md = medi
     md = md / M
@@ -202,30 +188,21 @@ def main():
 
     # Plotting
     plt.figure(figsize=(args.width, args.height))
-    mxy = ibd[statistic].max() * 1.1
+    mxy = ibd[statistic].max() * 1.5
     mxy = mxy / M
     for chrom, group in ibd.groupby("CHROM"):
         clr = "black" if chrom % 2 == 0 else "gray"
         plt.plot(group["CUMPOS"], group[statistic]/M, c=clr)
-        # plt.plot(group["CUMPOS"], group[statistic], c=clr)
         
     plt.axhline(y=md, color="tab:blue", linestyle="solid", label="Median", linewidth=2)
-    # plt.axhline(y=upp, color="tab:orange", linestyle="--", label='Heuristic')
     plt.axhline(y=upp, color="tab:orange", linestyle='dashed', label='Heuristic',alpha=0.75)
 
-    if args.analytical_cutoff is not None:
-        ac = args.analytical_cutoff / M
-        # plt.axhline(y=ac, color="tab:green", linestyle="--", label="Analytical")
-        plt.axhline(y=ac, color="tab:green", linestyle=(0,(5,10)), label="Analytical",linewidth=1,alpha=0.75)
-    if args.sim_cutoff is not None:
-        sc = args.sim_cutoff / M
-        # plt.axhline(y=sc, color="tab:red", linestyle="--", label='Simulation')
-        plt.axhline(y=sc, color="tab:red", linestyle='dotted', label='Simulation',linewidth=2,alpha=0.75)
 
-    # if args.ploidy <= 2:
-    #     plt.ylabel("IBD rate")
-    # else:
-    #     plt.ylabel("IBD count")
+    ac = float(ibd['UPPER_ANALYTICAL'][0]) / M
+    plt.axhline(y=ac, color="tab:green", linestyle=(0,(5,10)), label="Analytical",linewidth=1,alpha=0.75)
+    if args.num_sims > 0:
+        sc = float(ibd['UPPER_SIMULATE'][0]) / M
+        plt.axhline(y=sc, color="tab:red", linestyle='dotted', label='Simulation',linewidth=2,alpha=0.75)
 
     plt.xlabel(args.xlabel,loc='left')
     plt.ylabel(args.ylabel)
@@ -238,7 +215,11 @@ def main():
     plt.xlim(ibd['CUMPOS'].min() - 25, ibd['CUMPOS'].max() + 25)
     plt.title(args.title, loc='center')
     plt.tight_layout()
-    plt.legend(loc="upper right", title=None)
+    plt.legend(loc="upper right", 
+               title=None, 
+               ncol=4, 
+               frameon=True, 
+               shadow=True)
     plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 
     # Customize x-axis ticks
@@ -246,6 +227,8 @@ def main():
     x_ticks = [np.mean(ibd[ibd["CHROM"] == chrom]["CUMPOS"]) for chrom in chromosome_values]
     x_labels = [f"{chrom}" for chrom in chromosome_values]
     plt.xticks(x_ticks, x_labels, rotation=args.rotation)
+
+    plt.grid(alpha=args.alpha)
 
     # Saving plots
     for pic in ['jpeg', 'png', 'tiff']:

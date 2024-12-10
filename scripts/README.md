@@ -4,6 +4,10 @@ You may want to individually run some of the scripts. Here, I describe the scrip
 
 You can use `python *.py --help` to see the inputs to all scripts. For bash scripts, read in `vim` or `more`.
 
+You can customize your plots after the pipeline. There are motivating scripts in 'plotting/'.
+
+Other subfolders are organized by workflow (`scan/` versus `model/` sweeps) or general utilities.
+
 Scripts
 - `manhattan.py` : makes a plot of scanning statistic
     - Used to visualize the selection scans

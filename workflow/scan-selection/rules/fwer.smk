@@ -36,7 +36,7 @@ rule analytical_method:
        pre=macro+'/ibdsegs/ibdends/scan/chr',
     shell:
         """
-        python ../../scripts/multiple-testing-analytical.py \
+        python ../../scripts/scan/multiple-testing-analytical.py \
             --output_testing_file {output.testing} \
             --output_autocov_file {output.autocov} \
             --input_prefix {params.pre}\
@@ -61,7 +61,7 @@ rule simulation_method:
        numsims=str(config['CHANGE']['ISWEEP']['SIMS']),
     shell:
         """
-        python ../../scripts/multiple-testing-simulation-pipeline.py \
+        python ../../scripts/scan/multiple-testing-simulation-pipeline.py \
             --input_file {input.analytical} \
             --output_file {output.simulation} \
             --num_sims {params.numsims} \
@@ -77,7 +77,7 @@ rule significance:
         excess=macro+'/excess.ibd.tsv',
     shell:
         """
-        python ../../scripts/significance.py \
+        python ../../scripts/scan/significance.py \
             --input_ibd_file {input.scan} \
             --input_analytical_file {input.analytical} \
             --input_simulation_file {input.simulation} \
@@ -95,7 +95,7 @@ rule plot_autocovariance:
         prefix=macro+'/autocovariance'
     shell:
         """
-        python ../../scripts/plot-autocovariance.py \
+        python ../../scripts/plotting/plot-autocovariance.py \
             --input_autocov_file {input.autocov} \
             --input_analytical_file {input.testing} \
             --output_prefix {params.prefix} \

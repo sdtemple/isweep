@@ -105,7 +105,7 @@ rule filter_ibdends_scan: # applying cutoffs
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     shell:
         """
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {output.fipass} \
             --upper_bound {params.scancut}
@@ -119,7 +119,7 @@ rule count_ibdends_scan: # computing counts over windows
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
     shell:
         """
-        python ../../scripts/count-ibd.py \
+        python ../../scripts/utilities/count-ibd.py \
             --input_ibd_file {input.filein} \
             --input_map_file {input.mapin} \
             --output_file {output.fileout} \
@@ -136,7 +136,7 @@ rule filter_ibdends_mle: # applying cutoffs
         mlecut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
     shell:
         """
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {output.fipass} \
             --upper_bound {params.mlecut}
@@ -150,42 +150,13 @@ rule count_ibdends_mle: # computing counts over windows
         fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
     shell:
         """
-        python ../../scripts/count-ibd.py \
+        python ../../scripts/utilities/count-ibd.py \
             --input_ibd_file {input.filein} \
             --input_map_file {input.mapin} \
             --output_file {output.fileout} \
             --start 5 \
             --end 6 \
         """
-
-# rule scan: # conduct a manhattan scan
-#     input:
-#         [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
-#         [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
-#     output:
-#         scandata=macro+'/scan.ibd.tsv',
-#         excessdata=macro+'/excess.ibd.tsv',
-#     params:
-#         study=macro,
-#         folder='/ibdsegs/ibdends/scan',
-#         chrlow=str(low),
-#         chrhigh=str(high),
-#         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
-#         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
-#     shell:
-#         """
-#         python ../../scripts/scan.py \
-#             --input_study {params.study} \
-#             --input_folder {params.folder} \
-#             --output_all_genome_file scan.ibd.tsv \
-#             --output_excess_genome_file excess.ibd.tsv \
-#             --chr_low {params.chrlow} \
-#             --chr_high {params.chrhigh} \
-#             --input_prefix chr \
-#             --input_suffix .ibd.windowed.tsv.gz \
-#             --heuristic_cutoff {params.scansigma} \
-#             --outlier_cutoff {params.telosigma}
-#         """
 
 rule scan: # conduct a manhattan scan
     input:
@@ -201,7 +172,7 @@ rule scan: # conduct a manhattan scan
         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
     shell:
         """
-        python ../../scripts/scan.py \
+        python ../../scripts/scan/scan.py \
             --input_study {params.study} \
             --input_folder {params.folder} \
             --output_all_genome_file scan.ibd.tsv \
@@ -219,7 +190,7 @@ rule plot_histogram:
         histogram=macro+'/zhistogram.png'
     shell:
         """
-        python ../../scripts/plot-histogram.py \
+        python ../../scripts/plotting/plot-histogram.py \
             --input_file {input.scandata} \
             --output_file {output.histogram} \
             --chr_high 100 \

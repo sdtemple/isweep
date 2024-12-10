@@ -48,12 +48,12 @@ rule all:
 		# for best haplotype analysis
 		#[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
 		# for entropy
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
+		# [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
 		# for types of summary analyses
 		[macro+'/summary.hap.norm.tsv'], # best haploptye, normal intervals
-		#[macro+'/summary.hap.perc.tsv'], # best haplotype, percentile intervals
+		[macro+'/summary.hap.perc.tsv'], # best haplotype, percentile intervals
 		[macro+'/summary.snp.norm.tsv'], # best snp, normal intervals
-		#[macro+'/summary.snp.perc.tsv'], # best snp, percentile intervals
+		[macro+'/summary.snp.perc.tsv'], # best snp, percentile intervals
     output:
         yaml=macro+'/arguments.roi.yaml',
     params:

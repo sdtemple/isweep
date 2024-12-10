@@ -1,9 +1,16 @@
 ### finding ibd groups
 
 # some inputs, string managements, count sample size
+# some inputs, string managements, count sample size
+subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
+samplesize=0
+with open(cohort+'/'+subsamplefile,'r') as f:
+    for line in f:
+        samplesize+=1
 ploidy=2
-# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
+# ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
+samplesize_ploidy=samplesize*ploidy
 maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # subset vcf to region of interest
@@ -21,8 +28,8 @@ rule second_region: # focus vcf on region of interest
         pm=str(config['FIXED']['ISWEEP']['PM']),
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
-        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
-        center=$(python ../../scripts/lines.py {input.focus} 1 2)
+        chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
+        center=$(python ../../scripts/utilities/lines.py {input.focus} 1 2)
         left=$(python -c "out = $center - {params.pm} ; print(max(out,2))")
         right=$(python -c "out = $center + {params.pm} ; print(out)")
         tabix -fp vcf {input.vcf}
@@ -41,14 +48,14 @@ rule second_filt:
         ibd='{cohort}/{hit}/second.filt.ibd.gz',
     shell:
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
-        python ../../scripts/filter-lines.py \
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 1 2)
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -72,7 +79,7 @@ rule second_rank:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/rank.py \
+        python ../../scripts/model/rank.py \
             --input_ibd_file {input.short} \
             --input_vcf_file {input.vcf} \
             --output_file {output.fileout} \
@@ -94,7 +101,7 @@ rule second_outlier:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/outliers.py \
+        python ../../scripts/model/outliers.py \
             --input_ibd_file {input.short} \
             --output_folder {wildcards.cohort}/{wildcards.hit} \
             --graph_diameter {params.diameter} \
@@ -102,3 +109,20 @@ rule second_outlier:
         touch {output.fileout}
         touch {output.out1}
         """
+
+### write entropy ###
+
+rule gini_impurity:
+	input:
+		filein='{cohort}/{hit}/outlier1.txt',
+	output:
+		fileout='{cohort}/{hit}/ibd.gini.tsv',
+	params:
+		samplesizep=str(samplesize_ploidy),
+	shell:
+		"""
+		python ../../scripts/model/ibd-gini-entropy.py \
+			--input_folder {wildcards.cohort}/{wildcards.hit} \
+			--output_file {output.fileout} \
+			--sample_size {params.samplesizep}
+		"""

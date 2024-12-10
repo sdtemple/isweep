@@ -5,14 +5,41 @@ macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
 
-# rule plot_manhattan:
-#     input:
-#     output:
-#     params:
-#     shell:
-#         """
-#         python ../../scripts/plot-manhattan-pipeline.py \
-#         """
+subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
+macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+samplesize=0
+with open(subsamplefile,'r') as f:
+    for line in f:
+        samplesize+=1
+
+numsims = int(str(config['CHANGE']['ISWEEP']['SIMS']))
+
+rule plot_scan:
+    input:
+        ibd=macro+'/scan.ibd.tsv',
+    output:
+        png=macro+'/scan.png',
+    params:
+        prefix=macro+'/scan',
+        samplesize=str(samplesize),
+        numsims=str(numsims),
+        chrlow=str(low),
+        chrhigh=str(high),
+    shell:
+        """
+        python ../../scripts/plotting/plot-scan-pipeline.py \
+            --input_file {input.ibd} \
+            --output_prefix {params.prefix} \
+            --sample_size {params.samplesize} \
+            --ploidy 2 \
+            --heuristic_cutoff 4 \
+            --num_sims {params.numsims} \
+            --chr_low {params.chrlow} \
+            --chr_high {params.chrhigh} \
+            --statistic COUNT \
+            --ylabel 'IBD rate' \
+            --xlabel 'Position along genome' \
+        """
 
 rule excess_region: # concatenate regions of excess IBD
     input:
@@ -23,7 +50,7 @@ rule excess_region: # concatenate regions of excess IBD
         cMgap=str(config['FIXED']['ISWEEP']['CMGAP']),
     shell:
         '''
-        python ../../scripts/excess-region.py \
+        python ../../scripts/scan/excess-region.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
             --max_cM_gap {params.cMgap}
@@ -41,7 +68,7 @@ rule make_roi_table:
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
     shell:
         """
-        python ../../scripts/make-roi-table.py \
+        python ../../scripts/scan/make-roi-table.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
             --input_prefix {params.folder}/chr \
