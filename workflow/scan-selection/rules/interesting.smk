@@ -5,13 +5,13 @@ macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
 
-# rule manhattan:
+# rule plot_manhattan:
 #     input:
 #     output:
 #     params:
 #     shell:
 #         """
-#         python ../../scripts/manhattan-pipeline.py \
+#         python ../../scripts/plot-manhattan-pipeline.py \
 #         """
 
 rule excess_region: # concatenate regions of excess IBD
@@ -26,7 +26,7 @@ rule excess_region: # concatenate regions of excess IBD
         python ../../scripts/excess-region.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
-            --min_cM_region {params.cMgap}
+            --max_cM_gap {params.cMgap}
         '''
 
 rule make_roi_table:

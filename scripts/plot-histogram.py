@@ -1,3 +1,7 @@
+# Make a histogram of IBD rates.
+# Seth Temple, GitHub: sdtemple
+# Last modified: 2024-12-10
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
@@ -98,8 +102,8 @@ def main():
     parser.add_argument(
         '--fontsize',
         type=int,
-        default=14,
-        help="(default: 14) Choose font size."
+        default=12,
+        help="(default: 12) Choose font size."
     )
     
     parser.add_argument(

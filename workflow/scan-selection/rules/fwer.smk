@@ -3,7 +3,7 @@
 
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 
-pval = float(str(config['CHANGE']['ISWEEP']['PVALUE']))
+pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
 # you should choose one and stick with it. no p hacking.
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
@@ -46,7 +46,7 @@ rule analytical_method:
             --chr_average_size {params.chrsize} \
             --cM_step_size {params.stepsize} \
             --autocovariance_steps {params.covlen} \
-            --pvalue {params.pval} \
+            --confidence_level {params.pval} \
             --outlier_cutoff {params.initcut} \
             --counts_column COUNT \
         """
@@ -85,10 +85,18 @@ rule significance:
             --output_excess_file {output.excess} \
         """
 
-# rule plot_autocovariance:
-#     input:
-#     output:
-#     shell:
-#         """
-#         python ../../scripts/ \
-#         """
+rule plot_autocovariance:
+    input:
+        testing=macro+'/fwer.analytical.tsv',
+        autocov=macro+'/fwer.autocovariance.tsv',
+    output:
+        figure=macro+'/autocovariance.png',
+    params:
+        prefix=macro+'/autocovariance'
+    shell:
+        """
+        python ../../scripts/plot-autocovariance.py \
+            --input_autocov_file {input.autocov} \
+            --input_analytical_file {input.testing} \
+            --output_file {params.prefix} \
+        """

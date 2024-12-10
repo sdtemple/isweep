@@ -38,8 +38,13 @@ def main(pvalue, theta, chrnum, chrlen, stepsize, numsims):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Estimate a multiple testing correction using simulation of an Ornstein-Uhlenbeck process.')
+
+    parser.add_argument('--output_file',
+                        type=str,
+                        help='Name of file with simulated Zs'
+                        )
     
-    parser.add_argument('--pvalue', 
+    parser.add_argument('--confidence_level', 
                         type=float, 
                         default=0.05, 
                         help='(default: 0.05) p-value for the multiple testing correction')
@@ -66,7 +71,8 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    main(args.pvalue, 
+    main(args.output_file,
+         args.confidence_level, 
          args.theta, 
          args.chromosome_number, 
          args.chr_average_size, 

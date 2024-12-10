@@ -7,7 +7,6 @@ import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rc('font',size=14)
 
 def main():
     # Set up argparse
@@ -127,6 +126,13 @@ def main():
         default=None, 
         help="(default: None) Upper bound on y-scale."
     )
+
+    parser.add_argument(
+        '--fontsize',
+        type=int,
+        default=12,
+        help="(default: 12) Choose font size."
+    )
     
     parser.add_argument(
         '--width', 
@@ -144,6 +150,8 @@ def main():
     
     # Parse the arguments
     args = parser.parse_args()
+
+    plt.rc('font',size=args.fontsize)
     
     # Reading in data
     ibd = pd.read_table(args.input_file, sep='\t')

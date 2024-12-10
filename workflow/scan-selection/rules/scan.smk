@@ -212,14 +212,14 @@ rule scan: # conduct a manhattan scan
             --outlier_cutoff {params.telosigma} \
         """
 
-rule make_histogram:
+rule plot_histogram:
     input:
         scandata=macro+'/scan.ibd.tsv'
     output:
         histogram=macro+'/zhistogram.png'
     shell:
         """
-        python ../../scripts/make-histogram.py \
+        python ../../scripts/plot-histogram.py \
             --input_file {input.scandata} \
             --output_file {output.histogram} \
             --chr_high 100 \

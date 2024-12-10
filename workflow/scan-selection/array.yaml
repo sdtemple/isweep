@@ -3,9 +3,9 @@ CHANGE:
 
   FOLDERS:
     # folder for analysis
-    STUDY: '/path-to-study/test'
+    STUDY: '/path-to-study/array-data'
     # the yaml file with scan analysis options
-    YAML: 'test.yaml'
+    YAML: 'array.yaml'
 
   # parameters, subsample file
   ISWEEP:
@@ -16,7 +16,7 @@ CHANGE:
     SUBSAMPLE: '/path-to-subsample/inferred.ancestry.txt'
     XMXMEM: '240' # in gb
     THREADS: '16'
-    CMSTEPSIZE: '0.02' # in cM (step size)
+    CMSTEPSIZE: '0.05' # in cM (step size)
     GENOMESIZE: '3300' # in cM (all chromosomes summed)
     CONFLEVEL: '0.05'
     SIMS: '0' # simulations to derive OU threshold
@@ -44,11 +44,11 @@ FIXED:
   # these are inspired by Cai, Browning, and Browning (2023+)
   CANDHAPIBD: # candidate
     # min-seed
-    MINSEED: '0.5'
+    MINSEED: '1.8'
     # min-extend
-    MINEXT: '0.2'
+    MINEXT: '0.5'
     # min-output
-    MINOUT: '1.0'
+    MINOUT: '1.8'
     # minimum minor allele frequency
     MINMAF: '0.40'
     # ploidy number

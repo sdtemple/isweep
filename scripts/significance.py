@@ -43,7 +43,7 @@ with open(analytical, 'r') as f:
         key, val = line.strip().split('\t')
         the_dictionary[key] = float(val)
 
-pvalue = the_dictionary['p-value:']
+pvalue = the_dictionary['confidence-level:']
 lwrbnd = the_dictionary['initial-lower-bound:']
 uprbnd = the_dictionary['initial-upper-bound:']
 rmean = the_dictionary['revised-mean:']
@@ -66,6 +66,7 @@ simp = norm.sf(simcut)
 
 # Process IBD file
 table = pd.read_csv(ibd, sep='\t')
+table['PVALUE'] = norm.sf(table['Z'])
 table['UPPER_ANALYTICAL'] = draw
 table['Z_UPPER_ANALYTICAL'] = dz
 table['GW_LEVEL_ANALYTICAL'] = dp
@@ -79,7 +80,7 @@ table['INIT_UPPER_BOUND'] = uprbnd
 table['UPPER_CONTINUOUS'] = craw
 table['Z_UPPER_CONTINUOUS'] = cz
 table['GW_LEVEL_CONTINUOUS'] = cp
-table['PVALUE'] = pvalue
+table['CONFLEVEL'] = pvalue
 table.to_csv(out, sep='\t', header=True, index=False)
 
 # Filtered subtable

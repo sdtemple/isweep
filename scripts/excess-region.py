@@ -26,10 +26,10 @@ def main():
     )
     
     parser.add_argument(
-        '--min_cM_region', 
+        '--max_cM_gap', 
         type=float,
-        default=1.0, 
-        help="(default: 1.0) Threshold for combining windows in centiMorgans (cM)."
+        default=0.5, 
+        help="(default: 0.5) Allowed cM gap in contiguous stretch of excess IBD."
     )
     
     # Parse the arguments

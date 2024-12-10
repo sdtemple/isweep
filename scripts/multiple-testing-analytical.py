@@ -67,7 +67,7 @@ parser.add_argument('--autocovariance_steps',
                     type=int, 
                     default=80, 
                     help='(default: 80) Number of steps for the covariance estimate')
-parser.add_argument('--pvalue', 
+parser.add_argument('--confidence_level', 
                     type=float, 
                     default=0.05, 
                     help='(default: 0.05) p-value for the multiple testing correction')
@@ -92,7 +92,7 @@ en = args.chr_high
 chr_len = args.chr_average_size
 stepsize = args.cM_step_size
 covariance_length = args.autocovariance_steps
-pval = args.pvalue
+pval = args.confidence_level
 init_cut = args.outlier_cutoff
 counts_column = args.counts_column
 
@@ -241,7 +241,7 @@ else:
 # Write the results to an output file
 
 f = open(fileout,'w')
-f.write('p-value:\t'); f.write(str(pval)); f.write('\n')
+f.write('confidence-level:\t'); f.write(str(pval)); f.write('\n')
 f.write('chromosome-number:\t'); f.write(str(chrnum)); f.write('\n')
 f.write('average-chromosome-length-morgan:\t'); f.write(str(chr_len)); f.write('\n')
 f.write('step-size-morgan:\t'); f.write(str(stepsize)); f.write('\n')
