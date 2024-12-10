@@ -143,7 +143,7 @@ rule genotyping_error:
         gter=str(config['CHANGE']['SIMULATE']['GTERR']),
     shell:
         """
-        python ../../scripts/add-uniform-err.py \
+        python ../../scripts/utilities/add-uniform-err.py \
             --input_file {input.vcf} \
             --output_file {output.out} \
             --unif_err_rate {params.gter}

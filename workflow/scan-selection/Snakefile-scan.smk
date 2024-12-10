@@ -45,6 +45,8 @@ for i in range(low,high+1):
 include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
 include: 'rules/samples.smk'
+include: 'rules/maps.smk'
+include: 'rules/fwer.smk'
 
 rule yaml:
     input:
@@ -53,6 +55,8 @@ rule yaml:
         macro+'/roi.tsv',
         macro+'/excludesamples.txt',
         macro+'/zhistogram.png',
+        macro+'/autocovariance.png',
+        macro+'/scan.png'
     output:
         yaml=macro+'/arguments.scan.yaml',
     params:

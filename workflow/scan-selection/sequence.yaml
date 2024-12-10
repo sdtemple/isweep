@@ -3,9 +3,9 @@ CHANGE:
 
   FOLDERS:
     # folder for analysis
-    STUDY: '/path-to-study/test'
+    STUDY: '/path-to-study/sequence-data'
     # the yaml file with scan analysis options
-    YAML: 'test.yaml'
+    YAML: 'sequence.yaml'
 
   # parameters, subsample file
   ISWEEP:
@@ -16,7 +16,7 @@ CHANGE:
     SUBSAMPLE: '/path-to-subsample/inferred.ancestry.txt'
     XMXMEM: '240' # in gb
     THREADS: '16'
-    CMSTEPSIZE: '0.02' # in cM (step size)
+    CMSTEPSIZE: '0.05' # in cM (step size)
     GENOMESIZE: '3300' # in cM (all chromosomes summed)
     CONFLEVEL: '0.05'
     SIMS: '0' # simulations to derive OU threshold

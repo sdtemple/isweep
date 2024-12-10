@@ -7,15 +7,15 @@ import pandas as pd
 
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Compute IBD counts over windows.')
-parser.add_argument('input_ibd_file', 
+parser.add_argument('--input_ibd_file', 
                     type=str,
                     required=True, 
                     help='Input file path')
-parser.add_argument('input_map_file', 
+parser.add_argument('--input_map_file', 
                     type=str,
                     required=True, 
                     help='Map file path')
-parser.add_argument('output_file', 
+parser.add_argument('--output_file', 
                     type=str,
                     required=True, 
                     help='Output file path')

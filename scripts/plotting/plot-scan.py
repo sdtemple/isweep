@@ -7,7 +7,6 @@ import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rc('font',size=14)
 
 def main():
     # Set up argparse
@@ -127,6 +126,20 @@ def main():
         default=None, 
         help="(default: None) Upper bound on y-scale."
     )
+
+    parser.add_argument(
+        '--alpha',
+        type=float,
+        default=0.25,
+        help="(0. for no grid lines) Intensity of grid lines."
+        )
+
+    parser.add_argument(
+        '--fontsize',
+        type=int,
+        default=12,
+        help="(default: 12) Choose font size."
+    )
     
     parser.add_argument(
         '--width', 
@@ -139,11 +152,13 @@ def main():
         '--height', 
         type=float,
         default=4.0, 
-        help="(default: 3.0) Height of the plot."
+        help="(default: 4.0) Height of the plot."
     )
     
     # Parse the arguments
     args = parser.parse_args()
+
+    plt.rc('font',size=args.fontsize)
     
     # Reading in data
     ibd = pd.read_table(args.input_file, sep='\t')
@@ -194,30 +209,21 @@ def main():
 
     # Plotting
     plt.figure(figsize=(args.width, args.height))
-    mxy = ibd[statistic].max() * 1.1
+    mxy = ibd[statistic].max() * 1.5
     mxy = mxy / M
     for chrom, group in ibd.groupby("CHROM"):
         clr = "black" if chrom % 2 == 0 else "gray"
         plt.plot(group["CUMPOS"], group[statistic]/M, c=clr)
-        # plt.plot(group["CUMPOS"], group[statistic], c=clr)
         
     plt.axhline(y=md, color="tab:blue", linestyle="solid", label="Median", linewidth=2)
-    # plt.axhline(y=upp, color="tab:orange", linestyle="--", label='Heuristic')
     plt.axhline(y=upp, color="tab:orange", linestyle='dashed', label='Heuristic',alpha=0.75)
 
     if args.analytical_cutoff is not None:
         ac = args.analytical_cutoff / M
-        # plt.axhline(y=ac, color="tab:green", linestyle="--", label="Analytical")
         plt.axhline(y=ac, color="tab:green", linestyle=(0,(5,10)), label="Analytical",linewidth=1,alpha=0.75)
     if args.sim_cutoff is not None:
         sc = args.sim_cutoff / M
-        # plt.axhline(y=sc, color="tab:red", linestyle="--", label='Simulation')
         plt.axhline(y=sc, color="tab:red", linestyle='dotted', label='Simulation',linewidth=2,alpha=0.75)
-
-    # if args.ploidy <= 2:
-    #     plt.ylabel("IBD rate")
-    # else:
-    #     plt.ylabel("IBD count")
 
     plt.xlabel(args.xlabel,loc='left')
     plt.ylabel(args.ylabel)
@@ -238,6 +244,8 @@ def main():
     x_ticks = [np.mean(ibd[ibd["CHROM"] == chrom]["CUMPOS"]) for chrom in chromosome_values]
     x_labels = [f"{chrom}" for chrom in chromosome_values]
     plt.xticks(x_ticks, x_labels, rotation=args.rotation)
+
+    plt.grid(alpha=args.alpha)
 
     # Saving plots
     for pic in ['jpeg', 'png', 'tiff']:

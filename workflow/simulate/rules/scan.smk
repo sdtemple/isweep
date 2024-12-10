@@ -79,7 +79,7 @@ rule filter_ibdends:
         scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
     shell:
         """
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {output.fipass} \
             --upper_bound {params.scancut}

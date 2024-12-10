@@ -20,7 +20,7 @@ rule second_region:
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -71,14 +71,14 @@ rule second_filt:
         ibd='{macro}/{micro}/{seed}/second.filt.chr1.ibd.gz',
     shell:
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
-        python ../../scripts/filter-lines.py \
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 1 2)
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -102,7 +102,7 @@ rule second_rank:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/rank.py \
+        python ../../scripts/model/rank.py \
             --input_ibd_file {input.short} \
             --input_vcf_file {input.vcf} \
             --output_file {output.fileout} \
@@ -124,7 +124,7 @@ rule second_outlier:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/outliers.py \
+        python ../../scripts/model/outliers.py \
             --input_ibd_file {input.short} \
             --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --graph_diameter {params.diameter} \
@@ -142,7 +142,7 @@ rule gini_impurity:
 		samplesizep=str(samplesize_ploidy),
 	shell:
 		"""
-		python ../../scripts/ibd-gini-entropy.py \
+		python ../../scripts/model/ibd-gini-entropy.py \
 			--input_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
 			--output_file {output.fileout} \
 			--sample_size {params.samplesizep}

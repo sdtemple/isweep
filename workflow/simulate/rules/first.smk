@@ -34,7 +34,7 @@ rule first_region:
         pm=str(config['FIXED']['SIMULATE']['BUFFER']),
     shell: # to bgz and back is being consertative
         """
-        thecenter=$(python ../../scripts/lines.py {input.ibdwin} 1 2)
+        thecenter=$(python ../../scripts/utilities/lines.py {input.ibdwin} 1 2)
         gunzip -c {input.vcfin} | bgzip  > {params.folder}/chrtemp.vcf.bgz
         tabix -fp vcf {params.folder}/chrtemp.vcf.bgz
         left=$(python -c "out = $thecenter - {params.pm} ; print(out)")
@@ -85,14 +85,14 @@ rule first_filt:
         ibd='{macro}/{micro}/{seed}/first.filt.chr1.ibd.gz',
     shell:
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
-        python ../../scripts/filter-lines.py \
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 1 2)
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -116,7 +116,7 @@ rule first_rank:
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
     shell:
         """
-        python ../../scripts/rank.py \
+        python ../../scripts/model/rank.py \
             --input_ibd_file {input.short} \
             --input_vcf_file {input.vcf} \
             --output_file {output.fileout} \
@@ -138,7 +138,7 @@ rule first_score:
         folderout='{macro}/{micro}/{seed}',
     shell:
         """
-        python ../../scripts/site.py \
+        python ../../scripts/model/site.py \
             --input_snp_file {input.snps} \
             --output_folder {params.folderout} \
             --window_index 0 \

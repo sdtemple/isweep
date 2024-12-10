@@ -82,6 +82,8 @@ See `misc/usage.md`.
 
 Chromosome numbers in genetic maps should match chromosome numbers in VCFs.
 
+Recombination maps without headers! Tab-separated columns go chromosome, ID, cM, bp
+
 ## Repository overview
 ---
 

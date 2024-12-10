@@ -56,7 +56,7 @@ rule third_hap:
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python ../../scripts/haplotypes.py \
+        python ../../scripts/model/haplotypes.py \
             --input_snp_file {input.rankin} \
             --output_folder {wildcards.cohort}/{wildcards.hit} \
             --window_index 0 \
@@ -81,16 +81,16 @@ rule third_hap_ibd:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
     shell:
         """
-        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
-        thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
+        chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
+        thecenter=$(python ../../scripts/utilities/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file $ibd \
             --output_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.cohort}/{wildcards.hit}/intermediate.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -118,10 +118,10 @@ rule third_hap_infer_norm:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        model=$(python ../../scripts/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate-norm.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
@@ -151,10 +151,10 @@ rule third_hap_infer_perc:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        model=$(python ../../scripts/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate-perc.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        python ../../scripts/model/estimate-perc.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
@@ -170,6 +170,7 @@ rule third_hap_infer_perc:
 rule summary_hap_norm:
     input:
         [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.norm.tsv' for j in range(J)],
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
     output:
         fileout=macro+'/summary.hap.norm.tsv',
     params:
@@ -179,17 +180,19 @@ rule summary_hap_norm:
         unc='norm',
     shell:
         """
-        python ../../scripts/summary-table.py \
+        python ../../scripts/model/summary-table.py \
             --output_file {output.fileout} \
             --input_folder {params.study} \
             --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
+            --input_gini_file ibd.gini.tsv \
         """
 
 rule summary_hap_perc:
     input:
         [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.perc.tsv' for j in range(J)],
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
     output:
         fileout=macro+'/summary.hap.perc.tsv',
     params:
@@ -199,12 +202,13 @@ rule summary_hap_perc:
         unc='perc',
     shell:
         """
-        python ../../scripts/summary-table.py \
+        python ../../scripts/model/summary-table.py \
             --output_file {output.fileout} \
             --input_folder {params.study} \
             --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
+            --input_gini_file ibd.gini.tsv \
         """
 
 ##### snp analysis #####
@@ -219,7 +223,7 @@ rule third_snp:
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python ../../scripts/snp.py \
+        python ../../scripts/model/snp.py \
             --input_snp_file {input.rankin} \
             --output_file {output.lociout} \
             --lowest_freq {params.lowbnd}
@@ -235,16 +239,16 @@ rule third_snp_ibd:
         ibdfolder='{cohort}/ibdsegs/ibdends/mle',
     shell:
         """
-        chr=$(python ../../scripts/lines.py {input.locus} 2 2)
-        thecenter=$(python ../../scripts/lines.py {input.best} 1 2)
+        chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
+        thecenter=$(python ../../scripts/utilities/lines.py {input.best} 1 2)
         ibd={params.ibdfolder}/chr${{chr}}.ibd.gz
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file $ibd \
             --output_file {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.cohort}/{wildcards.hit}/intermediate2.ibd.gz \
             --output_file {output.ibd} \
             --column_index 7 \
@@ -272,10 +276,10 @@ rule third_snp_infer_norm:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        model=$(python ../../scripts/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate-norm.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
@@ -305,10 +309,10 @@ rule third_snp_infer_perc:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        model=$(python ../../scripts/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/lines.py {input.loci} 7 2)
-        python ../../scripts/estimate-perc.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
+        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        python ../../scripts/model/estimate-perc.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
@@ -324,6 +328,7 @@ rule third_snp_infer_perc:
 rule summary_snp_norm:
     input:
         [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.norm.tsv' for j in range(J)],
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
     output:
         fileout=macro+'/summary.snp.norm.tsv',
     params:
@@ -333,17 +338,19 @@ rule summary_snp_norm:
         unc='norm',
     shell:
         """
-        python ../../scripts/summary-table.py \
+        python ../../scripts/model/summary-table.py \
             --output_file {output.fileout} \
             --input_folder {params.study} \
             --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
+            --input_gini_file ibd.gini.tsv \
         """
 
 rule summary_snp_perc:
     input:
         [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.perc.tsv' for j in range(J)],
+        [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
     output:
         fileout=macro+'/summary.snp.perc.tsv',
     params:
@@ -353,27 +360,11 @@ rule summary_snp_perc:
         unc='perc',
     shell:
         """
-        python ../../scripts/summary-table.py \
+        python ../../scripts/model/summary-table.py \
             --output_file {output.fileout} \
             --input_folder {params.study} \
             --input_roi_file {params.roi} \
             --file_type {params.typ} \
             --uncertainty_type {params.unc} \
+            --input_gini_file ibd.gini.tsv \
         """
-
-### write entropy ###
-
-rule gini_impurity:
-	input:
-		filein='{cohort}/{hit}/outlier1.txt',
-	output:
-		fileout='{cohort}/{hit}/ibd.gini.tsv',
-	params:
-		samplesizep=str(samplesize_ploidy),
-	shell:
-		"""
-		python ../../scripts/ibd-gini-entropy.py \
-			--input_folder {wildcards.cohort}/{wildcards.hit} \
-			--output_file {output.fileout} \
-			--sample_size {params.samplesizep}
-		"""

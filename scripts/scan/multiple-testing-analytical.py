@@ -39,39 +39,39 @@ parser.add_argument('--output_autocov_file',
                     type=str,
                     required=True,
                     help='Output file with covariance estimates')
-parser.add_argument('--chr_prefix', 
+parser.add_argument('--input_prefix', 
                     type=str,
                     required=True, 
                     help='Prefix of chromosome files')
-parser.add_argument('--chr_suffix', 
+parser.add_argument('--input_suffix', 
                     type=str,
                     required=True, 
                     help='Suffix of chromosome files')
-parser.add_argument('--chr_start', 
+parser.add_argument('--chr_low', 
                     type=int, 
                     default=1, 
                     help='(default: 1) First chromosome number')
-parser.add_argument('--chr_end', 
+parser.add_argument('--chr_high', 
                     type=int, 
                     default=22, 
                     help='(default: 22) Last chromosome number')
-parser.add_argument('--chr_len', 
+parser.add_argument('--chr_average_size', 
                     type=float, 
                     default=1.5, 
                     help='(default: 1.5) Average length of chromosome (in Morgans)')
-parser.add_argument('--chr_slide', 
+parser.add_argument('--cM_step_size', 
                     type=float, 
                     default=0.0005, 
                     help='(default: 0.0005) Step size for each test (in Morgans)')
-parser.add_argument('--cov_len', 
+parser.add_argument('--autocovariance_steps', 
                     type=int, 
                     default=80, 
                     help='(default: 80) Number of steps for the covariance estimate')
-parser.add_argument('--pvalue', 
+parser.add_argument('--confidence_level', 
                     type=float, 
                     default=0.05, 
                     help='(default: 0.05) p-value for the multiple testing correction')
-parser.add_argument('--init_cut', 
+parser.add_argument('--outlier_cutoff', 
                     type=float, 
                     default=4, 
                     help='(default: 4) Scalar for the initial outlier removal')
@@ -85,15 +85,15 @@ args = parser.parse_args()
 # Assign arguments to variables
 fileout = args.output_testing_file
 fileout2 = args.output_autocov_file
-prefix = args.chr_prefix
-suffix = args.chr_suffix
-st = args.chr_start
-en = args.chr_end
-chr_len = args.chr_len
-stepsize = args.chr_slide
-covariance_length = args.cov_len
-pval = args.pvalue
-init_cut = args.init_cut
+prefix = args.input_prefix
+suffix = args.input_suffix
+st = args.chr_low
+en = args.chr_high
+chr_len = args.chr_average_size
+stepsize = args.cM_step_size
+covariance_length = args.autocovariance_steps
+pval = args.confidence_level
+init_cut = args.outlier_cutoff
 counts_column = args.counts_column
 
 final_goodbyes = []
@@ -241,21 +241,21 @@ else:
 # Write the results to an output file
 
 f = open(fileout,'w')
-f.write('p-value:'); f.write(str(pval)); f.write('\n')
-f.write('chromosome-number:'); f.write(str(chrnum)); f.write('\n')
-f.write('average-chromosome-length-morgan:'); f.write(str(chr_len)); f.write('\n')
-f.write('step-size-morgan:'); f.write(str(stepsize)); f.write('\n')
-f.write('estimated-theta:'); f.write(str(theta)); f.write('\n')
-f.write('revised-mean:'); f.write(str(avg2)); f.write('\n')
-f.write('revised-standard-deviation:'); f.write(str(stddev2)); f.write('\n')
-f.write('upper-discrete-z:'); f.write(str(lin2)); f.write('\n')
-f.write('upper-continuous-z:'); f.write(str(lin)); f.write('\n')
-f.write('upper-discrete-raw:'); f.write(str(result_lin2)); f.write('\n')
-f.write('upper-continuous-raw:'); f.write(str(result_lin)); f.write('\n')
-f.write('initial-mean:'); f.write(str(avg)); f.write('\n')
-f.write('initial-standard-deviation:'); f.write(str(stddev)); f.write('\n')
-f.write('initial-scalar:'); f.write(str(init_cut)); f.write('\n')
-f.write('initial-upper-bound:'); f.write(str(upper)); f.write('\n')
-f.write('initial-lower-bound:'); f.write(str(lower)); f.write('\n')
+f.write('confidence-level:\t'); f.write(str(pval)); f.write('\n')
+f.write('chromosome-number:\t'); f.write(str(chrnum)); f.write('\n')
+f.write('average-chromosome-length-morgan:\t'); f.write(str(chr_len)); f.write('\n')
+f.write('step-size-morgan:\t'); f.write(str(stepsize)); f.write('\n')
+f.write('estimated-theta:\t'); f.write(str(theta)); f.write('\n')
+f.write('revised-mean:\t'); f.write(str(avg2)); f.write('\n')
+f.write('revised-standard-deviation:\t'); f.write(str(stddev2)); f.write('\n')
+f.write('upper-discrete-z:\t'); f.write(str(lin2)); f.write('\n')
+f.write('upper-continuous-z:\t'); f.write(str(lin)); f.write('\n')
+f.write('upper-discrete-raw:\t'); f.write(str(result_lin2)); f.write('\n')
+f.write('upper-continuous-raw:\t'); f.write(str(result_lin)); f.write('\n')
+f.write('initial-mean:\t'); f.write(str(avg)); f.write('\n')
+f.write('initial-standard-deviation:\t'); f.write(str(stddev)); f.write('\n')
+f.write('initial-scalar:\t'); f.write(str(init_cut)); f.write('\n')
+f.write('initial-upper-bound:\t'); f.write(str(upper)); f.write('\n')
+f.write('initial-lower-bound:\t'); f.write(str(lower)); f.write('\n')
 f.close()
 g.close()

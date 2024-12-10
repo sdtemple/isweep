@@ -19,7 +19,7 @@ rule third_hap:
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python ../../scripts/haplotypes.py \
+        python ../../scripts/model/haplotypes.py \
             --input_snp_file {input.rankin} \
             --output_folder {wildcards.macro}/{wildcards.micro}/{wildcards.seed} \
             --window_index 0 \
@@ -44,20 +44,20 @@ rule third_hap_ibd:
     shell:
         """
         thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate.ibd.gz \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate2.ibd.gz \
             --output_file {output.ibd} \
             --upper_bound {params.mlecutoff}
@@ -82,8 +82,8 @@ rule third_hap_infer:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        python ../../scripts/estimate-norm.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
@@ -108,7 +108,7 @@ rule third_snp:
         lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
     shell:
         """
-        python ../../scripts/snp.py \
+        python ../../scripts/model/snp.py \
             --input_snp_file {input.rankin} \
             --output_file {output.lociout} \
             --lowest_freq {params.lowbnd}
@@ -126,21 +126,21 @@ rule third_snp_ibd:
         mem_gb='{config[CHANGE][CLUSTER][LARGEMEM]}'
     shell:
         """
-        thecenter=$(python ../../scripts/lines.py {input.locus} 1 2)
-        python ../../scripts/filter-lines.py \
+        thecenter=$(python ../../scripts/utilities/lines.py {input.locus} 1 2)
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {input.ibd} \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
             --column_index 6 \
             --upper_bound $thecenter \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate3.ibd.gz \
             --output_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
             --column_index 7 \
             --lower_bound $thecenter \
             --upper_bound 10000000000 \
             --complement 0
-        python ../../scripts/filter-lines.py \
+        python ../../scripts/utilities/filter-lines.py \
             --input_file {wildcards.macro}/{wildcards.micro}/{wildcards.seed}/intermediate4.ibd.gz \
             --output_file {output.ibd} \
             --upper_bound {params.mlecutoff}
@@ -165,8 +165,8 @@ rule third_snp_infer:
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
-        freqest=$(python ../../scripts/lines.py {input.freq} 2 2)
-        python ../../scripts/estimate-norm.py \
+        freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
+        python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
             --p_est ${{freqest}} \
