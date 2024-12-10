@@ -32,7 +32,7 @@ def main():
     )
 
     parser.add_argument(
-        '--output_file', 
+        '--output_prefix', 
         type=str,
         required=True, 
         help="Output file prefix for saving the plot."

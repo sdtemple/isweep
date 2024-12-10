@@ -98,5 +98,5 @@ rule plot_autocovariance:
         python ../../scripts/plot-autocovariance.py \
             --input_autocov_file {input.autocov} \
             --input_analytical_file {input.testing} \
-            --output_file {params.prefix} \
+            --output_prefix {params.prefix} \
         """
