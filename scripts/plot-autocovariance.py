@@ -120,6 +120,11 @@ def main():
         plt.plot(xs,
                  ys,
                  color=args.color)
+    ys = table.iloc[0]
+    ys = ys[:-1]
+    plt.plot(xs,ys,
+             color=args.color,
+             label='Specific chromosomes')
 
     def func(x, a):
         return np.exp(-a * x)
