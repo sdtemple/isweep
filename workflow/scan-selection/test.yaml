@@ -17,9 +17,10 @@ CHANGE:
     XMXMEM: '240' # in gb
     THREADS: '16'
     CMSTEPSIZE: '0.02' # in cM (step size)
-    GENOMESIZE: '330' # in cM (all chromosomes summed)
+    GENOMESIZE: '3300' # in cM (all chromosomes summed)
     PVALUE: '0.05'
-    SIMS: '500' # simulations to derive OU threshold
+    SIMS: '0' # simulations to derive OU threshold
+    # with 0, simulation approach will not run
 
   IBDENDS:
     # do a test run on 1 chromosome to set this
@@ -67,9 +68,6 @@ FIXED:
   ISWEEP:
     # scanning parameters
     SCANCUTOFF: '2.0' # ibd cM threshold
-    GENOMEEND: '1000' # in mega bp
-    BY: '20' # in kilo bp
-    TELOCUT: '0.5' # cutting cM at telomeres
     CMGAP: '1.0' # cM gap when concatenating regions of excess IBD
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd

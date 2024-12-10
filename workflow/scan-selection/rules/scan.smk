@@ -111,27 +111,6 @@ rule filter_ibdends_scan: # applying cutoffs
             --upper_bound {params.scancut}
         """
 
-# rule count_ibdends_scan: # computing counts over windows
-#     input:
-#         filein='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
-#         mapin='{cohort}/maps/chr{num}.map',
-#     output:
-#         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
-#     params:
-#         by=str(config['FIXED']['ISWEEP']['BY']),
-#         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
-#         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
-#     shell:
-#         """
-#         python ../../scripts/ibd-windowed.py \
-#             {input.filein} \
-#             {output.fileout} \
-#             {input.mapin} \
-#             --by {params.by} \
-#             --end {params.ge} \
-#             --telocut {params.tc}
-#         """
-
 rule count_ibdends_scan: # computing counts over windows
     input:
         filein='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
@@ -162,27 +141,6 @@ rule filter_ibdends_mle: # applying cutoffs
             --output_file {output.fipass} \
             --upper_bound {params.mlecut}
         """
-
-# rule count_ibdends_mle: # computing counts over windows
-#     input:
-#         filein='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
-#         mapin='{cohort}/maps/chr{num}.map',
-#     output:
-#         fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
-#     params:
-#         by=str(config['FIXED']['ISWEEP']['BY']),
-#         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
-#         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
-#     shell:
-#         """
-#         python ../../scripts/ibd-windowed.py \
-#             {input.filein} \
-#             {output.fileout} \
-#             {input.mapin} \
-#             --by {params.by} \
-#             --end {params.ge} \
-#             --telocut {params.tc}
-#         """
 
 rule count_ibdends_mle: # computing counts over windows
     input:

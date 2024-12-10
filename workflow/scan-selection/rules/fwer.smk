@@ -8,6 +8,7 @@ pval = float(str(config['CHANGE']['ISWEEP']['PVALUE']))
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
 genomesize = float(str(config['CHANGE']['ISWEEP']['GENOMESIZE']))
+genomesize /= 100 # in morgans
 chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
 chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 numchr = chrhigh - chrlow + 1
