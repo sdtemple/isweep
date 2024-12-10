@@ -47,15 +47,15 @@ if __name__ == "__main__":
                         type=float, 
                         default=35, 
                         help='(default: 35) Theta parameter for Ornstein-Uhlenbeck process')
-    parser.add_argument('--chrnum', 
+    parser.add_argument('--chromosome_number', 
                         type=int, 
                         default=22, 
                         help='(default: 22) Chromosome number')
-    parser.add_argument('--chrlen', 
+    parser.add_argument('--chr_average_size', 
                         type=float, 
                         default=1.5, 
                         help='(default: 1.5) Average chromosome length (in Morgans)')
-    parser.add_argument('--stepsize', 
+    parser.add_argument('--cM_step_size', 
                         type=float, 
                         default=0.0005, 
                         help='(default: 0.0005) Step size for each test (in Morgans)')
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     
     main(args.pvalue, 
          args.theta, 
-         args.chrnum, 
-         args.chrlen, 
-         args.stepsize, 
-         args.numsims)
+         args.chromosome_number, 
+         args.chr_average_size, 
+         args.cM_step_size, 
+         args.num_sims)
