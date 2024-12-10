@@ -87,7 +87,7 @@ def main():
     args = parser.parse_args()
 
     all_genome = f"{args.input_study}/{args.output_all_genome_file}" 
-    excess_genome = f"{args.input_study}/{args.output_excess_genome_file}" 
+    # excess_genome = f"{args.input_study}/{args.output_excess_genome_file}" 
 
     # Reading in data
     tab = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{args.chr_low}{args.input_suffix}", sep='\t')
