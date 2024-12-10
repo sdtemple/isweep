@@ -13,6 +13,7 @@ chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 numchr = chrhigh - chrlow + 1
 chrsize = genomesize / numchr
 covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
+covlen= int(covlen / 100 / stepsize)
 numsims = int(str(config['CHANGE']['ISWEEP']['SIMS'])) 
 
 # implement the siegmund and yakir (2007) method
@@ -43,7 +44,7 @@ rule analytical_method:
             --chr_high {params.chrhigh} \
             --chr_average_size {params.chrsize} \
             --cM_step_size {params.stepsize} \
-            --autocovariance_length {params.covlen} \
+            --autocovariance_steps {params.covlen} \
             --pvalue {params.pval} \
             --outlier_cutoff {params.initcut} \
             --counts_column COUNT \

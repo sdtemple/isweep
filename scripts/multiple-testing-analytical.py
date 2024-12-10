@@ -63,7 +63,7 @@ parser.add_argument('--cM_step_size',
                     type=float, 
                     default=0.0005, 
                     help='(default: 0.0005) Step size for each test (in Morgans)')
-parser.add_argument('--autocovariance_length', 
+parser.add_argument('--autocovariance_steps', 
                     type=int, 
                     default=80, 
                     help='(default: 80) Number of steps for the covariance estimate')

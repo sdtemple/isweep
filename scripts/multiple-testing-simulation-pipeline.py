@@ -18,11 +18,11 @@ def main(input_file, output_file, numsims):
         for line in f:
             key,val = line.strip().split('\t')
             the_dictionary[key] = float(val)
-    stepsize = the_dictionary['step-size-morgan']
-    chrnum = the_dictionary['chromosome-number']
-    chrlen = the_dictionary['average-chromosome-length-morgan']
-    theta = the_dictionary['estimated-theta']
-    pvalue = the_dictionary['p-value']
+    stepsize = the_dictionary['step-size-morgan:']
+    chrnum = the_dictionary['chromosome-number:']
+    chrlen = the_dictionary['average-chromosome-length-morgan:']
+    theta = the_dictionary['estimated-theta:']
+    pvalue = the_dictionary['p-value:']
 
     # Calculate K
     K = int(np.floor(chrlen / stepsize) * chrnum)
@@ -75,4 +75,4 @@ if __name__ == "__main__":
     
     main(args.input_file,
          args.output_file, 
-         args.numsims)
+         args.num_sims)

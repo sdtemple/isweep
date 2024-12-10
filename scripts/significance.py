@@ -43,17 +43,17 @@ with open(analytical, 'r') as f:
         key, val = line.strip().split('\t')
         the_dictionary[key] = float(val)
 
-pvalue = the_dictionary['p-value']
-lwrbnd = the_dictionary['initial-lower-bound']
-uprbnd = the_dictionary['initial-upper-bound']
-rmean = the_dictionary['revised-mean']
-rstd = the_dictionary['revised-standard-deviation']
-dz = the_dictionary['upper-discrete-z']
+pvalue = the_dictionary['p-value:']
+lwrbnd = the_dictionary['initial-lower-bound:']
+uprbnd = the_dictionary['initial-upper-bound:']
+rmean = the_dictionary['revised-mean:']
+rstd = the_dictionary['revised-standard-deviation:']
+dz = the_dictionary['upper-discrete-z:']
 dp = norm.sf(dz)
-cz = the_dictionary['upper-continuous-z']
+cz = the_dictionary['upper-continuous-z:']
 cp = norm.sf(cz)
-draw = the_dictionary['upper-discrete-raw']
-craw = the_dictionary['upper-continuous-raw']
+draw = the_dictionary['upper-discrete-raw:']
+craw = the_dictionary['upper-continuous-raw:']
 
 # Process simulation file
 sims = []
