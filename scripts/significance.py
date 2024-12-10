@@ -30,11 +30,11 @@ parser.add_argument('--output_excess_file',
 
 # Parse the arguments
 args = parser.parse_args()
-ibd = args.ibd
-analytical = args.analytical
-simulation = args.simulation
-out = args.out
-out2 = args.out2
+ibd = args.input_ibd_file
+analytical = args.input_analytical_file
+simulation = args.input_simulation_file
+out = args.output_modified_file
+out2 = args.output_excess_file
 
 # Process analytical file
 the_dictionary = dict()
