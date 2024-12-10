@@ -49,6 +49,7 @@ def main(input_file, output_file, numsims):
         out = np.quantile(maxs, 1 - pvalue)
     else:
         out = -100
+        maxs = [-100]
     print(out)
 
     with open(output_file,'w') as f:
