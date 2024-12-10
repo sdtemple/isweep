@@ -5,6 +5,15 @@ macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
 
+# rule manhattan:
+#     input:
+#     output:
+#     params:
+#     shell:
+#         """
+#         python ../../scripts/manhattan-pipeline.py \
+#         """
+
 rule excess_region: # concatenate regions of excess IBD
     input:
         filein=macro+'/excess.ibd.tsv',

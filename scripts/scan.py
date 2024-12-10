@@ -34,12 +34,12 @@ def main():
         help="Output file for saving all IBD data."
     )
     
-    parser.add_argument(
-        '--output_excess_genome_file', 
-        type=str,
-        default='excess.ibd.tsv', 
-        help="Output file for saving excess IBD data."
-    )
+    # parser.add_argument(
+    #     '--output_excess_genome_file', 
+    #     type=str,
+    #     default='excess.ibd.tsv', 
+    #     help="Output file for saving excess IBD data."
+    # )
     
     parser.add_argument(
         '--chr_low', 
@@ -69,18 +69,18 @@ def main():
         help="(default: .ibd.windowed.tsv.gz) Suffix of chromosome files."
     )
     
-    parser.add_argument(
-        '--heuristic_cutoff', 
-        type=float,
-        default=4.0, 
-        help="(default: 4.0) Heuristic cutoff value for extreme IBD rates. First pass."
-    )
+    # parser.add_argument(
+    #     '--heuristic_cutoff', 
+    #     type=float,
+    #     default=4.0, 
+    #     help="(default: 4.0) Heuristic cutoff value for extreme IBD rates. First pass."
+    # )
     
     parser.add_argument(
         '--outlier_cutoff', 
         type=float,
-        default=3.0, 
-        help="(default: 3.0) Heuristic cutoff value for outlier IBD rates. Second pass."
+        default=4.0, 
+        help="(default: 4.0) Heuristic cutoff value for outlier IBD rates. Second pass."
     )
     
     # Parse the arguments
@@ -98,24 +98,25 @@ def main():
         tab = pd.concat((tab, tabnow))
 
     # Calculating excess IBD
-    medi = np.quantile(tab['COUNT'], 0.5)
+    medi = np.mean(tab['COUNT'])
+    # medi = np.quantile(tab['COUNT'], 0.5)
     stdv = tab['COUNT'].std()
     a = medi - stdv * args.outlier_cutoff
     b = medi + stdv * args.outlier_cutoff
     sub = tab[(tab['COUNT'] >= a) & (tab['COUNT'] <= b)]
-    medi = np.quantile(sub['COUNT'], 0.5)
+    # medi = np.quantile(sub['COUNT'], 0.5)
     avg = np.mean(sub['COUNT'])
     stdv = sub['COUNT'].std()
-    b = medi + stdv * args.heuristic_cutoff
-    out = tab[tab['COUNT'] >= b]
+    # b = medi + stdv * args.heuristic_cutoff
+    # out = tab[tab['COUNT'] >= b]
 
     # Saving all data
     tab['Z'] = (tab['COUNT'] - avg) / stdv
     tab.to_csv(all_genome, sep='\t', index=False)
 
-    # Saving excess IBD data
-    out['Z'] = (out['COUNT'] - avg) / stdv
-    out.to_csv(excess_genome, sep='\t', index=False)
+    # # Saving excess IBD data
+    # out['Z'] = (out['COUNT'] - avg) / stdv
+    # out.to_csv(excess_genome, sep='\t', index=False)
 
 if __name__ == "__main__":
     main()

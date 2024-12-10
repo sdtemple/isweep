@@ -45,6 +45,8 @@ for i in range(low,high+1):
 include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
 include: 'rules/samples.smk'
+include: 'rules/maps.smk'
+include: 'rules/fwer.smk'
 
 rule yaml:
     input:

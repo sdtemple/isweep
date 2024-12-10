@@ -26,7 +26,7 @@ mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
 rule hapibd: # candidate segments from hap-ibd.jar
     input:
         vcf=vcffolder + '/' + vcfpre + '{num}' + vcfsuf,
-        map='{cohort}/maps/chr{num}.map',
+        mapfile='{cohort}/maps/chr{num}.map',
         excludesamples='{cohort}/excludesamples.txt',
     output:
         ibd='{cohort}/ibdsegs/hapibd/chr{num}.ibd.gz',
@@ -43,7 +43,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
         """
         java -Xmx{params.xmx}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
-            map={input.map} \
+            map={input.mapfile} \
             out={params.out} \
             min-seed={params.minsee} \
             min-extend={params.minext} \
@@ -55,7 +55,7 @@ rule hapibd: # candidate segments from hap-ibd.jar
 rule ibdends: # ibd-ends.jar
     input:
         vcf=vcffolder + '/' + vcfpre + '{num}' + vcfsuf,
-        map='{cohort}/maps/chr{num}.map',
+        mapfile='{cohort}/maps/chr{num}.map',
         ibd='{cohort}/ibdsegs/hapibd/chr{num}.ibd.gz',
         subsample='{cohort}/excludesamples.txt',
     output:
@@ -74,7 +74,7 @@ rule ibdends: # ibd-ends.jar
         java -Xmx{params.xmx}g -jar ../../software/ibd-ends.jar \
             gt={input.vcf} \
             ibd={input.ibd} \
-            map={input.map} \
+            map={input.mapfile} \
             out={params.out} \
             min-maf={params.maf} \
             quantiles={params.qua} \
@@ -111,25 +111,41 @@ rule filter_ibdends_scan: # applying cutoffs
             --upper_bound {params.scancut}
         """
 
+# rule count_ibdends_scan: # computing counts over windows
+#     input:
+#         filein='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
+#         mapin='{cohort}/maps/chr{num}.map',
+#     output:
+#         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
+#     params:
+#         by=str(config['FIXED']['ISWEEP']['BY']),
+#         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
+#         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
+#     shell:
+#         """
+#         python ../../scripts/ibd-windowed.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {input.mapin} \
+#             --by {params.by} \
+#             --end {params.ge} \
+#             --telocut {params.tc}
+#         """
+
 rule count_ibdends_scan: # computing counts over windows
     input:
         filein='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
-        mapin='{cohort}/maps/chr{num}.map',
+        mapin='{cohort}/maps/chr{num}.trimmed.map',
     output:
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.windowed.tsv.gz',
-    params:
-        by=str(config['FIXED']['ISWEEP']['BY']),
-        ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
-        tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
     shell:
         """
-        python ../../scripts/ibd-windowed.py \
-            {input.filein} \
-            {output.fileout} \
-            {input.mapin} \
-            --by {params.by} \
-            --end {params.ge} \
-            --telocut {params.tc}
+        python ../../scripts/count-ibd.py \
+            --input_ibd_file {input.filein} \
+            --input_map_file {input.mapin} \
+            --output_file {output.fileout} \
+            --start 5 \
+            --end 6 \
         """
 
 rule filter_ibdends_mle: # applying cutoffs
@@ -147,26 +163,71 @@ rule filter_ibdends_mle: # applying cutoffs
             --upper_bound {params.mlecut}
         """
 
+# rule count_ibdends_mle: # computing counts over windows
+#     input:
+#         filein='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
+#         mapin='{cohort}/maps/chr{num}.map',
+#     output:
+#         fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
+#     params:
+#         by=str(config['FIXED']['ISWEEP']['BY']),
+#         ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
+#         tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
+#     shell:
+#         """
+#         python ../../scripts/ibd-windowed.py \
+#             {input.filein} \
+#             {output.fileout} \
+#             {input.mapin} \
+#             --by {params.by} \
+#             --end {params.ge} \
+#             --telocut {params.tc}
+#         """
+
 rule count_ibdends_mle: # computing counts over windows
     input:
         filein='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
-        mapin='{cohort}/maps/chr{num}.map',
+        mapin='{cohort}/maps/chr{num}.trimmed.map',
     output:
         fileout='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.windowed.tsv.gz',
-    params:
-        by=str(config['FIXED']['ISWEEP']['BY']),
-        ge=str(config['FIXED']['ISWEEP']['GENOMEEND']),
-        tc=str(config['FIXED']['ISWEEP']['TELOCUT']),
     shell:
         """
-        python ../../scripts/ibd-windowed.py \
-            {input.filein} \
-            {output.fileout} \
-            {input.mapin} \
-            --by {params.by} \
-            --end {params.ge} \
-            --telocut {params.tc}
+        python ../../scripts/count-ibd.py \
+            --input_ibd_file {input.filein} \
+            --input_map_file {input.mapin} \
+            --output_file {output.fileout} \
+            --start 5 \
+            --end 6 \
         """
+
+# rule scan: # conduct a manhattan scan
+#     input:
+#         [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
+#         [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
+#     output:
+#         scandata=macro+'/scan.ibd.tsv',
+#         excessdata=macro+'/excess.ibd.tsv',
+#     params:
+#         study=macro,
+#         folder='/ibdsegs/ibdends/scan',
+#         chrlow=str(low),
+#         chrhigh=str(high),
+#         scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
+#         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+#     shell:
+#         """
+#         python ../../scripts/scan.py \
+#             --input_study {params.study} \
+#             --input_folder {params.folder} \
+#             --output_all_genome_file scan.ibd.tsv \
+#             --output_excess_genome_file excess.ibd.tsv \
+#             --chr_low {params.chrlow} \
+#             --chr_high {params.chrhigh} \
+#             --input_prefix chr \
+#             --input_suffix .ibd.windowed.tsv.gz \
+#             --heuristic_cutoff {params.scansigma} \
+#             --outlier_cutoff {params.telosigma}
+#         """
 
 rule scan: # conduct a manhattan scan
     input:
@@ -174,13 +235,11 @@ rule scan: # conduct a manhattan scan
         [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
     output:
         scandata=macro+'/scan.ibd.tsv',
-        excessdata=macro+'/excess.ibd.tsv',
     params:
         study=macro,
         folder='/ibdsegs/ibdends/scan',
         chrlow=str(low),
         chrhigh=str(high),
-        scansigma=str(config['FIXED']['ISWEEP']['SCANSIGMA']),
         telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
     shell:
         """
@@ -188,13 +247,11 @@ rule scan: # conduct a manhattan scan
             --input_study {params.study} \
             --input_folder {params.folder} \
             --output_all_genome_file scan.ibd.tsv \
-            --output_excess_genome_file excess.ibd.tsv \
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --input_prefix chr \
             --input_suffix .ibd.windowed.tsv.gz \
-            --heuristic_cutoff {params.scansigma} \
-            --outlier_cutoff {params.telosigma}
+            --outlier_cutoff {params.telosigma} \
         """
 
 rule make_histogram:

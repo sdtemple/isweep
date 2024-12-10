@@ -16,6 +16,10 @@ CHANGE:
     SUBSAMPLE: '/path-to-subsample/inferred.ancestry.txt'
     XMXMEM: '240' # in gb
     THREADS: '16'
+    CMSTEPSIZE: '0.02' # in cM (step size)
+    GENOMESIZE: '330' # in cM (all chromosomes summed)
+    PVALUE: '0.05'
+    SIMS: '500' # simulations to derive OU threshold
 
   IBDENDS:
     # do a test run on 1 chromosome to set this
@@ -72,6 +76,7 @@ FIXED:
     CMCOVER: '1.0' # excess ibd rate must extend this long in cM
     CMSMALL: '2.0' # region is extended w/ buffer if too small
     MBBUF: '2' # mb buffer if cm not long enough
+    AUTOCOVLEN: '4.' # in cM, how much data to learn autocovariance
     # estimating selection coefficient
     MLECUTOFF: '3.0' # ibd cM cutoff
 

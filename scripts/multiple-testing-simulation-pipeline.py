@@ -11,7 +11,19 @@
 import argparse
 import numpy as np
 
-def main(pvalue, theta, chrnum, chrlen, stepsize, numsims):
+def main(input_file, output_file, numsims):
+
+    the_dictionary = dict()
+    with open(input_file,'r') as f:
+        for line in f:
+            key,val = line.strip().split('\t')
+            the_dictionary[key] = float(val)
+    stepsize = the_dictionary['step-size-morgan']
+    chrnum = the_dictionary['chromosome-number']
+    chrlen = the_dictionary['average-chromosome-length-morgan']
+    theta = the_dictionary['estimated-theta']
+    pvalue = the_dictionary['p-value']
+
     # Calculate K
     K = int(np.floor(chrlen / stepsize) * chrnum)
     
@@ -36,34 +48,31 @@ def main(pvalue, theta, chrnum, chrlen, stepsize, numsims):
     out = np.quantile(maxs, 1 - pvalue)
     print(out)
 
+    with open(output_file,'w') as f:
+        for m in maxs:
+            f.write(str(m))
+            f.write('\n')
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Estimate a multiple testing correction using simulation of an Ornstein-Uhlenbeck process.')
     
-    parser.add_argument('--pvalue', 
-                        type=float, 
-                        default=0.05, 
-                        help='(default: 0.05) p-value for the multiple testing correction')
-    parser.add_argument('--theta', 
-                        type=float, 
-                        default=35, 
-                        help='(default: 35) Theta parameter for Ornstein-Uhlenbeck process')
-    parser.add_argument('--chrnum', 
-                        type=int, 
-                        default=22, 
-                        help='(default: 22) Chromosome number')
-    parser.add_argument('--chrlen', 
-                        type=float, 
-                        default=1.5, 
-                        help='(default: 1.5) Average chromosome length (in Morgans)')
-    parser.add_argument('--stepsize', 
-                        type=float, 
-                        default=0.0005, 
-                        help='(default: 0.0005) Step size for each test (in Morgans)')
-    parser.add_argument('--numsims', 
+    parser.add_argument('--input_file',
+                        type=str,
+                        required=True,
+                        help='File output from multiple-testing-analytical.py'
+                        )
+    parser.add_argument('--output_file',
+                        type=str,
+                        required=True,
+                        help='Output file with maxima of simulations'
+                        )
+    parser.add_argument('--num_sims', 
                         type=int, 
                         default=1000, 
                         help='(default: 1000) Number of simulations')
     
     args = parser.parse_args()
     
-    main(args.pvalue, args.theta, args.chrnum, args.chrlen, args.stepsize, args.numsims)
+    main(args.input_file,
+         args.output_file, 
+         args.numsims)
