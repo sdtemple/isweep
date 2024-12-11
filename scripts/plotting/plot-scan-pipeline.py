@@ -163,7 +163,7 @@ def main():
     lowbnd = float(ibd.INIT_LOWER_BOUND[0])
     uppbnd = float(ibd.INIT_UPPER_BOUND[0])
     less_ibd = ibd[(ibd.COUNT >= lowbnd)&(ibd.COUNT <= uppbnd)]
-    medi = less_ibd.median()
+    medi = less_ibd['COUNT'].median()
     stdv = float(ibd['ADJ_STDDEV'][0])
     upp = medi + stdv * args.heuristic_cutoff
     md = medi
