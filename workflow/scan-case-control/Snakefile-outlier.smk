@@ -157,19 +157,3 @@ rule outlier:
         touch {output.out1}
         """
 
-# ### map the phenotypes to the outlier haplotypes
-# rule phenotypes:
-#     input:
-#         inn='{cohort}/{hit}/outlier{num}.case.txt',
-#     output:
-#         out='{cohort}/{hit}/outlier{num}.case.phenotype.txt',
-#     params:
-#         cases=str(config['CHANGE']['ISWEEP']['CASES']),
-#     shell:
-#         """
-#         python ../../scripts/model/map-phenotype.py \
-#             {input.inn} \
-#             {params.cases} \
-#             {output.out} \
-#         """
-

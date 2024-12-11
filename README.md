@@ -6,18 +6,17 @@ There is a major methodological update for multiple-testing corrections.
 
 Please read `misc/multiple-testing.md`. You should read our citation below for more details.
 
-New features are actively under construction (December 2024).
-- Extension to IBD mapping
-
 Contact sethtem@umich.edu or Github issues for troubleshooting.
 
 See `misc/usage.md` to evaluate if this methodology fits your study.
 
 See `misc/cluster-options.md` for some suggested cluster options to use in pipelines.
 
-See on GitHub "Issues/Closed" for some comments **I/Seth** left about the pipeline.
+See on GitHub "Issues/Closed" for some comments about the pipeline.
 
 See `telomeres.md` for comments on very small chromosomes.
+
+See 'workflow/scan-case-control' if you are here for IBD mapping, not selection.
 
 ## Citation
 ---
@@ -32,7 +31,15 @@ Temple, S.D., Waples, R.K., Browning, S.R. (2024). Modeling recent positive sele
 
 Temple, S.D., Thompson, E.A. (2024). Identity-by-descent in large samples. Preprint at bioRxiv, 2024.06.05.597656. <a href="https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1">https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1</a>.
 
-#### Multiple testing correction for selection scan
+#### Genome-wide significance thresholds in the selection scan
+
+Temple, S.D., Browning, S.B. (2024). "Multiple testing corrections in selection studies using identity-by-descent segments. Draft in progress.
+
+#### Genome-wide significance thresholds in the IBD case-control mapping
+
+Temple, S.D., ..., Wijsman, E., and Blue, E. (2024-25). "Multiple testing corrections in case-control studies using identity-by-descent segments. Draft in progress.
+
+#### Unifying framework of the selection scan and sweep modeling
 
 Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection. PhD thesis (University of Washington). <a href="https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses">https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses</a>.
 
