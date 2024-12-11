@@ -36,7 +36,7 @@ def main():
     args = parser.parse_args()
 
     # File handling and computation
-    cm = args.min_cM_region
+    cm = args.max_cM_gap
     g = open(args.output_file, 'w')
     g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\tMINIBD\tMAXIBD\n')
     try:

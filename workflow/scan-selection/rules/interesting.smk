@@ -16,7 +16,7 @@ numsims = int(str(config['CHANGE']['ISWEEP']['SIMS']))
 
 rule plot_scan:
     input:
-        ibd=macro+'/scan.ibd.tsv',
+        ibd=macro+'/scan.modified.ibd.tsv',
     output:
         png=macro+'/scan.png',
     params:
