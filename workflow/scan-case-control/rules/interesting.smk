@@ -78,15 +78,3 @@ rule make_roi_table:
             --cM_small {params.cmsmall} \
             --Mb_buffer {params.mbbuf}
         """
-
-# rule plot_histogram:
-#     input:
-#         pass
-#     output:
-#         pass
-#     params:
-#         pass
-#     shell:
-#         """
-#         echo 'Hello world'
-#         """

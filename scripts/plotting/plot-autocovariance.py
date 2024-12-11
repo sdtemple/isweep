@@ -37,6 +37,13 @@ def main():
         required=True, 
         help="Output file prefix for saving the plot."
     )
+
+    parser.add_argument(
+        '--theta_type', 
+        type=str,
+        default='estimated-theta:', 
+        help="Estimator defined in output FWER analysis file."
+    )
     
     parser.add_argument(
         '--title', 
@@ -109,7 +116,7 @@ def main():
             key,val = line.strip().split('\t')
             the_dictionary[key] = float(val)
     stepsize = the_dictionary['step-size-morgan:']
-    theta = the_dictionary['estimated-theta:']
+    theta = the_dictionary[args.theta_type]
     
     xs = list(table.columns)
     xs = xs[:-1]

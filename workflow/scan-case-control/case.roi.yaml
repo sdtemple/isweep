@@ -15,7 +15,7 @@ CHANGE:
     CHRLOW: '1'
     # highest chromosome numbers
     CHRHIGH: '22'
-    CASES: 'phenotype.txt'
+    CASES: 'phenotypes.txt'
     ROI: 'roi.case.tsv'
     XMXMEM: '120' # in gb
     THREADS: '12'

@@ -69,7 +69,7 @@ FIXED:
     # scanning parameters
     SCANCUTOFF: '2.0' # ibd cM threshold
     CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
-    TELOSIGMA: '3.0' # sigma scalar to remove telomeres
+    TELOSIGMA: '3.5' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd
     CMCOVER: '0.5' # excess ibd rate must extend this long in cM
     CMSMALL: '2.0' # region is extended w/ buffer if too small

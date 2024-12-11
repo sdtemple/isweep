@@ -103,7 +103,7 @@ def main():
                 idx += 1
 
     # Saving
-    write_outliers(communities, args.output_folder, scalar)
+    write_outliers(communities, phen, args.output_folder, scalar)
 
 if __name__ == "__main__":
     main()

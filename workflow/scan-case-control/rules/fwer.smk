@@ -111,4 +111,90 @@ rule plot_autocovariance:
             --input_autocov_file {input.autocov} \
             --input_analytical_file {input.testing} \
             --output_prefix {params.prefix} \
+            --theta_type 'estimated-theta:' \
+        """
+
+rule plot_autocovariance_case:
+    input:
+        testing=macro+'/fwer.analytical.case.tsv',
+        autocov=macro+'/fwer.autocovariance.control.tsv',
+    output:
+        figure=macro+'/autocovariance-control.png',
+    params:
+        prefix=macro+'/autocovariance-control'
+    shell:
+        """
+        python ../../scripts/plotting/plot-autocovariance.py \
+            --input_autocov_file {input.autocov} \
+            --input_analytical_file {input.testing} \
+            --output_prefix {params.prefix} \
+            --theta_type 'estimated-theta0:' \
+        """
+
+rule plot_autocovariance_case:
+    input:
+        testing=macro+'/fwer.analytical.case.tsv',
+        autocov=macro+'/fwer.autocovariance.case.tsv',
+    output:
+        figure=macro+'/autocovariance-case.png',
+    params:
+        prefix=macro+'/autocovariance-case'
+    shell:
+        """
+        python ../../scripts/plotting/plot-autocovariance.py \
+            --input_autocov_file {input.autocov} \
+            --input_analytical_file {input.testing} \
+            --output_prefix {params.prefix} \
+            --theta_type 'estimated-theta1:' \
+        """
+
+rule plot_histogram_diff:
+    input:
+        scandata=macro+'/scan.case.ibd.tsv'
+    output:
+        histogram=macro+'/zhistogram.diff.png'
+    shell:
+        """
+        python ../../scripts/plotting/plot-histogram.py \
+            --input_file {input.scandata} \
+            --output_file {output.histogram} \
+            --chr_high 100 \
+            --statistic ZDIFFZ \
+            --xlabel z-score \
+            --xupp 6. \
+            --title 'Difference of IBD rates' \
+        """
+
+rule plot_histogram_case:
+    input:
+        scandata=macro+'/scan.case.ibd.tsv'
+    output:
+        histogram=macro+'/zhistogram.case.png'
+    shell:
+        """
+        python ../../scripts/plotting/plot-histogram.py \
+            --input_file {input.scandata} \
+            --output_file {output.histogram} \
+            --chr_high 100 \
+            --statistic Z1 \
+            --xlabel z-score \
+            --xupp 6. \
+            --title 'Case IBD rates' \
+        """
+
+rule plot_histogram_control:
+    input:
+        scandata=macro+'/scan.case.ibd.tsv'
+    output:
+        histogram=macro+'/zhistogram.control.png'
+    shell:
+        """
+        python ../../scripts/plotting/plot-histogram.py \
+            --input_file {input.scandata} \
+            --output_file {output.histogram} \
+            --chr_high 100 \
+            --statistic Z0 \
+            --xlabel z-score \
+            --xupp 6. \
+            --title 'Control IBD rates' \
         """
