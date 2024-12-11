@@ -27,18 +27,16 @@ rule plot_scan:
         chrhigh=str(high),
     shell:
         """
-        python ../../scripts/plotting/plot-scan-pipeline.py \
+        python ../../scripts/plotting/plot-scan-case-pipeline.py \
             --input_file {input.ibd} \
             --output_prefix {params.prefix} \
-            --sample_size {params.samplesize} \
-            --ploidy 2 \
-            --heuristic_cutoff 4 \
             --num_sims 0 \
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --statistic ZDIFFZ \
             --ylabel 'Standardized rate difference' \
             --xlabel 'Position along genome' \
+            --yupp 6 \
         """
 
 rule excess_region: # concatenate regions of excess IBD
