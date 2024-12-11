@@ -14,51 +14,38 @@ if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 folder_name = macro + '/maps'
 if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs'
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs/hapibd'
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
+    raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 folder_name = macro + '/ibdsegs/ibdends'
 if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-folder_name = macro + '/ibdsegs/ibdends/mle'
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
+    raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
+    raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 
 mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
 mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
 mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
-
 for i in range(low,high+1):
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     destination_file = macro+'/maps/chr'+str(i)+'.map'
     if not os.path.exists(destination_file):
-        shutil.copy(source_file, destination_file)
+        raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 
 # include .smk files with rules
 include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
-include: 'rules/samples.smk'
-include: 'rules/maps.smk'
 include: 'rules/fwer.smk'
 
 rule yaml:
     input:
-        macro+'/excess.ibd.tsv',
-        macro+'/excess.region.ibd.tsv',
-        macro+'/roi.tsv',
-        macro+'/excludesamples.txt',
-        macro+'/zhistogram.png',
-        macro+'/autocovariance.png',
-        macro+'/scan.png'
+        macro+'/roi.case.tsv',
+        # macro+'/zhistogram-case.png',
+        # macro+'/zhistogram-control.png',
+        macro+'/autocovariance-diff.png',
+        macro+'/fwer.crosscovariance.diff.tsv',
+        # macro+'/scan-case-control.png',
     output:
-        yaml=macro+'/arguments.scan.yaml',
+        yaml=macro+'/arguments.case.yaml',
     params:
         yaml=str(config['CHANGE']['FOLDERS']['YAML']),
     shell:
@@ -67,4 +54,4 @@ rule yaml:
 # snakemake all -c1 -n
 rule all:
     input:
-        macro+'/arguments.scan.yaml',
+        macro+'/arguments.case.yaml',
