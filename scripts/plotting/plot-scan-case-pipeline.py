@@ -88,8 +88,8 @@ def main():
     parser.add_argument(
         '--yupp', 
         type=float,
-        default=6, 
-        help="(default: 6) Upper bound on y-scale."
+        default=8., 
+        help="(default: 8.) Upper bound on y-scale."
     )
 
     parser.add_argument('--alpha',

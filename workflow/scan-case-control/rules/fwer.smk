@@ -112,6 +112,7 @@ rule plot_autocovariance:
             --input_analytical_file {input.testing} \
             --output_prefix {params.prefix} \
             --theta_type 'estimated-theta:' \
+            --title 'Difference in IBD rates' \
         """
 
 rule plot_autocovariance_control:
@@ -129,6 +130,7 @@ rule plot_autocovariance_control:
             --input_analytical_file {input.testing} \
             --output_prefix {params.prefix} \
             --theta_type 'estimated-theta0:' \
+            --title 'Control IBD rates' \
         """
 
 rule plot_autocovariance_case:
@@ -146,6 +148,7 @@ rule plot_autocovariance_case:
             --input_analytical_file {input.testing} \
             --output_prefix {params.prefix} \
             --theta_type 'estimated-theta1:' \
+            --title 'Case IBD rates' \
         """
 
 rule plot_histogram_diff:

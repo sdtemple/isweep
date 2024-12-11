@@ -36,7 +36,7 @@ rule plot_scan:
             --statistic ZDIFFZ \
             --ylabel 'Standardized rate difference' \
             --xlabel 'Position along genome' \
-            --yupp 6 \
+            --yupp 8 \
         """
 
 rule excess_region: # concatenate regions of excess IBD
