@@ -38,11 +38,14 @@ include: 'rules/fwer.smk'
 rule yaml:
     input:
         macro+'/roi.case.tsv',
-        # macro+'/zhistogram-case.png',
-        # macro+'/zhistogram-control.png',
-        macro+'/autocovariance-diff.png',
+        macro+'/zhistogram.case.png',
+        macro+'/zhistogram.control.png',
+        macro+'/zhistogram.diff.png',
+        macro+'/autocovariance.diff.png',
+        macro+'/autocovariance.case.png',
+        macro+'/autocovariance.control.png',
         macro+'/fwer.crosscovariance.diff.tsv',
-        # macro+'/scan-case-control.png',
+        macro+'/scan.case.control.png',
     output:
         yaml=macro+'/arguments.case.yaml',
     params:

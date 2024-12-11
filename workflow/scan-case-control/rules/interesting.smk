@@ -18,9 +18,9 @@ rule plot_scan:
     input:
         ibd=macro+'/scan.case.ibd.tsv',
     output:
-        png=macro+'/scan-case-control.png',
+        png=macro+'/scan.case.control.png',
     params:
-        prefix=macro+'/scan-case-control',
+        prefix=macro+'/scan.case.control',
         samplesize=str(samplesize),
         numsims=str(numsims),
         chrlow=str(low),

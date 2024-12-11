@@ -102,9 +102,9 @@ rule plot_autocovariance:
         testing=macro+'/fwer.analytical.case.tsv',
         autocov=macro+'/fwer.autocovariance.diff.tsv',
     output:
-        figure=macro+'/autocovariance-diff.png',
+        figure=macro+'/autocovariance.diff.png',
     params:
-        prefix=macro+'/autocovariance-diff'
+        prefix=macro+'/autocovariance.diff'
     shell:
         """
         python ../../scripts/plotting/plot-autocovariance.py \
@@ -114,14 +114,14 @@ rule plot_autocovariance:
             --theta_type 'estimated-theta:' \
         """
 
-rule plot_autocovariance_case:
+rule plot_autocovariance_control:
     input:
         testing=macro+'/fwer.analytical.case.tsv',
         autocov=macro+'/fwer.autocovariance.control.tsv',
     output:
-        figure=macro+'/autocovariance-control.png',
+        figure=macro+'/autocovariance.control.png',
     params:
-        prefix=macro+'/autocovariance-control'
+        prefix=macro+'/autocovariance.control'
     shell:
         """
         python ../../scripts/plotting/plot-autocovariance.py \
@@ -136,9 +136,9 @@ rule plot_autocovariance_case:
         testing=macro+'/fwer.analytical.case.tsv',
         autocov=macro+'/fwer.autocovariance.case.tsv',
     output:
-        figure=macro+'/autocovariance-case.png',
+        figure=macro+'/autocovariance.case.png',
     params:
-        prefix=macro+'/autocovariance-case'
+        prefix=macro+'/autocovariance.case'
     shell:
         """
         python ../../scripts/plotting/plot-autocovariance.py \
