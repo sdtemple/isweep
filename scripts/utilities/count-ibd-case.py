@@ -54,7 +54,8 @@ casefile = args.input_case_file
 
 # Input and formatting
 table = pd.read_csv(input_file, sep='\t')
-map_file = pd.read_csv(map_file, sep='\t')
+map_file = pd.read_csv(map_file, sep='\t',header=None)
+map_file.columns = ['chrom','rsid','cm','bp']
 columns = list(table.columns)
 encol = columns[end]
 stcol = columns[start]
@@ -66,7 +67,7 @@ casedict = dict()
 with open(casefile) as f:
     for line in f:
         ind, status = line.strip().split('\t')
-        casedict[int(ind)] = int(float(status))
+        casedict[ind] = int(float(status))
 
 # Map case status to individuals
 table['case1'] = table[ind1col].map(casedict)

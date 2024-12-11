@@ -31,50 +31,63 @@ def OU_approx_cont(z, beta, length, chr, center, test="one-sided"):
     return p - center
 
 # Set up argument parser
-parser = argparse.ArgumentParser(description="Estimate a multiple testing correction using the Ornstein-Uhlenbeck approximation.")
-parser.add_argument('file_out_test', 
-                    type=str, 
+parser = argparse.ArgumentParser(description="Estimate a multiple testing correction using the Ornstein-Uhlenbeck approximation (case-control mapping).")
+
+# Set up argument parser
+parser = argparse.ArgumentParser(description="Estimate a multiple testing correction using the Ornstein-Uhlenbeck approximation (case-control mapping).")
+parser.add_argument('--output_testing_file', 
+                    type=str,
+                    required=True, 
                     help='Output file with multiple testing results')
-parser.add_argument('file_out_cov', 
-                    type=str, 
-                    help='Output file with covariance estimates')
-parser.add_argument('file_out_zdiff',
+parser.add_argument('--output_autocov_prefix', 
                     type=str,
-                    help='Output file with test statistics')
-parser.add_argument('file_out_cross_corr',
+                    required=True,
+                    help='Output file prefix with autocovariance estimates')
+parser.add_argument('--output_crosscov_file', 
                     type=str,
-                    help='Output file with cross-correlations per chromosome')
-parser.add_argument('chr_prefix', 
-                    type=str, 
+                    required=True, 
+                    help='Output file with crosscovariance estimates')
+parser.add_argument('--output_scan_file', 
+                    type=str,
+                    required=True, 
+                    help='Output file standardized scanning statistics')
+parser.add_argument('--output_excess_file', 
+                    type=str,
+                    required=True, 
+                    help='Output file standardized scanning statistics if GW significant')
+parser.add_argument('--input_prefix', 
+                    type=str,
+                    required=True, 
                     help='Prefix of chromosome files')
-parser.add_argument('chr_suffix', 
-                    type=str, 
+parser.add_argument('--input_suffix', 
+                    type=str,
+                    required=True, 
                     help='Suffix of chromosome files')
-parser.add_argument('--chr_start', 
+parser.add_argument('--chr_low', 
                     type=int, 
                     default=1, 
                     help='(default: 1) First chromosome number')
-parser.add_argument('--chr_end', 
+parser.add_argument('--chr_high', 
                     type=int, 
                     default=22, 
                     help='(default: 22) Last chromosome number')
-parser.add_argument('--chr_len', 
+parser.add_argument('--chr_average_size', 
                     type=float, 
                     default=1.5, 
                     help='(default: 1.5) Average length of chromosome (in Morgans)')
-parser.add_argument('--chr_slide', 
+parser.add_argument('--cM_step_size', 
                     type=float, 
                     default=0.0005, 
                     help='(default: 0.0005) Step size for each test (in Morgans)')
-parser.add_argument('--cov_len', 
+parser.add_argument('--autocovariance_steps', 
                     type=int, 
                     default=80, 
                     help='(default: 80) Number of steps for the covariance estimate')
-parser.add_argument('--pvalue', 
+parser.add_argument('--confidence_level', 
                     type=float, 
                     default=0.05, 
                     help='(default: 0.05) p-value for the multiple testing correction')
-parser.add_argument('--init_cut', 
+parser.add_argument('--outlier_cutoff', 
                     type=float, 
                     default=4, 
                     help='(default: 4) Scalar for the initial outlier removal')
@@ -86,30 +99,31 @@ parser.add_argument('--counts_column1',
                     type=str, 
                     default='COUNT1', 
                     help='(default: COUNT1) Column name of case-case counts')
-parser.add_argument('--distance_column',
-                    type=str,
-                    default='CMWINDOW',
-                    help='(default: CMWINDOW) Column name of the distance between SNPs')
 
 args = parser.parse_args()
 
 # Assign arguments to variables
-fileout = args.file_out_test
-fileout2 = args.file_out_cov
-prefix = args.chr_prefix
-suffix = args.chr_suffix
-st = args.chr_start
-en = args.chr_end
-chr_len = args.chr_len
-stepsize = args.chr_slide
-covariance_length = args.cov_len
-pval = args.pvalue
-init_cut = args.init_cut
+fileout = args.output_testing_file
+fileout2 = args.output_autocov_prefix
+fileout3 = fileout2 + '.case.tsv'
+fileout6 = fileout2 + '.control.tsv'
+fileout2 = fileout2 + '.diff.tsv'
+prefix = args.input_prefix
+suffix = args.input_suffix
+st = args.chr_low
+en = args.chr_high
+chr_len = args.chr_average_size
+stepsize = args.cM_step_size
+covariance_length = args.autocovariance_steps
+pval = args.confidence_level
+init_cut = args.outlier_cutoff
 counts_column0 = args.counts_column0
 counts_column1 = args.counts_column1
 
 final_goodbyes = []
 final_covs = []
+final_covs0 = []
+final_covs1 = []
 keep_all_data_control = []
 keep_all_data_case = []
 keep_distance = []
@@ -124,7 +138,7 @@ for chromosome in range(st, en + 1):
         keep_all_data_control += subtable[counts_column0].to_list()
         keep_all_data_case += subtable[counts_column1].to_list()
         keep_chr += [chromosome] * subtable.shape[0]
-        keep_distance += subtable[args.distance_column].to_list()
+        keep_distance += subtable['CMWINDOW'].to_list()
     except:
         pass
 keep_all_data_case = np.array(keep_all_data_case)
@@ -159,7 +173,9 @@ kz = k1 - k0
 # prepare to output a normalized version of the test statistic
 out = dict()
 out['CHROM'] = keep_chr
-out['DISTANCE'] = keep_distance
+out['CMWINDOW'] = keep_distance
+out['COUNT0'] = keep_all_data_control
+out['COUNT1'] = keep_all_data_case
 out['Z0'] = k0
 out['Z1'] = k1 
 out['ZDIFF'] = kz
@@ -175,10 +191,7 @@ stdk = np.std(kz)
 out['ZDIFFZ'] = (k1 - k0 - avgk) / stdk
 # will use avgk and stdk to normalize later
 
-# output normalized test statistic
-outpd = pd.DataFrame(out)
-outpd.to_csv(args.file_out_zdiff, sep='\t', index=False)
-
+# difference process
 # Open an output file
 # And write the header
 # Which is the time lags
@@ -188,8 +201,29 @@ for c in range(1, covariance_length + 1):
     g.write('\t')
 g.write('\n')
 
-cc = open(args.file_out_cross_corr, 'w')
-cc.write('CHROM\tCROSS_CORR\n')
+
+# control process
+# Open an output file
+# And write the header
+# Which is the time lags
+g0 = open(fileout6, 'w')
+for c in range(1, covariance_length + 1):
+    g0.write(str(c * stepsize))
+    g0.write('\t')
+g0.write('\n')
+
+# case process
+# Open an output file
+# And write the header
+# Which is the time lags
+g1 = open(fileout3, 'w')
+for c in range(1, covariance_length + 1):
+    g1.write(str(c * stepsize))
+    g1.write('\t')
+g1.write('\n')
+
+cc = open(args.output_crosscov_file, 'w')
+cc.write('CHROM\tCROSS_COV\n')
 
 # Normalizing the data
 # And estimating the covariance
@@ -214,14 +248,23 @@ for chromosome in range(st, en + 1):
 
         byebye = covariance_length
         covs = []
+        covs0 = []
+        covs1 = []
         byes = []
         
         # loop over autoregressive lags
         for bye in range(1, byebye + 1):
             seq1 = np.arange(1, K - bye + 1, 1)
             seq2 = np.arange(1 + bye, K + 1, 1)
+            # difference process
             xs1 = xs[seq1-1]  # Adjusting index to 0-based for Python
             xs2 = xs[seq2-1]
+            # control process
+            us1 = zs0[seq1-1]  # Adjusting index to 0-based for Python
+            us2 = zs0[seq2-1]
+            # case process
+            vs1 = zs1[seq1-1]  # Adjusting index to 0-based for Python
+            vs2 = zs1[seq2-1]
             ln = len(xs1)
             # ignore the outliers
             bools = [ys1[x]<upper1 
@@ -240,8 +283,14 @@ for chromosome in range(st, en + 1):
                      ]
             xs1 = xs1[bools]
             xs2 = xs2[bools]
+            us1 = us1[bools]
+            us2 = us2[bools]
+            vs1 = vs1[bools]
+            vs2 = vs2[bools]
             # calculate the covariance
             covs.append(np.cov(xs1, xs2)[0, 1])
+            covs0.append(np.cov(us1, us2)[0, 1])
+            covs1.append(np.cov(vs1, vs2)[0, 1])
             byes.append(bye)
 
         # write the covariance estimates to an output file
@@ -250,8 +299,23 @@ for chromosome in range(st, en + 1):
             g.write('\t')
         g.write('\n')
 
+        # write the covariance estimates to an output file
+        for c in covs0:
+            g1.write(str(c))
+            g1.write('\t')
+        g1.write('\n')
+
+        # write the covariance estimates to an output file
+        for c in covs1:
+            g0.write(str(c))
+            g0.write('\t')
+        g0.write('\n')
+
         final_goodbyes += byes
         final_covs += covs
+
+        final_covs0 += covs0
+        final_covs1 += covs1
 
         ctr += 1
 
@@ -262,12 +326,17 @@ for chromosome in range(st, en + 1):
     
 final_goodbyes = np.array(final_goodbyes)
 final_covs = np.array(final_covs)
+final_covs0 = np.array(final_covs0)
+final_covs1 = np.array(final_covs1)
 # ignore the negatives b/c we will take the log
 # there should not be many estimated negative covariances
 # if there are, then the data is not well-behaved
 final_goodbyes = final_goodbyes[final_covs > 0.]
 final_covs = final_covs[final_covs > 0.]
+final_covs0 = final_covs0[final_covs0 > 0.]
+final_covs1 = final_covs1[final_covs1 > 0.]
 
+# difference process
 # fit the model [ minus log(cov) = theta * lag ]   
 xvar = np.array(final_goodbyes) * stepsize
 ytilde = - np.log(final_covs)
@@ -280,12 +349,43 @@ print('theta')
 print(fittilde.params[0])
 print('\n\n\n\n')
 
+theta = fittilde.params[0]
+
+# control process
+# fit the model [ minus log(cov) = theta * lag ]   
+xvar = np.array(final_goodbyes) * stepsize
+ytilde = - np.log(final_covs0)
+fittilde = sm.OLS(ytilde, xvar).fit()
+
+print(fittilde.summary())
+print('\n\n\n\n')
+
+print('theta')
+print(fittilde.params[0])
+print('\n\n\n\n')
+
+theta0 = fittilde.params[0]
+
+# case process
+# fit the model [ minus log(cov) = theta * lag ]   
+xvar = np.array(final_goodbyes) * stepsize
+ytilde = - np.log(final_covs1)
+fittilde = sm.OLS(ytilde, xvar).fit()
+
+print(fittilde.summary())
+print('\n\n\n\n')
+
+print('theta')
+print(fittilde.params[0])
+print('\n\n\n\n')
+
+theta1 = fittilde.params[0]
+
 # Calculating the multiple testing correction
 
 siglevel = pval
 chrnum = ctr
 chr_len = float(chr_len)
-theta = fittilde.params[0]
 
 # Using scipy's root_scalar to find the roots similar to R's uniroot
 lin_root = root_scalar(OU_approx_cont, args=(theta, chrnum * chr_len, chrnum, siglevel), bracket=[1, 20])
@@ -309,29 +409,59 @@ else:
 # Write the results to an output file
 
 f = open(fileout,'w')
-f.write('p-value:'); f.write(str(pval)); f.write('\n')
-f.write('chromosome-number:'); f.write(str(chrnum)); f.write('\n')
-f.write('average-chromosome-length-morgan:'); f.write(str(chr_len)); f.write('\n')
-f.write('step-size-morgan:'); f.write(str(stepsize)); f.write('\n')
-f.write('estimated-theta:'); f.write(str(theta)); f.write('\n')
-f.write('upper-discrete-z:'); f.write(str(lin2)); f.write('\n')
-f.write('upper-continuous-z:'); f.write(str(lin)); f.write('\n')
-f.write('upper-discrete-raw:'); f.write(str(result_lin2)); f.write('\n')
-f.write('upper-continuous-raw:'); f.write(str(result_lin)); f.write('\n')
-f.write('case-lower-bound:'); f.write(str(avg1 - init_cut * std1)); f.write('\n')
-f.write('case-upper-bound:'); f.write(str(avg1 + init_cut * std1)); f.write('\n')
-f.write('control-lower-bound:'); f.write(str(avg0 - init_cut * std0)); f.write('\n')
-f.write('control-upper-bound:'); f.write(str(avg0 + init_cut * std0)); f.write('\n')
-f.write('case-revised-mean:'); f.write(str(avg12)); f.write('\n')
-f.write('case-revised-std:'); f.write(str(std12)); f.write('\n')
-f.write('control-revised-mean:'); f.write(str(avg02)); f.write('\n')
-f.write('control-revised-std:'); f.write(str(std02)); f.write('\n')
+f.write('p-value:\t'); f.write(str(pval)); f.write('\n')
+f.write('chromosome-number:\t'); f.write(str(chrnum)); f.write('\n')
+f.write('average-chromosome-length-morgan:\t'); f.write(str(chr_len)); f.write('\n')
+f.write('step-size-morgan:\t'); f.write(str(stepsize)); f.write('\n')
+f.write('estimated-theta:\t'); f.write(str(theta)); f.write('\n')
+f.write('estimated-theta0:\t'); f.write(str(theta0)); f.write('\n')
+f.write('estimated-theta1:\t'); f.write(str(theta1)); f.write('\n')
+f.write('case-revised-mean:\t'); f.write(str(avg12)); f.write('\n')
+f.write('case-revised-std:\t'); f.write(str(std12)); f.write('\n')
+f.write('control-revised-mean:\t'); f.write(str(avg02)); f.write('\n')
+f.write('control-revised-std:\t'); f.write(str(std02)); f.write('\n')
+f.write('upper-discrete-z:\t'); f.write(str(lin2)); f.write('\n')
+f.write('upper-continuous-z:\t'); f.write(str(lin)); f.write('\n')
+f.write('upper-discrete-raw:\t'); f.write(str(result_lin2)); f.write('\n')
+f.write('upper-continuous-raw:\t'); f.write(str(result_lin)); f.write('\n')
+f.write('initial-case-lower-bound:\t'); f.write(str(avg1 - init_cut * std1)); f.write('\n')
+f.write('initial-case-upper-bound:\t'); f.write(str(avg1 + init_cut * std1)); f.write('\n')
+f.write('initial-control-lower-bound:\t'); f.write(str(avg0 - init_cut * std0)); f.write('\n')
+f.write('initial-control-upper-bound:\t'); f.write(str(avg0 + init_cut * std0)); f.write('\n')
 kza = np.array(k1-k0)
 # kza = abs(kza)
 kzz = np.array((k1 - k0 - avgk) / stdk)
 # kzz = abs(kzz)
-f.write('actual-maximum-z:'); f.write(str(np.max(kzz))); f.write('\n')
-f.write('actual-maximum-raw:'); f.write(str(np.max(kza))); f.write('\n')
+f.write('actual-maximum-z:\t'); f.write(str(np.max(kzz))); f.write('\n')
+f.write('actual-maximum-raw:\t'); f.write(str(np.max(kza))); f.write('\n')
 f.close()
 g.close()
+g1.close()
+g0.close()
 cc.close()
+
+# output normalized test statistic with thresholds
+out['PVALUE'] = norm.sf(out['ZDIFFZ'])
+out['UPPER_ANALYTICAL'] = lin2
+out['Z_UPPER_ANALYTICAL'] = result_lin2
+out['GW_LEVEL_ANALYTICAL'] = norm.sf(result_lin2)
+out['ADJ_CASE_MEAN'] = avg12
+out['ADJ_CASE_STDDEV'] = std12
+out['ADJ_CONTROL_MEAN'] = avg02
+out['ADJ_CONTROL_STDDEV'] = std02
+out['INIT_CASE_LOWER_BOUND'] = avg1 - init_cut * std1
+out['INIT_CASE_UPPER_BOUND'] = avg1 + init_cut * std1
+out['INIT_CONTROL_LOWER_BOUND'] = avg0 - init_cut * std0
+out['INIT_CONTROL_UPPER_BOUND'] = avg0 + init_cut * std0
+out['UPPER_CONTINUOUS'] = lin
+out['Z_UPPER_CONTINUOUS'] = result_lin
+out['GW_LEVEL_CONTINUOUS'] = norm.sf(result_lin)
+out['CONFLEVEL'] = pval
+
+outpd = pd.DataFrame(out)
+outpd.to_csv(args.output_scan_file, sep='\t', index=False)
+
+# output the significant regions
+# Filtered subtable
+suboutpd = outpd[outpd['ZDIFFZ'] > lin2]
+suboutpd.to_csv(args.output_excess_file, sep='\t', header=True, index=False)

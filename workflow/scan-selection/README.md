@@ -23,6 +23,9 @@ You should do an initial run to set the inferred error rate in your `*.yaml`.
 ## The procedure:
 
 1. Edit the YAML file.
+- The `array.yaml` file gives default settings for SNP array data.
+- The `sequence.yaml` file gives default settings for whole genome sequence data.
+
 2. ` mamba activate isweep `
 
 3. Dry-run of the pipeline.
@@ -39,37 +42,27 @@ nohup snakemake -c1 -s Snakefile-scan.smk --cluster "[options]" --jobs X --confi
 - Make sure to pass in the `isweep` environment to cluster.
 - Search for other `snakemake` options if you so wish.
 
-5. Make a Manhattan plot.
-    - Put a path to my plot script.
-    - ` python scripts/manhattan.py [options]`
-        - $1 : tsv file name for ibd at each window
-        - $2 : prefix for output image files
-        - $3 : lowest chromosome number (e.g, 1)
-        - $4 : highest chromosome number (e.g., 22)
-        - $5 : excess IBD rate threshold (e.g., 4)
-        - $6 : telomere, odd regions threshold (e.g., 3)
-            - This futzes w/ regions where ibd calling is difficult (anomalously low)
-        - $7 : title of plot
-        - $8 : width of plot
-        - $9 : height of plot
+5. Make a customized IBD rates scan plot.
+    - `python scripts/plotting/plot-scan.py [options]`
 
-6. Run `ibdne.jar` to get recent effective sizes.
-    - `cat scripts/run-ibdne.sh ` or `head -n 20 scripts/run-ibdne.sh `
-    - `bash scripts/run-ibdne.sh [options] `
-        - $1 : location of `ibdne.jar` applet
-        - $2 : memory limit in Gb
-        - $3 : folder name for the study
-        - $4 : subfolder path for ibd segments
-        - $5 : lowest chromosome number (e.g., 1)
-        - $6 : highest chromosome number (e.g., 22)
-        - $7 : prefix for outfiles 
-    - You should do this with cluster computing. Send in a job!
-      - E.g., `sbatch [cluster-options] scripts/run-ibdne.sh [script-options]`
-
-Step 5 is **if** you want to make a GWAS plot.
-Steps 6 is **if** you want to estimate selection coefficients for loci.
+Outputs:
+- `scan.modified.ibd.tsv` should have all the data for the scanning statistics and thresholds.
+  - 'Z' variables are standardized/normalized.
+  - 'RAW' are counts.
+  - p values assume that IBD rates are (asymptotically) normally distributed.
+- `roi.tsv` are your significant regions.
+- `autocovariance.png` is autocovariance by cM distance. The black line is a fitted exponential curve.
+- `zhistogram.png` is a default histogram for the IBD rates standardized. It should "look Gaussian".
+- `scan.png` is a default plot for the selection scan.
+- `fwer.analytical.txt` gives parameters and estimates for multiple-testing selection scan.
 
 ## Other considerations
+
+#### CHROM column in VCF
+
+If the CHROM column in your VCF files doesn not align with the chromosome column in your genetic maps:
+- Adjust the chromosome column in your genetic maps to match as such.
+- For example, 'chr1' in VCF file and '1' in genetic map. Change to 'chr1' in genetic map.
 
 #### Cohort-specific analyses 
 

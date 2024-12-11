@@ -1,0 +1,45 @@
+# change these
+CHANGE:
+
+  FOLDERS:
+    # folder for analysis
+    STUDY: '/path-to-study/sequence-data'
+    # the yaml file with scan analysis options
+    YAML: 'this-file.yaml'
+
+  # parameters, subsample file
+  ISWEEP:
+    # lowest chromosome number
+    CHRLOW: '1'
+    # highest chromosome numbers
+    CHRHIGH: '22'
+    CASES: 'phenotypes.txt'
+    XMXMEM: '120' # in gb
+    THREADS: '12'
+    CMSTEPSIZE: '0.05' # in cM (step size)
+    GENOMESIZE: '3300' # in cM (all chromosomes summed)
+    CONFLEVEL: '0.05'
+    SIMS: '0' # simulations to derive OU threshold
+    # with 0, simulation approach will give Z score of -100
+
+  EXISTING:
+    # these are phased vcfs
+    VCFS: '/path-to-topmed-data/phased-vcfs'
+    VCFPRE: 'chr'
+    VCFSUF: '.vcf.gz'
+
+# keep these fixed
+FIXED:
+
+  # isweep
+  ISWEEP:
+    # scanning parameters
+    CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
+    TELOSIGMA: '3.5' # sigma scalar to remove telomeres
+    CMCOVER: '0.25' # excess ibd rate must extend this long in cM
+    CMSMALL: '2.0' # region is extended w/ buffer if too small
+    MBBUF: '2' # mb buffer if cm not long enough
+    AUTOCOVLEN: '4.' # in cM, how much data to learn autocovariance
+
+
+

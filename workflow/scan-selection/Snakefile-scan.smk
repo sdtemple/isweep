@@ -1,5 +1,7 @@
 # scanning for excess ibd
 
+import shutil
+
 # setup macro folder
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
@@ -32,9 +34,7 @@ if not os.path.exists(folder_name):
 mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
 mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
 mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
-import shutil
-source_file = "path/to/source/file"
-destination_file = "path/to/destination/file"
+
 for i in range(low,high+1):
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     destination_file = macro+'/maps/chr'+str(i)+'.map'
