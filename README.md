@@ -16,7 +16,7 @@ See on GitHub "Issues/Closed" for some comments about the pipeline.
 
 See `telomeres.md` for comments on very small chromosomes.
 
-See 'workflow/scan-case-control' if you are here for IBD mapping, not selection.
+See `workflow/scan-case-control` if you are here for IBD mapping, not selection.
 
 ## Citation
 ---
