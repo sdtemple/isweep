@@ -1,5 +1,3 @@
-
-
 import os
 import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
@@ -25,16 +23,13 @@ for j in range(J):
 	f.write('\n')
 	f.write('RIGHT\t')
 	f.write(str(int(row.BPRIGHTCENTER)))
-	f.write('\n')
-	f.write('ALPHA\t')
-	f.write(str(float(row.ALPHA)))
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
 # snakemake all -c1 -n
 rule all:
 	input:
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/outlier1.case.phenotype.txt' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/outlier1.phenotype.txt' for j in range(J)],
 	output:
 		yaml=macro+'/arguments.outliers.yaml',
 	params:
@@ -49,25 +44,23 @@ rule all:
 subsamplefile=str(config['CHANGE']['ISWEEP']['CASES'])
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
 samplesize=0
-with open(cohort+'/'+subsamplefile,'r') as f:
+with open(subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 ploidy=2
 # ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
 maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
 mac3=int(ploidy*samplesize*maf3)
-maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # subset vcf to region of interest
 rule first_region: # focus vcf on region of interest
     input:
         locus='{cohort}/{hit}/locus.case.txt',
         subsample="{cohort}/subsample.txt",
-        excludesamples="{cohort}/excludesamples.txt",
     output:
         subvcf='{cohort}/{hit}/narrowing.case.vcf.gz',
     params:
-        qmaf=maf,
+        qmaf=maf3,
         chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
         vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
         vcfprefix=str(config['CHANGE']['EXISTING']['VCFPRE']),
@@ -80,6 +73,7 @@ rule first_region: # focus vcf on region of interest
         left=$(python ../../scripts/utilities/lines.py {input.locus} 4 2)
         right=$(python ../../scripts/utilities/lines.py {input.locus} 5 2)
         vcf={params.vcfs}/{params.vcfprefix}${{chr}}{params.vcfsuffix}
+        tabix -fp vcf $vcf
         bcftools view ${{vcf}} -r {params.chrpre}${{chr}}:${{left}}-${{right}} -Ob | \
             bcftools view -S {input.subsample} -Ob | \
             bcftools view -q {params.qmaf}:nonmajor -Oz -o {output.subvcf}
@@ -88,7 +82,7 @@ rule first_region: # focus vcf on region of interest
 ### call hap-ibd ###
 rule first_hapibd:
     input:
-        vcf='{cohort}/{hit}/narrowing.focused.vcf.gz',
+        vcf='{cohort}/{hit}/narrowing.case.vcf.gz',
         locus='{cohort}/{hit}/locus.case.txt',
     params:
         minmac=str(mac3),
@@ -147,35 +141,35 @@ rule outlier:
     input:
         short='{cohort}/{hit}/narrowing.filt.case.ibd.gz',
     output:
-        fileout='{cohort}/{hit}/outliers.case.txt',
-        out1='{cohort}/{hit}/outlier1.case.txt',
+        out1='{cohort}/{hit}/outlier1.phenotype.txt',
     params:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
-    shell:
-        """
-        python ../../scripts/model/outliers-case.py \
-            --input_ibd_file {input.short} \
-            --output_folder {wildcards.cohort}/{wildcards.hit} \
-            --graph_diameter {params.diameter} \
-            --group_cutoff {params.rulesigma}
-        touch {output.fileout}
-        touch {output.out1}
-        """
-
-### map the phenotypes to the outlier haplotypes
-rule phenotypes:
-    input:
-        inn='{cohort}/{hit}/outlier{num}.case.txt',
-    output:
-        out='{cohort}/{hit}/outlier{num}.case.phenotype.txt',
-    params:
         cases=str(config['CHANGE']['ISWEEP']['CASES']),
     shell:
         """
-        python ../../scripts/model/map-phenotype.py \
-            {input.inn} \
-            {params.cases} \
-            {output.out} \
+        python ../../scripts/model/outliers-phenotype.py \
+            --input_ibd_file {input.short} \
+            --input_phenotype_file {params.cases} \
+            --output_folder {wildcards.cohort}/{wildcards.hit} \
+            --graph_diameter {params.diameter} \
+            --group_cutoff {params.rulesigma}
+        touch {output.out1}
         """
+
+# ### map the phenotypes to the outlier haplotypes
+# rule phenotypes:
+#     input:
+#         inn='{cohort}/{hit}/outlier{num}.case.txt',
+#     output:
+#         out='{cohort}/{hit}/outlier{num}.case.phenotype.txt',
+#     params:
+#         cases=str(config['CHANGE']['ISWEEP']['CASES']),
+#     shell:
+#         """
+#         python ../../scripts/model/map-phenotype.py \
+#             {input.inn} \
+#             {params.cases} \
+#             {output.out} \
+#         """
 

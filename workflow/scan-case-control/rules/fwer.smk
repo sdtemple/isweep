@@ -62,7 +62,7 @@ rule analytical_method:
        stepsize=str(stepsize),
        initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
        pre=macro+'/ibdsegs/ibdends/scan/chr',
-       autocov='fwer.autocovariance'
+       autocov=macro+'/fwer.autocovariance'
     shell:
         """
         python ../../scripts/scan/case-control/multiple-testing-analytical-case.py \
@@ -72,7 +72,7 @@ rule analytical_method:
             --output_scan_file {output.scan} \
             --output_excess_file {output.excess} \
             --input_prefix {params.pre}\
-            --input_suffix .ibd.windowed.tsv.gz \
+            --input_suffix .case.ibd.windowed.tsv.gz \
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --chr_average_size {params.chrsize} \
@@ -104,7 +104,7 @@ rule plot_autocovariance:
     output:
         figure=macro+'/autocovariance-diff.png',
     params:
-        prefix=macro+'/autocovariance'
+        prefix=macro+'/autocovariance-diff'
     shell:
         """
         python ../../scripts/plotting/plot-autocovariance.py \

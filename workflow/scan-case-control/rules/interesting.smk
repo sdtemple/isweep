@@ -69,7 +69,7 @@ rule make_roi_table:
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
     shell:
         """
-        python ../../scripts/scan/make-roi-table-case.py \
+        python ../../scripts/scan/case-control/make-roi-table-case.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
             --input_prefix {params.folder}/chr \

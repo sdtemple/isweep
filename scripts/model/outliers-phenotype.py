@@ -19,6 +19,14 @@ def main():
         required=True, 
         help="Path to the input IBD file."
     )
+
+    # Define arguments with defaults
+    parser.add_argument(
+        '--input_phenotype_file', 
+        type=str,
+        required=True, 
+        help="Path to the input phenotype file."
+    )
     
     parser.add_argument(
         '--output_folder', 
@@ -43,6 +51,12 @@ def main():
     
     # Parse the arguments
     args = parser.parse_args()
+
+    phen=dict()
+    with open(args.input_phenotype_file,'r') as f:
+        for line in f:
+            hap,sta=line.strip().split('\t')
+            phen[hap]=int(sta)
     
     # Adjust values as needed
     K = int(args.graph_diameter / 2)
@@ -56,13 +70,15 @@ def main():
     communities = diameter_communities(graph, K=K, max_communities=np.inf)
 
     # Write clusters to file
-    def write_outliers(communities, folderout, scalar=3):
+    def write_outliers(communities, phen, folderout, scalar=3):
         '''Write haplotypes in outlier big communities.
 
         Parameters
         ----------
         communities : list of sets
             List of communities, each represented as a set of haplotypes.
+        phen: dict
+            Mapping between individual and categorical phenotype
         folderout : str
             Directory to write outlier files.
         scalar : float
@@ -78,9 +94,11 @@ def main():
         idx = 1
         for community in communities:
             if len(community) > cutoff:
-                with open(f"{folderout}/outlier{idx}.case.txt", 'w') as f:
+                with open(f"{folderout}/outlier{idx}.phenotype.txt", 'w') as f:
                     for haplo in community:
                         f.write(haplo)
+                        f.write('\t')
+                        f.write(str(phen[haplo[:-2]]))
                         f.write('\n')
                 idx += 1
 

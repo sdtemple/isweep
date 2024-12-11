@@ -9,11 +9,14 @@ CHANGE:
 
   # parameters, subsample file
   ISWEEP:
+    # either empty of says chr before the number
+    CHRPRE: ''
     # lowest chromosome number
     CHRLOW: '1'
     # highest chromosome numbers
     CHRHIGH: '22'
     CASES: 'phenotype.txt'
+    ROI: 'roi.case.tsv'
     XMXMEM: '120' # in gb
     THREADS: '12'
 
