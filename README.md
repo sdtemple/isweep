@@ -43,8 +43,9 @@ Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: 
 Acronym: *i*ncomplete *S*elective sweep *W*ith *E*xtended haplotypes *E*stimation *P*rocedure
 
 This software presents methods to study recent, strong positive selection.
-- By recent, we mean within the last 500 generations
-- By strong, we mean selection coefficient s >= 0.015 (1.5%) 
+- By recent, we mean within the last 500 generations.
+- By strong, we mean selection coefficient s >= 0.015 (1.5%).
+- Scan may have moderate power for s >= 0.01 (1%). 
 
 In modeling a sweep, we assume 1 selected allele at a locus.
 
@@ -72,15 +73,15 @@ See `misc/usage.md`.
   - Phased vcf data 0|1
   - No apparent population structure
   - No apparent close relatedness
-  - Tab-separated genetic map (bp ---> cM) 
+  - Tab-separated genetic map (bp ---> cM)
+    - Without headers!
+    - Columns are chromosome, rsID, cM, bp 
   - Recombining diploid autosomes
     - For haploids, see issue 5 "Not designed for ploidy != 2"
 - Access to cluster computing
   - Not extended to cloud computing
 
 Chromosome numbers in genetic maps should match chromosome numbers in VCFs.
-
-Recombination maps without headers! Tab-separated columns go chromosome, ID, cM, bp
 
 ## Repository overview
 ---
@@ -154,7 +155,18 @@ nohup snakemake -s Snakefile-scan.smk -c1 --cluster "[options]" --jobs X --confi
 - Check `*.log` files from `ibd-ends`. If it recommends an estimated err, change error rate in YAML file.
 - Then, run with all your chromosomes.
 
-Make the Manhattan plot: ` workflow/scan-selection/scripts/manhattan.py `.
+Make the IBD rates plot customized if you want: ` workflow/scan-selection/scripts/plotting/plot-scan.py `.
+
+Outputs:
+- `scan.modified.ibd.tsv` should have all the data for the scanning statistics and thresholds.
+  - 'Z' variables are standardized/normalized.
+  - 'RAW' are counts.
+  - p values assume that IBD rates are (asymptotically) normally distributed.
+- `roi.tsv` are your significant regions.
+- `autocovariance.png` is autocovariance by cM distance. The black line is a fitted exponential curve.
+- `zhistogram.png` is a default histogram for the IBD rates standardized. It should "look Gaussian".
+- `scan.png` is a default plot for the selection scan.
+- `fwer.analytical.txt` gives parameters and estimates for multiple-testing selection scan.
 
 ### Modeling putative sweeps
 ---
@@ -169,6 +181,17 @@ nohup snakemake -s Snakefile-roi.smk -c1 --cluster "[options]" --jobs X --config
 ``` 
 
 The script to estimate recent Ne can be replaced with any method to estimate recent Ne, as it happens before the `snakemake` command. This method [HapNe](https://palamaralab.github.io/software/hapne/) is one such option.
+
+Outputs:
+- `summary.hap.norm.tsv` are estimated selection coefficients, and other estimates, for regions of interest.
+  - Read Temple, Waples, and Browning (AJHG, 2024) to learn about the estimates.
+  - Confidence intervals assume IBD rates are (asymptotically) normally distributed.
+  - Frequency estimate is based on the best differentiated SNP **subset**.
+  - Models are 'a' additive, 'm' multiplicative, 'd' dominance, and 'r' recessive.
+- Other types of confidence intervals.
+  - 'perc' wildcard means percentile-based confidence intervals.
+  - 'snp' wildcard means that frequency estimate is based on best differentiated SNP.
+
 
 ## Picture of selection scan workflow
 ---

@@ -32,7 +32,6 @@ FIXED:
     SCANCUTOFF: '2.0' # ibd cM threshold
     GENOMEEND: '1000' # in mega bp
     BY: '20' # in kilo bp
-    TELOCUT: '0.5' # cutting cM at telomeres
     # inferring outgroup
     DIAMETER: '6' # any two nodes in community can reach other in this many edges
     GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule

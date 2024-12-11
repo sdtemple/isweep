@@ -8,9 +8,9 @@ There are multiple snakemake pipelines in these subfolders.
 
 - `simulate/` implements selection simulation study on genetic data.
   - `Snakefile-simulate.smk` will use SLiM to get `.trees` and `.vcf.gz`
-  - `Snakefile-ibd.smk` will run scripts like in `scan/` and `roi/`
+  - `Snakefile-ibd.smk` will run scripts like in `scan-selection/` and `model-selection/`
 
-- `scan-case-control` implement a genome-wide scan for differences in case and control IBD rates.
+- `scan-case-control` implements a genome-wide scan for differences in case and control IBD rates.
 
 There is documentation in each subfolder.
 

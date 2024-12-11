@@ -68,10 +68,10 @@ FIXED:
   ISWEEP:
     # scanning parameters
     SCANCUTOFF: '2.0' # ibd cM threshold
-    CMGAP: '1.0' # cM gap when concatenating regions of excess IBD
+    CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
     TELOSIGMA: '3.0' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd
-    CMCOVER: '1.0' # excess ibd rate must extend this long in cM
+    CMCOVER: '0.5' # excess ibd rate must extend this long in cM
     CMSMALL: '2.0' # region is extended w/ buffer if too small
     MBBUF: '2' # mb buffer if cm not long enough
     AUTOCOVLEN: '4.' # in cM, how much data to learn autocovariance
