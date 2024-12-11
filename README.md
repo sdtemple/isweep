@@ -37,11 +37,15 @@ Temple, S.D., Browning, S.B. (2024). "Multiple testing corrections in selection 
 
 #### Genome-wide significance thresholds in the IBD case-control mapping
 
-Temple, S.D., ..., Wijsman, E., and Blue, E. (2024-25). "Multiple testing corrections in case-control studies using identity-by-descent segments. Draft in progress.
+Temple, S.D., ..., Wijsman, E., and Blue, E. (2024-25). "Multiple testing corrections in case-control studies using identity-by-descent segments." Draft in progress.
+
+#### Simulating IBD around a locus
+
+Temple, S.D., Browning, S.B., and Thompson, E.A. (2024). "Fast simulation of identity-by-descent segments." Draft in progress.
 
 #### Unifying framework of the selection scan and sweep modeling
 
-Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection. PhD thesis (University of Washington). <a href="https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses">https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses</a>.
+Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection." PhD thesis (University of Washington). <a href="https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses">https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses</a>.
 
 
 ## Methodology
