@@ -1,0 +1,51 @@
+# change these
+CHANGE:
+
+  FOLDERS:
+    # folder for analysis
+    STUDY: '/path-to-study/sequence-data'
+    # the yaml file with scan analysis options
+    YAML: 'this-file.yaml'
+
+  # parameters, subsample file
+  ISWEEP:
+    # lowest chromosome number
+    CHRLOW: '1'
+    # highest chromosome numbers
+    CHRHIGH: '22'
+    CASES: 'phenotype.txt'
+    XMXMEM: '120' # in gb
+    THREADS: '12'
+
+  EXISTING:
+    # these are phased vcfs
+    VCFS: '/path-to-topmed-data/phased-vcfs'
+    VCFPRE: 'chr'
+    VCFSUF: '.vcf.gz'
+
+# keep these fixed
+FIXED:
+
+  # hap-ibd.jar
+  # candidate ibd segments
+  # these are inspired by Cai, Browning, and Browning (2023+)
+  HAPIBD: # candidate
+    # min-seed
+    MINSEED: '0.5'
+    # min-extend
+    MINEXT: '0.2'
+    # min-output
+    MINOUT: '1.0'
+    # minimum minor allele frequency
+    MINMAF: '0.10'
+    # ploidy number
+    # PLOIDY: '2'
+
+  # isweep
+  ISWEEP:
+    # inferring outgroup
+    DIAMETER: '6' # any two nodes in community can reach other in this many edges
+    GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+
+
+

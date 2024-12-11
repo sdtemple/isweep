@@ -22,17 +22,16 @@ folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 
-mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
-mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
-mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
-for i in range(low,high+1):
-    source_file = mapfol+'/'+mappre+str(i)+mapsuf
-    destination_file = macro+'/maps/chr'+str(i)+'.map'
-    if not os.path.exists(destination_file):
-        raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
+# mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
+# mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
+# mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
+# for i in range(low,high+1):
+#     source_file = mapfol+'/'+mappre+str(i)+mapsuf
+#     destination_file = macro+'/maps/chr'+str(i)+'.map'
+#     if not os.path.exists(destination_file):
+#         raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 
 # include .smk files with rules
-include: 'rules/scan.smk'
 include: 'rules/interesting.smk'
 include: 'rules/fwer.smk'
 
