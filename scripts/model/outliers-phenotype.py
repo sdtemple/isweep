@@ -56,7 +56,7 @@ def main():
     with open(args.input_phenotype_file,'r') as f:
         for line in f:
             hap,sta=line.strip().split('\t')
-            phen[hap]=int(sta)
+            phen[hap]=float(sta)
     
     # Adjust values as needed
     K = int(args.graph_diameter / 2)

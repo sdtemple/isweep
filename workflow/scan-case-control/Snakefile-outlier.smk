@@ -203,10 +203,10 @@ rule design:
     shell:
         """
         python ../../scripts/utilities/make-design-matrix.py \
-            --output_design_matrix_prefix {wildcards.cohort}/{wildcards.hit}/design.outlier.phenotypes \
+            --output_design_matrix_prefix {wildcards.cohort}/{wildcards.hit}/matrix.outlier.phenotypes \
             --input_phenotype_file {params.cases} \
             --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
-            --input_outlier_suffix .phenotype.txt \
+            --input_outlier_suffix .phenotype.tsv \
             --first_index 1
         """
 
