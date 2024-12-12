@@ -63,7 +63,6 @@ rule make_roi_table:
     output:
         fileout=macro+'/roi.case.tsv',
     params:
-        # folder=macro+'/ibdsegs/ibdends/scan',
         mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
         cmcover=str(config['FIXED']['ISWEEP']['CMCOVER']),
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
@@ -73,8 +72,6 @@ rule make_roi_table:
             --input_excess_file {input.filein} \
             --input_scan_file {input.filein2} \
             --output_file {output.fileout} \
-            # --input_prefix {params.folder}/chr \
-            # --input_suffix .case.ibd.windowed.tsv.gz \
             --cM_cover {params.cmcover} \
             --cM_small {params.cmsmall} \
             --Mb_buffer {params.mbbuf} \
