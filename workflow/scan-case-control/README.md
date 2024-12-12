@@ -76,5 +76,9 @@ nohup snakemake -c1 -s Snakefile-outlier.smk --cluster "[options]" --jobs X --co
 
 Outputs:
 - Look into the subfolders for `outlier*.phenotype.txt` files.
-- First column is the haplotype ID, with '_1' and '_2' being the haplotype and the string before the individual.
-- Second column is the case or control status, as defined in your phenotypes file.
+  - First column is the haplotype ID, with '_1' and '_2' being the haplotype and the string before the individual.
+  - Second column is the case or control status, as defined in your phenotypes file.
+- Also, look into the `matrix.outlier.phenotypes.tsv` files.
+  - These have categorical phenotypes (binary for each outlier group) in a linear model X matrix.
+  - And a binary column 'OUTLIER_ANY' if the haplotype is in an outlier group period.
+  - **Technically, this `Snakefile-outlier.smk` workflow should work for any numeric phenotype.** 

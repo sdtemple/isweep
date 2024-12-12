@@ -35,7 +35,7 @@ if not os.path.exists(file_name):
 # snakemake all -c1 -n
 rule all:
 	input:
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/design.outlier.phenotypes.tsv' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/matrix.outlier.phenotypes.tsv' for j in range(J)],
 	output:
 		yaml=macro+'/arguments.outliers.yaml',
 	params:
