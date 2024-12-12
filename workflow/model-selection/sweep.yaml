@@ -4,21 +4,21 @@ CHANGE:
   # folders
   FOLDERS:
     # folder for analysis
-    STUDY: '/path-to-study/test'
+    STUDY: '/path-to-study/sequence'
     # the yaml file with scan analysis options
-    YAML: 'test.yaml'
+    YAML: 'sweep.yaml'
 
   # parameters, subsample file
   ISWEEP:
     # region of interest file
     ROI: 'roi.tsv'
-    CHRPRE: 'chr' # either '' or 'chr' ; look at your vcf and map file
+    CHRPRE: '' # either '' or 'chr' ; look at your vcf and map file
     XMXMEM: '100' # in gb
     # inferred Ne(t) to use
     NE: 'ibdne.ne'
 
   EXISTING:
-    VCFS: '/path-to-topmed-data/phased-vcfs'
+    VCFS: '/path-to-phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
 
@@ -27,10 +27,6 @@ FIXED:
 
   # isweep
   ISWEEP:
-    # scanning parameters
-    SCANCUTOFF: '2.0' # ibd cM threshold
-    GENOMEEND: '1000' # in mega bp
-    BY: '20' # in kilo bp
     # inferring outgroup
     DIAMETER: '6' # any two nodes in community can reach other in this many edges
     GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule

@@ -6,6 +6,7 @@ import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from math import floor, ceil
 import sys
 
 def main():
@@ -94,8 +95,8 @@ def main():
         rowing = roitab.iloc[i]
         filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
         tab = pd.read_csv(filein1, sep='\t')
-        left = int(float(rowing.BPLEFT))
-        right = int(float(rowing.BPRIGHT))
+        left = floor(float(rowing.BPLEFT))
+        right = ceil(float(rowing.BPRIGHT))
         tab = tab[(tab['BPWINDOW'] >= left) & (tab['BPWINDOW'] <= right)]
         tab['WEIGHT'] = tab['COUNT'] / tab['COUNT'].sum()
         tab['CUMSUM'] = np.cumsum(tab['WEIGHT'])

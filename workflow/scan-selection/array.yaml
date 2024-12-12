@@ -28,7 +28,7 @@ CHANGE:
 
   EXISTING:
     # these are phased vcfs
-    VCFS: '/path-to-phase-vcfs'
+    VCFS: '/path-to-phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
     # these are genetic maps
@@ -70,7 +70,6 @@ FIXED:
     SCANCUTOFF: '2.0' # ibd cM threshold
     CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
     TELOSIGMA: '4.0' # sigma scalar to remove telomeres
-    SCANSIGMA: '4.0' # sigma scalar to call excess ibd
     CMCOVER: '0.5' # excess ibd rate must extend this long in cM
     CMSMALL: '2.0' # region is extended w/ buffer if too small
     MBBUF: '2' # mb buffer if cm not long enough
