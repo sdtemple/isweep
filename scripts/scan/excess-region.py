@@ -47,9 +47,11 @@ def main():
     cm = args.max_cM_gap
     g = open(args.output_file, 'w')
     statistic = args.statistic
+    minstat = 'MIN' + statistic
+    maxstat = 'MAX' + statistic
     table = pd.read_csv(args.input_file,sep='\t')
     nrows = table.shape[0]
-    g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\tMINSTAT\tMAXSTAT\n')
+    g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\t' + minstat + '\t' + maxstat + '\n')
     try:
         row = table.iloc[0]
         prev = row
