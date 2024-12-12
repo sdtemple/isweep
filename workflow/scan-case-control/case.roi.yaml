@@ -24,7 +24,11 @@ CHANGE:
     # these are phased vcfs
     VCFS: '/path-to-topmed-data/phased-vcfs'
     VCFPRE: 'chr'
-    VCFSUF: '.vcf.gz'
+    VCFSUF: '.vcf.gz
+    
+    MAPS: '/path-to-maps-folder'
+    MAPPRE: 'chr'
+    MAPSUF: '.vcf.gz'
 
 # keep these fixed
 FIXED:

@@ -82,3 +82,9 @@ Outputs:
   - These have categorical phenotypes (binary for each outlier group) in a linear model X matrix.
   - And a binary column 'OUTLIER_ANY' if the haplotype is in an outlier group period.
   - **Technically, this `Snakefile-outlier.smk` workflow should work for any numeric phenotype.** 
+
+
+### Phenotype file
+---
+
+This is a tab-separated file with two columns. First column is a sample ID. Second column is numeric.

@@ -3,6 +3,13 @@ import shutil
 import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 micro=str(config['CHANGE']["ISWEEP"]["ROI"])
+
+folder_name = macro
+if not os.path.exists(folder_name):
+    os.makedirs(folder_name)
+if not os.path.exists(macro+'/'+micro):
+    shutil.copy(micro,macro+'/'+micro)
+
 sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
 J = sims.shape[0]
 for j in range(J):
@@ -27,10 +34,26 @@ for j in range(J):
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
+# copy and paste maps
+folder_name = macro + '/maps'
+if not os.path.exists(folder_name):
+    os.makedirs(folder_name)
+
+mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
+mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
+mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
+
+for i in range(low,high+1):
+    source_file = mapfol+'/'+mappre+str(i)+mapsuf
+    destination_file = macro+'/maps/chr'+str(i)+'.map'
+    if not os.path.exists(destination_file):
+        shutil.copy(source_file, destination_file)
+
 cases=str(config['CHANGE']['ISWEEP']['CASES'])
 file_name = macro + '/phenotypes.txt'
 if not os.path.exists(file_name):
     shutil.copy(cases, file_name)
+
 
 # snakemake all -c1 -n
 rule all:
