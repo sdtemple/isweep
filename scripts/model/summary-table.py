@@ -33,6 +33,10 @@ parser.add_argument('--input_gini_file',
                     required=True,
                     help='File name of Gini impurity data'
                     )
+parser.add_argument('--statistic', 
+                    type=str, 
+                    default='COUNT', 
+                    help='The test statistic thresholded on')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -41,13 +45,16 @@ folder = args.input_folder
 roi = args.input_roi_file
 file_type = args.file_type
 uncertainty_type = args.uncertainty_type
+statistic = args.statistic
+
+maxstat = 'MAX' + statistic
 
 assert file_type in ['hap','snp']
 assert uncertainty_type in ['norm','perc']
 
 # Read the region of interest file
 tablein = pd.read_csv(f"{folder}/{roi}", sep='\t')
-tablein = tablein[['NAME', 'CHROM', 'MAXIBD', 'ALPHA']]
+tablein = tablein[['NAME', 'CHROM', maxstat, 'ALPHA']]
 nms = list(tablein['NAME'])
 
 p0 = []
@@ -77,7 +84,6 @@ for nm in nms:
     groups.append(ginitab['num_group'][0])
     ginis.append(ginitab['gini'][0])
     ass.append(ginitab['mean_freq'][0])
-
 
 # Add the results to the table
 tablein['LOCHAT'] = bs
