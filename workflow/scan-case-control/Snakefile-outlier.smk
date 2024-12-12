@@ -1,4 +1,5 @@
 import os
+import shutil
 import pandas as pd
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 micro=str(config['CHANGE']["ISWEEP"]["ROI"])
@@ -25,6 +26,11 @@ for j in range(J):
 	f.write(str(int(row.BPRIGHTCENTER)))
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
+
+cases=str(config['CHANGE']['ISWEEP']['CASES'])
+file_name = macro + '/phenotypes.txt'
+if not os.path.exists(file_name):
+    shutil.copy(cases, file_name)
 
 # snakemake all -c1 -n
 rule all:

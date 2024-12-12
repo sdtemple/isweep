@@ -2,10 +2,9 @@
 ### estimating allele frequencies
 
 # some inputs, string managements, count sample size
-subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
 samplesize=0
-with open(cohort+'/'+subsamplefile,'r') as f:
+with open(cohort+'/subsample.txt','r') as f:
     for line in f:
         samplesize+=1
 ploidy=2

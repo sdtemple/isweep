@@ -16,7 +16,6 @@ CHANGE:
     XMXMEM: '100' # in gb
     # inferred Ne(t) to use
     NE: 'ibdne.ne'
-    SUBSAMPLE: 'subsample.txt'
 
   EXISTING:
     VCFS: '/path-to-topmed-data/phased-vcfs'

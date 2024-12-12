@@ -6,6 +6,7 @@ import shutil
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
 high=int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
+cases=str(config['CHANGE']['ISWEEP']['CASES'])
 
 # copy and paste maps
 import os
@@ -21,6 +22,10 @@ if not os.path.exists(folder_name):
 folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
+file_name = macro + '/phenotypes.txt'
+if not os.path.exists(file_name):
+    shutil.copy(cases, file_name)
+
 
 include: 'rules/interesting.smk'
 include: 'rules/fwer.smk'

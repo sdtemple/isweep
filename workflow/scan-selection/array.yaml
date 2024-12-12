@@ -14,27 +14,27 @@ CHANGE:
     # highest chromosome numbers
     CHRHIGH: '22'
     SUBSAMPLE: '/path-to-subsample/inferred.ancestry.txt'
-    XMXMEM: '240' # in gb
-    THREADS: '16'
+    XMXMEM: '120' # in gb
+    THREADS: '12'
     CMSTEPSIZE: '0.05' # in cM (step size)
     GENOMESIZE: '3300' # in cM (all chromosomes summed)
     CONFLEVEL: '0.05'
-    SIMS: '0' # simulations to derive OU threshold
+    SIMS: '500' # simulations to derive OU threshold
     # with 0, simulation approach will give Z score of -100
 
   IBDENDS:
     # do a test run on 1 chromosome to set this
-    ERRRATE: '1.5e-4'
+    ERRRATE: '3e-4'
 
   EXISTING:
     # these are phased vcfs
-    VCFS: '/path-to-topmed-data/phased-vcfs'
+    VCFS: '/path-to-phase-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
     # these are genetic maps
-    MAPS: '/path-to-genetic-maps/decode.2019.b38'
-    MAPPRE: 'decode2019.chrchr'
-    MAPSUF: '.GRCh38.map'
+    MAPS: '/path-to-genetic-maps'
+    MAPPRE: 'chr'
+    MAPSUF: '.map'
 
 # keep these fixed
 FIXED:
@@ -50,7 +50,7 @@ FIXED:
     # min-output
     MINOUT: '1.8'
     # minimum minor allele frequency
-    MINMAF: '0.40'
+    MINMAF: '0.001'
     # ploidy number
     # PLOIDY: '2'
 
@@ -69,7 +69,7 @@ FIXED:
     # scanning parameters
     SCANCUTOFF: '2.0' # ibd cM threshold
     CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
-    TELOSIGMA: '3.5' # sigma scalar to remove telomeres
+    TELOSIGMA: '4.0' # sigma scalar to remove telomeres
     SCANSIGMA: '4.0' # sigma scalar to call excess ibd
     CMCOVER: '0.5' # excess ibd rate must extend this long in cM
     CMSMALL: '2.0' # region is extended w/ buffer if too small
