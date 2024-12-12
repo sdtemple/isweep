@@ -127,6 +127,7 @@ final_covs1 = []
 keep_all_data_control = []
 keep_all_data_case = []
 keep_distance = []
+keep_bp = []
 keep_chr = []
 ctr = 0
 
@@ -139,6 +140,7 @@ for chromosome in range(st, en + 1):
         keep_all_data_case += subtable[counts_column1].to_list()
         keep_chr += [chromosome] * subtable.shape[0]
         keep_distance += subtable['CMWINDOW'].to_list()
+        keep_bp += subtable['BPWINDOW'].to_list()
     except:
         pass
 keep_all_data_case = np.array(keep_all_data_case)
@@ -170,16 +172,6 @@ k0 = (keep_all_data_control - avg02) / std02
 # take the difference
 kz = k1 - k0
 
-# prepare to output a normalized version of the test statistic
-out = dict()
-out['CHROM'] = keep_chr
-out['CMWINDOW'] = keep_distance
-out['COUNT0'] = keep_all_data_control
-out['COUNT1'] = keep_all_data_case
-out['Z0'] = k0
-out['Z1'] = k1 
-out['ZDIFF'] = kz
-
 # compute mean and standard deviation of the difference
 kz = kz[(abs(keep_all_data_case - avg1) < init_cut * std1)
         * (keep_all_data_case > 0)
@@ -188,8 +180,19 @@ kz = kz[(abs(keep_all_data_case - avg1) < init_cut * std1)
         ]
 avgk = np.mean(kz) # mean should be zero by design
 stdk = np.std(kz)
-out['ZDIFFZ'] = (k1 - k0 - avgk) / stdk
 # will use avgk and stdk to normalize later
+
+# prepare to output a normalized version of the test statistic
+out = dict()
+out['BPWINDOW'] = keep_bp
+out['CMWINDOW'] = keep_distance
+out['ZDIFFZ'] = (k1 - k0 - avgk) / stdk
+out['CHROM'] = keep_chr
+out['Z0'] = k0
+out['Z1'] = k1 
+out['COUNT0'] = keep_all_data_control
+out['COUNT1'] = keep_all_data_case
+out['ZDIFF'] = kz
 
 # difference process
 # Open an output file
