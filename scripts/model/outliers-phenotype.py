@@ -94,7 +94,7 @@ def main():
         idx = 1
         for community in communities:
             if len(community) > cutoff:
-                with open(f"{folderout}/outlier{idx}.phenotype.txt", 'w') as f:
+                with open(f"{folderout}/outlier{idx}.phenotype.tsv", 'w') as f:
                     for haplo in community:
                         f.write(haplo)
                         f.write('\t')

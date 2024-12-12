@@ -43,6 +43,11 @@ mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
 mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
 mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
 
+low=str(config['CHANGE']['ISWEEP']['CHRLOW'])
+high=str(config['CHANGE']['ISWEEP']['CHRHIGH'])
+low=int(low)
+high=int(high)
+
 for i in range(low,high+1):
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     destination_file = macro+'/maps/chr'+str(i)+'.map'
@@ -183,7 +188,6 @@ rule outlier:
             --output_folder {wildcards.cohort}/{wildcards.hit} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
-        touch {output.out1}
         """
 
 rule design:
@@ -203,8 +207,6 @@ rule design:
             --input_phenotype_file {params.cases} \
             --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
             --input_outlier_suffix .phenotype.txt \
-            --first_index 1 \
-        touch {output.out1}
-        touch {output.out2}
+            --first_index 1
         """
 

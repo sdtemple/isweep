@@ -25,7 +25,6 @@ CHANGE:
     VCFS: '/path-to-topmed-data/phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz
-    
     MAPS: '/path-to-maps-folder'
     MAPPRE: 'chr'
     MAPSUF: '.vcf.gz'

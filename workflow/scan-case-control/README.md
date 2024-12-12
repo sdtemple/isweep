@@ -88,3 +88,11 @@ Outputs:
 ---
 
 This is a tab-separated file with two columns. First column is a sample ID. Second column is numeric.
+
+### Regions of interest file
+This is a tab-separated file with a header and the following columns (at least):
+- NAME (example: 'LCT')
+- CHROM (example: 2)
+- BPCENTER (example: 136000000) (IBD segments detected overlapping this)
+- BPLEFTCENTER (example: 134000000) (defines left end of region)
+- BPRIGHTCENTER (example: 138000000) (defines right end of region)
