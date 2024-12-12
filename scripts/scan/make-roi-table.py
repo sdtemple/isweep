@@ -16,10 +16,17 @@ def main():
     )
 
     parser.add_argument(
-        '--input_file',
+        '--input_excess_file',
         type=str,
         required=True,
-        help="Input file containing IBD regions data."
+        help="Input file containing excess IBD regions data."
+    )
+
+    parser.add_argument(
+        '--input_scan_file',
+        type=str,
+        required=True,
+        help="Prefix of chromosome files."
     )
 
     parser.add_argument(
@@ -29,19 +36,19 @@ def main():
         help="Output file for saving region of interest."
     )
 
-    parser.add_argument(
-        '--input_prefix',
-        type=str,
-        required=True,
-        help="Prefix of chromosome files."
-    )
+    # parser.add_argument(
+    #     '--input_prefix',
+    #     type=str,
+    #     required=True,
+    #     help="Prefix of chromosome files."
+    # )
 
-    parser.add_argument(
-        '--input_suffix',
-        type=str,
-        required=True,
-        help="Suffix of chromosome files."
-    )
+    # parser.add_argument(
+    #     '--input_suffix',
+    #     type=str,
+    #     required=True,
+    #     help="Suffix of chromosome files."
+    # )
     
     parser.add_argument(
         '--cM_cover', 
@@ -111,11 +118,15 @@ def main():
     for i in range(roitab.shape[0]):
         # reading
         rowing = roitab.iloc[i]
-        filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
+        filein1 = args.input_scan_file
+        # filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
         tab = pd.read_csv(filein1, sep='\t')
         left = floor(float(rowing.BPLEFT))
         right = ceil(float(rowing.BPRIGHT))
-        tab = tab[(tab['BPWINDOW'] >= left) & (tab['BPWINDOW'] <= right)]
+        chrom = floor(float(rowing.CHROM))
+        tab = tab[(tab['BPWINDOW'] >= left) & 
+                  (tab['BPWINDOW'] <= right) & 
+                  (tab['CHROM'] == chrom)]
         tab['WEIGHT'] = tab[statistic] / tab[statistic].sum()
         tab['CUMSUM'] = np.cumsum(tab['WEIGHT'])
 

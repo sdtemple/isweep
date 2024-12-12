@@ -61,7 +61,7 @@ def main():
             if int(row['CHROM']) == int(prev['CHROM']):
                 if float(row['CMWINDOW']) >= (float(prev['CMWINDOW']) + cm):
                     # gap in chromosome
-                    g.write(str(towrite['CHROM'])); g.write('\t')
+                    g.write(str(int(towrite['CHROM']))); g.write('\t')
                     g.write(str(towrite['BPWINDOW'])); g.write('\t')
                     g.write(str(prev['BPWINDOW'])); g.write('\t')
                     g.write(str(towrite['CMWINDOW'])); g.write('\t')
@@ -73,7 +73,7 @@ def main():
                     minct = float(row[statistic])
             else:
                 # chromosome changed
-                g.write(str(towrite['CHROM'])); g.write('\t')
+                g.write(str(int(towrite['CHROM']))); g.write('\t')
                 g.write(str(towrite['BPWINDOW'])); g.write('\t')
                 g.write(str(prev['BPWINDOW'])); g.write('\t')
                 g.write(str(towrite['CMWINDOW'])); g.write('\t')
@@ -89,11 +89,11 @@ def main():
                 maxct = nextct
             if nextct < minct:
                 minct = nextct
-        g.write(str(towrite['CHROM'])); g.write('\t')
+        g.write(str(int(towrite['CHROM']))); g.write('\t')
         g.write(str(towrite['BPWINDOW'])); g.write('\t')
         g.write(str(prev['BPWINDOW'])); g.write('\t')
         g.write(str(towrite['CMWINDOW'])); g.write('\t')
-        g.write(str(prev['WINDOW'])); g.write('\t')
+        g.write(str(prev['CMWINDOW'])); g.write('\t')
         g.write(str(minct)); g.write('\t')
         g.write(str(maxct)); g.write('\n')
     except IndexError:

@@ -182,6 +182,9 @@ avgk = np.mean(kz) # mean should be zero by design
 stdk = np.std(kz)
 # will use avgk and stdk to normalize later
 
+# take the difference
+kz = k1 - k0
+
 # prepare to output a normalized version of the test statistic
 out = dict()
 out['BPWINDOW'] = keep_bp
@@ -464,6 +467,7 @@ out['GW_LEVEL_CONTINUOUS'] = norm.sf(result_lin)
 out['CONFLEVEL'] = pval
 
 outpd = pd.DataFrame(out)
+outpd.sort_values(['CHROM','CMWINDOW'],inplace=True)
 outpd.to_csv(args.output_scan_file, sep='\t', index=False)
 
 # output the significant regions

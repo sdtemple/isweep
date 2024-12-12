@@ -51,7 +51,7 @@ rule excess_region: # concatenate regions of excess IBD
         python ../../scripts/scan/excess-region.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
-            --max_cM_gap {params.cMgap} 
+            --max_cM_gap {params.cMgap} \
             --statistic ZDIFFZ \
         '''
 
@@ -59,20 +59,22 @@ rule excess_region: # concatenate regions of excess IBD
 rule make_roi_table:
     input:
         filein=macro+'/excess.case.region.ibd.tsv',
+        filein2=macro+'/scan.case.ibd.tsv',
     output:
         fileout=macro+'/roi.case.tsv',
     params:
-        folder=macro+'/ibdsegs/ibdends/scan',
+        # folder=macro+'/ibdsegs/ibdends/scan',
         mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
         cmcover=str(config['FIXED']['ISWEEP']['CMCOVER']),
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
     shell:
         """
         python ../../scripts/scan/make-roi-table.py \
-            --input_file {input.filein} \
+            --input_excess_file {input.filein} \
+            --input_scan_file {input.filein2} \
             --output_file {output.fileout} \
-            --input_prefix {params.folder}/chr \
-            --input_suffix .case.ibd.windowed.tsv.gz \
+            # --input_prefix {params.folder}/chr \
+            # --input_suffix .case.ibd.windowed.tsv.gz \
             --cM_cover {params.cmcover} \
             --cM_small {params.cmsmall} \
             --Mb_buffer {params.mbbuf} \
