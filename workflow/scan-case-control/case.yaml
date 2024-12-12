@@ -22,12 +22,6 @@ CHANGE:
     SIMS: '0' # simulations to derive OU threshold
     # with 0, simulation approach will give Z score of -100
 
-  EXISTING:
-    # these are phased vcfs
-    VCFS: '/path-to-topmed-data/phased-vcfs'
-    VCFPRE: 'chr'
-    VCFSUF: '.vcf.gz'
-
 # keep these fixed
 FIXED:
 

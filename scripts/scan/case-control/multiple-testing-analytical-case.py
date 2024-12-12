@@ -331,10 +331,12 @@ final_covs1 = np.array(final_covs1)
 # ignore the negatives b/c we will take the log
 # there should not be many estimated negative covariances
 # if there are, then the data is not well-behaved
-final_goodbyes = final_goodbyes[final_covs > 0.]
-final_covs = final_covs[final_covs > 0.]
+final_goodbyes0 = final_goodbyes[final_covs0 > 0.]
+final_goodbyes1 = final_goodbyes[final_covs1 > 0.]
 final_covs0 = final_covs0[final_covs0 > 0.]
 final_covs1 = final_covs1[final_covs1 > 0.]
+final_goodbyes = final_goodbyes[final_covs > 0.]
+final_covs = final_covs[final_covs > 0.]
 
 # difference process
 # fit the model [ minus log(cov) = theta * lag ]   
@@ -353,7 +355,7 @@ theta = fittilde.params[0]
 
 # control process
 # fit the model [ minus log(cov) = theta * lag ]   
-xvar = np.array(final_goodbyes) * stepsize
+xvar = np.array(final_goodbyes0) * stepsize
 ytilde = - np.log(final_covs0)
 fittilde = sm.OLS(ytilde, xvar).fit()
 
@@ -368,7 +370,7 @@ theta0 = fittilde.params[0]
 
 # case process
 # fit the model [ minus log(cov) = theta * lag ]   
-xvar = np.array(final_goodbyes) * stepsize
+xvar = np.array(final_goodbyes1) * stepsize
 ytilde = - np.log(final_covs1)
 fittilde = sm.OLS(ytilde, xvar).fit()
 

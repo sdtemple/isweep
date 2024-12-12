@@ -61,6 +61,8 @@ encol = columns[end]
 stcol = columns[start]
 ind1col = columns[ind1]
 ind2col = columns[ind2]
+table[ind1col] = table[ind1col].astype(str)
+table[ind2col] = table[ind2col].astype(str)
 
 # Process case file
 casedict = dict()
