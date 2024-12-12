@@ -1,8 +1,9 @@
 # Combine windows in a region of excess IBD.
 # Seth Temple, GitHub: sdtemple
-# Last modified: 2024-07-22
+# Last modified: 2024-12-12
 
 import argparse
+import pandas as pd
 
 def main():
     # Set up argparse
@@ -31,6 +32,13 @@ def main():
         default=0.5, 
         help="(default: 0.5) Allowed cM gap in contiguous stretch of excess IBD."
     )
+
+    parser.add_argument(
+        '--statistic', 
+        type=str,
+        default='COUNT', 
+        help="(default: COUNT) Test statistic that exceeds threshold."
+    )
     
     # Parse the arguments
     args = parser.parse_args()
@@ -38,54 +46,54 @@ def main():
     # File handling and computation
     cm = args.max_cM_gap
     g = open(args.output_file, 'w')
-    g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\tMINIBD\tMAXIBD\n')
+    statistic = args.statistic
+    table = pd.read_csv(args.input_file,sep='\t')
+    nrows = table.shape[0]
+    g.write('CHROM\tBPLEFT\tBPRIGHT\tCMLEFT\tCMRIGHT\tMINSTAT\tMAXSTAT\n')
     try:
-        with open(args.input_file, 'r') as f:
-            f.readline()
-            line = f.readline()
-            row = line.strip().split('\t')
-            prev = row
-            towrite = prev
-            maxct = int(float(prev[2]))
-            minct = int(float(prev[2]))
-            for line in f:
-                row = line.strip().split('\t')
-                if int(row[3]) == int(prev[3]):
-                    if float(row[1]) >= (float(prev[1]) + cm):
-                        # gap in chromosome
-                        g.write(towrite[3]); g.write('\t')
-                        g.write(towrite[0]); g.write('\t')
-                        g.write(prev[0]); g.write('\t')
-                        g.write(towrite[1]); g.write('\t')
-                        g.write(prev[1]); g.write('\t')
-                        g.write(str(minct)); g.write('\t')
-                        g.write(str(maxct)); g.write('\n')
-                        towrite = row
-                        maxct = int(float(row[2]))
-                        minct = int(float(row[2]))
-                else:
-                    # chromosome changed
-                    g.write(towrite[3]); g.write('\t')
-                    g.write(towrite[0]); g.write('\t')
-                    g.write(prev[0]); g.write('\t')
-                    g.write(towrite[1]); g.write('\t')
-                    g.write(prev[1]); g.write('\t')
+        row = table.iloc[0]
+        prev = row
+        towrite = prev
+        maxct = float(prev[statistic])
+        minct = float(prev[statistic])
+        for i in range(1,nrows):
+            row = table.iloc[i]
+            if int(row['CHROM']) == int(prev['CHROM']):
+                if float(row['CMWINDOW']) >= (float(prev['CMWINDOW']) + cm):
+                    # gap in chromosome
+                    g.write(towrite['CHROM']); g.write('\t')
+                    g.write(towrite['BPWINDOW']); g.write('\t')
+                    g.write(prev['BPWINDOW']); g.write('\t')
+                    g.write(towrite['CMWINDOW']); g.write('\t')
+                    g.write(prev['CMWINDOW']); g.write('\t')
                     g.write(str(minct)); g.write('\t')
                     g.write(str(maxct)); g.write('\n')
                     towrite = row
-                    maxct = int(float(row[2]))
-                    minct = int(float(row[2]))
-                prev = row
-                nextct = int(float(prev[2]))
-                if nextct > maxct:
-                    maxct = nextct
-                if nextct < minct:
-                    minct = nextct
-        g.write(towrite[3]); g.write('\t')
-        g.write(towrite[0]); g.write('\t')
-        g.write(prev[0]); g.write('\t')
-        g.write(towrite[1]); g.write('\t')
-        g.write(prev[1]); g.write('\t')
+                    maxct = float(row[statistic])
+                    minct = float(row[statistic])
+            else:
+                # chromosome changed
+                g.write(towrite['CHROM']); g.write('\t')
+                g.write(towrite['BPWINDOW']); g.write('\t')
+                g.write(prev['BPWINDOW']); g.write('\t')
+                g.write(towrite['CMWINDOW']); g.write('\t')
+                g.write(prev['CMWINDOW']); g.write('\t')
+                g.write(str(minct)); g.write('\t')
+                g.write(str(maxct)); g.write('\n')
+                towrite = row
+                maxct = float(row[statistic])
+                minct = float(row[statistic])
+            prev = row
+            nextct = int(float(prev[statistic]))
+            if nextct > maxct:
+                maxct = nextct
+            if nextct < minct:
+                minct = nextct
+        g.write(towrite['CHROM']); g.write('\t')
+        g.write(towrite['BPWINDOW']); g.write('\t')
+        g.write(prev['BPWINDOW']); g.write('\t')
+        g.write(towrite['CMWINDOW']); g.write('\t')
+        g.write(prev['WINDOW']); g.write('\t')
         g.write(str(minct)); g.write('\t')
         g.write(str(maxct)); g.write('\n')
     except IndexError:

@@ -53,7 +53,8 @@ rule excess_region: # concatenate regions of excess IBD
         python ../../scripts/scan/excess-region.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
-            --max_cM_gap {params.cMgap}
+            --max_cM_gap {params.cMgap} \
+            --statistic COUNT \
         '''
 
 rule make_roi_table:
@@ -75,5 +76,7 @@ rule make_roi_table:
             --input_suffix .ibd.windowed.tsv.gz \
             --cM_cover {params.cmcover} \
             --cM_small {params.cmsmall} \
-            --Mb_buffer {params.mbbuf}
+            --Mb_buffer {params.mbbuf} \
+            --statistic COUNT \
+            --sweep 1 \
         """

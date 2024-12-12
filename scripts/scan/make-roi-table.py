@@ -63,6 +63,20 @@ def main():
         default=2.0, 
         help="(default: 2) Buffer size in megabases (Mb)."
     )
+
+    parser.add_argument(
+        '--statistic', 
+        type=str,
+        default='COUNT', 
+        help="(default: COUNT) Test statistic that exceeds threshold."
+    )
+
+    parser.add_argument(
+        '--sweep', 
+        type=int,
+        default=1, 
+        help="(default: 1) If > 0 (selection scan), format columns with model and alpha. If 0 (case scan), do not have these columns."
+    )
     
     # Parse the arguments
     args = parser.parse_args()
@@ -76,6 +90,10 @@ def main():
     filepre = f"{args.input_prefix}"
     filesuf = f"{args.input_suffix}"
     fileout = f"{args.output_file}"
+
+    statistic = args.statistic
+    minstat = 'MIN' + statistic
+    maxstat = 'MAX' + statistic
     
     roitab = pd.read_csv(filein, sep='\t')
     bpcenter = []
@@ -84,7 +102,7 @@ def main():
     # if there is no excess IBD make a blank file
     if roitab.shape[0] == 0:
         with open(fileout, 'w') as f:
-            f.write('NAME\tCHROM\tMINIBD\tMAXIBD\tBPCENTER\tCMCENTER\tBPLEFTCENTER\tBPRIGHTCENTER\n')
+            f.write('NAME\tCHROM\t'+ minstat +'\t' + maxstat + '\tBPCENTER\tCMCENTER\tBPLEFTCENTER\tBPRIGHTCENTER\n')
         sys.exit()
 
     # make magic happen
@@ -98,7 +116,7 @@ def main():
         left = floor(float(rowing.BPLEFT))
         right = ceil(float(rowing.BPRIGHT))
         tab = tab[(tab['BPWINDOW'] >= left) & (tab['BPWINDOW'] <= right)]
-        tab['WEIGHT'] = tab['COUNT'] / tab['COUNT'].sum()
+        tab['WEIGHT'] = tab[statistic] / tab[statistic].sum()
         tab['CUMSUM'] = np.cumsum(tab['WEIGHT'])
 
         # central tendency
@@ -108,10 +126,10 @@ def main():
         moBP = 0
         for j in range(shape0):
             row = tab.iloc[j]
-            if row['COUNT'] > mx:
+            if row[statistic] > mx:
                 moCM = row['CMWINDOW']
                 moBP = row['BPWINDOW']
-                mx = row['COUNT']
+                mx = row[statistic]
         moBP = int(moBP)
         meCM = (tab['WEIGHT'] * tab['CMWINDOW']).sum()
         meBP = (tab['WEIGHT'] * tab['BPWINDOW']).sum()
@@ -134,14 +152,27 @@ def main():
 
     # sorting, giving generic names
     initcol = list(roitab.columns)
-    finacol = ['NAME'] + initcol + ['MODEL', 'ALPHA']
     roitab.sort_values(by='MAXIBD', ascending=False, inplace=True)
     nrow = roitab.shape[0]
     roitab['NAME'] = [f'hit{i}' for i in range(1, nrow+1)]
-    roitab['MODEL'] = ['a' for _ in range(1, nrow+1)]
-    roitab['ALPHA'] = [0.95 for _ in range(1, nrow+1)]
+    if args.sweep > 0:
+        finacol = ['NAME'] + initcol + ['MODEL', 'ALPHA']
+        roitab['MODEL'] = ['a' for _ in range(1, nrow+1)]
+        roitab['ALPHA'] = [0.95 for _ in range(1, nrow+1)]
+    elif args.sweep <= 0:
+        finacol = ['NAME'] + initcol
     roitab = roitab[finacol]
-    roitab.to_csv(fileout, sep='\t', index=False, columns=['NAME', 'CHROM', 'MINIBD', 'MAXIBD', 'BPCENTER', 'CMCENTER', 'BPLEFTCENTER', 'BPRIGHTCENTER', 'MODEL', 'ALPHA'])
+    if args.sweep > 0:
+        roitab.to_csv(fileout, sep='\t', index=False, 
+                      columns=['NAME', 'CHROM', minstat, maxstat,
+                                'BPCENTER', 'CMCENTER', 'BPLEFTCENTER', 'BPRIGHTCENTER',
+                                'MODEL', 'ALPHA'])
+    elif args.sweep <= 0:
+        roitab.to_csv(fileout, sep='\t',index=False,
+                      columns=['NAME','CHROM', minstat, maxstat,
+                               'BPCENTER','CMCENTER','BPLEFTCENTER','BPRIGHTCENTER'
+                               ]
+                      )
 
 if __name__ == "__main__":
     main()

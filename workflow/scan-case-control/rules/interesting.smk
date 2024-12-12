@@ -51,7 +51,8 @@ rule excess_region: # concatenate regions of excess IBD
         python ../../scripts/scan/excess-region.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
-            --max_cM_gap {params.cMgap}
+            --max_cM_gap {params.cMgap} 
+            --statistic ZDIFFZ \
         '''
 
 # work on this
@@ -67,12 +68,14 @@ rule make_roi_table:
         cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
     shell:
         """
-        python ../../scripts/scan/case-control/make-roi-table-case.py \
+        python ../../scripts/scan/make-roi-table.py \
             --input_file {input.filein} \
             --output_file {output.fileout} \
             --input_prefix {params.folder}/chr \
             --input_suffix .case.ibd.windowed.tsv.gz \
             --cM_cover {params.cmcover} \
             --cM_small {params.cmsmall} \
-            --Mb_buffer {params.mbbuf}
+            --Mb_buffer {params.mbbuf} \
+            --statistic ZDIFFZ \
+            --sweep 0 \
         """
