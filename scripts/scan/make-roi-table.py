@@ -93,9 +93,7 @@ def main():
     cmsmall = args.cM_small
     mbbuffer = args.Mb_buffer * 1000000
     
-    filein = f"{args.input_file}"
-    filepre = f"{args.input_prefix}"
-    filesuf = f"{args.input_suffix}"
+    filein = f"{args.input_excess_file}"
     fileout = f"{args.output_file}"
 
     statistic = args.statistic
@@ -114,39 +112,39 @@ def main():
 
     # make magic happen
 
+    filein1 = args.input_scan_file
+    tab = pd.read_csv(filein1, sep='\t')
+
     # formatting
     for i in range(roitab.shape[0]):
         # reading
         rowing = roitab.iloc[i]
-        filein1 = args.input_scan_file
-        # filein1 = f"{filepre}{int(float(rowing.CHROM))}{filesuf}"
-        tab = pd.read_csv(filein1, sep='\t')
         left = floor(float(rowing.BPLEFT))
         right = ceil(float(rowing.BPRIGHT))
         chrom = floor(float(rowing.CHROM))
-        tab = tab[(tab['BPWINDOW'] >= left) & 
-                  (tab['BPWINDOW'] <= right) & 
-                  (tab['CHROM'] == chrom)]
-        tab['WEIGHT'] = tab[statistic] / tab[statistic].sum()
-        tab['CUMSUM'] = np.cumsum(tab['WEIGHT'])
+        subtab = tab[(tab['BPWINDOW'] >= left) & 
+                     (tab['BPWINDOW'] <= right) & 
+                     (tab['CHROM'] == chrom)]
+        subtab['WEIGHT'] = subtab[statistic] / subtab[statistic].sum()
+        subtab['CUMSUM'] = np.cumsum(subtab['WEIGHT'])
 
         # central tendency
-        shape0 = tab.shape[0]
+        shape0 = subtab.shape[0]
         mx = 0
         moCM = 0
         moBP = 0
         for j in range(shape0):
-            row = tab.iloc[j]
+            row = subtab.iloc[j]
             if row[statistic] > mx:
                 moCM = row['CMWINDOW']
                 moBP = row['BPWINDOW']
                 mx = row[statistic]
         moBP = int(moBP)
-        meCM = (tab['WEIGHT'] * tab['CMWINDOW']).sum()
-        meBP = (tab['WEIGHT'] * tab['BPWINDOW']).sum()
+        meCM = (subtab['WEIGHT'] * subtab['CMWINDOW']).sum()
+        meBP = (subtab['WEIGHT'] * subtab['BPWINDOW']).sum()
         meBP = int(meBP)
-        mdCM = tab[tab['CUMSUM'] >= 0.5]['CMWINDOW'].tolist()[0]
-        mdBP = tab[tab['CUMSUM'] >= 0.5]['BPWINDOW'].tolist()[0]
+        mdCM = subtab[subtab['CUMSUM'] >= 0.5]['CMWINDOW'].tolist()[0]
+        mdBP = subtab[subtab['CUMSUM'] >= 0.5]['BPWINDOW'].tolist()[0]
         bpcenter.append(moBP)
         cmcenter.append(moCM)
 
@@ -163,7 +161,7 @@ def main():
 
     # sorting, giving generic names
     initcol = list(roitab.columns)
-    roitab.sort_values(by='MAXIBD', ascending=False, inplace=True)
+    roitab.sort_values(by=maxstat, ascending=False, inplace=True)
     nrow = roitab.shape[0]
     roitab['NAME'] = [f'hit{i}' for i in range(1, nrow+1)]
     if args.sweep > 0:
