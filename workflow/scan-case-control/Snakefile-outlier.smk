@@ -35,7 +35,7 @@ if not os.path.exists(file_name):
 # snakemake all -c1 -n
 rule all:
 	input:
-		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/outlier1.phenotype.txt' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/design.outlier.phenotypes.tsv' for j in range(J)],
 	output:
 		yaml=macro+'/arguments.outliers.yaml',
 	params:
@@ -147,7 +147,7 @@ rule outlier:
     input:
         short='{cohort}/{hit}/narrowing.filt.case.ibd.gz',
     output:
-        out1='{cohort}/{hit}/outlier1.phenotype.txt',
+        out1='{cohort}/{hit}/outlier1.phenotype.tsv',
     params:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
@@ -161,5 +161,27 @@ rule outlier:
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
         touch {output.out1}
+        """
+
+rule design:
+    input:
+        short='{cohort}/{hit}/outlier1.phenotype.tsv',
+    output:
+        out1='{cohort}/{hit}/matrix.outlier.phenotypes.tsv',
+        out2='{cohort}/{hit}/matrix.outlier.phenotypes.sorted.tsv',
+    params:
+        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
+        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        cases=str(config['CHANGE']['ISWEEP']['CASES']),
+    shell:
+        """
+        python ../../scripts/utilities/make-design-matrix.py \
+            --output_design_matrix_prefix {wildcards.cohort}/{wildcards.hit}/design.outlier.phenotypes \
+            --input_phenotype_file {params.cases} \
+            --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --input_outlier_suffix .phenotype.txt \
+            --first_index 1 \
+        touch {output.out1}
+        touch {output.out2}
         """
 
