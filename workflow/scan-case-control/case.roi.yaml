@@ -17,6 +17,7 @@ CHANGE:
     CHRHIGH: '22'
     CASES: 'phenotypes.txt'
     ROI: 'roi.case.tsv'
+    PLOIDY: '2'
     XMXMEM: '120' # in gb
     THREADS: '12'
 

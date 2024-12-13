@@ -81,15 +81,22 @@ Outputs:
 - Also, look into the `matrix.outlier.phenotypes.tsv` files.
   - These have categorical phenotypes (binary for each outlier group) in a linear model X matrix.
   - And a binary column 'OUTLIER_ANY' if the haplotype is in an outlier group period.
-  - **Technically, this `Snakefile-outlier.smk` workflow should work for any numeric phenotype.** 
 
+
+## Broad use of IBD outlier group detection
+--
+
+**Technically, this `Snakefile-outlier.smk` workflow should work for any numeric phenotype.**
+
+The important script to make the design matrix (X in linear regression) is `scripts/utilities/make-design-matrix.py`. Example output is here in `design.sorted.tsv` and `design.tsv`.
 
 ### Phenotype file
 ---
 
-This is a tab-separated file with two columns. First column is a sample ID. Second column is numeric.
+This is a tab-separated file with two columns. First column is a sample ID. Second column is numeric. An example is `phenotypes.txt`
 
 ### Regions of interest file
+---
 This is a tab-separated file with a header and the following columns (at least):
 - NAME (example: 'LCT')
 - CHROM (example: 2)
