@@ -10,6 +10,7 @@ def main():
     parser.add_argument("--input_outlier_prefix", type=str, default='outlier', help="Prefix for the input outlier files.")
     parser.add_argument("--input_outlier_suffix", type=str, default='.tsv', help="Suffix for the input outlier files.")
     parser.add_argument("--first_index", type=int, default=1, help="The starting index of outlier files.")
+    parser.add_argument("--ploidy", type=int, default=2, help="The ploidy of the individuals.")
 
     # Parse arguments
     args = parser.parse_args()
@@ -27,9 +28,11 @@ def main():
     dict_phenotype = {}
     with open(input_phenotype_file, 'r') as f:
         for line in f:
-            line = line.strip().split()
-            dict_phenotype[str(line[0]) + '_1'] = line[1]
-            dict_phenotype[str(line[0]) + '_2'] = line[1]
+            line = line.strip().split('\t')
+            # assumes haplotypes are labeled individual_number
+            # where number index starts at 1
+            for p in range(1,args.ploidy+1):
+                dict_phenotype[str(line[0]) + '_' + str(p)] = line[1]
 
     with open(output_design_matrix_prefix + '.tsv', 'w') as out_phenotype:
         indicator_columns = ['OUTLIER' + str(j) for j in range(first_idx, itr)]
@@ -38,8 +41,8 @@ def main():
         for i in range(first_idx, itr):
             with open(input_prefix + str(i) + input_suffix, 'r') as f:
                 for line in f:
-                    line = line.strip().split()
-                    out_phenotype.write('\t'.join([str(line[0])[:-2], str(line[0]), line[1]]))
+                    line = line.strip().split('\t')
+                    out_phenotype.write('\t'.join([str(line[0])[:-2], str(line[0]), str(dict_phenotype[line[0]])]))
                     for j in range(i - 1):
                         out_phenotype.write('\t0')
                     out_phenotype.write('\t1')
@@ -47,7 +50,7 @@ def main():
                         out_phenotype.write('\t0')
                     out_phenotype.write('\t1\n')
                     outliers.append(str(line[0]))
-        less_phenotypes = {k: v for k, v in dict_phenotype.items() if v not in outliers}
+        less_phenotypes = {k: v for k, v in dict_phenotype.items() if k not in outliers}
         for k, v in less_phenotypes.items():
             out_phenotype.write('\t'.join([str(k)[:-2], str(k), str(v)]))
             for j in range(itr):
@@ -57,6 +60,14 @@ def main():
     table = pd.read_csv(output_design_matrix_prefix + '.tsv', sep='\t')
     table.sort_values(by=['INDIVIDUAL', 'HAPLOTYPE'], inplace=True)
     table.to_csv(output_design_matrix_prefix + '.sorted.tsv', sep='\t', index=False)
+
+    # make sure that no individual is duplicated
+    if len(table.INDIVIDUAL.value_counts().unique()) != 1:
+        raise Exception("Sorry, but some individuals have more than haplotypes than others.")
+
+    # make sure that haplotypes in same individual have same phenotype
+    if len(table.groupby('INDIVIDUAL').PHENO.nunique().unique()) != 1:
+        raise Exception("Sorry, but some individuals have different phenotypes for their haplotypes.") 
 
 if __name__ == "__main__":
     main()

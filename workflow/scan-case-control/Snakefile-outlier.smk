@@ -200,6 +200,7 @@ rule design:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
         cases=str(config['CHANGE']['ISWEEP']['CASES']),
+        ploidy=str(config['CHANGE']['ISWEEP']['PLOIDY']),
     shell:
         """
         python ../../scripts/utilities/make-design-matrix.py \
@@ -207,6 +208,7 @@ rule design:
             --input_phenotype_file {params.cases} \
             --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
             --input_outlier_suffix .phenotype.tsv \
-            --first_index 1
+            --first_index 1 \
+            --ploidy {params.ploidy}
         """
 
