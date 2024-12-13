@@ -9,7 +9,7 @@ CHANGE:
 
   # parameters, subsample file
   ISWEEP:
-    # either empty of says chr before the number
+    # either empty or chr depending on prefix of CHROM column in VCF
     CHRPRE: ''
     # lowest chromosome number
     CHRLOW: '1'

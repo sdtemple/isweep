@@ -65,7 +65,7 @@ rule analytical_method:
        autocov=macro+'/fwer.autocovariance'
     shell:
         """
-        python ../../scripts/scan/case-control/multiple-testing-analytical-case.py \
+        python ../../scripts/scan/multiple-testing-analytical-case.py \
             --output_testing_file {output.testing} \
             --output_autocov_prefix {params.autocov} \
             --output_crosscov_file {output.crosscov} \
