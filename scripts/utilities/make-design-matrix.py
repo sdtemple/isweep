@@ -61,13 +61,21 @@ def main():
     table.sort_values(by=['INDIVIDUAL', 'HAPLOTYPE'], inplace=True)
     table.to_csv(output_design_matrix_prefix + '.sorted.tsv', sep='\t', index=False)
 
-    # make sure that no individual is duplicated
-    if len(table.INDIVIDUAL.value_counts().unique()) != 1:
-        raise Exception("Sorry, but some individuals have more than haplotypes than others.")
+    try:
+        # make sure that no individual is duplicated
+        if len(table.INDIVIDUAL.value_counts().unique()) != 1:
+            raise Exception("Sorry, but some individuals have more than haplotypes than others.")
+    except Exception:
+        os.remove(output_design_matrix_prefix + '.sorted.tsv')
+        os.remove(output_design_matrix_prefix + '.tsv')
 
     # make sure that haplotypes in same individual have same phenotype
-    if len(table.groupby('INDIVIDUAL').PHENO.nunique().unique()) != 1:
-        raise Exception("Sorry, but some individuals have different phenotypes for their haplotypes.") 
+    try:
+        if len(table.groupby('INDIVIDUAL').PHENO.nunique().unique()) != 1:
+            raise Exception("Sorry, but some individuals have different phenotypes for their haplotypes.")
+    except Exception:
+        os.remove(output_design_matrix_prefix + '.sorted.tsv')
+        os.remove(output_design_matrix_prefix + '.tsv')
 
 if __name__ == "__main__":
     main()
