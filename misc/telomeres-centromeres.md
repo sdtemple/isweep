@@ -1,6 +1,6 @@
-## Considering telomeres and centromeres
+## IBD segment detection accuracy near telomeres and centromeres
 
-#### IBD segment detection
+### Telomeres
 ---
 
 `hap-ibd.jar` and `ibd-ends.jar` are not good at detecting IBD segments near the ends of the genetic map. The pipeline tries to address this issue by via the parameter `TELOSIGMA`.
@@ -11,11 +11,7 @@
 - I also try to address this by triming the ends of genetic maps by the size of the parameter 'SCANCUTOFF'.
     - There would otherwise be an issue with truncation when detecting segment lengths.
 
-#### Small chromosomes
+### Centromeres
 ---
 
-I recommend against analyzing chromosomes of length less than 10 cM.
-- The pipeline assumes that chromosomes are consecutive ordered from `CHRLOW` to `CHRHIGH`.
-- If after ignoring chromosomes smaller than 10 cM, resulting in a gap in the chromosome ordering, do the following.
-    - Create file pointers `ln -s old_file new_file` for genetic maps and VCFs
-    - Modify the *.yaml file accordingly.
+In some human autosomes, there are large centromeric gaps in the GRCh38 reference genome. These gaps in cM and bp can result in inaccurate IBD segment detection. The 'TELOSIGMA' initial removal step is supposed to partially address this. The concern about IBD rates near centromeres may be less of an issue using a map without large gaps. We have not investigated the accuracy of IBD segment detection in highly repetitive regions.

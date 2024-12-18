@@ -6,7 +6,7 @@ There is a major methodological update for multiple-testing corrections.
 
 Please read `misc/multiple-testing.md`. You should read our citation below for more details.
 
-Contact sethtem@umich.edu or Github issues for troubleshooting.
+See `workflow/scan-case-control` if you are here for IBD mapping, not selection.
 
 See `misc/usage.md` to evaluate if this methodology fits your study.
 
@@ -14,9 +14,7 @@ See `misc/cluster-options.md` for some suggested cluster options to use in pipel
 
 See on GitHub "Issues/Closed" for some comments about the pipeline.
 
-See `telomeres.md` for comments on very small chromosomes.
-
-See `workflow/scan-case-control` if you are here for IBD mapping, not selection.
+Contact sethtem@umich.edu or Github issues for troubleshooting.  
 
 ## Citation
 ---
@@ -203,6 +201,18 @@ Outputs:
   - 'perc' wildcard means percentile-based confidence intervals.
   - 'snp' wildcard means that frequency estimate is based on best differentiated SNP.
 
+### Other considerations
+---
+
+These Markdown files are in the folder `misc/`.
+
+See `telomeres-centromeres.md` for cautionary comments on interpreting results near these genomic regions.
+
+See `small-chromosomes.md` for comments on modified analyses when some chromosomes measure <= 10 cM.
+
+See `different-chromosome-rates.md` for comments on modified analyses when chromosome subsets have vastly different mean/median IBD rates.
+
+For species-specific conversions very different from 1.0 cM $\approx$ 1 Mb (humans), see `recombination-rates.md`
 
 ## Picture of selection scan workflow
 ---

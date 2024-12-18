@@ -8,7 +8,10 @@ You can customize your plots after the pipeline. There are motivating scripts in
 
 Other subfolders are organized by workflow (`scan/` versus `model/` sweeps) or general utilities.
 
-Scripts
+### Scripts
+---
+
+#### `plotting/`
 - `plot-scan.py` : makes a plot of scanning statistic.
     - Used to visualize the selection scans.
 - `plot-histogram.py` : makes a plot of some column statistic.
@@ -17,17 +20,28 @@ Scripts
     - Used as a diagnostic check to see if IBD rate process is approximately OU.
 - `plot-sweep.py` : line plot for allele frequency over time.
     - Used when sure that loci is undergoing a sweep.
+
+#### `utilities/`
 - `filter-lines.py` : apply simple filter to tab-separated data.
-- `exclude-samples.py` : finds outer intersection of two files.
-- `estimate-norm.py` : estimate selection coefficient with standard normal intervals.
-- `estimate-perc.py` : estimate selection coefficient with percentile intervals.
-- `scan.py` : implement a genome-wide scan over some statistic.
-- `rank.py` : score alleles based on how differentiated they are from IBD outgroup and rest of sample.
-- `outliers.py` : detect clusters with excess IBD rate.
+- `count_ibd.py` : compute number of IBD segments overlapping loci along genome.
 - `interpolate-map.py` : make genetic map with rows every fixed cM step size.
 - `trim-telomere-map.py` : cut some cM from start and end of genetic map.
-- `remove-phase.jar` : create an unphased vcf file.
-- `add-uniform-err.jar` : introduce allelic errors in vcf file.
+- `exclude-samples.py` : finds outer intersection of two files.
+- `remove-phase.py` : create an unphased vcf file.
+- `add-uniform-err.py` : introduce allelic errors in vcf file.
+- `fake-phenotypes.py` : create file with fake/randomly simulated categorical phenotypes.
+
+#### `scan/`
+- `scan.py` : implement a genome-wide scan over some statistic.
+- `multiple-testing-analytical.py` : compute the analytical threshold for multiple testing.
+- `multiple-testing-simulation.py` : compute the simulation-based threshold for multiple testing.
+    - Requires theta estimate from running `multiple-testing-analytical.py` beforehand.
+
+#### `model/`
+- `estimate-norm.py` : estimate selection coefficient with standard normal intervals.
+- `estimate-perc.py` : estimate selection coefficient with percentile intervals.
+- `rank.py` : score alleles based on how differentiated they are from IBD outgroup and rest of sample.
+- `outliers.py` : detect clusters with excess IBD rate.
 
 
 
