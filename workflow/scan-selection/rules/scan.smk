@@ -22,9 +22,10 @@ vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
 vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
 
 chromsstr = []
-with open(macro+'/chromosomes-sizes-kept.tsv','r') as f:
+with open(macro+'/chromosome-sizes-kept.tsv','r') as f:
+    f.readline()
     for line in f:
-        chromsstr.append(line.strip())
+        chromsstr.append(line.strip().split('\t')[0])
 chroms = [int(i) for i in chromsstr]
 
 mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
