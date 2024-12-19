@@ -11,9 +11,8 @@ pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
 # you should choose one and stick with it. no p hacking.
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
-chromosome_sizes = pd.read_csv(macro+'/chromosome-sizes-kept.tsv',sep='\t')
-genomesize = chromosome_sizes['CMSIZE'].astype(float).sum()
-numchr = chromosome_sizes.shape[0]
+genomesize = total_size
+numchr = total_chr
 telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
 genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans

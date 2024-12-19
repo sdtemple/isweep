@@ -4,6 +4,14 @@
 
 import pandas as pd
 
+localrules: \
+    plot_autocovariance, \
+    plot_autocovariance_case, \
+    plot_histogram_control, \
+    plot_histogram_case, \
+    plot_histogram_diff, \
+    plot_autocovariance_control
+
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 
 pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))

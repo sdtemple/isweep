@@ -1,6 +1,8 @@
 # process the isweep scan
 # form table of roi
 
+localrules: plot_scan, make_roi_table, excess_region
+
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
 high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))

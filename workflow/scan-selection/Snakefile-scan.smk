@@ -59,12 +59,13 @@ for i in range(low,high+1):
     sizes_out.write(str(size_cm)); sizes_out.write('\n')
 sizes_out.close()
 
-too_small = []
 sizes_kept = macro+'/chromosome-sizes-kept.tsv'
 sizes_kept_out = open(sizes_kept,'w')
 sizes_kept_out.write('CHROM\tCMSIZE\n')
 min_chr_size = float(str(config['FIXED']['ISWEEP']['CHRSIZECUTOFF']))
 exclude2 = []
+total_size = 0
+total_chr = 0
 for i in chroms:
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     sizes_table = pd.read_csv(source_file,sep='\t',header=None)
@@ -72,6 +73,8 @@ for i in chroms:
     end_cm = float(sizes_table[2].tolist()[-1])
     size_cm = end_cm - start_cm
     if size_cm >= min_chr_size:
+        total_size += size_cm
+        total_chr += 1
         sizes_kept_out.write(str(i)); sizes_kept_out.write('\t')
         sizes_kept_out.write(str(size_cm)); sizes_kept_out.write('\n')
     else:

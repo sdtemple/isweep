@@ -1,5 +1,7 @@
 ### finding ibd groups
 
+localrules: gini_impurity
+
 # some inputs, string managements, count sample size
 # some inputs, string managements, count sample size
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])

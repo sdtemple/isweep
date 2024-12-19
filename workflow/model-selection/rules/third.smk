@@ -1,6 +1,15 @@
 ### estimating selection coefficients
 ### estimating allele frequencies
 
+localrules: \
+    third_Ne, \
+    third_hap, \
+    third_snp, \
+    summary_hap_norm, \
+    summary_hap_perc, \
+    summary_snp_norm, \
+    summary_snp_perc
+
 # some inputs, string managements, count sample size
 cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
 samplesize=0

@@ -23,13 +23,6 @@ vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
 vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
 vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
 
-chromsstr = []
-with open(macro+'/chromosome-sizes-kept.tsv','r') as f:
-    f.readline()
-    for line in f:
-        chromsstr.append(line.strip().split('\t')[0])
-chroms = [int(i) for i in chromsstr]
-
 mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
 
 rule hapibd: # candidate segments from hap-ibd.jar
@@ -169,8 +162,8 @@ rule count_ibdends_mle: # computing counts over windows
 
 rule scan: # conduct a manhattan scan
     input:
-        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms],
-        [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms],
+        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms2],
+        [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms2],
     output:
         scandata=macro+'/scan.ibd.tsv',
     params:
