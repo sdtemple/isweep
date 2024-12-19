@@ -202,7 +202,8 @@ def main():
         try:
             mbp[i] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"].max()
             ibd.loc[ibd["CHROM"] == chr[i], "CUMPOS"] = ibd.loc[ibd["CHROM"] == chr[i], "CMWINDOW"] + s
-            s = s + mbp[i]
+            if not np.isnan(mbp[i]):
+                s = s + mbp[i]
         except:
             pass
     ibd["CHROM"] = ibd["CHROM"].astype(int)
