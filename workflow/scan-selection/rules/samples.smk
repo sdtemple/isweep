@@ -1,5 +1,7 @@
 # make excludesamples file for browning lab jar
 
+localrules: make_samples, make_subsample, make_excludesamples
+
 # inputs, string management
 vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
 vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
@@ -14,8 +16,6 @@ rule make_samples:
         vcf=vcffolder + '/' + vcfpre + high + vcfsuf,
     output:
         sample=macro+'/sample.txt',
-    resources:
-        use_cluster: False
     shell:
         'bcftools query -l {input.vcf} > {output.sample}'
 
@@ -25,8 +25,6 @@ rule make_subsample:
         filein=str(subsample),
     output:
         fileout=macro+'/subsample.txt',
-    resources:
-        use_cluster: False
     shell:
         'cp {input.filein} {output.fileout}'
 
@@ -37,8 +35,6 @@ rule make_excludesamples:
         subsample=macro+'/subsample.txt',
     output:
         exclsample=macro+'/excludesamples.txt',
-    resources:
-        use_cluster: False
     shell:
         """
         python ../../scripts/utilities/exclude-samples.py \

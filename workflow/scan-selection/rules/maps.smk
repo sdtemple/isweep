@@ -1,3 +1,6 @@
+
+localrules: interpolate_map, trim_telomeres
+
 # make genetic map with specified cM step size
 rule interpolate_map:
     input:
