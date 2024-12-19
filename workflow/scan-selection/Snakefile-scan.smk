@@ -45,6 +45,7 @@ else:
             exclude.append(int(float(line.strip())))
 chroms = [i for i in range(low,high+1) if i not in exclude]
 
+import pandas as pd
 sizes_file = macro+'/chromosome-sizes.tsv'
 sizes_out = open(sizes_file,'w')
 sizes_out.write('CHROM\tCMSIZE\n')
@@ -58,7 +59,6 @@ for i in range(low,high+1):
     sizes_out.write(str(size_cm)); sizes_out.write('\n')
 sizes_out.close()
 
-import pandas as pd
 too_small = []
 sizes_kept = macro+'/chromosome-sizes-kept.tsv'
 sizes_kept_out = open(sizes_kept,'w')
