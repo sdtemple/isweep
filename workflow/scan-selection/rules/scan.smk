@@ -1,5 +1,7 @@
 # conduct ibd calls and scan for isweep
 
+localrules: plot_histogram
+
 import os
 
 # inputs, string management, count sample size, make mac

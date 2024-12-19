@@ -1,6 +1,8 @@
 # implement family-wise error rate adjustments
 # to determine genome-wide significance levels
 
+localrules: plot_autocovariance, significance
+
 import pandas as pd
 
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
@@ -10,7 +12,7 @@ pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
 chromosome_sizes = pd.read_csv(macro+'/chromosome-sizes-kept.tsv',sep='\t')
-genomesize = chromosome_sizes['CMSIZE'].sum()
+genomesize = chromosome_sizes['CMSIZE'].astype(float).sum()
 numchr = chromosome_sizes.shape[0]
 telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
 genomesize -= numchr * telocutting * 2
