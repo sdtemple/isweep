@@ -14,6 +14,8 @@ rule make_samples:
         vcf=vcffolder + '/' + vcfpre + high + vcfsuf,
     output:
         sample=macro+'/sample.txt',
+    resources:
+        use_cluster: False
     shell:
         'bcftools query -l {input.vcf} > {output.sample}'
 
@@ -23,6 +25,8 @@ rule make_subsample:
         filein=str(subsample),
     output:
         fileout=macro+'/subsample.txt',
+    resources:
+        use_cluster: False
     shell:
         'cp {input.filein} {output.fileout}'
 
@@ -33,6 +37,8 @@ rule make_excludesamples:
         subsample=macro+'/subsample.txt',
     output:
         exclsample=macro+'/excludesamples.txt',
+    resources:
+        use_cluster: False
     shell:
         """
         python ../../scripts/utilities/exclude-samples.py \

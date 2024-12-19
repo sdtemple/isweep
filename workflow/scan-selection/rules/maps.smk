@@ -6,6 +6,8 @@ rule interpolate_map:
         mapfile='{cohort}/maps/chr{num}.interpolated.map',
     params:
         stepsize=str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']),
+    resources:
+        use_cluster: False
     shell:
         '''
         python ../../scripts/utilities/interpolate-map.py \
@@ -22,6 +24,8 @@ rule trim_telomeres:
         mapfile='{cohort}/maps/chr{num}.trimmed.map',
     params:
         trim=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
+    resources:
+        use_cluster: False
     shell:
         '''
         python ../../scripts/utilities/trim-telomere-map.py \

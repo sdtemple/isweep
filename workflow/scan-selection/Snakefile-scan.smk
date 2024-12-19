@@ -76,7 +76,6 @@ for i in chroms:
         sizes_kept_out.write(str(size_cm)); sizes_kept_out.write('\n')
     else:
         exclude2.append(i)
-sizes_out.close()
 sizes_kept_out.close()
 chroms2 = [i for i in chroms if i not in exclude2]
 
