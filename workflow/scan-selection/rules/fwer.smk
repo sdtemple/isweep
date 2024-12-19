@@ -1,17 +1,22 @@
 # implement family-wise error rate adjustments
 # to determine genome-wide significance levels
 
+import pandas as pd
+
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 
 pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
 # you should choose one and stick with it. no p hacking.
 stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
-genomesize = float(str(config['CHANGE']['ISWEEP']['GENOMESIZE']))
+chromosome_sizes = pd.read_csv(macro+'/chromosomes-sizes-kept.tsv',sep='\t')
+genomesize = chromosome_sizes['CMSIZE'].sum()
+numchr = chromosome_sizes.shape[0]
+telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
+genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
 chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
 chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
-numchr = chrhigh - chrlow + 1
 chrsize = genomesize / numchr
 covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
 covlen= int(covlen / 100 / stepsize)

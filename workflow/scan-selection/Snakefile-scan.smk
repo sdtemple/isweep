@@ -35,7 +35,44 @@ mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
 mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
 mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
 
-for i in range(low,high+1):
+mapexcl=str(config['CHANGE']['ISWEEP']['CHREXCLUDE'])
+exclude=[]
+if not os.path.exists(mapexcl):
+    pass
+else:
+    with open(mapexcl,'r') as f:
+        for line in f:
+            exclude.append(int(float(line.strip())))
+chroms = [i for i in range(low,high+1) if i not in exclude]
+
+import pandas as pd
+too_small = []
+sizes_file = macro+'/chromosome-sizes.tsv'
+sizes_kept = macro+'/chromosome-sizes-kept.tsv'
+sizes_out = open(sizes_file,'w')
+sizes_kept_out = open(sizes_kept,'w')
+sizes_out.write('CHROM\tCMSIZE\n')
+sizes_kept_out.write('CHROM\tCMSIZE\n')
+min_chr_size = float(str(config['FIXED']['ISWEEP']['CHRSIZECUTOFF']))
+exclude2 = []
+for i in chroms:
+    source_file = mapfol+'/'+mappre+str(i)+mapsuf
+    sizes_table = pd.concat(source_file,sep='\t',header=None)
+    start_cm = float(sizes_table[2].tolist()[0])
+    end_cm = float(sizes_table[2].tolist()[-1])
+    size_cm = end_cm - start_cm
+    sizes_out.write(str(i)); sizes_out.write('\t')
+    sizes_out.write(str(size_cm)); sizes_out.write('\n')
+    if size_cm >= min_chr_size:
+        sizes_kept_out.write(str(i)); sizes_kept_out.write('\t')
+        sizes_kept_out.write(str(size_cm)); sizes_kept_out.write('\n')
+    else:
+        exclude2.append(i)
+sizes_out.close()
+sizes_kept_out.close()
+chroms2 = [i for i in chroms if i not in exclude2]
+
+for i in chroms2:
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     destination_file = macro+'/maps/chr'+str(i)+'.map'
     if not os.path.exists(destination_file):

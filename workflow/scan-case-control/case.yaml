@@ -17,7 +17,6 @@ CHANGE:
     XMXMEM: '120' # in gb
     THREADS: '12'
     CMSTEPSIZE: '0.05' # in cM (step size)
-    GENOMESIZE: '3300' # in cM (all chromosomes summed)
     CONFLEVEL: '0.05'
     SIMS: '0' # simulations to derive OU threshold
     # with 0, simulation approach will give Z score of -100
@@ -28,6 +27,7 @@ FIXED:
   # isweep
   ISWEEP:
     # scanning parameters
+    SCANCUTOFF: '2.0' # whatever this parameter was in the selection scan
     CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
     TELOSIGMA: '4.0' # sigma scalar to remove telomeres
     CMCOVER: '0.25' # excess ibd rate must extend this long in cM

@@ -1,11 +1,12 @@
 # conduct ibd calls and scan for isweep
 
+import os
+
 # inputs, string management, count sample size, make mac
 subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
 macro=str(config['CHANGE']['FOLDERS']['STUDY'])
 samplesize=0
 with open(subsamplefile,'r') as f:
-# with open(macro+'/'+subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 # samplesize=str(samplesize)
@@ -19,7 +20,12 @@ high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
 vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
 vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
 vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
-concatmap=macro+'/maps/chr'+str(low)+'-'+str(high)+'.map'
+
+chromsstr = []
+with open(macro+'/chromosomes-sizes-kept.tsv','r') as f:
+    for line in f:
+        chromsstr.append(line.strip())
+chroms = [int(i) for i in chromsstr]
 
 mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
 
@@ -160,8 +166,8 @@ rule count_ibdends_mle: # computing counts over windows
 
 rule scan: # conduct a manhattan scan
     input:
-        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
-        [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in range(low,high+1)],
+        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms],
+        [macro+'/ibdsegs/ibdends/mle/chr'+str(i)+'.ibd.windowed.tsv.gz' for i in chroms],
     output:
         scandata=macro+'/scan.ibd.tsv',
     params:

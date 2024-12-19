@@ -72,6 +72,21 @@ If you are using the entire dataset,
 - ` bcftools query -l your-smallest-chr.vcf.gz > subsample.txt `
 - Link this in your YAML file.
 
+#### Ignoring some chromosomes
+
+To not analyze some chromosomes:
+- If they are in a contiguous ordering, adjust the CHRLOW and CHRHIGH parameters in YAML file
+  - For example, if I want to analyze 1,2,3 or chromosomes 1,2,3,4,5,6, I set CHRLOW=1 and CHRHIGH=3.
+- If they are not in a contiguous ordering, make a column of which chromosomes to exclude.
+  - For example, if I want to analyze 1,2,4,6, I set CHRLOW=1, CHRHIGH=6, and make a text file with 3 and 5 in a column.
+  - The path of the text file is then the parameter CHREXCLUDE in the YAML file.
+
+#### Ignoring small chromosomes
+
+Chromosome sizes (in cM) smaller than the FIXED:ISWEEP:CHRSIZECUTOFF will not be analyzed.
+
+We recommend against modifying this parameter.
+
 #### Sequence data
 
 In our simulation studies, we have evaluated our methods for sequence data. 

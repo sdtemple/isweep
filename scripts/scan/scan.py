@@ -78,9 +78,12 @@ def main():
     tab = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{args.chr_low}{args.input_suffix}", sep='\t')
     tab['CHROM'] = args.chr_low
     for i in range(args.chr_low + 1, args.chr_high + 1):
-        tabnow = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{i}{args.input_suffix}", sep='\t')
-        tabnow['CHROM'] = i
-        tab = pd.concat((tab, tabnow))
+        try:
+            tabnow = pd.read_csv(f"{args.input_study}/{args.input_folder}/{args.input_prefix}{i}{args.input_suffix}", sep='\t')
+            tabnow['CHROM'] = i
+            tab = pd.concat((tab, tabnow))
+        except:
+            pass
 
     # Calculating excess IBD
     medi = np.median(tab['COUNT'])
