@@ -30,13 +30,6 @@ def main():
     )
 
     parser.add_argument(
-        '--num_sims', 
-        type=int,
-        default=0, 
-        help="(default: 0) If 0, no simulation threshold will be drawn."
-    )
-
-    parser.add_argument(
         '--chr_low', 
         type=int,
         default=1, 
@@ -165,9 +158,6 @@ def main():
 
     ac = float(ibd['UPPER_ANALYTICAL'][0]) / M
     plt.axhline(y=ac, color="tab:green", linestyle=(0,(5,10)), label="Analytical",linewidth=1,alpha=0.75)
-    if args.num_sims > 0:
-        sc = float(ibd['UPPER_SIMULATE'][0]) / M
-        plt.axhline(y=sc, color="tab:red", linestyle='dotted', label='Simulation',linewidth=2,alpha=0.75)
 
     plt.xlabel(args.xlabel,loc='left')
     plt.ylabel(args.ylabel)

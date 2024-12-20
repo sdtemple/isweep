@@ -18,8 +18,7 @@ CHANGE:
     THREADS: '12'
     CMSTEPSIZE: '0.05' # in cM (step size)
     CONFLEVEL: '0.05'
-    SIMS: '0' # simulations to derive OU threshold
-    # with 0, simulation approach will give Z score of -100
+    SIMS: '500' # simulations to derive OU threshold
 
 # keep these fixed
 FIXED:

@@ -32,7 +32,6 @@ rule plot_scan:
         python ../../scripts/plotting/plot-scan-case-pipeline.py \
             --input_file {input.ibd} \
             --output_prefix {params.prefix} \
-            --num_sims 0 \
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --statistic ZDIFFZ \
