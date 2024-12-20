@@ -37,22 +37,17 @@ def main():
     chrlen = the_dictionary['average-chromosome-length-morgan:']
     theta1 = the_dictionary['estimated-theta1:']
     theta0 = the_dictionary['estimated-theta0:']
+    rho = the_dictionary['estimated-rho:']
     pvalue = the_dictionary['confidence-level:']
 
 
     # Parameters
-    theta1 = args.theta1
-    theta0 = args.theta0
     mu_X, mu_Y = 0.0, 0.0
     sigma_X, sigma_Y = 1., 1.
-    rho = args.rho  # Correlation coefficient
     
     J = args.num_sims
     
-    stepsize = args.cM_step_size
     dt = stepsize
-    chrnum = args.chromosome_number
-    chrlen = args.chr_average_size
     N = floor(chrlen/stepsize)*chrnum
     
     # Initialize arrays

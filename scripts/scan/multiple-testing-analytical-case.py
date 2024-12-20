@@ -423,7 +423,7 @@ else:
 # Write the results to an output file
 
 f = open(fileout,'w')
-f.write('p-value:\t'); f.write(str(pval)); f.write('\n')
+f.write('confidence-level:\t'); f.write(str(pval)); f.write('\n')
 f.write('chromosome-number:\t'); f.write(str(chrnum)); f.write('\n')
 f.write('average-chromosome-length-morgan:\t'); f.write(str(chr_len)); f.write('\n')
 f.write('step-size-morgan:\t'); f.write(str(stepsize)); f.write('\n')
