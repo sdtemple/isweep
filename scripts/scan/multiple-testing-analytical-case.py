@@ -235,6 +235,8 @@ cc.write('CHROM\tCROSS_COV\n')
 # And estimating the covariance
 # For each chromosome
 cross = []
+cross_case = []
+cross_control = []
 for chromosome in range(st, en + 1):
     try:
         table = pd.read_csv(prefix + str(chromosome) + suffix, sep='\t')
@@ -249,6 +251,8 @@ for chromosome in range(st, en + 1):
         # calculate the cross correlation
         zs1c = zs1[(abs(ys1 - avg1) < init_cut * std1) * (ys1 > 0) * (abs(ys0 - avg0) < init_cut * std0) * (ys0 > 0)]
         zs0c = zs0[(abs(ys1 - avg1) < init_cut * std1) * (ys1 > 0) * (abs(ys0 - avg0) < init_cut * std0) * (ys0 > 0)]
+        cross_case += list(zs1c)
+        cross_control += list(zs0c)
         cross = pearsonr(zs1c, zs0c)[0]
         cc.write(str(chromosome) + '\t' + str(cross) + '\n')
 
@@ -344,6 +348,8 @@ final_covs1 = final_covs1[final_covs1 > 0.]
 final_goodbyes = final_goodbyes[final_covs > 0.]
 final_covs = final_covs[final_covs > 0.]
 
+cross_corr_all, _ = pearsonr(np.array(cross_case), np.array(cross_control))
+
 # difference process
 # fit the model [ minus log(cov) = theta * lag ]   
 xvar = np.array(final_goodbyes) * stepsize
@@ -424,6 +430,7 @@ f.write('step-size-morgan:\t'); f.write(str(stepsize)); f.write('\n')
 f.write('estimated-theta:\t'); f.write(str(theta)); f.write('\n')
 f.write('estimated-theta0:\t'); f.write(str(theta0)); f.write('\n')
 f.write('estimated-theta1:\t'); f.write(str(theta1)); f.write('\n')
+f.write('estimated-rho:\t'); f.write(str(cross_corr_all)); f.write('\n')
 f.write('case-revised-mean:\t'); f.write(str(avg12)); f.write('\n')
 f.write('case-revised-std:\t'); f.write(str(std12)); f.write('\n')
 f.write('control-revised-mean:\t'); f.write(str(avg02)); f.write('\n')

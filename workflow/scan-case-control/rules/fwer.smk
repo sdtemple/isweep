@@ -20,10 +20,11 @@ stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
 stepsize /= 100 # in morgans
 chromosome_sizes = pd.read_csv(macro+'/chromosome-sizes-kept.tsv',sep='\t')
 genomesize = chromosome_sizes['CMSIZE'].sum()
+chroms2 = chromosome_sizes.CHROM.astype(int).tolist()
 telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
+numchr = chromosome_sizes.shape[0]
 genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
-numchr = chromosome_sizes.shape[0]
 chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
 chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 chrsize = genomesize / numchr
@@ -57,7 +58,7 @@ rule count_ibdends_case: # computing counts over windows for case and controls
 # merged analytical_method, scan, and significance rules together
 rule analytical_method:
     input:
-        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.case.ibd.windowed.tsv.gz' for i in range(chrlow,chrhigh+1)],
+        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.case.ibd.windowed.tsv.gz' for i in chroms2],
     output:
         testing=macro+'/fwer.analytical.case.tsv',
         autocov0=macro+'/fwer.autocovariance.control.tsv',
