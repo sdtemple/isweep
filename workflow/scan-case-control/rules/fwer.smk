@@ -98,18 +98,20 @@ rule analytical_method:
             --counts_column1 COUNT1 \
         """
 
-# # maybe implement later
-# rule simulation_method:
-#     input:
-#         pass
-#     output:
-#         pass
-#     params:
-#         pass
-#     shell:
-#         """
-#         echo 'Hello world'
-#         """
+rule simulation_method:
+    input:
+        testing=macro+'/fwer.analytical.case.tsv',
+    output:
+        testing=macro+'/fwer.simulation.case.txt',
+    params:
+        numsims=str(config['CHANGE']['ISWEEP']['SIMS']),
+    shell:
+        """
+        python ../../scripts/scan/multiple-testing-simulation-case-pipeline.py \
+            --input_file {input.testing} \
+            --output_file {output.testing} \
+            --num_sims {params.numsims} \
+        """
 
 rule plot_autocovariance:
     input:

@@ -41,6 +41,7 @@ rule yaml:
         macro+'/autocovariance.control.png',
         macro+'/fwer.crosscovariance.diff.tsv',
         macro+'/scan.case.control.png',
+        macro+'/fwer.simulation.case.tsv',
     output:
         yaml=macro+'/arguments.case.yaml',
     params:

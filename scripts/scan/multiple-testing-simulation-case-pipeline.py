@@ -48,7 +48,7 @@ def main():
     J = args.num_sims
     
     dt = stepsize
-    N = floor(chrlen/stepsize)*chrnum
+    N = int(floor(chrlen/stepsize)*chrnum)
     
     # Initialize arrays
     X = np.zeros(N)
