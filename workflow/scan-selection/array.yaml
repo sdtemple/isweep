@@ -24,6 +24,9 @@ change:
     map_suffix: '.map'
     # column in text file of samples to analyze
     subsample: '/path-to-subsample/inferred.ancestry.txt'
+    # 2 if diploid, 1 if not diploid
+    # See instructions for how to handle non-diploidy
+    ploidy: '2'
 
   # Main method parameters
   isweep:

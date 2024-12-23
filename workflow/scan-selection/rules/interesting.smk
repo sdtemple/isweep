@@ -14,13 +14,14 @@ rule plot_scan:
         numsims=str(numsims),
         chrlow=str(low),
         chrhigh=str(high),
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/plotting/plot-scan-pipeline.py \
             --input_file {input.ibd} \
             --output_prefix {params.prefix} \
             --sample_size {params.samplesize} \
-            --ploidy 2 \
+            --ploidy {params.ploidy} \
             --heuristic_cutoff 4 \
             --num_sims {params.numsims} \
             --chr_low {params.chrlow} \

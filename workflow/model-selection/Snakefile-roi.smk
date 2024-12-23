@@ -42,7 +42,7 @@ samplesize=0
 with open(cohort+'/subsample.txt','r') as f:
     for line in f:
         samplesize+=1
-ploidy=2
+ploidy=int(float(config['change']['files']['ploidy']))
 samplesize_ploidy=samplesize*ploidy
 
 maf=str(config['fixed']['isweep']['min_adaptive_allele_frequency'])

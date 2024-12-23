@@ -24,6 +24,8 @@ with open(subsample,'r') as f:
     for line in f:
         samplesize+=1
 
+ploidy = int(float(config['change']['files']['ploidy']))
+
 # number of sims for the simulation method
 numsims = int(str(config['change']['isweep']['num_sims'])) 
 

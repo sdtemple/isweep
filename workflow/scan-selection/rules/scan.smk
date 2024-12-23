@@ -5,7 +5,6 @@ localrules: plot_histogram
 
 import os
 
-ploidy=2
 maf1=float(config['fixed']['hap_ibd_candidate']['min_minor_allele_frequency'])
 mac1=int(ploidy*samplesize*maf1)
 mgb=int(float(str(config['change']['isweep']['xmx_mem'])))

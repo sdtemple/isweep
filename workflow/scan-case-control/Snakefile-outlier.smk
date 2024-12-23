@@ -85,7 +85,7 @@ samplesize=0
 with open(subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
-ploidy=2
+ploidy=int(float(config['change']['files']['ploidy']))
 maf3=float(config['fixed']['hap_ibd']['min_minor_allele_frequency'])
 mac3=int(ploidy*samplesize*maf3)
 
@@ -203,7 +203,7 @@ rule design:
         diameter=str(config['fixed']['isweep']['diameter']),
         rulesigma=str(config['fixed']['isweep']['group_cutoff']),
         cases=cases,
-        ploidy=str(2),
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/utilities/make-design-matrix.py \

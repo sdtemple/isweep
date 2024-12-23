@@ -23,6 +23,9 @@ change:
     genetic_maps: '/path-to-maps-folder'
     map_prefix: 'chr'
     map_suffix: '.map'
+    # 2 if diploid, 1 if not diploid
+    # See instructions for how to handle non-diploidy
+    ploidy: '2'
 
   # Main method parameters
   isweep:

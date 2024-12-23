@@ -15,6 +15,9 @@ change:
     regions_of_interest: 'roi.tsv'
     # either empty or chr depending on prefix of CHROM column in VCF
     chromosome_prefix: ''
+    # 2 if diploid, 1 if not diploid
+    # See instructions for how to handle non-diploidy
+    ploidy: '2'
 
   # Main method parameters
   isweep:

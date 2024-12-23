@@ -114,7 +114,7 @@ rule third_hap_infer_norm:
         nboot=nbootnorm,
         cm=mlecut,
         n=str(samplesize),
-        ploidy=str(2),
+        ploidy=str(ploidy),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -146,7 +146,7 @@ rule third_hap_infer_perc:
         nboot=nbootperc,
         cm=mlecut,
         n=str(samplesize),
-        ploidy=str(2),
+        ploidy=str(ploidy),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -270,7 +270,7 @@ rule third_snp_infer_norm:
         nboot=nbootnorm,
         cm=mlecut,
         n=str(samplesize),
-        ploidy=str(2),
+        ploidy=str(ploidy),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -302,7 +302,7 @@ rule third_snp_infer_perc:
         nboot=nbootperc,
         cm=mlecut,
         n=str(samplesize),
-        ploidy=str(2),
+        ploidy=str(ploidy),
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
