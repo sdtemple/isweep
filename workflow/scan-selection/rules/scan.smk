@@ -1,29 +1,14 @@
-# conduct ibd calls and scan for isweep
+# The main steps in the selection scan are
+# detecting identity-by-descent segments.
 
 localrules: plot_histogram
 
 import os
 
-# inputs, string management, count sample size, make mac
-subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-samplesize=0
-with open(subsamplefile,'r') as f:
-    for line in f:
-        samplesize+=1
-# samplesize=str(samplesize)
 ploidy=2
-# ploidy=int(float(config['FIXED']['CANDHAPIBD']['PLOIDY']))
-maf1=float(config['FIXED']['CANDHAPIBD']['MINMAF'])
+maf1=float(config['fixed']['hap_ibd_candidate']['min_minor_allele_frequency'])
 mac1=int(ploidy*samplesize*maf1)
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
-high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
-vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
-vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
-vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
-
-mgb=int(float(str(config['CHANGE']['ISWEEP']['XMXMEM'])))
+mgb=int(float(str(config['change']['isweep']['xmx_mem'])))
 
 rule hapibd: # candidate segments from hap-ibd.jar
     input:
@@ -35,10 +20,10 @@ rule hapibd: # candidate segments from hap-ibd.jar
     params:
         minmac=str(mac1),
         out='{cohort}/ibdsegs/hapibd/chr{num}',
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-        minsee=str(config['FIXED']['CANDHAPIBD']['MINSEED']),
-        minext=str(config['FIXED']['CANDHAPIBD']['MINEXT']),
-        minout=str(config['FIXED']['CANDHAPIBD']['MINOUT']),
+        xmx=str(mgb),
+        minsee=str(config['fixed']['hap_ibd_candidate']['min_seed']),
+        minext=str(config['fixed']['hap_ibd_candidate']['min_extend']),
+        minout=str(config['fixed']['hap_ibd_candidate']['min_output']),
     resources:
         mem_gb=mgb+1,
     shell:
@@ -64,11 +49,11 @@ rule ibdends: # ibd-ends.jar
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     params:
         out='{cohort}/ibdsegs/ibdends/chr{num}',
-        xmx=str(config['CHANGE']['ISWEEP']['XMXMEM']),
-        maf=str(config['FIXED']['IBDENDS']['MINMAF']),
-        qua=str(config['FIXED']['IBDENDS']['QUANTILES']),
-        sam=str(config['FIXED']['IBDENDS']['NSAMPLES']),
-        err=str(config['CHANGE']['IBDENDS']['ERRRATE']),
+        xmx=str(mgb),
+        maf=str(config['fixed']['ibd_ends']['min_minor_allele_frequency']),
+        qua=str(config['fixed']['ibd_ends']['quantiles']),
+        sam=str(config['fixed']['ibd_ends']['num_posterior_samples']),
+        err=str(config['change']['ibd_ends']['error_rate']),
     resources:
         mem_gb=mgb+1,
     shell:
@@ -104,7 +89,7 @@ rule filter_ibdends_scan: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
-        scancut=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
+        scancut=str(config['fixed']['isweep']['scan_cutoff']),
     shell:
         """
         python ../../scripts/utilities/filter-lines.py \
@@ -135,7 +120,7 @@ rule filter_ibdends_mle: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/mle/chr{num}.ibd.gz',
     params:
-        mlecut=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        mlecut=str(config['fixed']['isweep']['mle_cutoff']),
     shell:
         """
         python ../../scripts/utilities/filter-lines.py \
@@ -171,7 +156,7 @@ rule scan: # conduct a manhattan scan
         folder='/ibdsegs/ibdends/scan',
         chrlow=str(low),
         chrhigh=str(high),
-        telosigma=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+        telosigma=str(config['fixed']['isweep']['outlier_cutoff']),
     shell:
         """
         python ../../scripts/scan/scan.py \

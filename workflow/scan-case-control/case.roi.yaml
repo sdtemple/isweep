@@ -1,58 +1,51 @@
-# change these
-CHANGE:
+# Change these parameters, which mostly
+# concern the location of files.
+change:
 
-  FOLDERS:
+  files:
     # folder for analysis
-    STUDY: '/path-to-study/sequence-data'
+    study: '/path-to-study/sequence-data'
     # the yaml file with scan analysis options
-    YAML: 'this-file.yaml'
-
-  # parameters, subsample file
-  ISWEEP:
+    yaml: 'this-file.yaml'
+    cases: 'phenotypes.txt'
+    regions_of_interest: 'roi.case.tsv'
     # either empty or chr depending on prefix of CHROM column in VCF
-    CHRPRE: ''
+    chromosome_prefix: ''
     # lowest chromosome number
-    CHRLOW: '1'
+    chromosome_low: '1'
     # highest chromosome numbers
-    CHRHIGH: '22'
-    CASES: 'phenotypes.txt'
-    ROI: 'roi.case.tsv'
-    PLOIDY: '2'
-    XMXMEM: '120' # in gb
-    THREADS: '12'
-
-  EXISTING:
+    chromosome_high: '22'
     # these are phased vcfs
-    VCFS: '/path-to-topmed-data/phased-vcfs'
-    VCFPRE: 'chr'
-    VCFSUF: '.vcf.gz
-    MAPS: '/path-to-maps-folder'
-    MAPPRE: 'chr'
-    MAPSUF: '.vcf.gz'
+    vcfs: '/path-to-topmed-data/phased-vcfs'
+    vcf_prefix: 'chr'
+    vcf_suffix: '.vcf.gz'
+    # these are genetic recombination maps
+    genetic_maps: '/path-to-maps-folder'
+    map_prefix: 'chr'
+    map_suffix: '.vcf.gz'
 
-# keep these fixed
-FIXED:
+  # Main method parameters
+  isweep:
+    xmx_mem: '60' # in gb
+    num_threads: '8'
 
-  # hap-ibd.jar
-  # candidate ibd segments
-  # these are inspired by Cai, Browning, and Browning (2023+)
-  HAPIBD: # candidate
+# We recommend against adjusting these parameters.
+fixed:
+
+  hap_ibd:
     # min-seed
-    MINSEED: '0.5'
+    min_seed: '0.5'
     # min-extend
-    MINEXT: '0.2'
+    min_extend: '0.2'
     # min-output
-    MINOUT: '1.0'
+    min_output: '1.0'
     # minimum minor allele frequency
-    MINMAF: '0.10'
-    # ploidy number
-    # PLOIDY: '2'
+    min_minor_allele_frequency: '0.10'
 
-  # isweep
-  ISWEEP:
+  isweep:
     # inferring outgroup
-    DIAMETER: '6' # any two nodes in community can reach other in this many edges
-    GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    diameter: '6' # any two nodes in community can reach other in this many edges
+    group_cutoff: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
 
 
 

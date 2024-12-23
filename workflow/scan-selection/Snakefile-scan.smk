@@ -1,14 +1,33 @@
-# scanning for excess ibd
+# The main organizing file for the selection scan,
+# where the rule all is and many of the yaml parameters.
+# You run this file with the -s parameter in snakemake.
 
 import shutil
+import os
 
 # setup macro folder
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-low=int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
-high=int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
+macro=str(config['change']['files']['study'])
+chrlow=int(str(config['change']['files']['chromosome_low']))
+chrhigh=int(str(config['change']['files']['chromosome_high']))
+low=chrlow
+high=chrhigh
+
+# vcf data
+vcffolder=str(config['change']['files']['vcfs'])
+vcfpre=str(config['change']['files']['vcf_prefix'])
+vcfsuf=str(config['change']['files']['vcf_suffix'])
+
+# calculate the sample size
+subsample=str(config['change']['files']['subsample'])
+samplesize=0
+with open(subsample,'r') as f:
+    for line in f:
+        samplesize+=1
+
+# number of sims for the simulation method
+numsims = int(str(config['change']['isweep']['num_sims'])) 
 
 # copy and paste maps
-import os
 folder_name = macro
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
@@ -31,11 +50,11 @@ folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
-mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
-mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
-mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
+mapfol=str(config['change']['files']['genetic_maps'])
+mappre=str(config['change']['files']['map_prefix'])
+mapsuf=str(config['change']['files']['map_suffix'])
 
-mapexcl=str(config['CHANGE']['ISWEEP']['CHREXCLUDE'])
+mapexcl=str(config['change']['files']['chromosome_exclude'])
 exclude=[]
 if not os.path.exists(mapexcl):
     pass
@@ -43,13 +62,13 @@ else:
     with open(mapexcl,'r') as f:
         for line in f:
             exclude.append(int(float(line.strip())))
-chroms = [i for i in range(low,high+1) if i not in exclude]
+chroms = [i for i in range(chrlow,chrhigh+1) if i not in exclude]
 
 import pandas as pd
 sizes_file = macro+'/chromosome-sizes.tsv'
 sizes_out = open(sizes_file,'w')
 sizes_out.write('CHROM\tCMSIZE\n')
-for i in range(low,high+1):
+for i in range(chrlow,chrhigh+1):
     source_file = mapfol+'/'+mappre+str(i)+mapsuf
     sizes_table = pd.read_csv(source_file,sep='\t',header=None)
     start_cm = float(sizes_table[2].tolist()[0])
@@ -62,7 +81,7 @@ sizes_out.close()
 sizes_kept = macro+'/chromosome-sizes-kept.tsv'
 sizes_kept_out = open(sizes_kept,'w')
 sizes_kept_out.write('CHROM\tCMSIZE\n')
-min_chr_size = float(str(config['FIXED']['ISWEEP']['CHRSIZECUTOFF']))
+min_chr_size = float(str(config['fixed']['isweep']['chromosome_size_cutoff']))
 exclude2 = []
 total_size = 0
 total_chr = 0
@@ -95,6 +114,7 @@ include: 'rules/samples.smk'
 include: 'rules/maps.smk'
 include: 'rules/fwer.smk'
 
+# record the configuration settings used
 rule yaml:
     input:
         macro+'/excess.ibd.tsv',
@@ -107,7 +127,7 @@ rule yaml:
     output:
         yaml=macro+'/arguments.scan.yaml',
     params:
-        yaml=str(config['CHANGE']['FOLDERS']['YAML']),
+        yaml=str(config['change']['files']['yaml']),
     shell:
         'cp {params.yaml} {output.yaml}'
 

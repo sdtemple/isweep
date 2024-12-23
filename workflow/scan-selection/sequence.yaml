@@ -1,82 +1,78 @@
-# change these
-CHANGE:
+# Change these parameters, which mostly
+# concern the location of files.
+change:
 
-  FOLDERS:
+  # Where data is to be output
+  # and where existing data are
+  folders:
     # folder for analysis
-    STUDY: '/path-to-study/sequence-data'
+    study: '/path-to-study/sequence-data'
     # the yaml file with scan analysis options
-    YAML: 'sequence.yaml'
-
-  # parameters, subsample file
-  ISWEEP:
+    yaml: 'sequence.yaml'
     # lowest chromosome number
-    CHRLOW: '1'
+    chromosome_low: '1'
     # highest chromosome numbers
-    CHRHIGH: '22'
+    chromosome_high: '22'
     # column in text file of chromosome numbers to exclude
     # default is an no file
-    CHREXCLUDE: ''
-    # column in text file of samples to analyze
-    SUBSAMPLE: '/path-to-subsample/inferred.ancestry.txt'
-    XMXMEM: '240' # in gb
-    THREADS: '16'
-    CMSTEPSIZE: '0.05' # in cM (step size)
-    CONFLEVEL: '0.05'
-    SIMS: '500' # simulations to derive OU threshold
-    # with 0, simulation approach will give Z score of -100
-
-  IBDENDS:
-    # do a test run on 1 chromosome to set this
-    ERRRATE: '1.5e-4'
-
-  EXISTING:
+    chromosome_exclude: ''
     # these are phased vcfs
-    VCFS: '/path-to-phased-vcfs'
-    VCFPRE: 'chr'
-    VCFSUF: '.vcf.gz'
+    vcfs: '/path-to-phased-vcfs'
+    vcf_prefix: 'chr'
+    vcf_suffix: '.vcf.gz'
     # these are genetic maps
-    MAPS: '/path-to-genetic-maps/decode.2019.b38'
-    MAPPRE: 'decode2019.chrchr'
-    MAPSUF: '.GRCh38.map'
+    genetic_maps: '/path-to-genetic-maps/decode.2019.b38'
+    map_prefix: 'decode2019.chrchr'
+    map_suffix: '.GRCh38.map'
+    # column in text file of samples to analyze
+    subsample: '/path-to-subsample/inferred.ancestry.txt'
 
-# keep these fixed
-FIXED:
+  # Main method parameters
+  isweep:
+    step_size_cm: '0.05' # in cM (step size)
+    scan_cutoff: '2.0' # in cM (the detection threshold)
+    confidence_level: '0.05'
+    num_sims: '500' # simulations to derive OU threshold
+    # with 0, simulation approach will give Z score of -100
+    xmx_mem: '240' # heap memory in Gb for intensive jobs
+    num_threads: '16' # threads for intensive jobs
 
-  # hap-ibd.jar
-  # candidate ibd segments
-  # these are inspired by Cai, Browning, and Browning (2023+)
-  CANDHAPIBD: # candidate
+  ibd_ends:
+    # do a test run on 1 chromosome to set this
+    error_rate: '1.5e-4'
+
+# We recommend against adjusting these parameters.
+fixed:
+
+  # Candidate identity-by-descent segments
+  # serving as input data to ibd-ends
+  hap_ibd_candidate:
     # min-seed
-    MINSEED: '0.5'
+    min_seed: '0.5'
     # min-extend
-    MINEXT: '0.2'
+    min_extend: '0.2'
     # min-output
-    MINOUT: '1.0'
+    min_output: '1.0'
     # minimum minor allele frequency
-    MINMAF: '0.40'
-    # ploidy number
-    # PLOIDY: '2'
+    min_minor_allele_frequency: '0.40'
 
-  # refined ibd segments
-  # ibd-ends.jar
-  IBDENDS:
-    # quantiles from endpoint posterior
-    QUANTILES: '0.5'
+  ibd_ends:
+    # quantiles (comma separated) from endpoint posterior
+    quantiles: '0.5'
     # num samples from endpoint posterior
-    NSAMPLES: '0'
+    num_posterior_samples: '0'
     # minimum minor allele frequency
-    MINMAF: '0.001'
+    min_minor_allele_frequency: '0.001'
 
-  # isweep
-  ISWEEP:
+  isweep:
     # scanning parameters
-    SCANCUTOFF: '2.0' # ibd cM threshold
-    CHRSIZECUTOFF: '10.0' # chromosomes must be this or more cM long
-    CMGAP: '0.5' # cM gap when concatenating regions of excess IBD
-    TELOSIGMA: '4.0' # sigma scalar to remove telomeres
-    CMCOVER: '0.5' # excess ibd rate must extend this long in cM
-    CMSMALL: '2.0' # region is extended w/ buffer if too small
-    MBBUF: '2' # mb buffer if cm not long enough
-    AUTOCOVLEN: '4.' # in cM, how much data to learn autocovariance
+    scan_cutoff: '2.0' # ibd cM threshold
+    chromosome_size_cutoff: '10.0' # chromosomes must be this or more cM long
+    cm_gap: '0.5' # cM gap when concatenating regions of excess IBD
+    outlier_cutoff: '4.0' # sigma scalar to remove telomeres
+    covered_cm_region: '0.5' # excess ibd rate must extend this long in cM
+    small_cm_region: '2.0' # region is extended w/ buffer if too small
+    mega_base_buffer: '2' # mb buffer if cm not long enough
+    auto_covariance_length: '4.' # in cM, how much data to learn autocovariance
     # estimating selection coefficient
-    MLECUTOFF: '3.0' # ibd cM cutoff
+    mle_cutoff: '3.0' # ibd cM cutoff

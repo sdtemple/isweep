@@ -1,66 +1,63 @@
-# change these
-CHANGE:
+# Change these parameters, which mostly
+# concern the location of files.
+change:
 
-  # folders
-  FOLDERS:
+  files:
     # folder for analysis
-    STUDY: '/path-to-study/sequence'
+    study: '/path-to-study/sequence'
     # the yaml file with scan analysis options
-    YAML: 'sweep.yaml'
-
-  # parameters, subsample file
-  ISWEEP:
-    # region of interest file
-    ROI: 'roi.tsv'
-    # either empty or chr depending on prefix of CHROM column in VCF
-    CHRPRE: ''
-    XMXMEM: '100' # in gb
-    # inferred Ne(t) to use
-    NE: 'ibdne.ne'
-
-  EXISTING:
+    yaml: 'sweep.yaml'
+    # these are phased vcfs
     VCFS: '/path-to-phased-vcfs'
     VCFPRE: 'chr'
     VCFSUF: '.vcf.gz'
+    # region of interest file
+    regions_of_interest: 'roi.tsv'
+    # either empty or chr depending on prefix of CHROM column in VCF
+    chromosome_prefix: ''
 
-# keep these fixed
-FIXED:
+  # Main method parameters
+  isweep:
+    xmx_mem: '60' # in gb
+    # inferred Ne(t) to use
+    Ne: 'ibdne.ne'
 
-  # isweep
-  ISWEEP:
+# We recommend against adjusting these parameters.
+fixed:
+
+  isweep:
     # inferring outgroup
-    DIAMETER: '6' # any two nodes in community can reach other in this many edges
-    GROUPCUTOFF: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
+    diameter: '6' # any two nodes in community can reach other in this many edges
+    group_cutoff: '3' # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
     # initiat focal location
-    MAXSPACING: '25000' # max position spacing in location initializing
-    QRANGE: '10' # num percentiles to sum over in location initializing
-    PM: '1000000'
+    max_spacing: '25000' # max position spacing in location initializing
+    num_in_quantile_sum: '10' # num percentiles to sum over in location initializing
+    base_pair_buffer: '1000000'
     # estimating allele frequency
-    WINSIZE: '250000' # window size and step
-    WINSTEP: '50000'
-    HAPSIZE: '500000' # haplotype position size and step
-    HAPSTEP: '50000'
-    FREQSIZE: '0.100' # haplotype frequency size and step
-    FREQSTEP: '0.025'
-    NUMSNP: '5' # min number of SNPs in a haplotype rectangle
-    MINAAF: '0.10' # min allele frequency considered in estimating frequency
+    window_size: '250000' # window size and step
+    window_step: '50000'
+    haplotype_size: '500000' # haplotype position size and step
+    haplotype_step: '50000'
+    frequency_size: '0.100' # haplotype frequency size and step
+    frequency_step: '0.025'
+    num_variants: '5' # min number of SNPs in a haplotype rectangle
+    min_adaptive_allele_frequency: '0.10' # min allele frequency considered in estimating frequency
     # estimating selection coefficient
-    MLECUTOFF: '3.0' # ibd cM cutoff
-    LASTNE: '2000' # extend inferred ne file to this many generations
-    NBOOTNORM: '100' # number of bootstraps for standard normal intervals
-    NBOOTPERC: '2000' # number of bootstraps for percentile intervals
+    num_generations: '2000' # extend inferred ne file to this many generations
+    num_bootstraps_normal: '100' # number of bootstraps for standard normal intervals
+    num_bootstraps_percentile: '2000' # number of bootstraps for percentile intervals
+    # Warning: this parameter must be the same
+    # as in the selection scan.
+    mle_cutoff: '3.0' # ibd cM cutoff
 
-  # hap-ibd.jar
-  # these are for ibd group segments
-  # these are hap-ibd.jar sequence parameters (see suppl.)
-  HAPIBD:
+  # These parameters are for detecting IBD groups.
+  # They are very different from hap-ibd.jar defaults.
+  hap_ibd:
     # min-seed
-    MINSEED: '0.5'
+    min_seed: '0.5'
     # min-extend
-    MINEXT: '0.2'
+    min_extend: '0.2'
     # min-output
-    MINOUT: '1.0'
+    min_output: '1.0'
     # minimum minor allele frequency
-    MINMAF: '0.10'
-    # ploidy number
-    # PLOIDY: '2'
+    min_minor_allele_frequency: '0.10'

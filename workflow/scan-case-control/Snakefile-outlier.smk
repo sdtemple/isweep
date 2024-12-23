@@ -1,8 +1,12 @@
+# The main organizing file for the outlier detection + phenotypes,
+# where the rule all is and many of the yaml parameters.
+# You run this file with the -s parameter in snakemake.
+
 import os
 import shutil
 import pandas as pd
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-micro=str(config['CHANGE']["ISWEEP"]["ROI"])
+macro=str(config['change']['files']['study'])
+micro=str(config['change']["files"]["regions_of_interest"])
 
 folder_name = macro
 if not os.path.exists(folder_name):
@@ -39,12 +43,12 @@ folder_name = macro + '/maps'
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
-mapfol=str(config['CHANGE']['EXISTING']['MAPS'])
-mappre=str(config['CHANGE']['EXISTING']['MAPPRE'])
-mapsuf=str(config['CHANGE']['EXISTING']['MAPSUF'])
+mapfol=str(config['change']['files']['genetic_maps'])
+mappre=str(config['change']['files']['map_prefix'])
+mapsuf=str(config['change']['files']['map_suffix'])
 
-low=str(config['CHANGE']['ISWEEP']['CHRLOW'])
-high=str(config['CHANGE']['ISWEEP']['CHRHIGH'])
+low=str(config['change']['files']['chromosome_low'])
+high=str(config['change']['files']['chromosome_high'])
 low=int(low)
 high=int(high)
 
@@ -54,7 +58,7 @@ for i in range(low,high+1):
     if not os.path.exists(destination_file):
         shutil.copy(source_file, destination_file)
 
-cases=str(config['CHANGE']['ISWEEP']['CASES'])
+cases=str(config['change']['files']['cases'])
 file_name = macro + '/phenotypes.txt'
 if not os.path.exists(file_name):
     shutil.copy(cases, file_name)
@@ -67,7 +71,7 @@ rule all:
 	output:
 		yaml=macro+'/arguments.outliers.yaml',
 	params:
-		yaml=str(config['CHANGE']['FOLDERS']['YAML']),
+		yaml=str(config['change']['files']['yaml']),
 	shell:
 		'cp {params.yaml} {output.yaml}'
 
@@ -75,15 +79,14 @@ rule all:
 # zooming in on a region of interest
 
 # some inputs, string managements, count sample size
-subsamplefile=str(config['CHANGE']['ISWEEP']['CASES'])
-cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
+subsamplefile=cases
+cohort=str(config['change']['files']['study'])
 samplesize=0
 with open(subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
 ploidy=2
-# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
-maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
+maf3=float(config['fixed']['hap_ibd']['min_minor_allele_frequency'])
 mac3=int(ploidy*samplesize*maf3)
 
 # subset vcf to region of interest
@@ -95,12 +98,12 @@ rule first_region: # focus vcf on region of interest
         subvcf='{cohort}/{hit}/narrowing.case.vcf.gz',
     params:
         qmaf=maf3,
-        chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
-        vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
-        vcfprefix=str(config['CHANGE']['EXISTING']['VCFPRE']),
-        vcfsuffix=str(config['CHANGE']['EXISTING']['VCFSUF']),
+        chrpre=str(config['change']['files']['chromosome_prefix']),
+        vcfs=str(config['change']['files']['vcfs']),
+        vcfprefix=str(config['change']['files']['vcf_prefix']),
+        vcfsuffix=str(config['change']['files']['vcf_suffix']),
     resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
+        mem_gb='{config[change][isweep][xmx_mem]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
@@ -121,19 +124,19 @@ rule first_hapibd:
     params:
         minmac=str(mac3),
         out='{cohort}/{hit}/narrowing.case',
-        minsee=str(config['FIXED']['HAPIBD']['MINSEED']),
-        minext=str(config['FIXED']['HAPIBD']['MINEXT']),
-        minout=str(config['FIXED']['HAPIBD']['MINOUT']),
+        minsee=str(config['fixed']['hap_ibd']['min_seed']),
+        minext=str(config['fixed']['hap_ibd']['min_extend']),
+        minout=str(config['fixed']['hap_ibd']['min_output']),
     output:
         ibd='{cohort}/{hit}/narrowing.case.ibd.gz',
         hbd='{cohort}/{hit}/narrowing.case.hbd.gz',
         log='{cohort}/{hit}/narrowing.case.log',
     resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
+        mem_gb='{config[change][isweep][xmx_mem]}',
     shell:
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
-        java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar ../../software/hap-ibd.jar \
+        java -Xmx{config[change][isweep][xmx_mem]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={wildcards.cohort}/maps/chr${{chr}}.map \
             out={params.out} \
@@ -177,9 +180,9 @@ rule outlier:
     output:
         out1='{cohort}/{hit}/outlier1.phenotype.tsv',
     params:
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
-        cases=str(config['CHANGE']['ISWEEP']['CASES']),
+        diameter=str(config['fixed']['isweep']['diameter']),
+        rulesigma=str(config['fixed']['isweep']['group_cutoff']),
+        cases=cases,
     shell:
         """
         python ../../scripts/model/outliers-phenotype.py \
@@ -197,10 +200,10 @@ rule design:
         out1='{cohort}/{hit}/matrix.outlier.phenotypes.tsv',
         out2='{cohort}/{hit}/matrix.outlier.phenotypes.sorted.tsv',
     params:
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
-        cases=str(config['CHANGE']['ISWEEP']['CASES']),
-        ploidy=str(config['CHANGE']['ISWEEP']['PLOIDY']),
+        diameter=str(config['fixed']['isweep']['diameter']),
+        rulesigma=str(config['fixed']['isweep']['group_cutoff']),
+        cases=cases,
+        ploidy=str(2),
     shell:
         """
         python ../../scripts/utilities/make-design-matrix.py \

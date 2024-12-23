@@ -1,27 +1,23 @@
-# implement family-wise error rate adjustments
+# Implement the multiple-testing corrections
 # to determine genome-wide significance levels
+# that control the family-wise error rate.
 
 localrules: plot_autocovariance, significance
 
 import pandas as pd
 
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-
-pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
+pval = float(str(config['change']['isweep']['confidence_level']))
 # you should choose one and stick with it. no p hacking.
-stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
+stepsize = float(str(config['change']['isweep']['step_size_cm']))
 stepsize /= 100 # in morgans
 genomesize = total_size
 numchr = total_chr
-telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
+telocutting = float(str(config['fixed']['isweep']['scan_cutoff']))
 genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
-chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
-chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 chrsize = genomesize / numchr
-covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
+covlen = float(str(config['fixed']['isweep']['auto_covariance_length']))
 covlen= int(covlen / 100 / stepsize)
-numsims = int(str(config['CHANGE']['ISWEEP']['SIMS'])) 
 
 # implement the siegmund and yakir (2007) method
 # with log linear modeled autocovariance
@@ -38,7 +34,7 @@ rule analytical_method:
        covlen=str(covlen),
        pval=str(pval),
        stepsize=str(stepsize),
-       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+       initcut=str(config['fixed']['isweep']['outlier_cutoff']),
        pre=macro+'/ibdsegs/ibdends/scan/chr',
     shell:
         """
@@ -64,7 +60,7 @@ rule simulation_method:
     output:
         simulation=macro+'/fwer.simulation.txt',
     params:
-       numsims=str(config['CHANGE']['ISWEEP']['SIMS']),
+       numsims=str(config['change']['isweep']['num_sims']),
     shell:
         """
         python ../../scripts/scan/multiple-testing-simulation-pipeline.py \

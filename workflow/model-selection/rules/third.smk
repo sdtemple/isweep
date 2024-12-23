@@ -1,5 +1,5 @@
-### estimating selection coefficients
-### estimating allele frequencies
+# Estimating selection coefficients
+# and estimating allele frequencies
 
 localrules: \
     third_Ne, \
@@ -10,36 +10,29 @@ localrules: \
     summary_snp_norm, \
     summary_snp_perc
 
-# some inputs, string managements, count sample size
-cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
-samplesize=0
-with open(cohort+'/subsample.txt','r') as f:
-    for line in f:
-        samplesize+=1
-ploidy=2
-# ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
-samplesize_ploidy=samplesize*ploidy
-
 import os
 import pandas as pd
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-micro=str(config['CHANGE']["ISWEEP"]["ROI"])
-sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
-J = sims.shape[0]
-for j in range(J):
-	row = sims.iloc[j]
-	if not os.path.exists(macro+'/'+str(row.NAME)):
-		os.mkdir(macro+'/'+str(row.NAME))
-sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
+
+mlecut=str(config['fixed']['isweep']['mle_cutoff'])
+nbootnorm=str(config['change']['isweep']['num_boostraps_normal'])
+nbootperc=str(config['change']['isweep']['num_boostraps_percentile'])
+
+# sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
+# J = sims.shape[0]
+# for j in range(J):
+# 	row = sims.iloc[j]
+# 	if not os.path.exists(macro+'/'+str(row.NAME)):
+# 		os.mkdir(macro+'/'+str(row.NAME))
+# sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
 
 # extend Ne(t)
 rule third_Ne:
     input:
-        shortNe='{cohort}/'+str(config['CHANGE']['ISWEEP']['NE']),
+        shortNe='{cohort}/'+str(config['change']['isweep']['Ne']),
     output:
         longNe='{cohort}/extended.ne',
     params:
-        lastne=str(config['FIXED']['ISWEEP']['LASTNE']),
+        lastne=str(config['fixed']['isweep']['num_generations']),
     shell:
         """
         python -c "from isweep import extend_Ne; extend_Ne('{input.shortNe}',float('{params.lastne}'),'{output.longNe}')"
@@ -56,12 +49,12 @@ rule third_hap:
         happng='{cohort}/{hit}/third.hap.png',
         snppng='{cohort}/{hit}/third.snp.png',
     params:
-        windowsize=str(config['FIXED']['ISWEEP']['HAPSIZE']),
-        windowstep=str(config['FIXED']['ISWEEP']['HAPSTEP']),
-        freqsize=str(config['FIXED']['ISWEEP']['FREQSIZE']),
-        freqstep=str(config['FIXED']['ISWEEP']['FREQSTEP']),
-        numsnp=str(config['FIXED']['ISWEEP']['NUMSNP']),
-        lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
+        windowsize=str(config['fixed']['isweep']['haplotype_size']),
+        windowstep=str(config['fixed']['isweep']['haplotype_step']),
+        freqsize=str(config['fixed']['isweep']['frequency_size']),
+        freqstep=str(config['fixed']['isweep']['frequency_step']),
+        numsnp=str(config['fixed']['isweep']['num_snps']),
+        lowbnd=maf,
     shell:
         """
         python ../../scripts/model/haplotypes.py \
@@ -118,11 +111,10 @@ rule third_hap_infer_norm:
     output:
         fileout='{cohort}/{hit}/results.hap.norm.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOTNORM']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        nboot=nbootnorm,
+        cm=mlecut,
         n=str(samplesize),
         ploidy=str(2),
-        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -151,11 +143,10 @@ rule third_hap_infer_perc:
     output:
         fileout='{cohort}/{hit}/results.hap.perc.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOTPERC']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        nboot=nbootperc,
+        cm=mlecut,
         n=str(samplesize),
         ploidy=str(2),
-        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -183,7 +174,7 @@ rule summary_hap_norm:
         fileout=macro+'/summary.hap.norm.tsv',
     params:
         study=macro,
-        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        roi=roi,
         typ='hap',
         unc='norm',
     shell:
@@ -205,7 +196,7 @@ rule summary_hap_perc:
         fileout=macro+'/summary.hap.perc.tsv',
     params:
         study=macro,
-        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        roi=roi,
         typ='hap',
         unc='perc',
     shell:
@@ -228,7 +219,7 @@ rule third_snp:
     output:
         lociout='{cohort}/{hit}/third.best.snp.txt',
     params:
-        lowbnd=str(config['FIXED']['ISWEEP']['MINAAF']),
+        lowbnd=maf,
     shell:
         """
         python ../../scripts/model/snp.py \
@@ -276,11 +267,10 @@ rule third_snp_infer_norm:
     output:
         fileout='{cohort}/{hit}/results.snp.norm.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOTNORM']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        nboot=nbootnorm,
+        cm=mlecut,
         n=str(samplesize),
         ploidy=str(2),
-        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -309,11 +299,10 @@ rule third_snp_infer_perc:
     output:
         fileout='{cohort}/{hit}/results.snp.perc.tsv',
     params:
-        nboot=str(config['FIXED']['ISWEEP']['NBOOTPERC']),
-        cm=str(config['FIXED']['ISWEEP']['MLECUTOFF']),
+        nboot=nbootperc,
+        cm=mlecut,
         n=str(samplesize),
         ploidy=str(2),
-        # ploidy=str(config['FIXED']['HAPIBD']['PLOIDY'])
     shell:
         """
         ibdest=$(zcat {input.long} | wc -l)
@@ -341,7 +330,7 @@ rule summary_snp_norm:
         fileout=macro+'/summary.snp.norm.tsv',
     params:
         study=macro,
-        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        roi=roi,
         typ='snp',
         unc='norm',
     shell:
@@ -363,7 +352,7 @@ rule summary_snp_perc:
         fileout=macro+'/summary.snp.perc.tsv',
     params:
         study=macro,
-        roi=str(config['CHANGE']['ISWEEP']['ROI']),
+        roi=roi,
         typ='snp',
         unc='perc',
     shell:

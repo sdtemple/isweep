@@ -1,6 +1,7 @@
-# implement family-wise error rate adjustments
+# Implement the multiple-testing corrections
 # to determine genome-wide significance levels
-# for the case-control mapping version
+# that control the family-wise error rate.
+# This is the case-control scan version.
 
 import pandas as pd
 
@@ -12,25 +13,23 @@ localrules: \
     plot_histogram_diff, \
     plot_autocovariance_control
 
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+macro=str(config['change']['files']['study'])
 
-pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
+pval = float(str(config['change']['isweep']['confidence_level']))
 # you should choose one and stick with it. no p hacking.
-stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
+stepsize = float(str(config['change']['isweep']['step_size_cm']))
 stepsize /= 100 # in morgans
 chromosome_sizes = pd.read_csv(macro+'/chromosome-sizes-kept.tsv',sep='\t')
 genomesize = chromosome_sizes['CMSIZE'].sum()
 chroms2 = chromosome_sizes.CHROM.astype(int).tolist()
-telocutting = float(str(config['FIXED']['ISWEEP']['SCANCUTOFF']))
+telocutting = float(str(config['change']['isweep']['scan_cutoff']))
 numchr = chromosome_sizes.shape[0]
 genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
-chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
-chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
 chrsize = genomesize / numchr
-covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
+covlen = float(str(config['fixed']['isweep']['auto_covariance_length']))
 covlen= int(covlen / 100 / stepsize)
-numsims = int(str(config['CHANGE']['ISWEEP']['SIMS']))
+numsims = int(str(config['change']['isweep']['num_sims']))
 
 rule count_ibdends_case: # computing counts over windows for case and controls
     input:
@@ -39,7 +38,7 @@ rule count_ibdends_case: # computing counts over windows for case and controls
     output:
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.case.ibd.windowed.tsv.gz',
     params:
-        cases=str(config['CHANGE']['ISWEEP']['CASES']),
+        cases=str(config['change']['files']['cases']),
     shell:
         """
         python ../../scripts/utilities/count-ibd-case.py \
@@ -74,7 +73,7 @@ rule analytical_method:
        covlen=str(covlen),
        pval=str(pval),
        stepsize=str(stepsize),
-       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+       initcut=str(config['fixed']['isweep']['outlier_cutoff']),
        pre=macro+'/ibdsegs/ibdends/scan/chr',
        autocov=macro+'/fwer.autocovariance'
     shell:
@@ -104,7 +103,7 @@ rule simulation_method:
     output:
         testing=macro+'/fwer.simulation.case.txt',
     params:
-        numsims=str(config['CHANGE']['ISWEEP']['SIMS']),
+        numsims=str(config['change']['isweep']['num_sims']),
     shell:
         """
         python ../../scripts/scan/multiple-testing-simulation-case-pipeline.py \

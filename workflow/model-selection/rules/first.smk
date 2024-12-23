@@ -1,16 +1,7 @@
-# zooming in on a region of interest
+# Zooming in on a region of interest
 
-# some inputs, string managements, count sample size
-cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
-samplesize=0
-with open(cohort+'/subsample.txt','r') as f:
-    for line in f:
-        samplesize+=1
-ploidy=2
-# ploidy=int(float(config['FIXED']['HAPIBD']['PLOIDY']))
-maf3=float(config['FIXED']['HAPIBD']['MINMAF'])
+maf3=float(config['fixed']['hap_ibd']['min_minor_allele_frequency'])
 mac3=int(ploidy*samplesize*maf3)
-maf=float(config['FIXED']['ISWEEP']['MINAAF'])
 
 # subset vcf to region of interest
 rule first_region: # focus vcf on region of interest
@@ -22,12 +13,12 @@ rule first_region: # focus vcf on region of interest
         subvcf='{cohort}/{hit}/first.focused.vcf.gz',
     params:
         qmaf=maf,
-        chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
-        vcfs=str(config['CHANGE']['EXISTING']['VCFS']),
-        vcfprefix=str(config['CHANGE']['EXISTING']['VCFPRE']),
-        vcfsuffix=str(config['CHANGE']['EXISTING']['VCFSUF']),
+        chrpre=str(config['change']['isweep']['chromosome_prefix']),
+        vcfs=str(config['change']['files']['vcfs']),
+        vcfprefix=str(config['change']['files']['vcf_prefix']),
+        vcfsuffix=str(config['change']['files']['vcf_suffix']),
     resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
+        mem_gb='{config[change][isweep][xmx_mem]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
@@ -41,26 +32,26 @@ rule first_region: # focus vcf on region of interest
 
 ### call hap-ibd ###
 
-rule first_hapibd:
+rule first_hap_ibd:
     input:
         vcf='{cohort}/{hit}/first.focused.vcf.gz',
         locus='{cohort}/{hit}/locus.txt',
     params:
         minmac=str(mac3),
         out='{cohort}/{hit}/first',
-        minsee=str(config['FIXED']['HAPIBD']['MINSEED']),
-        minext=str(config['FIXED']['HAPIBD']['MINEXT']),
-        minout=str(config['FIXED']['HAPIBD']['MINOUT']),
+        minsee=str(config['fixed']['hap_ibd']['min_seed']),
+        minext=str(config['fixed']['hap_ibd']['min_extend']),
+        minout=str(config['fixed']['hap_ibd']['min_output']),
     output:
         ibd='{cohort}/{hit}/first.ibd.gz',
         hbd='{cohort}/{hit}/first.hbd.gz',
         log='{cohort}/{hit}/first.log',
     resources:
-        mem_gb='{config[CHANGE][ISWEEP][XMXMEM]}',
+        mem_gb='{config[change][isweep][xmx_mem]}',
     shell:
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
-        java -Xmx{config[CHANGE][ISWEEP][XMXMEM]}g -jar ../../software/hap-ibd.jar \
+        java -Xmx{config[change][isweep][xmx_mem]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={wildcards.cohort}/maps/chr${{chr}}.map \
             out={params.out} \
@@ -106,9 +97,9 @@ rule first_rank:
     output:
         fileout='{cohort}/{hit}/first.ranks.tsv.gz',
     params:
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        diameter=diameter,
+        q1=maf,
+        rulesigma=group_cutoff,
     shell:
         """
         python ../../scripts/model/rank.py \
@@ -129,10 +120,10 @@ rule first_score:
         '{cohort}/{hit}/first.snp.png',
         '{cohort}/{hit}/first.score.png',
     params:
-        windowsize=str(config['FIXED']['ISWEEP']['WINSIZE']),
-        windowstep=str(config['FIXED']['ISWEEP']['WINSTEP']),
-        qrng=str(config['FIXED']['ISWEEP']['QRANGE']),
-        maxspace=str(config['FIXED']['ISWEEP']['MAXSPACING']),
+        windowsize=str(config['fixed']['isweep']['window_size']),
+        windowstep=str(config['fixed']['isweep']['window_step']),
+        qrng=str(config['fixed']['isweep']['num_in_quantile_sum']),
+        maxspace=str(config['fixed']['isweep']['max_spacing']),
         folderout='{cohort}/{hit}',
     shell:
         """

@@ -1,14 +1,7 @@
-# make excludesamples file for browning lab jar
+# Reformat the sample files, which includes
+# flle for excludesamples= in Browning Lab software.
 
 localrules: make_samples, make_subsample, make_excludesamples
-
-# inputs, string management
-vcffolder=str(config['CHANGE']['EXISTING']['VCFS'])
-vcfpre=str(config['CHANGE']['EXISTING']['VCFPRE'])
-vcfsuf=str(config['CHANGE']['EXISTING']['VCFSUF'])
-low=str(config['CHANGE']['ISWEEP']['CHRHIGH'])
-high=str(config['CHANGE']['ISWEEP']['CHRLOW'])
-subsample=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
 
 # get all samples from bcftools
 rule make_samples:
