@@ -13,7 +13,7 @@ rule second_region: # focus vcf on region of interest
         subvcf='{cohort}/{hit}/second.focused.vcf.gz',
     params:
         qmaf=maf,
-        chrpre=str(config['change']['isweep']['chromosome_prefix']),
+        chrpre=str(config['change']['files']['chromosome_prefix']),
         pm=str(config['fixed']['isweep']['base_pair_buffer']),
     shell:
         """

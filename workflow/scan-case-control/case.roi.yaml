@@ -22,7 +22,7 @@ change:
     # these are genetic recombination maps
     genetic_maps: '/path-to-maps-folder'
     map_prefix: 'chr'
-    map_suffix: '.vcf.gz'
+    map_suffix: '.map'
 
   # Main method parameters
   isweep:

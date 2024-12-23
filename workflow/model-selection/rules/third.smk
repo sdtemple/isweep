@@ -14,8 +14,8 @@ import os
 import pandas as pd
 
 mlecut=str(config['fixed']['isweep']['mle_cutoff'])
-nbootnorm=str(config['change']['isweep']['num_boostraps_normal'])
-nbootperc=str(config['change']['isweep']['num_boostraps_percentile'])
+nbootnorm=str(config['fixed']['isweep']['num_bootstraps_normal'])
+nbootperc=str(config['fixed']['isweep']['num_bootstraps_percentile'])
 
 # sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
 # J = sims.shape[0]

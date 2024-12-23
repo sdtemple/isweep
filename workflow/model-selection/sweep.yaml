@@ -8,9 +8,9 @@ change:
     # the yaml file with scan analysis options
     yaml: 'sweep.yaml'
     # these are phased vcfs
-    VCFS: '/path-to-phased-vcfs'
-    VCFPRE: 'chr'
-    VCFSUF: '.vcf.gz'
+    vcfs: '/path-to-phased-vcfs'
+    vcf_prefix: 'chr'
+    vcf_suffix: '.vcf.gz'
     # region of interest file
     regions_of_interest: 'roi.tsv'
     # either empty or chr depending on prefix of CHROM column in VCF
@@ -40,7 +40,7 @@ fixed:
     haplotype_step: '50000'
     frequency_size: '0.100' # haplotype frequency size and step
     frequency_step: '0.025'
-    num_variants: '5' # min number of SNPs in a haplotype rectangle
+    num_snps: '5' # min number of SNPs in a haplotype rectangle
     min_adaptive_allele_frequency: '0.10' # min allele frequency considered in estimating frequency
     # estimating selection coefficient
     num_generations: '2000' # extend inferred ne file to this many generations

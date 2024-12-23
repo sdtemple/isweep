@@ -6,7 +6,7 @@ localrules: make_samples, make_subsample, make_excludesamples
 # get all samples from bcftools
 rule make_samples:
     input:
-        vcf=vcffolder + '/' + vcfpre + high + vcfsuf,
+        vcf=vcffolder + '/' + vcfpre + str(high) + vcfsuf,
     output:
         sample=macro+'/sample.txt',
     shell:

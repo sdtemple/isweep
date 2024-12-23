@@ -89,7 +89,7 @@ rule filter_ibdends_scan: # applying cutoffs
     output:
         fipass='{cohort}/ibdsegs/ibdends/scan/chr{num}.ibd.gz',
     params:
-        scancut=str(config['fixed']['isweep']['scan_cutoff']),
+        scancut=str(config['change']['isweep']['scan_cutoff']),
     shell:
         """
         python ../../scripts/utilities/filter-lines.py \

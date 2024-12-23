@@ -6,7 +6,7 @@ import os
 import pandas as pd
 macro=str(config['change']['files']['study'])
 cohort=macro
-micro=str(config['change']["isweep"]["regions_of_interest"])
+micro=str(config['change']["files"]["regions_of_interest"])
 roi=micro
 sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
 J = sims.shape[0]
