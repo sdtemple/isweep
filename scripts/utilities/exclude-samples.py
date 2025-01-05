@@ -33,8 +33,11 @@ with open(subsampfile, 'r') as f:
     for line in f:
         subsamplist.append(line.strip())
 
-# Determine excluded samples
-exclsamplist = [samp for samp in samplist if samp not in subsamplist]
+# set minus operation
+sampset = set(samplist)
+subsampset = set(subsamplist)
+exclsampset = sampset - subsampset
+exclsamplist = list(exclsampset)
 
 # Write excluded samples to output file
 with open(exclsampfile, 'w') as f:

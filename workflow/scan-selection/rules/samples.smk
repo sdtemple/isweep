@@ -1,7 +1,7 @@
 # Reformat the sample files, which includes
 # flle for excludesamples= in Browning Lab software.
 
-localrules: make_samples, make_subsample, make_excludesamples
+localrules: make_samples, make_subsample
 
 # get all samples from bcftools
 rule make_samples:
