@@ -100,6 +100,7 @@ rule first_rank:
         diameter=diameter,
         q1=maf,
         rulesigma=group_cutoff,
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/model/rank.py \
@@ -109,6 +110,7 @@ rule first_rank:
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
+            --ploidy {params.ploidy}
         """
 
 rule first_score:
