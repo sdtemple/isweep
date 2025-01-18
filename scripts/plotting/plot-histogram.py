@@ -26,7 +26,7 @@ def main():
         '--output_file', 
         type=str,
         required=True, 
-        help="Output file prefix for saving the plot."
+        help="Output file for saving the plot."
     )
 
     parser.add_argument(

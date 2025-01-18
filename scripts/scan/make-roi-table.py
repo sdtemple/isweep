@@ -174,12 +174,16 @@ def main():
     if args.sweep > 0:
         roitab.to_csv(fileout, sep='\t', index=False, 
                       columns=['NAME', 'CHROM', minstat, maxstat,
-                                'BPCENTER', 'CMCENTER', 'BPLEFTCENTER', 'BPRIGHTCENTER',
+                                'BPCENTER', 'BPLEFTCENTER', 'BPRIGHTCENTER',
+                                'BPLEFT','BPRIGHT',
+                                'CMCENTER','CMLEFT','CMRIGHT',
                                 'MODEL', 'ALPHA'])
     elif args.sweep <= 0:
         roitab.to_csv(fileout, sep='\t',index=False,
                       columns=['NAME','CHROM', minstat, maxstat,
-                               'BPCENTER','CMCENTER','BPLEFTCENTER','BPRIGHTCENTER'
+                                'BPCENTER', 'BPLEFTCENTER', 'BPRIGHTCENTER',
+                                'BPLEFT','BPRIGHT',
+                                'CMCENTER','CMLEFT','CMRIGHT',
                                ]
                       )
 

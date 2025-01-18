@@ -89,7 +89,7 @@ rule analytical_method:
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --chr_average_size {params.chrsize} \
-            --cM_step_size {params.stepsize} \
+            --Morgan_step_size {params.stepsize} \
             --autocovariance_steps {params.covlen} \
             --confidence_level {params.pval} \
             --outlier_cutoff {params.initcut} \

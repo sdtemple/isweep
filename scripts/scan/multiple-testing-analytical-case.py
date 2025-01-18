@@ -75,7 +75,7 @@ parser.add_argument('--chr_average_size',
                     type=float, 
                     default=1.5, 
                     help='(default: 1.5) Average length of chromosome (in Morgans)')
-parser.add_argument('--cM_step_size', 
+parser.add_argument('--Morgan_step_size', 
                     type=float, 
                     default=0.0005, 
                     help='(default: 0.0005) Step size for each test (in Morgans)')

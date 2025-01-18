@@ -57,12 +57,6 @@ include: 'rules/third.smk'
 # snakemake all -c1 -n
 rule all:
 	input:
-		# for best snp analysis
-		#[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.snp.tsv' for j in range(J)],
-		# for best haplotype analysis
-		#[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/results.hap.tsv' for j in range(J)],
-		# for entropy
-		# [(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/ibd.gini.tsv' for j in range(J)],
 		# for types of summary analyses
 		[macro+'/summary.hap.norm.tsv'], # best haploptye, normal intervals
 		# [macro+'/summary.hap.perc.tsv'], # best haplotype, percentile intervals
