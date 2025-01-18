@@ -11,6 +11,7 @@ ibd=$4 # study/ibd make directory for chr.ibd.gz files
 chrlow=$5 # lowest chromosome number
 chrhigh=$6 # highest chromosome number
 outfile=$7 # prefix for ibdne files
+seed=$8 # random seed, a number
 prefix=${study}/${ibd}
 
 # merge map files
@@ -20,7 +21,7 @@ for j in $(seq ${chrlow} 1 ${chrhigh}); do cat ${study}/maps/chr${j}.map >> ${st
 for j in $(seq ${chrlow} 1 ${chrhigh}); do zcat ${prefix}/chr${j}.ibd.gz >> ${prefix}/chrall.ibd ; done;
 
 # run ibdne
-cat ${prefix}/chrall.ibd | java -Xmx${xmx}g -jar ${ibdne} map=${study}/maps/chr${chrlow}-${chrhigh}.map out=${study}/${outfile}
+cat ${prefix}/chrall.ibd | java -Xmx${xmx}g -jar ${ibdne} map=${study}/maps/chr${chrlow}-${chrhigh}.map out=${study}/${outfile} seed=$seed
 
 # remove temp files 
 rm ${prefix}/chrall.ibd

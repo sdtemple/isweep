@@ -43,6 +43,7 @@ change:
   ibd_ends:
     # do a test run on 1 chromosome to set this
     error_rate: '1.5e-4'
+    random_seed: '-99999'
 
 # We recommend against adjusting these parameters.
 fixed:
