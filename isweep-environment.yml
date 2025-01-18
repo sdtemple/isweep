@@ -16,7 +16,7 @@ dependencies:
   - tszip
   - msprime
   - stdpopsim
-  - snakemake
+  - snakemake==7.32.4
   - jupyter
   - notebook
   - pip
