@@ -53,6 +53,7 @@ rule ibdends: # ibd-ends.jar
         qua=str(config['fixed']['ibd_ends']['quantiles']),
         sam=str(config['fixed']['ibd_ends']['num_posterior_samples']),
         err=str(config['change']['ibd_ends']['error_rate']),
+        rnsd=str(config['change']['ibd_ends']['random_seed']),
     resources:
         mem_gb=mgb+1,
     shell:
@@ -66,7 +67,8 @@ rule ibdends: # ibd-ends.jar
             quantiles={params.qua} \
             nsamples={params.sam} \
             err={params.err} \
-            excludesamples={input.subsample}
+            excludesamples={input.subsample} \
+            seed={params.rnsd}
         """
 
 rule format_ibdends: # reformatting
