@@ -4,7 +4,7 @@ change:
 
   # Where data is to be output
   # and where existing data are
-  folders:
+  files:
     # folder for analysis
     study: '/path-to-study/sequence-data'
     # the yaml file with scan analysis options
