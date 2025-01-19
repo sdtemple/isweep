@@ -6,14 +6,14 @@ def main():
     parser = argparse.ArgumentParser(description="Append random integers to lines in a file.")
     parser.add_argument("--input_file", type=str, help="Path to the input samples file.")
     parser.add_argument("--output_file", type=str, help="Path to the output phenotype file.")
-    parser.add_argument("--num_int", type=int, default=2, help="The number of categorical phenotypes to generate.")
+    parser.add_argument("--num_categories", type=int, default=2, help="The number of categorical phenotypes to generate.")
 
     # Parse arguments
     args = parser.parse_args()
 
     file_in = args.input_file
     file_out = args.output_file
-    num_int = args.num_int - 1
+    num_int = args.num_categories - 1
 
     with open(file_out, 'w') as g:
         with open(file_in, 'r') as f:
