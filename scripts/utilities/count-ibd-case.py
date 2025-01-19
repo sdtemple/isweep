@@ -4,6 +4,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Compute IBD counts over windows in case and control groups.')
@@ -68,8 +69,8 @@ counter = {
     'BPWINDOW': map_file['bp'].to_list(),
     'CMWINDOW': map_file['cm'].to_list(),
     'COUNT': counts,
-    'COUNT0': counts,
-    'COUNT1': counts,
+    'COUNT0': deepcopy(counts),
+    'COUNT1': deepcopy(counts),
 }
 
 # Process case file
