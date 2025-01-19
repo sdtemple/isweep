@@ -107,7 +107,7 @@ def main():
     # if there is no excess IBD make a blank file
     if roitab.shape[0] == 0:
         with open(fileout, 'w') as f:
-            f.write('NAME\tCHROM\t'+ minstat +'\t' + maxstat + '\tBPCENTER\tCMCENTER\tBPLEFTCENTER\tBPRIGHTCENTER\n')
+            f.write('NAME\tCHROM\t'+ minstat +'\t' + maxstat + '\tBPCENTER\tBPLEFTCENTER\tBPRIGHTCENTER\tBPLEFT\tBPRIGHT\tCMCENTER\tCMLEFT\tCMRIGHT\n')
         sys.exit()
 
     # make magic happen

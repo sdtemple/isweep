@@ -27,8 +27,7 @@ folder_name = macro + '/ibdsegs/ibdends/scan'
 if not os.path.exists(folder_name):
     raise Exception("Files don't exist. Run workflow/scan-selection beforehand.")
 file_name = macro + '/phenotypes.txt'
-if not os.path.exists(file_name):
-    shutil.copy(cases, file_name)
+shutil.copy(cases, file_name)
 
 
 include: 'rules/interesting.smk'

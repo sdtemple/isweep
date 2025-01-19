@@ -3,12 +3,6 @@
 
 localrules: plot_scan, make_roi_table, excess_region
 
-subsamplefile=str(config['change']['files']['cases'])
-samplesize=0
-with open(subsamplefile,'r') as f:
-    for line in f:
-        samplesize+=1
-
 numsims = int(str(config['change']['isweep']['num_sims']))
 
 rule plot_scan:
@@ -18,7 +12,6 @@ rule plot_scan:
         png=macro+'/scan.case.control.png',
     params:
         prefix=macro+'/scan.case.control',
-        samplesize=str(samplesize),
         numsims=str(numsims),
         chrlow=str(low),
         chrhigh=str(high),

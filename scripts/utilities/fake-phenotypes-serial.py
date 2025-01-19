@@ -25,6 +25,7 @@ def main():
                     g.write('1\t')
                 else:
                     g.write('0\t')
+                ctr += 1
                 g.write('\n')
 
 if __name__ == "__main__":
