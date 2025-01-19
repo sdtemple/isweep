@@ -111,7 +111,7 @@ def main():
     for inh in inhs:
         s_est = minimize_scalar(
             chi2_isweep,
-            args=(p_est, Ne, N, (numTracts,), ab, inh),
+            args=(p_est, Ne, N, (numTracts,), ab, inh,0,-0.01,ploidy),
             bounds=(0, 0.5),
             method='bounded'
         ).x
@@ -134,7 +134,7 @@ def main():
             simibd = simdata[0][0]
             sb = minimize_scalar(
                 chi2_isweep,
-                args=(p_est, Ne, N, (simibd,), ab, inh),
+                args=(p_est, Ne, N, (simibd,), ab, inh,0,-0.01,ploidy),
                 bounds=(0, 0.5),
                 method='bounded'
             ).x
@@ -142,6 +142,7 @@ def main():
 
     # Writing results
     with open(args.output_file, 'w') as f:
+        f.write('CountIbd\t')
         f.write('VarFreqEst\t')
         f.write('SelCoefEst\t')
         f.write('SelCoefLow\t')
@@ -153,7 +154,7 @@ def main():
             sbsinh = sbsinhs[j]
             inh = inhs[j]
             sl, sm, su = bootstrap_standard(sinh, sbsinh, alpha1, alpha2)
-            f.write(f"{p_est}\t{sm}\t{sl}\t{su}\t{inh}\n")
+            f.write(f"{numTracts}\t{p_est}\t{sm}\t{sl}\t{su}\t{inh}\n")
 
 if __name__ == "__main__":
     main()
