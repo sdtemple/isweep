@@ -39,6 +39,8 @@ rule count_ibdends_case: # computing counts over windows for case and controls
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.case.ibd.windowed.tsv.gz',
     params:
         cases=str(config['change']['files']['cases']),
+    resources:
+        mem_gb='{config[change][xmx_mem]}',
     shell:
         """
         python ../../scripts/utilities/count-ibd-case.py \

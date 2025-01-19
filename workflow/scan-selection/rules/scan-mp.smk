@@ -7,7 +7,7 @@ import os
 
 maf1=float(config['fixed']['hap_ibd_candidate']['min_minor_allele_frequency'])
 mac1=int(ploidy*samplesize*maf1)
-mgb=int(float(str(config['change']['isweep']['xmx_mem'])))
+mgb=int(float(str(config['change']['xmx_mem'])))
 
 rule hapibd: # candidate segments from hap-ibd.jar
     input:

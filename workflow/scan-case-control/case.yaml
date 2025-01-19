@@ -17,9 +17,8 @@ change:
     # First column is sample IDs
     # Second column is binary phenotype
     cases: 'phenotypes.txt'
-    # 2 if diploid, 1 if not diploid
-    # See instructions for how to handle non-diploidy
-    ploidy: '2'
+
+  xmx_mem: '60'
 
   # Main method parameters
   isweep:
