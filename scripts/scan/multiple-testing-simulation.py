@@ -60,7 +60,7 @@ if __name__ == "__main__":
                         type=float, 
                         default=1.5, 
                         help='(default: 1.5) Average chromosome length (in Morgans)')
-    parser.add_argument('--cM_step_size', 
+    parser.add_argument('--Morgan_step_size', 
                         type=float, 
                         default=0.0005, 
                         help='(default: 0.0005) Step size for each test (in Morgans)')
@@ -76,5 +76,5 @@ if __name__ == "__main__":
          args.theta, 
          args.chromosome_number, 
          args.chr_average_size, 
-         args.cM_step_size, 
+         args.Morgan_step_size, 
          args.num_sims)

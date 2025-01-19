@@ -38,7 +38,7 @@ def main():
                         type=float, 
                         default=1.5, 
                         help='(default: 1.5) Average chromosome length (in Morgans)')
-    parser.add_argument('--cM_step_size', 
+    parser.add_argument('--Morgan_step_size', 
                         type=float, 
                         default=0.0005, 
                         help='(default: 0.0005) Step size for each test (in Morgans)')
@@ -59,7 +59,7 @@ def main():
     
     J = args.num_sims
     
-    stepsize = args.cM_step_size
+    stepsize = args.Morgan_step_size
     dt = stepsize
     chrnum = args.chromosome_number
     chrlen = args.chr_average_size
