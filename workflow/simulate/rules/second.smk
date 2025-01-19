@@ -100,6 +100,7 @@ rule second_rank:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/model/rank.py \
@@ -109,6 +110,7 @@ rule second_rank:
             --graph_diameter {params.diameter} \
             --lowest_freq {params.q1} \
             --group_cutoff {params.rulesigma} \
+            --ploidy {params.ploidy}
         """
         
 ### write outliers ###

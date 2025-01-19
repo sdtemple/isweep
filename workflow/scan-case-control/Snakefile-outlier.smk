@@ -60,8 +60,7 @@ for i in range(low,high+1):
 
 cases=str(config['change']['files']['cases'])
 file_name = macro + '/phenotypes.txt'
-if not os.path.exists(file_name):
-    shutil.copy(cases, file_name)
+shutil.copy(cases, file_name)
 
 
 # snakemake all -c1 -n

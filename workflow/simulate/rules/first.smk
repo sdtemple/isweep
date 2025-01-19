@@ -114,6 +114,7 @@ rule first_rank:
         diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
         q1=str(config['FIXED']['ISWEEP']['MINAAF']),
         rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/model/rank.py \
@@ -123,6 +124,7 @@ rule first_rank:
             --graph_diameter {params.diameter} \
             --lowest_freq {params.q1} \
             --group_cutoff {params.rulesigma} \
+            --ploidy {params.ploidy}
         """
 
 rule first_score:
