@@ -239,7 +239,7 @@ rule flare:
         minmac=str(config['fixed']['flare-parameters']['min-mac']),
         probs=str(config['change']['flare-parameters']['probs']),
         out='{study}/lai/chr{num}.flare',
-        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
+        rnsd=str(config['fixed']['flare-parameters']['random-seed']),
     shell:
         '''
         mkdir -p {wildcards.study}/lai

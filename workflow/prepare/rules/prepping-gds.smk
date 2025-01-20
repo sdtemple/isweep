@@ -90,6 +90,7 @@ rule shrink_vcf_adx:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -m2 -M2 \
             -S {params.keepsamples} \
             --force-samples \
             -O z \
