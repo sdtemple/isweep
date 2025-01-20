@@ -261,7 +261,7 @@ rule flare:
 # for admixed samples
 rule hapibd_adx:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
         chrmap='{study}/maps/chr{num}.map',
     output:
         adxhap='{study}/ibdsegs/chr{num}.adx.hapibd.ibd.gz',
