@@ -120,6 +120,7 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -m2 -M2 \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}

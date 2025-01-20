@@ -217,7 +217,7 @@ rule flare:
             min-maf={params.minmaf} \
             min-mac={params.minmac} \
             probs={params.probs} \
-            params={params.rnsd}
+            seed={params.rnsd}
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.shared.vcf.gz
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.vcf.gz.tbi
         rm -f {wildcards.study}/gtdata/adxpop/chr{wildcards.num}.shared.vcf.gz
