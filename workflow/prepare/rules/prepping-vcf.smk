@@ -28,10 +28,10 @@ rule copy_ln_vcf_ref:
 # direct to the vcf file for admixed samples
 rule copy_ln_vcf_adx:
     input:
-        adxgds=adxfolder + '/' + adxprefix + '{num}' + adxsuffix,
+        adxvcf=adxfolder + '/' + adxprefix + '{num}' + adxsuffix,
         maps='{study}/maps/chr{num}.map',
     output:
-        adxgds='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
     shell:
         '''
         ln -s {input.adxvcf} {output.adxvcf}
