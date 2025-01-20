@@ -72,7 +72,6 @@ rule shrink_vcf_adx:
 rule shrink_vcf_ref:
     input:
         refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
-        keepsamples=macro+'/samples-reference.txt'
     output:
         refvcfshrink='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     params:
