@@ -31,7 +31,7 @@ rule copy_ln_vcf_adx:
         adxgds=adxfolder + '/' + adxprefix + '{num}' + adxsuffix,
         maps='{study}/maps/chr{num}.map',
     output:
-        adxgds='{study}/gtdata/adxpop/chr{num}.gds',
+        adxgds='{study}/gtdata/adxpop/chr{num}.vcf.gz',
     shell:
         '''
         ln -s {input.adxvcf} {output.adxvcf}
