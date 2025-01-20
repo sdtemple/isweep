@@ -64,7 +64,7 @@ rule flare_reference_phased:
     shell:
         '''
         mkdir -p {wildcards.study}/lai
-        java -Xmx{params.xmxmem}g -jar {../../software/flare.jar \
+        java -Xmx{params.xmxmem}g -jar ../../software/flare.jar \
             ref={input.refvcf} \
             ref-panel={input.refpanelmap} \
             gt={input.adxvcf} \
