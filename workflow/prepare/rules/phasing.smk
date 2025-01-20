@@ -74,7 +74,6 @@ rule phase_all:
             gt={input.allvcf} \
             map={input.chrmap} \
             out={params.allvcfout} \
-            nthreads={params.thr} \
             excludesamples={params.excludesamples} \
             window={params.window}
         '''
@@ -137,7 +136,6 @@ rule phase_ref:
             ref={input.refvcf} \
             map={input.chrmap} \
             out={params.adxvcfout} \
-            nthreads={params.thr} \
             excludesamples={params.excludesamples} \
             impute={params.impute} \
             window={params.window}
