@@ -22,8 +22,10 @@ dependencies:
   - pip
   - pip:
       - isweep
+  - r-base
+  - r-essentials
+  - bioconductor-SNPRelate
+  - bioconductor-gdsfmt
+  - bioconductor-SeqArray
+  - bioconductor-Rsamtools
   - bcftools
-  # - r-base
-  # - r-essentials
-# if issues with bcftools: (https://github.com/alek0991/iSAFE/issues/17)
-# use separate isafe environment for simulation study
