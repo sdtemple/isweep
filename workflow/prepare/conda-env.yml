@@ -1,0 +1,23 @@
+name: flare24
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python>=3.7
+  - numpy>=1.21
+  - pandas
+  - scipy>=1.7
+  - matplotlib
+  - seaborn
+  - snakemake=7.25.2
+  - jupyter
+  - notebook
+  - pip
+  - r-base
+  - r-essentials
+  - bioconductor-SNPRelate
+  - bioconductor-gdsfmt
+  - bioconductor-SeqArray
+  - bioconductor-Rsamtools
+  - bcftools

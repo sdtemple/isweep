@@ -2,6 +2,8 @@
 
 <img src="isweep-icon.png" align="center" width="600px"/>
 
+There will be a readthedocs set up in January or February.
+
 There is a major methodological update for multiple-testing corrections.
 
 Please read `misc/multiple-testing.md`. You should read our citation below for more details.
