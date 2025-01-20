@@ -10,7 +10,9 @@ rule unphase_ref:
         refvcf='{study}/gtdata/refpop/chr{num}.unphased.vcf.gz',
     shell:
         '''
-        python ../../scripts/pre-processing/remove-phase.py {input.refvcf} {output.refvcf}.temp
+        python ../../scripts/utilities/remove-phase.py \
+            --phased_vcf_file {input.refvcf} \
+            --unphased_vcf_file {output.refvcf}.temp
         zcat {output.refvcf}.temp | bgzip -c > {output.refvcf}
         rm -f {output.refvcf}.temp
         '''
@@ -23,7 +25,9 @@ rule unphase_adx:
         adxvcf='{study}/gtdata/adxpop/chr{num}.unphased.vcf.gz',
     shell:
         '''
-        python ../../scripts/pre-processing/remove-phase.py {input.adxvcf} {output.adxvcf}.temp
+        python ../../scripts/utilities/remove-phase.py \
+            --phased_vcf_file {input.adxvcf} \
+            --unphased_vcf_file {output.adxvcf}.temp
         zcat {output.adxvcf}.temp | bgzip -c > {output.adxvcf}
         rm -f {output.adxvcf}.temp
         '''
