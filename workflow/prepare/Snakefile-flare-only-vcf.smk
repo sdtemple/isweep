@@ -63,10 +63,7 @@ for i in range(low,high+1):
 ### what the pipeline demands
 
 # include .smk files with rules
-include: 'rules/ibd.smk'
-include: 'rules/lai.smk'
-include: 'rules/prepping.smk'
-include: 'rules/phasing.smk'
+include: 'rules/flare-only-vcf.smk'
 
 # do the dry run `snakemake all -c1 -n`
 # this tells you what the pipeline will do
@@ -74,15 +71,9 @@ include: 'rules/phasing.smk'
 
 rule record_yaml:
     input:
-        [macro+'/lai/chr'+str(i)+'.referencephased.flare.anc.vcf.gz' for i in range(low,high+1)],
-        # [macro+'/lai/chr'+str(i)+'.rephased.flare.anc.vcf.gz' for i in range(low,high+1)],
+        [macro+'/lai/chr'+str(i)+'.flare.anc.vcf.gz' for i in range(low,high+1)],
         # local ancestry inference
-        [macro+'/gtdata/adxpop/chr'+str(i)+'.referencephased.vcf.gz' for i in range(low,high+1)],
-        # [macro+'/gtdata/adxpop/chr'+str(i)+'.rephased.vcf.gz' for i in range(low,high+1)],
-        # [macro+'/gtdata/refpop/chr'+str(i)+'.rephased.vcf.gz' for i in range(low,high+1)],
-        # phasing
-        [macro+'/ibdsegs/chr'+str(i)+'.referencephased.adx.hapibd.ibd.gz' for i in range(low,high+1)],
-        # [macro+'/ibdsegs/chr'+str(i)+'.rephased.adx.hapibd.ibd.gz' for i in range(low,high+1)],
+        [macro+'/ibdsegs/chr'+str(i)+'.adx.hapibd.ibd.gz' for i in range(low,high+1)],
         # ibd segment detection
     output:
         yaml=macro+'/arguments.yaml',

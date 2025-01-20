@@ -4,12 +4,12 @@
 macro=str(config['change']['want-data']['your-analysis-folder'])
 low=int(float(str(config['change']['want-data']['chr-low'])))
 high=int(float(str(config['change']['want-data']['chr-high'])))
-refgdsfolder=str(config['change']['existing-data']['ref-gds-folder'])
-refgdsprefix=str(config['change']['existing-data']['ref-gds-prefix'])
-refgdssuffix=str(config['change']['existing-data']['ref-gds-suffix'])
-adxgdsfolder=str(config['change']['existing-data']['adx-gds-folder'])
-adxgdsprefix=str(config['change']['existing-data']['adx-gds-prefix'])
-adxgdssuffix=str(config['change']['existing-data']['adx-gds-suffix'])
+refgdsfolder=str(config['change']['existing-data']['ref-folder'])
+refgdsprefix=str(config['change']['existing-data']['ref-prefix'])
+refgdssuffix=str(config['change']['existing-data']['ref-suffix'])
+adxgdsfolder=str(config['change']['existing-data']['adx-folder'])
+adxgdsprefix=str(config['change']['existing-data']['adx-prefix'])
+adxgdssuffix=str(config['change']['existing-data']['adx-suffix'])
 
 
 ### ln -s the gds files

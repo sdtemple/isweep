@@ -65,7 +65,7 @@ for i in range(low,high+1):
 # include .smk files with rules
 include: 'rules/ibd.smk'
 include: 'rules/lai.smk'
-include: 'rules/prepping.smk'
+include: 'rules/prepping-vcf.smk'
 include: 'rules/phasing.smk'
 
 # do the dry run `snakemake all -c1 -n`

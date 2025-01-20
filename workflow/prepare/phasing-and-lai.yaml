@@ -21,14 +21,14 @@ change:
     rename-chrs-map-adx: 'rename-chrs/num-chrnum.txt'
     rename-chrs-map-ref: 'rename-chrs/num-chrnum.txt'
     # these are reference sample vcfs
-    ref-gds-folder: ''
-    ref-gds-prefix: ''
-    ref-gds-suffix: ''
+    ref-folder: ''
+    ref-prefix: ''
+    ref-suffix: ''
     ref-panel-map: ''
     # these are target sample vcfs
-    adx-gds-folder: ''
-    adx-gds-prefix: ''
-    adx-gds-suffix: ''
+    adx-folder: ''
+    adx-prefix: ''
+    adx-suffix: ''
     # these are genetic maps
     maps-folder: '/path-to-genetic-maps/decode.2019.b38'
     maps-prefix: 'decode2019.chrchr'
