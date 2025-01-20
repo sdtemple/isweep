@@ -83,8 +83,6 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
-            -S {input.keepsamples} \
-            --force-samples \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
