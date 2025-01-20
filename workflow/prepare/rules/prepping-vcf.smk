@@ -55,6 +55,7 @@ rule shrink_vcf_adx:
             -c {params.minmac}:nonmajor \
             -v snps \
             -S {params.keepsamples} \
+            --force-samples \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -74,6 +75,7 @@ rule shrink_vcf_ref:
     output:
         refvcfshrink='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     params:
+        keepsamples=str(config['change']['existing-data']['keep-samples']),
         minmac=str(config['change']['bcftools-parameters']['c-min-mac']),
         chrnamemap=str(config['change']['existing-data']['rename-chrs-map-ref']),
     shell:
@@ -82,6 +84,8 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -S {params.keepsamples} \
+            --force-samples \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
