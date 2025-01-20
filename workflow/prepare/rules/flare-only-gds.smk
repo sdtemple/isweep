@@ -81,6 +81,7 @@ rule shrink_vcf_adx:
     output:
         adxvcfshrink='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
     params:
+        keepsamples=str(config['change']['existing-data']['keep-samples']),
         minmac=str(config['change']['bcftools-parameters']['c-min-mac']),
         chrnamemap=str(config['change']['existing-data']['rename-chrs-map-adx']),
     shell:
@@ -89,6 +90,9 @@ rule shrink_vcf_adx:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -S {params.keepsamples} \
+            --force-samples \
+            -g \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -102,9 +106,18 @@ rule shrink_vcf_adx:
         rm -f {output.adxvcfshrink}.unannotated.tbi
         '''
 
+rule reference_samples:
+    input:
+        refpanelmap=str(config['change']['existing-data']['ref-panel-map']),
+    output:
+        refsamples=macro+'/samples-reference.txt'
+    shell:
+        'cut -f 1 {input.refpanelmap} > {output.refsamples}'
+
 rule shrink_vcf_ref:
     input:
         refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
+        keepsamples=macro+'/samples-reference.txt'
     output:
         refvcfshrink='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     params:
@@ -116,6 +129,9 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -S {input.keepsamples} \
+            --force-samples \
+            -g \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
@@ -128,6 +144,7 @@ rule shrink_vcf_ref:
         rm -f {output.refvcfshrink}.unannotated
         rm -f {output.refvcfshrink}.unannotated.tbi
         '''
+        
 ### write samples text file
 
 # write the sample names for reference samples
@@ -270,7 +287,7 @@ rule hapibd_adx:
     shell:
         '''
         mkdir -p {wildcards.study}/ibdsegs
-        java -Xmx{params.xmxmem}g -jar ../../hap-ibd.jar \
+        java -Xmx{params.xmxmem}g -jar ../../software/hap-ibd.jar \
             gt={input.adxvcf} \
             map={input.chrmap} \
             out={params.adxout} \

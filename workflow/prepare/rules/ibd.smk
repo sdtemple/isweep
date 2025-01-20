@@ -21,7 +21,7 @@ rule hapibd_adx_referencephased:
     shell:
         '''
         mkdir -p {wildcards.study}/ibdsegs
-        java -Xmx{params.xmxmem}g -jar ../../hap-ibd.jar \
+        java -Xmx{params.xmxmem}g -jar ../../software/hap-ibd.jar \
             gt={input.adxvcf} \
             map={input.chrmap} \
             out={params.adxout} \
@@ -50,7 +50,7 @@ rule hapibd_adx_rephased:
     shell:
         '''
         mkdir -p {wildcards.study}/ibdsegs
-        java -Xmx{params.xmxmem}g -jar ../../hap-ibd.jar \
+        java -Xmx{params.xmxmem}g -jar ../../software/hap-ibd.jar \
             gt={input.adxvcf} \
             map={input.chrmap} \
             out={params.adxout} \
