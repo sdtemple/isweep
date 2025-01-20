@@ -94,6 +94,7 @@ rule subset_phased_adx:
         tabix -fp vcf {input.allvcf}
         bcftools view \
             -S {input.adxsam} \
+            --force-samples \
             -O z \
             -o {output.adxvcf} \
             {input.allvcf}
@@ -112,6 +113,7 @@ rule subset_phased_ref:
         tabix -fp vcf {input.allvcf}
         bcftools view \
             -S {input.refsam} \
+            --force-samples \
             -O z \
             -o {output.refvcf} \
             {input.allvcf}

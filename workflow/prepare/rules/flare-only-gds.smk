@@ -92,7 +92,6 @@ rule shrink_vcf_adx:
             -v snps \
             -S {params.keepsamples} \
             --force-samples \
-            -g \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -106,18 +105,9 @@ rule shrink_vcf_adx:
         rm -f {output.adxvcfshrink}.unannotated.tbi
         '''
 
-rule reference_samples:
-    input:
-        refpanelmap=str(config['change']['existing-data']['ref-panel-map']),
-    output:
-        refsamples=macro+'/samples-reference.txt'
-    shell:
-        'cut -f 1 {input.refpanelmap} > {output.refsamples}'
-
 rule shrink_vcf_ref:
     input:
         refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
-        keepsamples=macro+'/samples-reference.txt'
     output:
         refvcfshrink='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     params:
@@ -129,9 +119,6 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
-            -S {input.keepsamples} \
-            --force-samples \
-            -g \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
@@ -171,8 +158,8 @@ rule write_adx_sample_names:
 
 rule merge_vcfs:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
-        refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
+        refvcf='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     output:
         allvcf='{study}/gtdata/all/chr{num}.vcf.gz',
     shell:
@@ -197,15 +184,16 @@ rule merge_vcfs:
 # subset the phased files for admixed samples
 rule subset_phased_adx:
     input:
-        allvcf='{study}/gtdata/all/chr{num}.shared.vcf.gz',
+        allvcf='{study}/gtdata/all/chr{num}.vcf.gz',
         adxsam='{study}/gtdata/adxpop/chr{num}.sample.txt'
     output:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shared.vcf.gz',
     shell:
         '''
         tabix -fp vcf {input.allvcf}
         bcftools view \
             -S {input.adxsam} \
+            --force-samples \
             -O z \
             -o {output.adxvcf} \
             {input.allvcf}
@@ -224,6 +212,7 @@ rule subset_phased_ref:
         tabix -fp vcf {input.allvcf}
         bcftools view \
             -S {input.refsam} \
+            --force-samples \
             -O z \
             -o {output.refvcf} \
             {input.allvcf}
@@ -272,7 +261,7 @@ rule flare:
 # for admixed samples
 rule hapibd_adx:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
         chrmap='{study}/maps/chr{num}.map',
     output:
         adxhap='{study}/ibdsegs/chr{num}.adx.hapibd.ibd.gz',

@@ -92,7 +92,6 @@ rule shrink_vcf_adx:
             -v snps \
             -S {params.keepsamples} \
             --force-samples \
-            -g \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -106,18 +105,9 @@ rule shrink_vcf_adx:
         rm -f {output.adxvcfshrink}.unannotated.tbi
         '''
 
-rule reference_samples:
-    input:
-        refpanelmap=str(config['change']['existing-data']['ref-panel-map']),
-    output:
-        refsamples=macro+'/samples-reference.txt'
-    shell:
-        'cut -f 1 {input.refpanelmap} > {output.refsamples}'
-
 rule shrink_vcf_ref:
     input:
         refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
-        keepsamples=macro+'/samples-reference.txt'
     output:
         refvcfshrink='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     params:
@@ -129,9 +119,6 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
-            -S {input.keepsamples} \
-            --force-samples \
-            -g \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
