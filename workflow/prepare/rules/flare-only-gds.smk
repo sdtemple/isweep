@@ -92,6 +92,7 @@ rule shrink_vcf_adx:
             -v snps \
             -S {params.keepsamples} \
             --force-samples \
+            -e 'GT="." || GT="|"' \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -119,6 +120,7 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
+            -e 'GT="." || GT="|"' \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
