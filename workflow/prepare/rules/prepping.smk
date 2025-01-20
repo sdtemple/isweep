@@ -46,11 +46,9 @@ rule gds_to_vcf_ref:
         refgds='{study}/gtdata/refpop/chr{num}.gds',
     output:
         refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
-    params:
-        script=str(config['change']['pipe']['scripts'] + '/gds-to-vcf.R'),
     shell:
         '''
-        Rscript --vanilla {params.script} {input.refgds} {output.refvcf}
+        Rscript --vanilla ../../scripts/pre-processing/gds-to-vcf.R {input.refgds} {output.refvcf}
         rm -f {input.refgds}.seq.gds
         '''
 
@@ -61,13 +59,12 @@ rule gds_to_vcf_adx:
     output:
         adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
     params:
-        script=str(config['change']['pipe']['scripts'] + '/subset-gds.R'),
         keepsamples=str(config['change']['existing-data']['keep-samples']),
         minmac=str(config['change']['bcftools-parameters']['c-min-mac']),
         minmis=str(config['change']['bcftools-parameters']['missingness']),
     shell:
         '''
-        Rscript --vanilla {params.script} \
+        Rscript --vanilla ../../scripts/pre-processing/subset-gds.R \
             {input.adxgds} \
             {params.keepsamples} \
             {params.minmac} \

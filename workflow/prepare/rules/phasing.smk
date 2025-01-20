@@ -8,23 +8,12 @@ rule unphase_ref:
         refvcf='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     output:
         refvcf='{study}/gtdata/refpop/chr{num}.unphased.vcf.gz',
-    params:
-        script=str(config['change']['pipe']['scripts'])+'/remove-phase.py',
     shell:
         '''
-        python {params.script} {input.refvcf} {output.refvcf}.temp
+        python ../../scripts/pre-processing/remove-phase.py {input.refvcf} {output.refvcf}.temp
         zcat {output.refvcf}.temp | bgzip -c > {output.refvcf}
         rm -f {output.refvcf}.temp
         '''
-    # params:
-    #     software=str(config['change']['pipe']['software']),
-    #     rmphase=str(config['fixed']['programs']['remove-phase']),
-    # shell:
-    #     '''
-    #     zcat {input.refvcf} | \
-    #         java -jar {params.software}/{params.rmphase} 30293 | \
-    #         bgzip -c > {output.refvcf}
-    #     '''
 
 # remove phase in admixed samples
 rule unphase_adx:
@@ -32,23 +21,12 @@ rule unphase_adx:
         adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
     output:
         adxvcf='{study}/gtdata/adxpop/chr{num}.unphased.vcf.gz',
-    params:
-        script=str(config['change']['pipe']['scripts'])+'/remove-phase.py',
     shell:
         '''
-        python {params.script} {input.adxvcf} {output.adxvcf}.temp
+        python ../../scripts/pre-processing/remove-phase.py {input.adxvcf} {output.adxvcf}.temp
         zcat {output.adxvcf}.temp | bgzip -c > {output.adxvcf}
         rm -f {output.adxvcf}.temp
         '''
-    # params:
-    #     software=str(config['change']['pipe']['software']),
-    #     rmphase=str(config['fixed']['programs']['remove-phase']),
-    # shell:
-    #     '''
-    #     zcat {input.adxvcf} | \
-    #         java -jar {params.software}/{params.rmphase} 30598 | \
-    #         bgzip -c > {output.adxvcf}
-    #     '''
 
 rule merge_vcfs:
     input:
@@ -56,8 +34,6 @@ rule merge_vcfs:
         refvcf='{study}/gtdata/refpop/chr{num}.unphased.vcf.gz',
     output:
         allvcf='{study}/gtdata/all/chr{num}.unphased.vcf.gz',
-    params:
-        script=str(config['change']['pipe']['scripts'] + '/shared.py'),
     shell:
         '''
         tabix -fp vcf {input.adxvcf}
@@ -65,7 +41,7 @@ rule merge_vcfs:
         bcftools query -f "%CHROM\t%POS\n" {input.adxvcf} > {input.adxvcf}.pos
         bcftools query -f "%CHROM\t%POS\n" {input.refvcf} > {input.refvcf}.pos
         mkdir -p {wildcards.study}/gtdata/all
-        python {params.script} \
+        python ../../scripts/pre-processing/shared.py \
             {input.adxvcf}.pos \
             {input.refvcf}.pos \
             {wildcards.study}/gtdata/all/chr{wildcards.num}.intersection.Rfile.txt
@@ -80,7 +56,6 @@ rule merge_vcfs:
 # another phasing strategy
 # phase using ref and admixs all together
 # helps w/ phase consistency
-# i reviewed a paper that says 
 # this controls switch errors better
 rule phase_all:
     input:
@@ -89,16 +64,13 @@ rule phase_all:
     output:
         allvcf='{study}/gtdata/all/chr{num}.rephased.vcf.gz',
     params:
-        software=str(config['change']['pipe']['software']),
-        phase=str(config['fixed']['programs']['beagle']),
         allvcfout='{study}/gtdata/all/chr{num}.rephased',
-        xmx=config['change']['cluster-resources']['xmxmem'],
-        thr=config['change']['cluster-resources']['threads'],
+        xmx=config['change']['xmxmem'],
         excludesamples=str(config['change']['existing-data']['exclude-samples']),
         window=str(config['fixed']['beagle-parameters']['window']),
     shell:
         '''
-        java -Xmx{params.xmx}g -jar {params.software}/{params.phase} \
+        java -Xmx{params.xmx}g -jar ../../software/beagle.jar \
             gt={input.allvcf} \
             map={input.chrmap} \
             out={params.allvcfout} \
@@ -156,14 +128,13 @@ rule phase_ref:
         software=str(config['change']['pipe']['software']),
         phase=str(config['fixed']['programs']['beagle']),
         adxvcfout='{study}/gtdata/adxpop/chr{num}.referencephased',
-        xmx=config['change']['cluster-resources']['xmxmem'],
-        thr=config['change']['cluster-resources']['threads'],
+        xmx=config['change']['xmxmem'],
         excludesamples=str(config['change']['existing-data']['exclude-samples']),
         impute=str(config['fixed']['beagle-parameters']['impute']),
         window=str(config['fixed']['beagle-parameters']['window']),
     shell:
         '''
-        java -Xmx{params.xmx}g -jar {params.software}/{params.phase} \
+        java -Xmx{params.xmx}g -jar ../../software/beagle.jar \
             gt={input.adxvcf} \
             ref={input.refvcf} \
             map={input.chrmap} \

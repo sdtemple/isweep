@@ -12,14 +12,8 @@ change:
     # highest chromosome numbers
     chr-high: '22'
 
-  # location of your pipeline folders, files
-  pipe:
-    # the yaml file with scan analysis options
-    yaml: 'your.analysis.arguments.yaml'
-    # folder where python or R scripts are
-    scripts: 'scripts'
-    # folder where software is
-    software: 'software'
+  # the yaml file with scan analysis options
+  yaml: 'your.analysis.arguments.yaml'
 
   # location of your data
   existing-data:
@@ -44,9 +38,7 @@ change:
     keep-samples: 'samples.txt'
 
   # compute resources for your analysis
-  cluster-resources:
-    xmxmem: '100' # in gb
-    threads: '12'
+  xmxmem: '120' # in gb
 
   flare-parameters:
     probs: 'false'
@@ -57,19 +49,6 @@ change:
 
 ### you should keep these fixed
 fixed:
-
-  # download these software
-  # bash get-software.sh
-  # in this git repo!
-  programs:
-    # https://github.com/browning-lab/hap-ibd
-    hapibd: 'hap-ibd.jar'
-    # https://github.com/browning-lab/ibd-ends
-    remove-phase: 'remove-phase.jar'
-    # https://github.com/browning-lab/ibd-ends
-    beagle: 'beagle.jar'
-    # https://github.com/browning-lab/ibd-ends
-    flare: 'flare.jar'
 
   # hap-ibd.jar parameters
   hapibd-parameters:
