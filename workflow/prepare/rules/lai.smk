@@ -17,7 +17,8 @@ rule flare_rephased:
         minmaf=str(config['fixed']['flare-parameters']['min-maf']),
         minmac=str(config['fixed']['flare-parameters']['min-mac']),
         probs=str(config['change']['flare-parameters']['probs']),
-        out='{study}/lai/chr{num}.rephased.flare'
+        out='{study}/lai/chr{num}.rephased.flare',
+        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
     shell:
         '''
         mkdir -p {wildcards.study}/lai
@@ -30,7 +31,8 @@ rule flare_rephased:
             gen={params.gen} \
             min-maf={params.minmaf} \
             min-mac={params.minmac} \
-            probs={params.probs}
+            probs={params.probs} \
+            seed={params.rnsd}
         rm -f {wildcards.study}/gtdata/adxpop/chr{wildcards.num}.unphased.vcf.gz
         rm -f {wildcards.study}/gtdata/adxpop/chr{wildcards.num}.unphased.vcf.gz.tbi
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.unphased.vcf.gz
@@ -60,7 +62,8 @@ rule flare_reference_phased:
         minmaf=str(config['fixed']['flare-parameters']['min-maf']),
         minmac=str(config['fixed']['flare-parameters']['min-mac']),
         probs=str(config['change']['flare-parameters']['probs']),
-        out='{study}/lai/chr{num}.referencephased.flare'
+        out='{study}/lai/chr{num}.referencephased.flare',
+        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
     shell:
         '''
         mkdir -p {wildcards.study}/lai
@@ -73,7 +76,8 @@ rule flare_reference_phased:
             gen={params.gen} \
             min-maf={params.minmaf} \
             min-mac={params.minmac} \
-            probs={params.probs}
+            probs={params.probs} \
+            seed={params.rnsd}
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.shrink.vcf.gz
         rm -f {wildcards.study}/gtdata/adxpop/chr{wildcards.num}.shrink.vcf.gz
         '''

@@ -72,6 +72,7 @@ rule phase_all:
         xmx=config['change']['xmxmem'],
         excludesamples=str(config['change']['existing-data']['exclude-samples']),
         window=str(config['fixed']['beagle-parameters']['window']),
+        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
     shell:
         '''
         java -Xmx{params.xmx}g -jar ../../software/beagle.jar \
@@ -79,7 +80,8 @@ rule phase_all:
             map={input.chrmap} \
             out={params.allvcfout} \
             excludesamples={params.excludesamples} \
-            window={params.window}
+            window={params.window} \
+            seed={params.rnsd}
         '''
 
 # subset the phased files for admixed samples
@@ -135,6 +137,7 @@ rule phase_ref:
         excludesamples=str(config['change']['existing-data']['exclude-samples']),
         impute=str(config['fixed']['beagle-parameters']['impute']),
         window=str(config['fixed']['beagle-parameters']['window']),
+        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
     shell:
         '''
         java -Xmx{params.xmx}g -jar ../../software/beagle.jar \
@@ -144,5 +147,6 @@ rule phase_ref:
             out={params.adxvcfout} \
             excludesamples={params.excludesamples} \
             impute={params.impute} \
-            window={params.window}
+            window={params.window} \
+            seed={params.rnsd}
         '''

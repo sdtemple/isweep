@@ -70,9 +70,11 @@ fixed:
     min-maf: '0.005'
     min-mac: '50'
     gen: '10.0'
+    random-seed: '-99999'
 
   # beagle.jar parameters
   # use the defaults
   beagle-parameters:
     impute: 'false'
     window: '40.0'
+    random-seed: '-99999'

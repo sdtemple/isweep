@@ -56,7 +56,6 @@ rule shrink_vcf_adx:
             -v snps \
             -S {params.keepsamples} \
             --force-samples \
-            -e 'GT="mis" || GT~"|"' \
             -O z \
             -o {output.adxvcfshrink}.unannotated \
             {input.adxvcf}
@@ -84,7 +83,6 @@ rule shrink_vcf_ref:
         bcftools view \
             -c {params.minmac}:nonmajor \
             -v snps \
-            -e 'GT="mis" || GT~"|"' \
             -O z \
             -o {output.refvcfshrink}.unannotated \
             {input.refvcf}
@@ -202,7 +200,8 @@ rule flare:
         minmaf=str(config['fixed']['flare-parameters']['min-maf']),
         minmac=str(config['fixed']['flare-parameters']['min-mac']),
         probs=str(config['change']['flare-parameters']['probs']),
-        out='{study}/lai/chr{num}.flare'
+        out='{study}/lai/chr{num}.flare',
+        rnsd=str(config['fixed']['beagle-parameters']['random-seed']),
     shell:
         '''
         mkdir -p {wildcards.study}/lai
@@ -215,7 +214,8 @@ rule flare:
             gen={params.gen} \
             min-maf={params.minmaf} \
             min-mac={params.minmac} \
-            probs={params.probs}
+            probs={params.probs} \
+            params={params.rnsd}
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.shared.vcf.gz
         rm -f {wildcards.study}/gtdata/refpop/chr{wildcards.num}.vcf.gz.tbi
         rm -f {wildcards.study}/gtdata/adxpop/chr{wildcards.num}.shared.vcf.gz
