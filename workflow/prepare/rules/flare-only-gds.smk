@@ -223,8 +223,8 @@ rule subset_phased_ref:
 # using flare software
 rule flare:
     input:
-        refvcf='{study}/gtdata/refpop/chr{num}.vcf.shared.gz',
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.shared.gz',
+        refvcf='{study}/gtdata/refpop/chr{num}.shared.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shared.vcf.gz',
         allvcf='{study}/gtdata/all/chr{num}.vcf.gz',
         chrmap='{study}/maps/chr{num}.map',
         refpanelmap=str(config['change']['existing-data']['ref-panel-map']),
