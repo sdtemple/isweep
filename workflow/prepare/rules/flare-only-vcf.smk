@@ -102,7 +102,7 @@ rule shrink_vcf_ref:
 # write the sample names for reference samples
 rule write_ref_sample_names:
     input:
-        refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
+        refvcf='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     output:
         refsample='{study}/gtdata/refpop/chr{num}.sample.txt',
     shell:
@@ -113,7 +113,7 @@ rule write_ref_sample_names:
 # write the sample names for admixed samples
 rule write_adx_sample_names:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
     output:
         adxsample='{study}/gtdata/adxpop/chr{num}.sample.txt',
     shell:
@@ -123,8 +123,8 @@ rule write_adx_sample_names:
 
 rule merge_vcfs:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
-        refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
+        refvcf='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     output:
         allvcf='{study}/gtdata/all/chr{num}.vcf.gz',
     shell:
@@ -226,7 +226,7 @@ rule flare:
 # for admixed samples
 rule hapibd_adx:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
         chrmap='{study}/maps/chr{num}.map',
     output:
         adxhap='{study}/ibdsegs/chr{num}.adx.hapibd.ibd.gz',

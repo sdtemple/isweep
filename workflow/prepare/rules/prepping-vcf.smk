@@ -103,7 +103,7 @@ rule shrink_vcf_ref:
 # write the sample names for reference samples
 rule write_ref_sample_names:
     input:
-        refvcf='{study}/gtdata/refpop/chr{num}.vcf.gz',
+        refvcf='{study}/gtdata/refpop/chr{num}.shrink.vcf.gz',
     output:
         refsample='{study}/gtdata/refpop/chr{num}.sample.txt',
     shell:
@@ -114,7 +114,7 @@ rule write_ref_sample_names:
 # write the sample names for admixed samples
 rule write_adx_sample_names:
     input:
-        adxvcf='{study}/gtdata/adxpop/chr{num}.vcf.gz',
+        adxvcf='{study}/gtdata/adxpop/chr{num}.shrink.vcf.gz',
     output:
         adxsample='{study}/gtdata/adxpop/chr{num}.sample.txt',
     shell:
