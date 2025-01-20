@@ -125,7 +125,6 @@ rule phase_ref:
     output:
         adxvcf='{study}/gtdata/adxpop/chr{num}.referencephased.vcf.gz',
     params:
-        software=str(config['change']['pipe']['software']),
         phase=str(config['fixed']['programs']['beagle']),
         adxvcfout='{study}/gtdata/adxpop/chr{num}.referencephased',
         xmx=config['change']['xmxmem'],
