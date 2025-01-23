@@ -15,15 +15,15 @@ change:
     regions_of_interest: 'roi.tsv'
     # either empty or chr depending on prefix of CHROM column in VCF
     chromosome_prefix: ''
-    # 2 if diploid, 1 if not diploid
-    # See instructions for how to handle non-diploidy
-    ploidy: '2'
+  
+  # 2 if diploid, 1 if not diploid
+  # See instructions for how to handle non-diploidy  
+  ploidy: '2'
 
-  # Main method parameters
-  isweep:
-    xmx_mem: '60' # in gb
-    # inferred Ne(t) to use
-    Ne: 'ibdne.ne'
+  xmx_mem: '60' # in gb
+  
+  # inferred Ne(t) to use
+  Ne: 'ibdne.ne'
 
 # We recommend against adjusting these parameters.
 fixed:

@@ -28,7 +28,7 @@ nbootperc=str(config['fixed']['isweep']['num_bootstraps_percentile'])
 # extend Ne(t)
 rule third_Ne:
     input:
-        shortNe='{cohort}/'+str(config['change']['isweep']['Ne']),
+        shortNe='{cohort}/'+str(config['change']['Ne']),
     output:
         longNe='{cohort}/extended.ne',
     params:

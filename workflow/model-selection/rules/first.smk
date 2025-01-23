@@ -18,7 +18,7 @@ rule first_region: # focus vcf on region of interest
         vcfprefix=str(config['change']['files']['vcf_prefix']),
         vcfsuffix=str(config['change']['files']['vcf_suffix']),
     resources:
-        mem_gb='{config[change][isweep][xmx_mem]}',
+        mem_gb='{config[change][xmx_mem]}',
     shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
@@ -47,11 +47,11 @@ rule first_hap_ibd:
         hbd='{cohort}/{hit}/first.hbd.gz',
         log='{cohort}/{hit}/first.log',
     resources:
-        mem_gb='{config[change][isweep][xmx_mem]}',
+        mem_gb='{config[change][xmx_mem]}',
     shell:
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
-        java -Xmx{config[change][isweep][xmx_mem]}g -jar ../../software/hap-ibd.jar \
+        java -Xmx{config[change][xmx_mem]}g -jar ../../software/hap-ibd.jar \
             gt={input.vcf} \
             map={wildcards.cohort}/maps/chr${{chr}}.map \
             out={params.out} \
