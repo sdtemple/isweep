@@ -2,12 +2,11 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'isweep'
+copyright = '2025, Seth D. Temple'
+author = 'Seth D. Temple'
 
-release = '0.1'
-version = '0.1.0'
+release = '1.0'
 
 # -- General configuration
 

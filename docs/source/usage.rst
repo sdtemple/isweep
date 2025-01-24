@@ -1,34 +1,32 @@
 Usage
 =====
 
-.. _installation:
 
-Installation
+.. _selection-scan:
+
+Selection scan
 ------------
 
-To use Lumache, first install it using pip:
+Words
 
-.. code-block:: console
+.. _hard-sweeps:
 
-   (.venv) $ pip install lumache
+Modeling hard sweeps
+------------
 
-Creating recipes
-----------------
+Words
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+.. _case-control-scan:
 
-.. autofunction:: lumache.get_random_ingredients
+Case-control scan
+------------
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
+Words
 
-.. autoexception:: lumache.InvalidKindError
+.. _prepare:
 
-For example:
+Preliminary material
+------------
 
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
+Words
 

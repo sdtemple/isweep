@@ -7,15 +7,16 @@ The Python package simulates IBD segments around a locus and estimates selection
 
 The automated workflows are:
 
-* `workflow/scan-selection`: detects selected loci with rigorous multiple testing thresholds
-* `workflow/model-selection`: estimates the location, allele frequency, and selection coefficient of a sweep
-* `workflow/scan-case-control`: detects loci where IBD rates differ between binary cases and controls
-* `workflow/prepare`: supports haplotype phasing, local ancestry, and kinship inference
+* :ref:`_selection-scan`: detects selected loci with rigorous multiple testing thresholds
+* :ref:`_hard-sweeps`: estimates the location, allele frequency, and selection coefficient of a sweep
+* :ref:`_case-control-scan`: detects loci where IBD rates differ between binary cases and controls
+* :ref:`_prepare`: supports haplotype phasing, local ancestry, and kinship inference
 
-Each automated workflow has a dedicated page under Usage.
+Each automated workflow has a dedicated page under :doc:`usage`. The general way to run these methods is:
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+1. Navigate to the appropriate workflow directory
+2. Modify parameters in YAML configuration files
+3. Send the jobs to a cluster with ``nohup snakemake [...] &``
 
 Installation
 --------
@@ -31,6 +32,86 @@ Installation
 
    This project is under active development.
 
+
+Data Requirements
+--------
+
+The main requirements are a tab-separated genetic recombination map and enough samples to detect more than 0 IBD segments at all positions.
+
+* Phased haplotypes
+* Samples with a similar ancestry
+* No close relatives
+* Recombining autosomes
+
+In humans, more than 1000 is enough samples, but more than 3000 samples is recommended. 
+
+At some point, there are no gains in statistical power with more samples. I do not recommend analyzing more than 100k samples in a biobank.
+
+The tree of life is messy. Email or make a `GitHub Issue <https://github.com/sdtemple/isweep/issues>`_ for analysis advice about the nuances of your sample population.
+
+
+Vignette
+--------
+
+Outside of the running the workflows, the main functions are:
+
+* ``isweep.coalescent.simulated_ibd_isweep``: generate long IBD segments around a locus (w/ selection)
+* ``isweep.coalescent.chi2_isweep``: use a ``scipy`` root finder with this to estimate the selection coefficient
+* ``isweep.read_Ne.read_Ne``: load in recent effective population sizes
+
+For instance:
+
+.. code-block:: python
+
+   from isweep import *
+   # parameter settings
+   s = 0.03
+   p=float(0.5) # allele freq
+   Ne=read_Ne('constant-10k.ne') # demo history
+   model='m'
+   long_ibd=3.0
+   ab=[long_ibd,np.inf]
+   nsamples=200
+   # calculate denominator
+   ploidy=2
+   msamples=ploidy*nsamples
+   N=msamples*(msamples-1)/2-msamples
+   # simulate data
+   out=simulate_ibd_isweep(
+    nsamples,
+    s,
+    p,
+    Ne,
+    long_ibd,
+    long_ibd,
+    one_step_model=model,
+    ploidy=ploidy,
+   )
+   ibd=out[0][0]
+   # estimating the selection coefficient
+   se = minimize_scalar(
+    chi2_isweep,
+    args=(p,Ne,N,(ibd,),ab,model,0,-0.01,ploidy),
+    bounds=(0,0.5),
+    method='bounded'
+   ).x
+   print('true selection coefficient')
+   print(s)
+   print('estimate selection coefficient')
+   print(se)
+
+Citations
+--------
+
+This software and its methods are the basis of five publications. The software Beagle, ibd-ends, hap-ibd, and flare are also used and should be cited.
+
+* `Modeling hard sweeps <https://www.sciencedirect.com/science/article/pii/S0002929724003331>`_
+* `Simulating IBD segments <https://www.biorxiv.org/content/10.1101/2024.12.13.628449v2>`_
+* `Central limit theorems <https://www.biorxiv.org/content/10.1101/2024.06.05.597656v2>`_
+* `Thesis on recent positive selection <https://www.proquest.com/docview/3105584569>`_
+* TBD (Multiple testing in selection scan)
+* TBD (Multiple testing in case-control scan)
+
 Contents
 --------
 
@@ -38,3 +119,9 @@ Contents
 
    usage
    api
+
+
+Contact
+--------
+
+Seth Temple (sethtem@umich.edu) or `GitHub Issues <https://github.com/sdtemple/isweep/issues>`_
