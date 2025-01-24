@@ -21,7 +21,7 @@ Each automated workflow has a dedicated page under :doc:`usage`. The general way
 Installation
 --------
 
-.. code-block:: bash
+.. code-block:: shell
 
     git clone https://github.com/sdtemple/isweep.git
     mamba env create -f isweep-environment.yml
@@ -38,7 +38,7 @@ Data Requirements
 
 The main requirements are a tab-separated genetic recombination map and enough samples to detect more than 0 IBD segments at all positions.
 
-* Phased haplotypes
+* Phased haplotypes (VCF files)
 * Samples with a similar ancestry
 * No close relatives
 * Recombining autosomes

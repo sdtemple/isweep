@@ -5,6 +5,8 @@ You should always enter the isweep environment before running workflows: ``mamba
 
 You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background.
 
+The penultimate rule of all workflows is to copy the YAML parameters file to your analysis folder, supporting reproducibility and logging.
+
 I regularly use these ``snakemake`` options:
 
 * ``-s``: point to the right Snakefile
@@ -30,7 +32,7 @@ I regularly use these SLURM options:
 Selection scan
 ------------
 
-The ``worfklow/scan-selection`` implements the IBD rate selection scan with two multiple-testing corrections. You should use the `Snakefile-scan.smk` as input to the ``-s`` option.
+The ``worfklow/scan-selection`` implements the IBD rate selection scan with two multiple-testing corrections. You should use the `Snakefile-scan.smk` file as input to the ``-s`` option.
 
 Recipe YAML files to modify are ``sequence.yaml`` and ``array.yaml`` for WGS and SNP array data, respectively. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
 
@@ -68,7 +70,38 @@ There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may on
 Modeling hard sweeps
 ------------
 
-Words
+The ``worfklow/model-selection`` estimates frequencies, locations, and selection coefficients of loci detected in the :ref:selection-scan. This workflow must be run after the selection scan. You should use the `Snakefile-roi.smk` file as input to the ``-s`` option.
+
+The recipe YAML file to modify is ``sweep.yaml``. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
+
+The parameters are:
+
+* Many parameters under ``files`` determine where your data is and where you want outputs to be.
+* ``regions_of_interest``: these are the loci to analyse. The default are those GW significant in the scan. You can delete some, or rename the GW significant "hits".
+* ``chromosome_prefix``: this is the name ``chr`` or blank that you see when you run ``bcftools query -f "%CHROM\n" chr.vcf.gz | head``.
+* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy`
+* ``Ne``: an estimate of recent effective population sizes (IBDNe text file format)
+
+You can change the genic selection model in ``roi.tsv`` to "a" for additive, "m" for multiplicative, "d" for dominance, and "r" for recessive. You can also change alpha, which determines the (1-alpha) percent confidence intervals.
+
+The script ``scripts/run-ibdne.sh`` runs IBDNe, which is good for populations with exponential growth. You may want to consider another Ne estimator as well.
+
+.. code-block:: shell
+
+   sbatch [...] run-ibdne.sh [ibdne-jar] [memory-in-Gb] [main-folder-of-study] [path-to-subfolder-with-ibd-data] [chromosome_low] [chromosome_high] [output_file] [random_seed]
+
+The outputs are:
+
+* ``summary.hap.norm.tsv``: sweep model estimates for best haplotype-based analysis and Gaussian confidence intervals for selection coefficient
+* ``summary.snp.norm.tsv``: sweep model estimates for best SNP-based analysis and Gaussian confidence intervals for selection coefficient
+* ``hit*/second.ranks.tsv.gz``: alleles with putative evidence for selection (or strong correlation with a selected allele)
+* ``hit*/outlier*.txt``: files with sample haplotype IDs in clusters on excess IBD sharing
+
+You can uncomment lines in `rule all` of the `Snakefile-roi.smk` to get percentile-based bootstrap intervals.
+
+The multiple-testing corrections are valid asymptotically (Temple and Thompson, 2024+).
+
+There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
 
 .. _case-control-scan:
 
