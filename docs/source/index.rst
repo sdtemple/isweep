@@ -56,8 +56,8 @@ Vignette
 Outside of the running the workflows, the main functions are:
 
 * ``isweep.coalescent.simulated_ibd_isweep``: generate long IBD segments around a locus (w/ selection)
-* ``isweep.coalescent.chi2_isweep``: use a ``scipy`` root finder with this to estimate the selection coefficient
-* ``isweep.read_Ne.read_Ne``: load in recent effective population sizes
+* ``isweep.coalescent.chi2_isweep``: use a uniroot finder with this to estimate the selection coefficient
+* ``isweep.utilities.read_Ne``: load in recent effective population sizes
 
 For instance:
 

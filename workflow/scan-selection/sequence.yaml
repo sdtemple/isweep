@@ -71,7 +71,6 @@ fixed:
 
   isweep:
     # scanning parameters
-    scan_cutoff: '2.0' # ibd cM threshold
     chromosome_size_cutoff: '10.0' # chromosomes must be this or more cM long
     cm_gap: '0.5' # cM gap when concatenating regions of excess IBD
     outlier_cutoff: '4.0' # sigma scalar to remove telomeres
