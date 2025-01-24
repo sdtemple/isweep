@@ -23,6 +23,8 @@ sims = sims.set_index("SIMNAME", drop=False)
 
 include: 'rules/simulate.smk'
 
+localrules: all
+
 rule all:
     input:
         [f"{sim.FOLDER}/slimulation.trees.tsz".replace(" ","") for sim in sims.itertuples()],

@@ -59,7 +59,7 @@ parser.add_argument('--chr_average_size',
                     type=float, 
                     default=1.5, 
                     help='(default: 1.5) Average length of chromosome (in Morgans)')
-parser.add_argument('--cM_step_size', 
+parser.add_argument('--Morgan_step_size', 
                     type=float, 
                     default=0.0005, 
                     help='(default: 0.0005) Step size for each test (in Morgans)')
@@ -90,7 +90,7 @@ suffix = args.input_suffix
 st = args.chr_low
 en = args.chr_high
 chr_len = args.chr_average_size
-stepsize = args.cM_step_size
+stepsize = args.Morgan_step_size
 covariance_length = args.autocovariance_steps
 pval = args.confidence_level
 init_cut = args.outlier_cutoff

@@ -13,8 +13,8 @@ def labeled_allele_frequencies(vcf, labels1):
     ----------
     vcf : str
         Name of phased diploid VCF data
-    labels1 : list/str
-        Filename for haplotype names in group 1 or a list of them
+    labels1 : list
+        List of haplotype names in group 1
 
     Return
     -------
@@ -23,17 +23,8 @@ def labeled_allele_frequencies(vcf, labels1):
     '''
 
     # bring in group 1
-    if type(labels1) is list:
-        labhap1=labels1
-    elif type(labels1) is str:
-        labhap1=[]
-        with gzip.open(label1file, 'rt') as g:
-            g.readline()
-            for line in g:
-                splitline=line.split('\t')
-                labhap1.append(splitline[0])
-    else:
-        raise 'labels should be lists or file names'
+    assert type(labels1) is list
+    labhap1=labels1
 
     # compute allele frequencies from phased VCF
     with gzip.open(vcf, 'rt') as f:
@@ -43,7 +34,6 @@ def labeled_allele_frequencies(vcf, labels1):
             twochar=line[:2]
         header=line
         headerlist=header.split('\t')
-        numdip=len(header)-9
         namdip=headerlist[9:]
         namhap1=[nam+'_1' for nam in namdip]
         namhap2=[nam+'_2' for nam in namdip]
@@ -142,3 +132,60 @@ def format_allele_table(pos, freq1, freq0, freqm, topn=np.inf):
     if topn < table.shape[0]:
         return table.loc[:topn,]
     return table
+
+def labeled_allele_frequencies_haploid(vcf, labels1):
+    '''Process haploid VCF data to compute allele frequencies for 2 groups
+
+    Parameters
+    ----------
+    vcf : str
+        Name of haploid VCF data
+    labels1 : list/str
+        Filename for haplotype names in group 1 or a list of them
+
+    Return
+    -------
+    tuple
+        (basepair positions, allele frequencies group 1, allele frequencies group 0, ALT allele frequencies)
+    '''
+
+    # bring in group 1
+    assert type(labels1) is list
+    labhap1=labels1
+
+    # compute allele frequencies from phased VCF
+    with gzip.open(vcf, 'rt') as f:
+        twochar='##'
+        while twochar=='##':
+            line=f.readline().strip()
+            twochar=line[:2]
+        header=line
+        headerlist=header.split('\t')
+        namdip=headerlist[9:]
+        namhap1=[nam+'_1' for nam in namdip]
+        hap11=[i for i in range(len(namhap1)) if namhap1[i] in labhap1]
+        hap10=[i for i in range(len(namhap1)) if namhap1[i] not in labhap1]
+        pos=[]
+        count11=[]
+        count10=[]
+        itr=1
+        for line in f:
+            if (itr % 1000) == 0:
+                print(itr)
+            splitline=line.split('\t')
+            infoline=splitline[:9]
+            markline=splitline[9:]
+            markhap1=np.array([int(float(mark[0])) for mark in markline])
+            pos.append(int(float(infoline[1])))
+            count11.append(markhap1[hap11].sum())
+            count10.append(markhap1[hap10].sum())
+            itr+=1
+    denom1=len(hap11)
+    denom0=len(hap10)
+    count1=[(count11[i]) for i in range(len(count11))]
+    count0=[(count10[i]) for i in range(len(count11))]
+    freq1=np.array(count1)/denom1
+    freq0=np.array(count0)/denom0
+    denom=denom1+denom0
+    freqm=(np.array(count1)+np.array(count0))/denom
+    return pos, freq1, freq0, freqm

@@ -27,6 +27,11 @@ parser.add_argument('--end',
                     type=int,
                     default=6, 
                     help='End bp column index')
+parser.add_argument('--chunksize',
+                    type=int,
+                    default=10000000,
+                    help='The parameter in pandas read_csv'
+                    )
 
 # Parse the arguments
 args = parser.parse_args()
@@ -35,22 +40,28 @@ map_file = args.input_map_file
 output_file = args.output_file
 start = args.start
 end = args.end
+chunksize = args.chunksize
 
-# formatting
-table = pd.read_csv(input_file, sep='\t')
-map_file = pd.read_csv(map_file, sep='\t')
-columns = list(table.columns)
-encol = columns[end]
-stcol = columns[start]
+# formatting the map file
+map_file = pd.read_csv(map_file, sep='\t', header=None)
 map_file.columns = ['chrom', 'rsid', 'cm', 'bp']
 
-# counting IBD segments
-counts = [((table[stcol] <= i) & (table[encol] >= i)).sum() for i in map_file['bp']]
+# initialize the counter
+counts = np.zeros(map_file.shape[0],dtype=int)
 counter = {
     'BPWINDOW': map_file['bp'].to_list(),
     'CMWINDOW': map_file['cm'].to_list(),
     'COUNT': counts
 }
+
+# counting IBD segments in chunks
+for chunk in pd.read_csv(input_file, sep='\t', chunksize=chunksize):
+    columns = list(chunk.columns)
+    encol = columns[end]
+    stcol = columns[start]
+    counts = [((chunk[stcol] <= i) & (chunk[encol] >= i)).sum() for i in map_file['bp']]
+    counts = np.array(counts)
+    counter['COUNT'] += counts
 counter = pd.DataFrame(counter)
 
 # count cutting

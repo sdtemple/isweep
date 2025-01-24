@@ -1,0 +1,80 @@
+##### the arguments for your pipeline analysis
+
+### you can change these
+change:
+
+  # parameters, subsample file
+  want-data:
+    # the location of all results
+    your-analysis-folder: '/your-analysis-folder'
+    # lowest chromosome number
+    chr-low: '20'
+    # highest chromosome numbers
+    chr-high: '22'
+
+  # the yaml file with scan analysis options
+  yaml: 'your.analysis.arguments.yaml'
+
+  # location of your data
+  existing-data:
+    # rename-chrs
+    rename-chrs-map-adx: 'rename-chrs/num-chrnum.txt'
+    rename-chrs-map-ref: 'rename-chrs/num-chrnum.txt'
+    # these are reference sample vcfs
+    ref-folder: ''
+    ref-prefix: ''
+    ref-suffix: ''
+    ref-panel-map: ''
+    # these are target sample vcfs
+    adx-folder: ''
+    adx-prefix: ''
+    adx-suffix: ''
+    # these are genetic maps
+    maps-folder: '/path-to-genetic-maps/decode.2019.b38'
+    maps-prefix: 'decode2019.chrchr'
+    maps-suffix: '.GRCh38.map'
+    # markers or samples to exclude based on prelim analysis
+    exclude-samples: 'excludesamples.txt'
+    keep-samples: 'samples.txt'
+
+  # compute resources for your analysis
+  xmxmem: '120' # in gb
+
+  flare-parameters:
+    probs: 'false'
+
+  bcftools-parameters:
+    c-min-mac: '3'
+    missingness: '0.05'
+
+### you should keep these fixed
+fixed:
+
+  # hap-ibd.jar parameters
+  hapibd-parameters:
+    # min-seed
+    min-seed: '1.0'
+    # min-extend
+    min-extend: '0.2'
+    # min-output
+    min-output: '2.0'
+    # minimum minor allele frequency
+    min-mac: '2'
+    # maximum basepair gap
+    max-gap: '1000'
+    # minimum markers
+    min-markers: '100'
+
+  # flare.jar parameters
+  flare-parameters:
+    min-maf: '0.005'
+    min-mac: '50'
+    gen: '10.0'
+    random-seed: '-99999'
+
+  # beagle.jar parameters
+  # use the defaults
+  beagle-parameters:
+    impute: 'false'
+    window: '40.0'
+    random-seed: '-99999'

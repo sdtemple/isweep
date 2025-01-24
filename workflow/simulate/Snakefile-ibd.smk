@@ -26,6 +26,8 @@ include: 'rules/first.smk'
 include: 'rules/second.smk'
 include: 'rules/third.smk'
 
+localrules: all, yaml
+
 rule yaml:
     input:
         [f"{sim.FOLDER}/results.snp.tsv".replace(" ","") for sim in sims.itertuples()],

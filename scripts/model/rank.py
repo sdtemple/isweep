@@ -54,9 +54,18 @@ def main():
         default=0.1, 
         help="(default: 0.10) Lower bound for allele frequency."
     )
+
+    parser.add_argument(
+        '--ploidy', 
+        type=int,
+        default=2, 
+        help="(default: 2) Diploid or haploid."
+    )
     
     # Parse the arguments
     args = parser.parse_args()
+
+    assert args.ploidy in [1,2]
     
     # Adjust values as needed
     K = int(args.graph_diameter / 2)
@@ -73,7 +82,12 @@ def main():
     outliers = outlier_communities(communities, scalar=scalar)
 
     # Compute adaptive allele frequencies
-    tup = labeled_allele_frequencies(args.input_vcf_file, outliers)
+    if args.ploidy == 2:
+        tup = labeled_allele_frequencies(args.input_vcf_file, outliers)
+    elif args.ploidy == 1:
+        tup = labeled_allele_frequencies_haploid(args.input_vcf_file, outliers)
+    else:
+        raise ValueError("Ploidy is not 1 or 2")
 
     # Make table
     pos = tup[0]

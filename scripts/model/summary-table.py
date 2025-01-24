@@ -57,6 +57,7 @@ tablein = pd.read_csv(f"{folder}/{roi}", sep='\t')
 tablein = tablein[['NAME', 'CHROM', maxstat, 'ALPHA']]
 nms = list(tablein['NAME'])
 
+countibd = []
 p0 = []
 se = []
 sl = []
@@ -76,6 +77,7 @@ for nm in nms:
 
     restab = pd.read_csv(f"{folder}/{nm}/results.{file_type}.{uncertainty_type}.tsv", sep='\t')
     ginitab = pd.read_csv(f"{folder}/{nm}/{args.input_gini_file}", sep='\t')
+    countibd.append(restab['CountIbd'][0])
     p0.append(restab['VarFreqEst'][0])
     se.append(restab['SelCoefEst'][0])
     sl.append(restab['SelCoefLow'][0])
@@ -87,6 +89,7 @@ for nm in nms:
 
 # Add the results to the table
 tablein['LOCHAT'] = bs
+tablein['COUNTIBD'] = countibd
 tablein['PHAT'] = p0
 tablein['SHAT'] = se
 tablein['CONF_INT_LOW'] = sl

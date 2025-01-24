@@ -1,16 +1,6 @@
-### finding ibd groups
+#s Finding excess IBD groups
 
-# some inputs, string managements, count sample size
-# some inputs, string managements, count sample size
-cohort=str(config['CHANGE']['FOLDERS']['STUDY'])
-samplesize=0
-with open(cohort+'/subsample.txt','r') as f:
-    for line in f:
-        samplesize+=1
-ploidy=2
-# ploidy=int(float(str(config['FIXED']['HAPIBD']['PLOIDY'])))
-samplesize_ploidy=samplesize*ploidy
-maf=float(config['FIXED']['ISWEEP']['MINAAF'])
+localrules: gini_impurity
 
 # subset vcf to region of interest
 rule second_region: # focus vcf on region of interest
@@ -23,9 +13,9 @@ rule second_region: # focus vcf on region of interest
         subvcf='{cohort}/{hit}/second.focused.vcf.gz',
     params:
         qmaf=maf,
-        chrpre=str(config['CHANGE']['ISWEEP']['CHRPRE']),
-        pm=str(config['FIXED']['ISWEEP']['PM']),
-    shell: # if chromosome is huge (greater than 10000 Mb), may need to modify the third pipe
+        chrpre=str(config['change']['files']['chromosome_prefix']),
+        pm=str(config['fixed']['isweep']['base_pair_buffer']),
+    shell:
         """
         chr=$(python ../../scripts/utilities/lines.py {input.locus} 2 2)
         center=$(python ../../scripts/utilities/lines.py {input.focus} 1 2)
@@ -73,9 +63,10 @@ rule second_rank:
     output:
         fileout='{cohort}/{hit}/second.ranks.tsv.gz',
     params:
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        q1=str(config['FIXED']['ISWEEP']['MINAAF']),
-        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        diameter=diameter,
+        q1=maf,
+        rulesigma=group_cutoff,
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/model/rank.py \
@@ -85,6 +76,7 @@ rule second_rank:
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma} \
             --lowest_freq {params.q1} \
+            --ploidy {params.ploidy}
         """
 
 ### write outliers ###
@@ -96,8 +88,8 @@ rule second_outlier:
         fileout='{cohort}/{hit}/second.outliers.txt',
         out1='{cohort}/{hit}/outlier1.txt',
     params:
-        diameter=str(config['FIXED']['ISWEEP']['DIAMETER']),
-        rulesigma=str(config['FIXED']['ISWEEP']['GROUPCUTOFF']),
+        diameter=diameter,
+        rulesigma=group_cutoff,
     shell:
         """
         python ../../scripts/model/outliers.py \

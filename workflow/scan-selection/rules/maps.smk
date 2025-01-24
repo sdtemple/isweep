@@ -1,3 +1,9 @@
+# Reformat the genetic maps
+# by interpolating for a fixed step size
+# and trimming the telomeres.
+
+localrules: interpolate_map, trim_telomeres
+
 # make genetic map with specified cM step size
 rule interpolate_map:
     input:
@@ -5,7 +11,7 @@ rule interpolate_map:
     output:
         mapfile='{cohort}/maps/chr{num}.interpolated.map',
     params:
-        stepsize=str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']),
+        stepsize=str(config['change']['isweep']['step_size_cm']),
     shell:
         '''
         python ../../scripts/utilities/interpolate-map.py \
@@ -21,7 +27,7 @@ rule trim_telomeres:
     output:
         mapfile='{cohort}/maps/chr{num}.trimmed.map',
     params:
-        trim=str(config['FIXED']['ISWEEP']['SCANCUTOFF']),
+        trim=str(config['change']['isweep']['scan_cutoff']),
     shell:
         '''
         python ../../scripts/utilities/trim-telomere-map.py \

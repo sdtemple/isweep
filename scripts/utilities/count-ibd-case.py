@@ -4,6 +4,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 
 # Set up the argument parser
 parser = argparse.ArgumentParser(description='Compute IBD counts over windows in case and control groups.')
@@ -39,6 +40,11 @@ parser.add_argument('--ind2',
                     type=int, 
                     default=2, 
                     help='Individual 2 column index')
+parser.add_argument('--chunksize',
+                    type=int,
+                    default=10000000,
+                    help='The parameter in pandas read_csv'
+                    )
 
 # Parse the arguments
 args = parser.parse_args()
@@ -47,22 +53,25 @@ map_file = args.input_map_file
 output_file = args.output_file
 start = args.start
 end = args.end
+chunksize = args.chunksize
 
 ind1 = args.ind1
 ind2 = args.ind2
 casefile = args.input_case_file
 
-# Input and formatting
-table = pd.read_csv(input_file, sep='\t')
-map_file = pd.read_csv(map_file, sep='\t',header=None)
-map_file.columns = ['chrom','rsid','cm','bp']
-columns = list(table.columns)
-encol = columns[end]
-stcol = columns[start]
-ind1col = columns[ind1]
-ind2col = columns[ind2]
-table[ind1col] = table[ind1col].astype(str)
-table[ind2col] = table[ind2col].astype(str)
+# formatting the map file
+map_file = pd.read_csv(map_file, sep='\t', header=None)
+map_file.columns = ['chrom', 'rsid', 'cm', 'bp']
+
+# initialize the counter
+counts = np.zeros(map_file.shape[0],dtype=int)
+counter = {
+    'BPWINDOW': map_file['bp'].to_list(),
+    'CMWINDOW': map_file['cm'].to_list(),
+    'COUNT': counts,
+    'COUNT0': deepcopy(counts),
+    'COUNT1': deepcopy(counts),
+}
 
 # Process case file
 casedict = dict()
@@ -71,24 +80,37 @@ with open(casefile) as f:
         ind, status = line.strip().split('\t')
         casedict[ind] = int(float(status))
 
-# Map case status to individuals
-table['case1'] = table[ind1col].map(casedict)
-table['case2'] = table[ind2col].map(casedict)
-table['match'] = table['case1'] == table['case2']
-table['casemult'] = table['case1'] * table['case2']
-table['case'] = table.apply(lambda x: x['casemult'] if x['match'] else 2, axis=1)
+# Counting IBD segments in chunks
+for table in pd.read_csv(input_file, sep='\t', chunksize=chunksize):
 
-# Counting IBD segments
-counts = [((table[stcol] <= i) & (table[encol] >= i)).sum() for i in map_file['bp']]
-counts0 = [((table[stcol] <= i) & (table[encol] >= i) & (table['case'] == 0)).sum() for i in map_file['bp']]
-counts1 = [((table[stcol] <= i) & (table[encol] >= i) & (table['case'] == 1)).sum() for i in map_file['bp']]
-counter = {
-    'BPWINDOW': map_file['bp'].to_list(),
-    'CMWINDOW': map_file['cm'].to_list(),
-    'COUNT': counts,
-    'COUNT0': counts0,
-    'COUNT1': counts1
-}
+    # Input and formatting
+    table = pd.read_csv(input_file, sep='\t')
+    columns = list(table.columns)
+    encol = columns[end]
+    stcol = columns[start]
+    ind1col = columns[ind1]
+    ind2col = columns[ind2]
+    table[ind1col] = table[ind1col].astype(str)
+    table[ind2col] = table[ind2col].astype(str)
+
+    # Map case status to individuals
+    table['case1'] = table[ind1col].map(casedict)
+    table['case2'] = table[ind2col].map(casedict)
+    table['match'] = table['case1'] == table['case2']
+    table['casemult'] = table['case1'] * table['case2']
+    table['case'] = table.apply(lambda x: x['casemult'] if x['match'] else 2, axis=1)
+
+    # Counting IBD segments
+    counts = [((table[stcol] <= i) & (table[encol] >= i)).sum() for i in map_file['bp']]
+    counts0 = [((table[stcol] <= i) & (table[encol] >= i) & (table['case'] == 0)).sum() for i in map_file['bp']]
+    counts1 = [((table[stcol] <= i) & (table[encol] >= i) & (table['case'] == 1)).sum() for i in map_file['bp']]
+    counts = np.array(counts)
+    counts0 = np.array(counts0)
+    counts1 = np.array(counts1)
+    counter['COUNT'] += counts
+    counter['COUNT0'] += counts0
+    counter['COUNT1'] += counts1
+
 counter = pd.DataFrame(counter)
 
 # Count cutting

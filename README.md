@@ -1,6 +1,10 @@
 # Statistical inference using long IBD segments
 
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
+
 <img src="isweep-icon.png" align="center" width="600px"/>
+
+There will be a readthedocs set up in January or February.
 
 There is a major methodological update for multiple-testing corrections.
 
@@ -27,21 +31,21 @@ Temple, S.D., Waples, R.K., Browning, S.R. (2024). Modeling recent positive sele
 
 #### IBD central limit theorems:
 
-Temple, S.D., Thompson, E.A. (2024). Identity-by-descent in large samples. Preprint at bioRxiv, 2024.06.05.597656. <a href="https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1">https://www.biorxiv.org/content/10.1101/2024.06.05.597656v1</a>.
+Temple, S.D., Thompson, E.A. (2024). Identity-by-descent segments in large samples. Preprint at bioRxiv, 2024.06.05.597656. <a href="https://www.biorxiv.org/content/10.1101/2024.06.05.597656v2">https://www.biorxiv.org/content/10.1101/2024.06.05.597656v2</a>.
 
-#### Genome-wide significance thresholds in the selection scan
+#### Genome-wide significance thresholds in the selection scan:
 
 Temple, S.D., Browning, S.B. (2024). "Multiple testing corrections in selection studies using identity-by-descent segments. Draft in progress.
 
-#### Genome-wide significance thresholds in the IBD case-control mapping
+#### Genome-wide significance thresholds in the IBD case-control mapping:
 
 Temple, S.D., ..., Wijsman, E., and Blue, E. (2024-25). "Multiple testing corrections in case-control studies using identity-by-descent segments." Draft in progress.
 
-#### Simulating IBD around a locus
+#### Simulating IBD around a locus:
 
-Temple, S.D., Browning, S.B., and Thompson, E.A. (2024). "Fast simulation of identity-by-descent segments." Draft in progress.
+Temple, S.D., Browning, S.B., and Thompson, E.A. (2024). "Fast simulation of identity-by-descent segments." bioRxiv. <a href="https://www.biorxiv.org/content/10.1101/2024.12.13.628449v2">https://www.biorxiv.org/content/10.1101/2024.12.13.628449v2</a>
 
-#### Unifying framework of the selection scan and sweep modeling
+#### Unifying framework of the selection scan and sweep modeling:
 
 Temple, S.D. (2024). "Statistical Inference using Identity-by-Descent Segments: Perspectives on Recent Positive Selection." PhD thesis (University of Washington). <a href="https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses">https://www.proquest.com/docview/3105584569?sourcetype=Dissertations%20&%20Theses</a>.
 

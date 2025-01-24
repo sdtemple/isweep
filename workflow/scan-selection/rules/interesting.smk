@@ -1,18 +1,7 @@
-# process the isweep scan
-# form table of roi
+# Summarize the core findings of the selection scan.
+# The output is a regions of interest tabular file.
 
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-low=int(float(str(config['CHANGE']['ISWEEP']['CHRLOW'])))
-high=int(float(str(config['CHANGE']['ISWEEP']['CHRHIGH'])))
-
-subsamplefile=str(config['CHANGE']['ISWEEP']['SUBSAMPLE'])
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
-samplesize=0
-with open(subsamplefile,'r') as f:
-    for line in f:
-        samplesize+=1
-
-numsims = int(str(config['CHANGE']['ISWEEP']['SIMS']))
+localrules: plot_scan, make_roi_table, excess_region
 
 rule plot_scan:
     input:
@@ -25,13 +14,14 @@ rule plot_scan:
         numsims=str(numsims),
         chrlow=str(low),
         chrhigh=str(high),
+        ploidy=str(ploidy),
     shell:
         """
         python ../../scripts/plotting/plot-scan-pipeline.py \
             --input_file {input.ibd} \
             --output_prefix {params.prefix} \
             --sample_size {params.samplesize} \
-            --ploidy 2 \
+            --ploidy {params.ploidy} \
             --heuristic_cutoff 4 \
             --num_sims {params.numsims} \
             --chr_low {params.chrlow} \
@@ -47,7 +37,7 @@ rule excess_region: # concatenate regions of excess IBD
     output:
         fileout=macro+'/excess.region.ibd.tsv',
     params:
-        cMgap=str(config['FIXED']['ISWEEP']['CMGAP']),
+        cMgap=str(config['fixed']['isweep']['cm_gap']),
     shell:
         '''
         python ../../scripts/scan/excess-region.py \
@@ -64,9 +54,9 @@ rule make_roi_table:
     output:
         fileout=macro+'/roi.tsv',
     params:
-        mbbuf=str(config['FIXED']['ISWEEP']['MBBUF']),
-        cmcover=str(config['FIXED']['ISWEEP']['CMCOVER']),
-        cmsmall=str(config['FIXED']['ISWEEP']['CMSMALL']),
+        mbbuf=str(config['fixed']['isweep']['mega_base_buffer']),
+        cmcover=str(config['fixed']['isweep']['covered_cm_region']),
+        cmsmall=str(config['fixed']['isweep']['small_cm_region']),
     shell:
         """
         python ../../scripts/scan/make-roi-table.py \

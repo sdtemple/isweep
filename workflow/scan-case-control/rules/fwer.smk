@@ -1,22 +1,35 @@
-# implement family-wise error rate adjustments
+# Implement the multiple-testing corrections
 # to determine genome-wide significance levels
-# for the case-control mapping version
+# that control the family-wise error rate.
+# This is the case-control scan version.
 
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+import pandas as pd
 
-pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
+localrules: \
+    plot_autocovariance, \
+    plot_autocovariance_case, \
+    plot_histogram_control, \
+    plot_histogram_case, \
+    plot_histogram_diff, \
+    plot_autocovariance_control
+
+macro=str(config['change']['files']['study'])
+
+pval = float(str(config['change']['isweep']['confidence_level']))
 # you should choose one and stick with it. no p hacking.
-stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
+stepsize = float(str(config['change']['isweep']['step_size_cm']))
 stepsize /= 100 # in morgans
-genomesize = float(str(config['CHANGE']['ISWEEP']['GENOMESIZE']))
+chromosome_sizes = pd.read_csv(macro+'/chromosome-sizes-kept.tsv',sep='\t')
+genomesize = chromosome_sizes['CMSIZE'].sum()
+chroms2 = chromosome_sizes.CHROM.astype(int).tolist()
+telocutting = float(str(config['change']['isweep']['scan_cutoff']))
+numchr = chromosome_sizes.shape[0]
+genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
-chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
-chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
-numchr = chrhigh - chrlow + 1
 chrsize = genomesize / numchr
-covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
+covlen = float(str(config['fixed']['isweep']['auto_covariance_length']))
 covlen= int(covlen / 100 / stepsize)
-numsims = int(str(config['CHANGE']['ISWEEP']['SIMS']))
+numsims = int(str(config['change']['isweep']['num_sims']))
 
 rule count_ibdends_case: # computing counts over windows for case and controls
     input:
@@ -25,7 +38,9 @@ rule count_ibdends_case: # computing counts over windows for case and controls
     output:
         fileout='{cohort}/ibdsegs/ibdends/scan/chr{num}.case.ibd.windowed.tsv.gz',
     params:
-        cases=str(config['CHANGE']['ISWEEP']['CASES']),
+        cases=str(config['change']['files']['cases']),
+    resources:
+        mem_gb='{config[change][xmx_mem]}',
     shell:
         """
         python ../../scripts/utilities/count-ibd-case.py \
@@ -44,7 +59,7 @@ rule count_ibdends_case: # computing counts over windows for case and controls
 # merged analytical_method, scan, and significance rules together
 rule analytical_method:
     input:
-        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.case.ibd.windowed.tsv.gz' for i in range(chrlow,chrhigh+1)],
+        [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.case.ibd.windowed.tsv.gz' for i in chroms2],
     output:
         testing=macro+'/fwer.analytical.case.tsv',
         autocov0=macro+'/fwer.autocovariance.control.tsv',
@@ -60,7 +75,7 @@ rule analytical_method:
        covlen=str(covlen),
        pval=str(pval),
        stepsize=str(stepsize),
-       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+       initcut=str(config['fixed']['isweep']['outlier_cutoff']),
        pre=macro+'/ibdsegs/ibdends/scan/chr',
        autocov=macro+'/fwer.autocovariance'
     shell:
@@ -76,7 +91,7 @@ rule analytical_method:
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --chr_average_size {params.chrsize} \
-            --cM_step_size {params.stepsize} \
+            --Morgan_step_size {params.stepsize} \
             --autocovariance_steps {params.covlen} \
             --confidence_level {params.pval} \
             --outlier_cutoff {params.initcut} \
@@ -84,18 +99,20 @@ rule analytical_method:
             --counts_column1 COUNT1 \
         """
 
-# # maybe implement later
-# rule simulation_method:
-#     input:
-#         pass
-#     output:
-#         pass
-#     params:
-#         pass
-#     shell:
-#         """
-#         echo 'Hello world'
-#         """
+rule simulation_method:
+    input:
+        testing=macro+'/fwer.analytical.case.tsv',
+    output:
+        testing=macro+'/fwer.simulation.case.txt',
+    params:
+        numsims=str(config['change']['isweep']['num_sims']),
+    shell:
+        """
+        python ../../scripts/scan/multiple-testing-simulation-case-pipeline.py \
+            --input_file {input.testing} \
+            --output_file {output.testing} \
+            --num_sims {params.numsims} \
+        """
 
 rule plot_autocovariance:
     input:

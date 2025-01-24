@@ -1,21 +1,23 @@
-# implement family-wise error rate adjustments
+# Implement the multiple-testing corrections
 # to determine genome-wide significance levels
+# that control the family-wise error rate.
 
-macro=str(config['CHANGE']['FOLDERS']['STUDY'])
+localrules: plot_autocovariance, significance
 
-pval = float(str(config['CHANGE']['ISWEEP']['CONFLEVEL']))
+import pandas as pd
+
+pval = float(str(config['change']['isweep']['confidence_level']))
 # you should choose one and stick with it. no p hacking.
-stepsize = float(str(config['CHANGE']['ISWEEP']['CMSTEPSIZE']))
+stepsize = float(str(config['change']['isweep']['step_size_cm']))
 stepsize /= 100 # in morgans
-genomesize = float(str(config['CHANGE']['ISWEEP']['GENOMESIZE']))
+genomesize = total_size
+numchr = total_chr
+telocutting = float(str(config['change']['isweep']['scan_cutoff']))
+genomesize -= numchr * telocutting * 2
 genomesize /= 100 # in morgans
-chrlow = int(str(config['CHANGE']['ISWEEP']['CHRLOW']))
-chrhigh = int(str(config['CHANGE']['ISWEEP']['CHRHIGH']))
-numchr = chrhigh - chrlow + 1
 chrsize = genomesize / numchr
-covlen = float(str(config['FIXED']['ISWEEP']['AUTOCOVLEN']))
+covlen = float(str(config['fixed']['isweep']['auto_covariance_length']))
 covlen= int(covlen / 100 / stepsize)
-numsims = int(str(config['CHANGE']['ISWEEP']['SIMS'])) 
 
 # implement the siegmund and yakir (2007) method
 # with log linear modeled autocovariance
@@ -32,7 +34,7 @@ rule analytical_method:
        covlen=str(covlen),
        pval=str(pval),
        stepsize=str(stepsize),
-       initcut=str(config['FIXED']['ISWEEP']['TELOSIGMA']),
+       initcut=str(config['fixed']['isweep']['outlier_cutoff']),
        pre=macro+'/ibdsegs/ibdends/scan/chr',
     shell:
         """
@@ -44,7 +46,7 @@ rule analytical_method:
             --chr_low {params.chrlow} \
             --chr_high {params.chrhigh} \
             --chr_average_size {params.chrsize} \
-            --cM_step_size {params.stepsize} \
+            --Morgan_step_size {params.stepsize} \
             --autocovariance_steps {params.covlen} \
             --confidence_level {params.pval} \
             --outlier_cutoff {params.initcut} \
@@ -58,7 +60,7 @@ rule simulation_method:
     output:
         simulation=macro+'/fwer.simulation.txt',
     params:
-       numsims=str(config['CHANGE']['ISWEEP']['SIMS']),
+       numsims=str(config['change']['isweep']['num_sims']),
     shell:
         """
         python ../../scripts/scan/multiple-testing-simulation-pipeline.py \
