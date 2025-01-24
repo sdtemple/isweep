@@ -33,6 +33,8 @@ shutil.copy(cases, file_name)
 include: 'rules/interesting.smk'
 include: 'rules/fwer.smk'
 
+localrules: all
+
 # record the configuration settings used
 rule yaml:
     input:

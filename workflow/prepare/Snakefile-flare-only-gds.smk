@@ -65,6 +65,8 @@ for i in range(low,high+1):
 # include .smk files with rules
 include: 'rules/flare-only-gds.smk'
 
+localrules: all
+
 # do the dry run `snakemake all -c1 -n`
 # this tells you what the pipeline will do
 # this rule will also copy the arguments you used

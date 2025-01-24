@@ -62,6 +62,8 @@ cases=str(config['change']['files']['cases'])
 file_name = macro + '/phenotypes.txt'
 shutil.copy(cases, file_name)
 
+localrules: all
+
 
 # snakemake all -c1 -n
 rule all:

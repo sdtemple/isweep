@@ -54,6 +54,8 @@ include: 'rules/first.smk'
 include: 'rules/second.smk'
 include: 'rules/third.smk'
 
+localrules: all
+
 # snakemake all -c1 -n
 rule all:
 	input:

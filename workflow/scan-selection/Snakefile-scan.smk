@@ -116,6 +116,8 @@ include: 'rules/samples.smk'
 include: 'rules/maps.smk'
 include: 'rules/fwer.smk'
 
+localrules: all, yaml 
+
 # record the configuration settings used
 rule yaml:
     input:
