@@ -54,14 +54,15 @@ Chromosomes smaller that the centiMorgan parameter ``fixed:isweep:chromosome_siz
 The outputs are:
 
 * ``scan.png``: the IBD rates along autosomes and the estimated significance thresholds
+* ``scan.modified.ibd.tsv``: the difference in IBD rates along the autosomes in tabular format
 * ``autocovariance.png```: model fit for autocovariances of IBD rates
-* ```zhistogram.png``: an empirical distribution of IBD rates (should look Gaussian)
+* ``zhistogram.png``: an empirical distribution of IBD rates (should look Gaussian)
 * ``roi.tsv``: summary table of the genome-wide significant loci
 * ``fwer.analytical.txt``: details about parameters and estimates for multiple testing
 * ``chromosome-sizes-kept.tsv``: numbers and cM sizes of chromosomes analyzed
 * ``ibdsegs/``: folder and subfolders with detected IBD segments
 
-The multiple-testing corrections are valid asymptotically (Temple and Thompson, 2024+).
+The multiple-testing corrections are valid asymptotically (Temple and Thompson, 2024+). You can look at the IBD rate histogram to visually assess such. Be wary of IBD rates being zero truncated in small samples.
 
 There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
 
@@ -97,9 +98,7 @@ The outputs are:
 * ``hit*/second.ranks.tsv.gz``: alleles with putative evidence for selection (or strong correlation with a selected allele)
 * ``hit*/outlier*.txt``: files with sample haplotype IDs in clusters on excess IBD sharing
 
-You can uncomment lines in `rule all` of the `Snakefile-roi.smk` to get percentile-based bootstrap intervals.
-
-The multiple-testing corrections are valid asymptotically (Temple and Thompson, 2024+).
+The Gaussian bootstrap intervals are valid asymptotically (Temple and Thompson, 2024+). You can uncomment lines in `rule all` of the `Snakefile-roi.smk` to get percentile-based bootstrap intervals.
 
 There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
 
@@ -108,7 +107,22 @@ There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may on
 Case-control scan
 ------------
 
-Words
+The ``worfklow/scan-case-control`` implements the difference in IBD rates scan with two multiple-testing corrections. You should use the `Snakefile-case.smk` file as input to the ``-s`` option.
+
+You must run this workflow after the selection scan workflow (where the IBD segments are detected). You should scrutinize the results to see if strong selection confounds your case-control study.
+
+The recipe YAML file to modify is ``case.yaml``. The parameters are nearly all the same as in :ref:_selection-scan. The ``case`` parameter is a two-column text file with sample IDs and binary phenotypes.
+
+The outputs have the same nomenclature as in the selection scan workflow, but ``.case.`` and ``.control.`` is inserted in file names:
+
+* ``scan.case.control.png``: the standardized difference in IBD rates along autosomes and the estimated significance thresholds
+* ``scan.case.ibd.tsv``: the difference in IBD rates along the autosomes in tabular format 
+* ``roi.case.tsv``: summary table of the genome-wide significant loci
+* ``fwer.analytical.case.txt``: details about parameters and estimates for multiple testing
+
+The multiple-testing corrections are valid asymptotically (Temple and Thompson, 2024+). You can look at the IBD rate histogram to visually assess such. Be wary of IBD rates being zero truncated in small samples. 
+
+There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may only be useful in enormous human biobanks.
 
 .. _prepare:
 
