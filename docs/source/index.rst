@@ -5,7 +5,6 @@ Documentation
    :align: center
    :width: 600px
 
-
 |
 |
 
@@ -21,6 +20,8 @@ Each automated workflow has a dedicated page under :doc:`usage`. The general way
 1. Navigate to the appropriate workflow directory
 2. Modify parameters in YAML configuration files
 3. Send the jobs to a cluster with ``nohup snakemake [...] &``
+
+The source code is `here <https://github.com/sdtemple/isweep>`_
 
 Installation
 --------

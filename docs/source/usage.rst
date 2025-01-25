@@ -230,7 +230,7 @@ I regularly use these options.
 
 .. _slurm-options:
 
-SLURM options
+Slurm options
 ##############
 
 I regularly use these options.
