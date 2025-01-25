@@ -124,15 +124,54 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 
 There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may only be useful in enormous human biobanks.
 
+
+You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``-s Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
+
+The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``.
+
+You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.tsv`` files.
+
+.. note::
+
+   We tested that ``Snakefile-case-roi.smk`` runs smoothly, but not if it works well at its task in a simulation study.
+
+
 .. _prepare:
 
 Preliminary material
 ------------
 
-Words
+This ``worfklow/prepare`` provides support for automated haplotype phasing (Beagle 5), local ancestry inference (Flare), and kinship inference (hap-ibd).
+
+The Snakefiles are:
+
+* ``Snakefile-beagle-flare-gds.smk``: your data is stored as GDS files, and you want to phase as well as LAI and IBD inference
+* ``Snakefile-beagle-flare-vcf.smk``: your data is stored as VCF files, and you want to phase as well as LAI and IBD inference
+* ``Snakefile-flare-only-gds.smk``: your data is already phased in GDS files, and you want to perform LAI and IBD inference
+* ``Snakefile-flare-only-vcf.smk``: your data is already phased in VCF files, and you want to perform LAI and IBD inference
+
+The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are written exactly as the parameters in Beagle, Flare, or hap-ibd. Other parameters define file locations. The remaining parameters are:
+
+* ``change:files:ref-panel-map``: tab-separated, headerless file with reference sample ID (column 1) and reference panel label (column 2)
+* ``keep-samples``: the sample IDs to phase, LAI, and IBD infer, which may be a subset of a larger consortium dataset
+* ``change:bcftools-parameters:c-min-mac``: minimum minor allele count, where 1 and 2 are incredibly difficult to phase
+
+We strongly recommend against setting ``flare-parameter:orbs`` equal to ``true``, which may create enormous file sizes and require a lot of RAM.
+
+The output files are in ``gtdata/``, ``lai/``, and ``ibdsegs/``. Rephasing is unphasing the reference panel and phasing them again with all the admixed samples; reference phasing is using the existing phase of the reference panel. Rephasing takes longer and creates more disk memory. You can uncomment or comment these output files in the ``rule all`` of the Snakefile.
+
+You can use ``run-ibdkin.sh``, ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
+
 
 Ploidy
 ------------
 
-Words
+VCF files with more than 1 or 2 ploidy are minimally supported. The cheat code is to treat them like haploid VCFs for the software using ``scripts/utilities/ploidy-conversion.py``. Let sample 1 have the genotype 0|0|0|1. The script will convert this into 4 samples with a haplotype index appended and the genotypes 0, 0, 0, 1.
+
+In all configuration files hence, you should set ploidy to be 1. For modeling hard sweeps, you should make sure that your Ne file is scaled by the ploidy. E.g., if your Ne file is w.r.t. the number of tetraploids, you should multiply the discrete Ne's by 4. Moreover, the sweep model will assume the formulas for haploid genic selection.
+
+We are not experts in nondiploidy. This cheat code may not be reasonable for your data.
+
+
+
 
