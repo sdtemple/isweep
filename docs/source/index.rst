@@ -5,7 +5,9 @@ Documentation
    :align: center
    :width: 600px
 
-<br>
+.. raw:: html
+
+   <br>
 
 **isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments.
 
