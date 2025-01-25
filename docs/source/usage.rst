@@ -3,11 +3,14 @@ Usage
 
 You should always enter the ``isweep`` environment before running workflows: ``mamba activate isweep``.
 
-You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background. Jobs that are not ``localrules`` could take considerable RAM and time.
-
 The penultimate rule of all workflows is to copy the YAML parameters file to your analysis folder, supporting reproducibility and logging.
 
 Most of the Python scripts under ``scripts/`` use ``argparse``. You can run them solo, with description and input support via ``python your-script.py --help``. For examples, see how scripts are run in the snakemake ``rules/``.
+
+.. note::
+
+   You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background. Jobs that are not ``localrules`` could take considerable RAM and time.
+
 
 Snakemake options
 ------------
@@ -35,12 +38,10 @@ I regularly use these options.
 * ``--mail-type=END`` and ``mail-user``: careful to not send yourself too many emails
 * ``--partition``
 
-.. _selection-scan:
-
 Selection scan
 ------------
 
-The ``worfklow/scan-selection`` implements the IBD rate selection scan with two multiple-testing corrections. You should use the `Snakefile-scan.smk` file as input to the ``-s`` option.
+The ``worfklow/scan-selection`` implements the IBD rate selection scan with two multiple-testing corrections. You should use the ``Snakefile-scan.smk`` file as input to the ``-s`` option.
 
 Recipe YAML files to modify are ``sequence.yaml`` and ``array.yaml`` for WGS and SNP array data, respectively. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
 
@@ -76,8 +77,6 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 
 There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
 
-.. _hard-sweeps:
-
 Modeling hard sweeps
 ------------
 
@@ -112,8 +111,6 @@ The outputs are:
 
 The Gaussian bootstrap intervals are valid asymptotically (Temple and Thompson, 2024+). You can uncomment lines in ``rule all`` of the ``Snakefile-roi.smk`` to get percentile-based bootstrap intervals.
 
-.. _case-control-scan:
-
 Case-control scan
 ------------
 
@@ -136,7 +133,6 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 
 There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may only be useful in enormous human biobanks.
 
-
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
 The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``. You could perform regression analyses on these dataframes. Scripts ``scripts/utilities/fake-phenotypes-*.py`` can be used for testing and evaluating confounding from strong recent selection.
@@ -145,10 +141,7 @@ You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.t
 
 .. note::
 
-   We tested that ``Snakefile-case-roi.smk`` runs smoothly, but not if it works well at its task in a simulation study.
-
-
-.. _prepare:
+   I tested that ``Snakefile-case-roi.smk`` runs smoothly, but not if it works well at its task in a simulation study.
 
 Pre-processing data
 ------------
@@ -184,7 +177,7 @@ VCF files with more than 1 or 2 ploidy are minimally supported. The cheat code i
 
 For nondiploidy, you should set ploidy to be 1 in all configuration files. For modeling hard sweeps, you should make sure that your Ne file is scaled by the ploidy. For example, if your Ne file is w.r.t. the number of tetraploids, you should multiply the discrete Ne's by 4. Moreover, the sweep model will assume the formulas for haploid genic selection.
 
-We are not experts in nondiploidy. This cheat code may not be reasonable for your data.
+I am not an expert in nondiploidy. This cheat code may not be reasonable for your data.
 
 Other considerations
 ------------
@@ -242,6 +235,10 @@ The tag v1.0 is closest to the code used in our publications. The scripts in the
 .. note::
 
    The simulation study in ``workflow/simulate`` was used in Temple, Waples, and Browning (2024). The scripts are older versions of this software. I will provide minimal/some support if one wants to replicate our results or use our SLiM simulation scripts.
+
+.. note::
+
+   The branch ``bring_clues_update`` has ``workflow/other-methods`` for the comparisons in Temple, Waples, and Browning (2024).
 
 Testing the workflow
 ------------
