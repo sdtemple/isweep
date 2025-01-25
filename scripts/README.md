@@ -1,4 +1,4 @@
-## Documenting python scripts
+## Documenting the Python scripts
 
 You may want to individually run some of the scripts. Here, I describe the scripts I imagine a user may want to re-run individually.
 

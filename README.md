@@ -4,7 +4,7 @@
 
 <img src="isweep-icon.png" align="center" width="600px"/>
 
-**isweep** is a <a href="https://pypi.org/project/isweep/">Python package</a> and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments. The Python package simulates IBD segments around a locus and estimates selection coefficients. The automated workflows perform selection scans, selection coefficient estimation, IBD case-control mapping, haplotype phasing, and local ancestry inference.
+**isweep** is a <a href="https://pypi.org/project/isweep/">Python package</a> and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments. The Python package simulates IBD segments around a locus and estimates selection coefficients. The automated workflows perform selection scans, selection coefficient estimation, IBD case-control mapping, haplotype phasing, and local ancestry inference. Scripts in the workflows can be run individually in `scripts/`, with `argparse` documentation and inputs.
 
 These methods are suitable for analyses for recent genetic/evolution events. For example,
 - By recent, we mean within the last 500 generations.

@@ -211,6 +211,7 @@ Possible errors
 * A locus fails at the ``rule first_rank`` in ``workflow/model-selection`` because no excess IBD sharing group exists
 * Sometimes the `Browning Lab software <https://github.com/browning-lab/>`_ (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
 * Genetic maps have a header or are not tab-separated. Four column (PLINK style) genetics maps should be tab-separated and headerless. 
+* You are using Snakemake 8, or too old a version of Snakemake 7.
 
 .. _snakemake-options:
 
