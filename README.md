@@ -44,7 +44,7 @@ In general, you run workflows with
 ```
 nohup snakemake -s Snakefile-*.smk -c1 --cluster "sbatch [options]" [options] --jobs XX --configfile *.yaml &
 ```
-You modify the relevant YAML files, which define the method parameters.
+You modify the relevant YAML files, which define the method parameters. You should run the pipelines in the `mamba activate isweep` environment.
 
 Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-6).)
 
@@ -61,12 +61,6 @@ git clone https://github.com/sdtemple/isweep.git
 ``` 
 mamba env create -f isweep-environment.yml
 ```
-```
-mamba activate isweep
-```
-```
-python -c 'import site; print(site.getsitepackages())'
-```
 3. Download some Java software.
 ``` 
 bash get-software.sh 
@@ -76,7 +70,5 @@ bash get-software.sh
 ---
 
 The flow chart below shows the steps ("rules") in the selection scan pipeline.
-
-Diverting paths "mle" versus "scan" refer to different detection thresholds (3.0 and 2.0 cM).
 
 <img src="scan-selection-rulegraph.png" align="center" width="600px"/>
