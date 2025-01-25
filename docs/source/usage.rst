@@ -3,7 +3,7 @@ Usage
 
 You should always enter the ``isweep`` environment before running workflows: ``mamba activate isweep``.
 
-You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background.
+You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background. Jobs that are not ``localrules`` could take considerable RAM and time.
 
 The penultimate rule of all workflows is to copy the YAML parameters file to your analysis folder, supporting reproducibility and logging.
 
@@ -44,13 +44,15 @@ The ``worfklow/scan-selection`` implements the IBD rate selection scan with two 
 
 Recipe YAML files to modify are ``sequence.yaml`` and ``array.yaml`` for WGS and SNP array data, respectively. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
 
+The main command is ``nohup snakemake -s Snakefile-scan.smk [...] --cluster "sbatch [...]" --configfile sequence.yaml``.
+
 The parameters are:
 
 * Many parameters under ``files`` determine where your data is and where you want outputs to be.
 * You can use ``chromosome_low`` and ``chromosome_high`` to determine a range of such to study. All chromosome ``.vcf.gz`` and ``.map`` must be numbered.
 * ``subsample``: text file with sample IDs in VCF files, which can/likely is a subset of larger consortium dataset
-* ``ibd_ends:error_rate``: set this from estimated error in pilot study of your smallest chromosomes (log files from ibd-ends software)
-* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy`
+* ``ibd_ends:error_rate``: set this from estimated error in pilot study of your smallest chromosomes (log files from `ibd-ends <https://github.com/browning-lab/ibd-ends/>`_ software)
+* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`Ploidy`
 * ``step_size_cm``: you perform a hypothesis every X.XX centiMorgans
 * ``scan_cutoff``: minimum length of detected IBD segments (recommended >= 2.0 or >= 3.0)
 * ``confidence_level``: the family-wise error rate you want to control (e.g., 0.05)
@@ -79,16 +81,18 @@ There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may on
 Modeling hard sweeps
 ------------
 
-The ``worfklow/model-selection`` estimates frequencies, locations, and selection coefficients of loci detected in the :ref:selection-scan. This workflow must be run after the selection scan. You should use the `Snakefile-roi.smk` file as input to the ``-s`` option.
+The ``worfklow/model-selection`` estimates frequencies, locations, and selection coefficients of loci detected in the :ref:`Selection scan`. This workflow must be run after the selection scan. You should use the ``Snakefile-roi.smk`` file as input to the ``-s`` option.
 
 The recipe YAML file to modify is ``sweep.yaml``. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
+
+The main command is ``nohup snakemake -s Snakefile-roi.smk [...] --cluster "sbatch [...]" --configfile sweep.yaml``.
 
 The parameters are:
 
 * Many parameters under ``files`` determine where your data is and where you want outputs to be.
 * ``regions_of_interest``: these are the loci to analyse. The default are those GW significant in the scan. You can delete some, or rename the GW significant "hits".
 * ``chromosome_prefix``: this is the name ``chr`` or blank that you see when you run ``bcftools query -f "%CHROM\n" chr.vcf.gz | head``.
-* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy`
+* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`Ploidy`
 * ``Ne``: an estimate of recent effective population sizes (IBDNe text file format)
 
 You can change the genic selection model in ``roi.tsv`` to "a" for additive, "m" for multiplicative, "d" for dominance, and "r" for recessive. You can also change alpha, which determines the (1-alpha) percent confidence intervals.
@@ -106,20 +110,20 @@ The outputs are:
 * ``hit*/second.ranks.tsv.gz``: alleles with putative evidence for selection (or strong correlation with a selected allele)
 * ``hit*/outlier*.txt``: files with sample haplotype IDs in clusters on excess IBD sharing
 
-The Gaussian bootstrap intervals are valid asymptotically (Temple and Thompson, 2024+). You can uncomment lines in `rule all` of the `Snakefile-roi.smk` to get percentile-based bootstrap intervals.
-
-There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
+The Gaussian bootstrap intervals are valid asymptotically (Temple and Thompson, 2024+). You can uncomment lines in ``rule all`` of the ``Snakefile-roi.smk`` to get percentile-based bootstrap intervals.
 
 .. _case-control-scan:
 
 Case-control scan
 ------------
 
-The ``worfklow/scan-case-control`` implements the difference in IBD rates scan with two multiple-testing corrections. You should use the `Snakefile-case.smk` file as input to the ``-s`` option.
+The ``worfklow/scan-case-control`` implements the difference in IBD rates scan with two multiple-testing corrections. You should use the ``Snakefile-case.smk`` file as input to the ``-s`` option.
 
 You must run this workflow after the selection scan workflow (where the IBD segments are detected). You should scrutinize the results to see if strong selection confounds your case-control study.
 
-The recipe YAML file to modify is ``case.yaml``. The parameters are nearly all the same as in :ref:_selection-scan. The ``case`` parameter is a two-column text file with sample IDs and binary phenotypes.
+The recipe YAML file to modify is ``case.yaml``. The parameters are nearly all the same as in :ref:`Selection scan`. The ``case`` parameter is a two-column text file with sample IDs and binary phenotypes.
+
+The main command is ``nohup snakemake -s Snakefile-case.smk [...] --cluster "sbatch [...]" --configfile case.yaml``.
 
 The outputs have the same nomenclature as in the selection scan workflow, but ``.case.`` and ``.control.`` is inserted in file names:
 
@@ -133,7 +137,7 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may only be useful in enormous human biobanks.
 
 
-You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``-s Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
+You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
 The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``. You could perform regression analyses on these dataframes. Scripts ``scripts/utilities/fake-phenotypes-*.py`` can be used for testing and evaluating confounding from strong recent selection.
 
@@ -146,10 +150,12 @@ You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.t
 
 .. _prepare:
 
-Preliminary material
+Pre-processing data
 ------------
 
-This ``worfklow/prepare`` provides support for automated haplotype phasing (Beagle 5), local ancestry inference (Flare), and kinship inference (hap-ibd).
+This ``worfklow/prepare`` provides support for automated haplotype phasing (`Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_), local ancestry inference (`Flare <https://github.com/browning-lab/flare>`_), and kinship inference (`IBDkin <https://github.com/YingZhou001/IBDkin>`_).
+
+The main command is ``nohup snakemake -s Snakefile-*.smk [...] --cluster "sbatch [...]" --configfile sweep.yaml``.
 
 The Snakefiles are:
 
@@ -158,7 +164,7 @@ The Snakefiles are:
 * ``Snakefile-flare-only-gds.smk``: your data is already phased in GDS files, and you want to perform LAI and IBD inference
 * ``Snakefile-flare-only-vcf.smk``: your data is already phased in VCF files, and you want to perform LAI and IBD inference
 
-The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are written exactly as the parameters in Beagle, Flare, or hap-ibd. Other parameters define file locations. The remaining parameters are:
+The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are written exactly as the parameters in `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_, `Flare <https://github.com/browning-lab/flare>`_, or `hap-ibd <https://github.com/browning-lab/hap-ibd>`_. Other parameters define file locations. The remaining parameters are:
 
 * ``change:files:ref-panel-map``: tab-separated, headerless file with reference sample ID (column 1) and reference panel label (column 2)
 * ``keep-samples``: the sample IDs to phase, LAI, and IBD infer, which may be a subset of a larger consortium dataset
@@ -168,7 +174,7 @@ We strongly recommend against setting ``flare-parameter:probs`` equal to ``true`
 
 The output files are in ``gtdata/``, ``lai/``, and ``ibdsegs/``. Rephasing is unphasing the reference panel and phasing them again with all the admixed samples; reference phasing is using the existing phase of the reference panel. Rephasing takes longer and creates more disk memory. You can uncomment or comment these output files in the ``rule all`` of the Snakefile.
 
-You can use ``run-ibdkin.sh``, ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
+You can use ``run-ibdkin.sh`` (with `IBDkin <https://github.com/YingZhou001/IBDkin>`_), ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
 
 
 Ploidy
@@ -192,6 +198,7 @@ Other considerations
 * You can use ``scripts/plotting/plot-sweep.py`` to make figures like those in Temple, Waples, and Browning (2024). The file assumes you use Gaussian-based intervals (``scripts/model/estimate-norm.py``).
 
 The Temple and Thompson conditions, under which the scan is asymptotically valid, are:
+
 1. Sample size squared large relative to population size times cM length threshold (n^2 = o(Nw))
 2. Scaled population size large relative to sample size (Nw = o(n))
 
@@ -205,7 +212,7 @@ Possible errors
 * SLURM jobs may fail at the Beagle or ibd-ends steps because of RAM. Re-run with more resources.
 * Make sure your VCF files are tab-indexed (``tabix -fp vcf [...]``)
 * A locus fails at the ``rule first_rank`` in ``workflow/model-selection`` because no excess IBD sharing group exists
-* Sometimes the Browning Lab software (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
+* Sometimes the `Browning Lab software <https://github.com/browning-lab/>`_ (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
 * Genetic maps have a header or are not tab-separated. Four column (PLINK style) genetics maps should be tab-separated and headerless. 
 
 Installing a fast package manager
@@ -225,3 +232,18 @@ If the mamba command does not work,
 2. Put in a line and save ``alias mamba="/path/to/miniforge3/bin/mamba``
 3. ``source .bashrc``
 4. Sign out and sign back in of terminal
+
+
+Reproducing simulation results
+------------
+
+The tag v1.0 is closest to the code used in our publications. The scripts in the tag to simulate data with msprime and capture the IBD segments with tskibd are used in the Temple and Browning (2025+) publication.
+
+.. note::
+
+   The simulation study in ``workflow/simulate`` was used in Temple, Waples, and Browning (2024). The scripts are older versions of this software. I will provide minimal/some support if one wants to replicate our results or use our SLiM simulation scripts.
+
+Testing the workflow
+------------
+
+Insert hyperlink and instructions for Zenodo.

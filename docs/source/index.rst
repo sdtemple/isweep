@@ -7,10 +7,10 @@ The Python package simulates IBD segments around a locus and estimates selection
 
 The automated workflows are:
 
-* :ref:`_selection-scan`: detects selected loci with rigorous multiple testing thresholds
-* :ref:`_hard-sweeps`: estimates the location, allele frequency, and selection coefficient of a sweep
-* :ref:`_case-control-scan`: detects loci where IBD rates differ between binary cases and controls
-* :ref:`_prepare`: supports haplotype phasing, local ancestry, and kinship inference
+* :ref:`Selection scan`: detects selected loci with rigorous multiple testing thresholds
+* :ref:`Modeling hard sweeps`: estimates the location, allele frequency, and selection coefficient of a sweep
+* :ref:`Case-control-scan`: detects loci where IBD rates differ between binary cases and controls
+* :ref:`Pre-processing data`: supports haplotype phasing, local ancestry, and kinship inference
 
 Each automated workflow has a dedicated page under :doc:`usage`. The general way to run these methods is:
 
@@ -46,7 +46,7 @@ The main requirements are a tab-separated genetic recombination map and enough s
 
 In humans, more than 1000 is enough samples, but more than 3000 samples is recommended. 
 
-At some point, there are no gains in statistical power with more samples. I do not recommend analyzing more than 100k samples in a biobank.
+At some point, there are no gains in statistical power with more samples. I do not recommend analyzing more than 100k samples in a biobank. See our Temple and Browning (2025+) publication.
 
 The tree of life is messy. Email or make a `GitHub Issue <https://github.com/sdtemple/isweep/issues>`_ for analysis advice about the nuances of your sample population.
 
@@ -56,7 +56,7 @@ Vignette
 
 Outside of the running the workflows, the main functions are:
 
-* ``isweep.coalescent.simulated_ibd_isweep``: generate long IBD segments around a locus (w/ selection)
+* ``isweep.coalescent.simulate_ibd_isweep``: generate long IBD segments around a locus (w/ selection)
 * ``isweep.coalescent.chi2_isweep``: use a uniroot finder with this to estimate the selection coefficient
 * ``isweep.utilities.read_Ne``: load in recent effective population sizes
 
@@ -104,7 +104,7 @@ For instance:
 Citations
 --------
 
-This software and its methods are the basis of five publications. The software Beagle, ibd-ends, hap-ibd, and flare are also used and should be cited.
+This software and its methods are the basis of six publications.
 
 * `Modeling hard sweeps <https://www.sciencedirect.com/science/article/pii/S0002929724003331>`_
 * `Simulating IBD segments <https://www.biorxiv.org/content/10.1101/2024.12.13.628449v2>`_
@@ -112,6 +112,14 @@ This software and its methods are the basis of five publications. The software B
 * `Thesis on recent positive selection <https://www.proquest.com/docview/3105584569>`_
 * TBD (Multiple testing in selection scan)
 * TBD (Multiple testing in case-control scan)
+
+The software `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_, `ibd-ends <https://github.com/browning-lab/ibd-ends/>`_, `hap-ibd <https://github.com/browning-lab/hap-ibd>`_, and `flare <https://github.com/browning-lab/flare>`_ are also used and should be cited.
+
+* ``workflow/scan-selection``: hap-ibd and ibd-ends
+* ``workflow/scan-case-control``: hap-ibd and ibd-ends
+* ``workflow/model-selection``: hap-ibd
+* ``prepare``: Beagle, flare, and hap-ibd
+
 
 Contents
 --------
