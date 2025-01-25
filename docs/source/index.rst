@@ -1,11 +1,13 @@
-isweep documentation
+Documentation
 ===================================
-
-**isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments.
 
 .. image:: images/isweep-icon.png
    :align: center
    :width: 600px
+
+<br>
+
+**isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments.
 
 The Python package simulates IBD segments around a locus and estimates selection coefficients.
 
