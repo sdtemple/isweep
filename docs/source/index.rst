@@ -3,6 +3,10 @@ isweep documentation
 
 **isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments.
 
+.. image:: images/isweep-icon.png
+   :align: center
+   :width: 600px
+
 The Python package simulates IBD segments around a locus and estimates selection coefficients.
 
 The automated workflows are:
@@ -120,7 +124,7 @@ The software `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html
 * ``workflow/scan-selection``: hap-ibd and ibd-ends
 * ``workflow/scan-case-control``: hap-ibd and ibd-ends
 * ``workflow/model-selection``: hap-ibd
-* ``prepare``: Beagle, flare, and hap-ibd
+* ``workflow/prepare``: Beagle, flare, and hap-ibd
 
 
 Contents

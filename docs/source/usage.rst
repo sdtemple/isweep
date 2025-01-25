@@ -52,6 +52,10 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 
 There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may only be useful in enormous human biobanks.
 
+.. image:: images/scan-selection-rulegraph.png
+   :align: center
+   :width: 600px
+
 .. _modeling-hard-sweeps:
 
 Modeling hard sweeps
@@ -112,6 +116,11 @@ The multiple-testing corrections are valid asymptotically (Temple and Thompson, 
 
 There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may only be useful in enormous human biobanks.
 
+.. image:: images/scan-case-control-rulegraph.png
+   :align: center
+   :width: 600px
+
+
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
 The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``. You could perform regression analyses on these dataframes. Scripts ``scripts/utilities/fake-phenotypes-*.py`` can be used for testing and evaluating confounding from strong recent selection.
@@ -150,6 +159,10 @@ The output files are in ``gtdata/``, ``lai/``, and ``ibdsegs/``. Rephasing is un
 
 You can use ``run-ibdkin.sh`` (with `IBDkin <https://github.com/YingZhou001/IBDkin>`_), ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
 
+
+.. image:: images/phasing-lai-ibd-rulegraph.png
+   :align: center
+   :width: 600px
 
 .. _ploidy:
 
