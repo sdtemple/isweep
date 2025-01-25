@@ -8,9 +8,9 @@ The Python package simulates IBD segments around a locus and estimates selection
 The automated workflows are:
 
 * :ref:`selection-scan`: detects selected loci with rigorous multiple testing thresholds
-* :ref:`hard-sweeps`: estimates the location, allele frequency, and selection coefficient of a sweep
-* :ref:`cases`: detects loci where IBD rates differ between binary cases and controls
-* :ref:`prepare`: supports haplotype phasing, local ancestry, and kinship inference
+* :ref:`modeling-hard-sweeps`: estimates location, allele frequency, and selection coefficient of sweep
+* :ref:`case-control-scan`: detects loci where IBD rates differ between binary cases and controls
+* :ref:`pre-processing-data`: supports haplotype phasing, local ancestry, and kinship inference
 
 Each automated workflow has a dedicated page under :doc:`usage`. The general way to run these methods is:
 
