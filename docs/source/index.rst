@@ -30,7 +30,8 @@ Installation
 
 .. note::
 
-   This project is under active development.
+   
+   This project is in a stable state. I am commited to providing quick support via GitHub Issues at least into 2026.
 
 
 Data Requirements

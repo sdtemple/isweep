@@ -1,13 +1,18 @@
 Usage
 =====
 
-You should always enter the isweep environment before running workflows: ``mamba activate isweep``.
+You should always enter the ``isweep`` environment before running workflows: ``mamba activate isweep``.
 
 You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background.
 
 The penultimate rule of all workflows is to copy the YAML parameters file to your analysis folder, supporting reproducibility and logging.
 
-I regularly use these ``snakemake`` options:
+Most of the Python scripts under ``scripts/`` use ``argparse``. You can run them solo, with description and input support via ``python your-script.py --help``. For examples, see how scripts are run in the snakemake ``rules/``.
+
+Snakemake options
+------------
+
+I regularly use these options.
 
 * ``-s``: point to the right Snakefile
 * ``--configfile``: point to your parameters file
@@ -18,7 +23,10 @@ I regularly use these ``snakemake`` options:
 * ``--keep-going``
 * ``-c1``
 
-I regularly use these SLURM options:
+SLURM options
+------------
+
+I regularly use these options.
 
 * ``--cpus-per-task``: you should max out the CPUs on a node
 * ``--mem``: you should almost max out the memory on a node
@@ -127,7 +135,7 @@ There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may on
 
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``-s Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
-The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``.
+The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``. You could perform regression analyses on these dataframes. Scripts ``scripts/utilities/fake-phenotypes-*.py`` can be used for testing and evaluating confounding from strong recent selection.
 
 You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.tsv`` files.
 
@@ -156,7 +164,7 @@ The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are wr
 * ``keep-samples``: the sample IDs to phase, LAI, and IBD infer, which may be a subset of a larger consortium dataset
 * ``change:bcftools-parameters:c-min-mac``: minimum minor allele count, where 1 and 2 are incredibly difficult to phase
 
-We strongly recommend against setting ``flare-parameter:orbs`` equal to ``true``, which may create enormous file sizes and require a lot of RAM.
+We strongly recommend against setting ``flare-parameter:probs`` equal to ``true``, which may create enormous file sizes and require a lot of RAM.
 
 The output files are in ``gtdata/``, ``lai/``, and ``ibdsegs/``. Rephasing is unphasing the reference panel and phasing them again with all the admixed samples; reference phasing is using the existing phase of the reference panel. Rephasing takes longer and creates more disk memory. You can uncomment or comment these output files in the ``rule all`` of the Snakefile.
 
@@ -168,10 +176,52 @@ Ploidy
 
 VCF files with more than 1 or 2 ploidy are minimally supported. The cheat code is to treat them like haploid VCFs for the software using ``scripts/utilities/ploidy-conversion.py``. Let sample 1 have the genotype 0|0|0|1. The script will convert this into 4 samples with a haplotype index appended and the genotypes 0, 0, 0, 1.
 
-In all configuration files hence, you should set ploidy to be 1. For modeling hard sweeps, you should make sure that your Ne file is scaled by the ploidy. E.g., if your Ne file is w.r.t. the number of tetraploids, you should multiply the discrete Ne's by 4. Moreover, the sweep model will assume the formulas for haploid genic selection.
+For nondiploidy, you should set ploidy to be 1 in all configuration files. For modeling hard sweeps, you should make sure that your Ne file is scaled by the ploidy. For example, if your Ne file is w.r.t. the number of tetraploids, you should multiply the discrete Ne's by 4. Moreover, the sweep model will assume the formulas for haploid genic selection.
 
 We are not experts in nondiploidy. This cheat code may not be reasonable for your data.
 
+Other considerations
+------------
 
+* There is limited statistical power in the selection scan with high cM length thresholds (>= 4.0).
+* For humans, using pedigree-based maps like the deCODE map are crucial for accurate IBD segment detection. Non-pedigree based maps may be suitable in non-humans, as long as the estimated recombination rates are accurate enough for IBD segment detection.
+* The p values assume the null model in the scans. If the histograms are far from Gaussian, you should not trust the p values.
+* The null model is that there is a genome-wide mean IBD rate. If there are apparently two or more subsets of chromosomes with a different mean IBD rate, you should run such subsets separately using ``chromosome_exclude`` in the YAML file.
+* Be cautious about interpretation of results near centromeres, where IBD segment detection is difficult.
+* You could analyze recombining sex chromosomes solo, but estimates of the genome-wide significance level will be noisy. You should give the chromosome a pseudo number, e.g., human chromosome X as chr23.
+* You can use ``scripts/plotting/plot-sweep.py`` to make figures like those in Temple, Waples, and Browning (2024). The file assumes you use Gaussian-based intervals (``scripts/model/estimate-norm.py``).
 
+The Temple and Thompson conditions, under which the scan is asymptotically valid, are:
+1. Sample size squared large relative to population size times cM length threshold (n^2 = o(Nw))
+2. Scaled population size large relative to sample size (Nw = o(n))
 
+The Gaussian model is often reasonable whenever sample size and scaled population size are large, even if the above conditions don't hold.
+
+There is a generalization of the main Temple and Thompson CLT for flexible demographic scenarios, i.e., large recent effective population sizes. 
+
+Possible errors
+------------
+
+* SLURM jobs may fail at the Beagle or ibd-ends steps because of RAM. Re-run with more resources.
+* Make sure your VCF files are tab-indexed (``tabix -fp vcf [...]``)
+* A locus fails at the ``rule first_rank`` in ``workflow/model-selection`` because no excess IBD sharing group exists
+* Sometimes the Browning Lab software (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
+* Genetic maps have a header or are not tab-separated. Four column (PLINK style) genetics maps should be tab-separated and headerless. 
+
+Installing a fast package manager
+------------
+
+I like to use mamba from miniforge as my package manager.
+
+.. code-block:: shell
+
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+    bash Miniforge3-Linux-x86_64.sh
+    mamba
+
+If the mamba command does not work,
+
+1. ``vim .bashrc`` 
+2. Put in a line and save ``alias mamba="/path/to/miniforge3/bin/mamba``
+3. ``source .bashrc``
+4. Sign out and sign back in of terminal

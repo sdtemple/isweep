@@ -202,8 +202,8 @@ def bootstrap_standard_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
 
     return (val - bc + za * sd, val - bc, val - bc + zb * sd)
 
-def bootstrap_hall(val, boot, alpha1 = 0.025, alpha2 = 0.975):
-    '''Implement Hall's interval estimator
+def bootstrap_percentile_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
+    '''Implement percentile-based interval estimator with bias correction
 
     Parameters
     ----------
@@ -229,8 +229,8 @@ def bootstrap_hall(val, boot, alpha1 = 0.025, alpha2 = 0.975):
             val - np.quantile(err, alpha1)
            )
 
-def bootstrap_efron(val, boot, alpha1 = 0.025, alpha2 = 0.975):
-    '''Implements Efron's interval estimator
+def bootstrap_percentile(val, boot, alpha1 = 0.025, alpha2 = 0.975):
+    '''Implements percentile-based interval estimator
 
     Parameters
     ----------
@@ -255,38 +255,38 @@ def bootstrap_efron(val, boot, alpha1 = 0.025, alpha2 = 0.975):
 
     return (vl, vm, vu)
 
-def bootstrap_efron_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
-    '''Implements Efron's interval estimator (w/ bias-correction)
+# def bootstrap_efron_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
+#     '''Implements Efron's interval estimator (w/ bias-correction)
 
-    Parameters
-    ----------
-    val : float
-        Parameter estimate
-    boot : array-like
-        Bootstraps
-    alpha1 : float
-        Percentile
-    alpha2 : float
-        Percentile
+#     Parameters
+#     ----------
+#     val : float
+#         Parameter estimate
+#     boot : array-like
+#         Bootstraps
+#     alpha1 : float
+#         Percentile
+#     alpha2 : float
+#         Percentile
 
-    Returns
-    -------
-    tuple
-        (lower, middle, upper) interval estimator
-    '''
+#     Returns
+#     -------
+#     tuple
+#         (lower, middle, upper) interval estimator
+#     '''
 
-    prop = sum(boot > val) / len(boot)
-    z0 = norm.ppf(1 - prop)
-    za = norm.ppf(alpha1)
-    zb = norm.ppf(alpha2)
-    ql = norm.cdf(2 * z0 + za)
-    qu = norm.cdf(2 * z0 + zb)
-    qm = norm.cdf(2 * z0)
-    vl = np.quantile(boot, ql)
-    vu = np.quantile(boot, qu)
-    vm = np.quantile(boot, qm)
+#     prop = sum(boot > val) / len(boot)
+#     z0 = norm.ppf(1 - prop)
+#     za = norm.ppf(alpha1)
+#     zb = norm.ppf(alpha2)
+#     ql = norm.cdf(2 * z0 + za)
+#     qu = norm.cdf(2 * z0 + zb)
+#     qm = norm.cdf(2 * z0)
+#     vl = np.quantile(boot, ql)
+#     vu = np.quantile(boot, qu)
+#     vm = np.quantile(boot, qm)
 
-    return (vl, vm, vu)
+#     return (vl, vm, vu)
 
 ##### time to event #####
 
@@ -450,114 +450,114 @@ def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model 
 
 ### metrics (evaluate experimental results) ###
 
-def check_envelope(x, a, b):
-    '''Check if value is in an interval
+# def check_envelope(x, a, b):
+#     '''Check if value is in an interval
 
-    Parameters
-    ----------
-    x : float
-        Parameter estimate
-    a : float
-        Left endpoint
-    b : float
-        Right endpoint
+#     Parameters
+#     ----------
+#     x : float
+#         Parameter estimate
+#     a : float
+#         Left endpoint
+#     b : float
+#         Right endpoint
 
-    Returns
-    -------
-    bool
-        If covered
-    '''
+#     Returns
+#     -------
+#     bool
+#         If covered
+#     '''
 
-    if x >= a:
-        if x <= b:
-            return True
+#     if x >= a:
+#         if x <= b:
+#             return True
 
-    return False
+#     return False
 
-def make_confusion_matrix(real, pred):
-    '''Form confusion matrix for statistical classification
+# def make_confusion_matrix(real, pred):
+#     '''Form confusion matrix for statistical classification
 
-    Parameters
-    ----------
-    real : array_like
-        Actual 1s and 0s
-    pred : array_like
-        Predicted 1s and 0s
+#     Parameters
+#     ----------
+#     real : array_like
+#         Actual 1s and 0s
+#     pred : array_like
+#         Predicted 1s and 0s
 
-    Returns
-    -------
-    pandas DataFrame object
-        2 x 2 crosstab
-    '''
+#     Returns
+#     -------
+#     pandas DataFrame object
+#         2 x 2 crosstab
+#     '''
 
-    data = {'Actual':real, 'Predicted':pred}
-    conf = pd.DataFrame(data, columns = ['Actual', 'Predicted'])
-    matr = pd.crosstab(conf['Actual'],
-                       conf['Predicted'],
-                       rownames=['Actual'],
-                       colnames=['Predicted'])
+#     data = {'Actual':real, 'Predicted':pred}
+#     conf = pd.DataFrame(data, columns = ['Actual', 'Predicted'])
+#     matr = pd.crosstab(conf['Actual'],
+#                        conf['Predicted'],
+#                        rownames=['Actual'],
+#                        colnames=['Predicted'])
 
-    return matr
+#     return matr
 
-def false_omission_rate(matrix):
-    '''Compute false omission rate
+# def false_omission_rate(matrix):
+#     '''Compute false omission rate
 
-    Parameters
-    ----------
-    matrix : pandas DataFrame object
-        2 x 2 cross tab
+#     Parameters
+#     ----------
+#     matrix : pandas DataFrame object
+#         2 x 2 cross tab
 
-    Returns
-    -------
-    float
-        The false omission rate (https://en.wikipedia.org/wiki/Confusion_matrix)
-    '''
+#     Returns
+#     -------
+#     float
+#         The false omission rate (https://en.wikipedia.org/wiki/Confusion_matrix)
+#     '''
 
-    tn = matrix[0][0]
-    fp = matrix[1][0]
-    fn = matrix[0][1]
-    tp = matrix[1][1]
+#     tn = matrix[0][0]
+#     fp = matrix[1][0]
+#     fn = matrix[0][1]
+#     tp = matrix[1][1]
 
-    return fn / (fn + tn)
+#     return fn / (fn + tn)
 
-def false_positive_rate(matrix):
-    '''Compute false positive rate
+# def false_positive_rate(matrix):
+#     '''Compute false positive rate
 
-    Parameters
-    ----------
-    matrix : pandas DataFrame object
-        2 x 2 cross tab
+#     Parameters
+#     ----------
+#     matrix : pandas DataFrame object
+#         2 x 2 cross tab
 
-    Returns
-    -------
-    float
-        The false positive rate (https://en.wikipedia.org/wiki/Confusion_matrix)
-    '''
+#     Returns
+#     -------
+#     float
+#         The false positive rate (https://en.wikipedia.org/wiki/Confusion_matrix)
+#     '''
 
-    tn = matrix[0][0]
-    fp = matrix[1][0]
-    fn = matrix[0][1]
-    tp = matrix[1][1]
+#     tn = matrix[0][0]
+#     fp = matrix[1][0]
+#     fn = matrix[0][1]
+#     tp = matrix[1][1]
 
-    return fp / (fp + tn)
+#     return fp / (fp + tn)
 
-def true_positive_rate(matrix):
-    '''Compute true positive rate
+# def true_positive_rate(matrix):
+#     '''Compute true positive rate
 
-    Parameters
-    ----------
-    matrix : pandas DataFrame object
-        2 x 2 cross tab
+#     Parameters
+#     ----------
+#     matrix : pandas DataFrame object
+#         2 x 2 cross tab
 
-    Returns
-    -------
-    float
-        The true positive rate (https://en.wikipedia.org/wiki/Confusion_matrix)
-    '''
+#     Returns
+#     -------
+#     float
+#         The true positive rate (https://en.wikipedia.org/wiki/Confusion_matrix)
+#     '''
 
-    tn = matrix[0][0]
-    fp = matrix[1][0]
-    fn = matrix[0][1]
-    tp = matrix[1][1]
+#     tn = matrix[0][0]
+#     fp = matrix[1][0]
+#     fn = matrix[0][1]
+#     tp = matrix[1][1]
 
-    return tp / (tp + fn)
+#     return tp / (tp + fn)
