@@ -9,39 +9,12 @@ Most of the Python scripts under ``scripts/`` use ``argparse``. You can run them
 
 .. note::
 
-   You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background. Jobs that are not ``localrules`` could take considerable RAM and time.
-
-
-Snakemake options
-------------
-
-I regularly use these options.
-
-* ``-s``: point to the right Snakefile
-* ``--configfile``: point to your parameters file
-* ``--jobs``: how many jobs can queue at once
-* ``--cluster "[sbatch ...]"``
-* ``-n``: dry run to see what the workflow will run
-* ``--latency-wait 200``
-* ``--keep-going``
-* ``-c1``
-
-SLURM options
-------------
-
-I regularly use these options.
-
-* ``--cpus-per-task``: you should max out the CPUs on a node
-* ``--mem``: you should almost max out the memory on a node
-* ``-e {rule}`` and ``-o {rule}``: many jobs will be run, so you should define file locations for stdout and stderr
-* ``--job-name={rule}``
-* ``--mail-type=END`` and ``mail-user``: careful to not send yourself too many emails
-* ``--partition``
+   You should always run the workflows on cluster nodes with ``nohup snakemake [...] --cluster "sbatch [...]" &`` to manage submissions in the background. Jobs that are not ``localrules`` could take considerable RAM and time. See :ref:`snakemake-options` and :ref:`slurm-options`.
 
 .. _selection-scan:
 
 Selection scan
-------------
+##############
 
 The ``worfklow/scan-selection`` implements the IBD rate selection scan with two multiple-testing corrections. You should use the ``Snakefile-scan.smk`` file as input to the ``-s`` option.
 
@@ -82,7 +55,7 @@ There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may on
 .. _modeling-hard-sweeps:
 
 Modeling hard sweeps
-------------
+##############
 
 The ``worfklow/model-selection`` estimates frequencies, locations, and selection coefficients of loci detected in the :ref:`selection-scan`. This workflow must be run after the selection scan. You should use the ``Snakefile-roi.smk`` file as input to the ``-s`` option.
 
@@ -118,7 +91,7 @@ The Gaussian bootstrap intervals are valid asymptotically (Temple and Thompson, 
 .. _case-control-scan:
 
 Case-control scan
-------------
+##############
 
 The ``worfklow/scan-case-control`` implements the difference in IBD rates scan with two multiple-testing corrections. You should use the ``Snakefile-case.smk`` file as input to the ``-s`` option.
 
@@ -152,7 +125,7 @@ You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.t
 .. _pre-processing-data:
 
 Pre-processing data
-------------
+##############
 
 This ``worfklow/prepare`` provides support for automated haplotype phasing (`Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_), local ancestry inference (`Flare <https://github.com/browning-lab/flare>`_), and kinship inference (`IBDkin <https://github.com/YingZhou001/IBDkin>`_).
 
@@ -178,10 +151,10 @@ The output files are in ``gtdata/``, ``lai/``, and ``ibdsegs/``. Rephasing is un
 You can use ``run-ibdkin.sh`` (with `IBDkin <https://github.com/YingZhou001/IBDkin>`_), ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
 
 
-.. _non-diploidy:
+.. _ploidy:
 
 Ploidy
-------------
+##############
 
 VCF files with more than 1 or 2 ploidy are minimally supported. The cheat code is to treat them like haploid VCFs for the software using ``scripts/utilities/ploidy-conversion.py``. Let sample 1 have the genotype 0|0|0|1. The script will convert this into 4 samples with a haplotype index appended and the genotypes 0, 0, 0, 1.
 
@@ -190,7 +163,7 @@ For nondiploidy, you should set ploidy to be 1 in all configuration files. For m
 I am not an expert in nondiploidy. This cheat code may not be reasonable for your data.
 
 Other considerations
-------------
+##############
 
 * There is limited statistical power in the selection scan with high cM length thresholds (>= 4.0).
 * For humans, using pedigree-based maps like the deCODE map are crucial for accurate IBD segment detection. Non-pedigree based maps may be suitable in non-humans, as long as the estimated recombination rates are accurate enough for IBD segment detection.
@@ -210,7 +183,7 @@ The Gaussian model is often reasonable whenever sample size and scaled populatio
 There is a generalization of the main Temple and Thompson CLT for flexible demographic scenarios, i.e., large recent effective population sizes. 
 
 Possible errors
-------------
+##############
 
 * SLURM jobs may fail at the Beagle or ibd-ends steps because of RAM. Re-run with more resources.
 * Make sure your VCF files are tab-indexed (``tabix -fp vcf [...]``)
@@ -218,8 +191,39 @@ Possible errors
 * Sometimes the `Browning Lab software <https://github.com/browning-lab/>`_ (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
 * Genetic maps have a header or are not tab-separated. Four column (PLINK style) genetics maps should be tab-separated and headerless. 
 
+.. _snakemake-options:
+
+Snakemake options
+##############
+
+I regularly use these options.
+
+* ``-s``: point to the right Snakefile
+* ``--configfile``: point to your parameters file
+* ``--jobs``: how many jobs can queue at once
+* ``--cluster "[sbatch ...]"``
+* ``-n``: dry run to see what the workflow will run
+* ``--latency-wait 200``
+* ``--keep-going``
+* ``-c1``
+
+.. _slurm-options:
+
+SLURM options
+##############
+
+I regularly use these options.
+
+* ``--cpus-per-task``: you should max out the CPUs on a node
+* ``--mem``: you should almost max out the memory on a node
+* ``-e {rule}`` and ``-o {rule}``: many jobs will be run, so you should define file locations for stdout and stderr
+* ``--job-name={rule}``
+* ``--mail-type=END`` and ``mail-user``: careful to not send yourself too many emails
+* ``--partition``
+
+
 Installing a fast package manager
-------------
+##############
 
 I like to use mamba from miniforge as my package manager.
 
@@ -238,7 +242,7 @@ If the mamba command does not work,
 
 
 Reproducing simulation results
-------------
+##############
 
 The tag v1.0 is closest to the code used in our publications. The scripts in the tag to simulate data with msprime and capture the IBD segments with tskibd are used in the Temple and Browning (2025+) publication.
 
@@ -250,7 +254,7 @@ The tag v1.0 is closest to the code used in our publications. The scripts in the
 
    The branch ``bring_clues_update`` has ``workflow/other-methods`` for the comparisons in Temple, Waples, and Browning (2024).
 
-Testing the workflow
-------------
+Testing workflows
+##############
 
 Insert hyperlink and instructions for Zenodo.
