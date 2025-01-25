@@ -56,9 +56,10 @@ There is a multiprocessing version using ``Snakefile-scan-mp.smk``, which may on
    :align: center
    :width: 600px
 
-.. raw:: html
+::
 
-   <br><br>
+
+::
 
 .. _modeling-hard-sweeps:
 
@@ -124,9 +125,10 @@ There is a multiprocessing version using ``Snakefile-case-mp.smk``, which may on
    :align: center
    :width: 600px
 
-.. raw:: html
+::
 
-   <br><br>
+
+::
 
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
@@ -171,9 +173,10 @@ You can use ``run-ibdkin.sh`` (with `IBDkin <https://github.com/YingZhou001/IBDk
    :align: center
    :width: 600px
 
-.. raw:: html
+::
 
-   <br><br>
+
+::
 
 .. _ploidy:
 

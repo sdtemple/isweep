@@ -5,15 +5,12 @@ Documentation
    :align: center
    :width: 600px
 
-.. raw:: html
 
-   <br>
+::
 
-**isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments.
+::
 
-The Python package simulates IBD segments around a locus and estimates selection coefficients.
-
-The automated workflows are:
+**isweep** is a Python package and a series of automated workflows to study natural selection with identity-by-descent (IBD) segments. The Python package simulates IBD segments around a locus and estimates selection coefficients. The automated workflows are:
 
 * :ref:`selection-scan`: detects selected loci with rigorous multiple testing thresholds
 * :ref:`modeling-hard-sweeps`: estimates location, allele frequency, and selection coefficient of sweep
