@@ -32,7 +32,7 @@ The parameters are:
 * You can use ``chromosome_low`` and ``chromosome_high`` to determine a range of such to study. All chromosome ``.vcf.gz`` and ``.map`` must be numbered.
 * ``subsample``: text file with sample IDs in VCF files, which can/likely is a subset of larger consortium dataset
 * ``ibd_ends:error_rate``: set this from estimated error in pilot study of your smallest chromosomes (log files from `ibd-ends <https://github.com/browning-lab/ibd-ends/>`_ software)
-* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy`
+* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy-extension`
 * ``step_size_cm``: you perform a hypothesis every X.XX centiMorgans
 * ``scan_cutoff``: minimum length of detected IBD segments (recommended >= 2.0 or >= 3.0)
 * ``confidence_level``: the family-wise error rate you want to control (e.g., 0.05)
@@ -83,7 +83,7 @@ The parameters are:
 * Many parameters under ``files`` determine where your data is and where you want outputs to be.
 * ``regions_of_interest``: these are the loci to analyse. The default are those GW significant in the scan. You can delete some, or rename the GW significant "hits".
 * ``chromosome_prefix``: this is the name ``chr`` or blank that you see when you run ``bcftools query -f "%CHROM\n" chr.vcf.gz | head``.
-* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy`
+* ``ploidy``: if your ploidy is not 1 or 2, see :ref:`ploidy-extension`
 * ``Ne``: an estimate of recent effective population sizes (IBDNe text file format)
 
 You can change the genic selection model in ``roi.tsv`` to "a" for additive, "m" for multiplicative, "d" for dominance, and "r" for recessive. You can also change alpha, which determines the (1-alpha) percent confidence intervals.
@@ -236,9 +236,9 @@ You should run the selection scan with cluster resources.
 
    You are strongly encouraged to test out the workflows if your data exceeds 500 samples.
 
-.. _ploidy:
+.. _ploidy-extension:
 
-Ploidy
+Ploidy extension
 ##############
 
 VCF files with more than 1 or 2 ploidy are minimally supported. The cheat code is to treat them like haploid VCFs for the software using ``scripts/utilities/ploidy-conversion.py``. Let sample 1 have the genotype 0|0|0|1. The script will convert this into 4 samples with a haplotype index appended and the genotypes 0, 0, 0, 1.
@@ -270,7 +270,7 @@ The Gaussian model is often reasonable whenever sample size and scaled populatio
 
 There is a generalization of the main Temple and Thompson CLT for flexible demographic scenarios, i.e., large recent effective population sizes. 
 
-Possible errors
+Potential errors
 ##############
 
 * SLURM jobs may fail at the Beagle or ibd-ends steps because of RAM. Re-run with more resources.
@@ -283,7 +283,7 @@ Possible errors
 * "Error: Could not find or load main class ibdends.IbdEndsMain". Re-download the java files with ``rm -r software/`` and then ``bash get-software.sh``.
 * Java class file is too old. The Flare Jan 24 version worked for JDK11, but I upgraded to JDK23 to get Flare Oct 24 version to run.
 
-Reproducing simulations from first paper
+Reproducing paper results
 ##############
 
 The tag v1.0 is closest to the code used in our publications. The scripts in the tag to simulate data with msprime and capture the IBD segments with tskibd are used in the Temple and Browning (2025+) publication.
