@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "isweep"
-version = "1.0.2"
+version = "1.0.3"
 authors = [
   { name="Seth D. Temple", email="sdtemple@uw.edu" },
 ]
@@ -23,6 +23,9 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Operating System :: OS Independent",
 ]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "docs"]
 
 [project.urls]
 "Homepage" = "https://github.com/sdtemple/isweep"
