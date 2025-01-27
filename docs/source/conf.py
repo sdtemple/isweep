@@ -10,13 +10,23 @@ release = '1.0'
 
 # -- General configuration
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../..'))
+
 extensions = [
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
+
+napoleon_numpy_docstring = True     # Turn on numpydoc strings
+
+modules = ['isweep']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),

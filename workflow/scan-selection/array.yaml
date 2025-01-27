@@ -11,8 +11,8 @@ change:
     chromosome_low: '1'
     # highest chromosome numbers
     chromosome_high: '22'
-    # column in text file of chromosome numbers to exclude
-    # default is an no file
+    # single column in text file of chromosome numbers to exclude
+    # the default is no file
     chromosome_exclude: ''
     # these are phased vcfs
     vcfs: '/path-to-phased-vcfs'
@@ -22,7 +22,7 @@ change:
     genetic_maps: '/path-to-genetic-maps'
     map_prefix: 'chr'
     map_suffix: '.map'
-    # column in text file of samples to analyze
+    # single column in text file of samples to analyze
     subsample: '/path-to-subsample/inferred.ancestry.txt'
 
   # 2 if diploid, 1 if not diploid

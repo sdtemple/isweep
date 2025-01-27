@@ -21,9 +21,14 @@ change:
     rename-chrs-map-adx: 'rename-chrs/num-chrnum.txt'
     rename-chrs-map-ref: 'rename-chrs/num-chrnum.txt'
     # these are reference sample vcfs
+    # these must be phased if you are doing reference phasing
+    # these can be unphased if you are doing re-phasing.
     ref-folder: ''
     ref-prefix: ''
     ref-suffix: ''
+    # two column tab-separated file
+    # first column is IDs for reference samples
+    # second column is the reference population
     ref-panel-map: ''
     # these are target sample vcfs
     adx-folder: ''

@@ -46,7 +46,7 @@ nohup snakemake -s Snakefile-*.smk -c1 --cluster "sbatch [options]" [options] --
 ```
 You modify the relevant YAML files, which define the method parameters. You should run the pipelines in the `mamba activate isweep` environment.
 
-Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-6).)
+Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-6), which also requires demographic Ne estimation.)
 
 ## Installation
 
