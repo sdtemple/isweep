@@ -6,6 +6,8 @@ Here are the main functions a user might consider. I intend the users to import 
 Functions
 --------
 
+.. autofunction:: isweep.slow.empty_function
+
 .. autofunction:: isweep.inference.read_ibd_file
 
 .. autofunction:: isweep.utilities.bin_ibd_segments

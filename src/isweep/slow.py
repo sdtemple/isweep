@@ -13,7 +13,9 @@ from math import floor, exp, log, ceil
 from numpy.random import exponential as Exp
 
 from .coalescent import *
-from .slow import *
+
+def empty_function():
+    return None
 
 def two_randint(n):
     x = randint(0,n)
