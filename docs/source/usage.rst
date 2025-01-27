@@ -20,7 +20,11 @@ The ``worfklow/scan-selection`` implements the IBD rate selection scan with two 
 
 Recipe YAML files to modify are ``sequence.yaml`` and ``array.yaml`` for WGS and SNP array data, respectively. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
 
-The main command is ``nohup snakemake -s Snakefile-scan.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sequence.yaml``.
+The main command is 
+
+.. code-block:: shell
+
+   ``nohup snakemake -s Snakefile-scan.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sequence.yaml``.
 
 The parameters are:
 
@@ -68,7 +72,11 @@ The ``worfklow/model-selection`` estimates frequencies, locations, and selection
 
 The recipe YAML file to modify is ``sweep.yaml``. There is a hierarchy of ``change`` versus ``fixed`` parameters, where ``change`` you should modify for your dataset and ``fixed`` you should reach out for advice.
 
-The main command is ``nohup snakemake -s Snakefile-roi.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sweep.yaml``.
+The main command is 
+
+.. code-bloack:: shell
+
+   ``nohup snakemake -s Snakefile-roi.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sweep.yaml``.
 
 The parameters are:
 
@@ -106,7 +114,11 @@ You must run this workflow after the selection scan workflow (where the IBD segm
 
 The recipe YAML file to modify is ``case.yaml``. The parameters are nearly all the same as in :ref:`selection-scan`. The ``case`` parameter is a two-column text file with sample IDs and binary phenotypes.
 
-The main command is ``nohup snakemake -s Snakefile-case.smk [...] --cluster "sbatch [...]" --jobs XX --configfile case.yaml``.
+The main command is 
+
+.. code-block:: shell
+
+   ``nohup snakemake -s Snakefile-case.smk [...] --cluster "sbatch [...]" --jobs XX --configfile case.yaml``.
 
 The outputs have the same nomenclature as in the selection scan workflow, but ``.case.`` and ``.control.`` is inserted in file names:
 
@@ -143,7 +155,11 @@ Pre-processing data
 
 This ``worfklow/prepare`` provides support for automated haplotype phasing (`Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_), local ancestry inference (`Flare <https://github.com/browning-lab/flare>`_), and kinship inference (`IBDkin <https://github.com/YingZhou001/IBDkin>`_).
 
-The main command is ``nohup snakemake -s Snakefile-*.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sweep.yaml``.
+The main command is 
+
+.. code-block:: shell
+
+   ``nohup snakemake -s Snakefile-*.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sweep.yaml``.
 
 The Snakefiles are:
 
@@ -282,6 +298,8 @@ The tag v1.0 is closest to the code used in our publications. The scripts in the
 .. note::
 
    The branch ``bring_clues_update`` has ``workflow/other-methods`` for the comparisons in Temple, Waples, and Browning (2024).
+
+.. _testing-workflows:
 
 Testing workflows
 ##############

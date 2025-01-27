@@ -21,6 +21,8 @@ Each automated workflow has a dedicated page under :doc:`usage`. The general way
 2. Modify parameters in YAML configuration files
 3. Send the jobs to a cluster with ``nohup snakemake [...] &``
 
+We made a Zenodo repository with some simulated data to test the workflows. See :ref:`testing-workflows`.
+
 The source code is `here <https://github.com/sdtemple/isweep>`_
 
 Installation
