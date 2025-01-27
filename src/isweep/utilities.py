@@ -198,7 +198,7 @@ def read_Ne(file):
 
     Parameters
     ----------
-    file : string
+    file : str
         Input file name
 
     Returns
@@ -253,8 +253,7 @@ def extend_Ne(file, maxg, output):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     with open(file, 'r') as f:
@@ -288,8 +287,7 @@ def make_constant_Ne(file, size, maxg):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     size = floor(size)
@@ -307,7 +305,7 @@ def make_exponential_Ne(file, size, maxg, rate):
 
     Parameters
     ----------
-    file : string
+    file : str
         Output file name
     size : float
         Effective population size at generation 0
@@ -318,8 +316,7 @@ def make_exponential_Ne(file, size, maxg, rate):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     assert len(rate) == len(maxg)
@@ -358,8 +355,7 @@ def make_bottleneck_Ne(file, isize, bsize, rt1, rt2, rt3):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     # initialize
@@ -414,8 +410,7 @@ def make_two_growth_phases_Ne(file, isize, rt1, rt2):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     # initialize
@@ -463,8 +458,7 @@ def make_three_growth_phases_Ne(file, isize, rt1, rt2, rt3):
 
     Returns
     -------
-    NoneType
-        Writes a *.ne file
+    None
     '''
 
     # initialize

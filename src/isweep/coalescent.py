@@ -293,7 +293,7 @@ def basic_coalescent(n):
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Interarrival times
     '''
     n = int(float(n))
@@ -325,7 +325,7 @@ def varying_Ne_coalescent(n, Ne, ploidy = 2, to_tmrca=True):
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Arrival times in generations
     '''
 
@@ -452,7 +452,7 @@ def wright_fisher(n, Ne, ploidy = 2, to_tmrca=True):
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Arrival times in generations
     '''
     # initalize
@@ -507,7 +507,7 @@ def simulate_coalgen(n, Ne, ploidy, binom_cut=0.01, to_tmrca=True):
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Arrival times in generations
     '''
 
@@ -752,7 +752,9 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
         Sample size (individuals)
     Ne : dict
         Effective population sizes
-    long_ibd, short_ibd : float
+    long_ibd: float
+        cM length threshold
+    short_ibd : float
         cM length threshold
     ploidy : int
         1 for haploid or 2 for diploid
@@ -1009,16 +1011,16 @@ def probability_quasi_geometric(ps, Ns, ploidy = 2):
 
     Parameters
     ----------
-    ps : NumPy array
+    ps : numpy.array
         Variant frequencies (back in time)
-    Ns : NumPy array
+    Ns : numpy.array
         Effective population sizes
     ploidy : int
         1 for haploid or 2 for diploid
 
     Returns
     -------
-    NumPy array
+    numpy.array
         P(G = g) for generation g; zero element is P(G > g) for some large g
     """
 
@@ -1043,12 +1045,12 @@ def simulate_quasi_geometric(n, mass):
     ----------
     n : int
         Simulation size
-    mass : NumPy array
+    mass : numpy.array
         Probability masses
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Coalescent generation times; np.Inf for P(G > g) for some large g
     """
 
@@ -1065,12 +1067,12 @@ def simulate_erlang_segments(geom):
 
     Parameters
     ----------
-    geom : NumPy array
+    geom : numpy.array
         Coalescent generation times (quasi-geometric)
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Independent ibd segment lengths
     """
 
@@ -1086,14 +1088,14 @@ def probability_erlang_segments(ab, mass):
 
     Parameters
     ----------
-    ab : array-like
+    ab : numpy.array
         Increasing floats in centiMorgans
-    mass : NumPy array
+    mass : numpy.array
         P(G = g) for generation g
 
     Returns
     -------
-    NumPy array
+    numpy.array
         P(\ell \in [u,v)) for many [u,v) intervals
     '''
 
@@ -1135,9 +1137,9 @@ def probability_ibd(ps, Ns, long_ibd = 2, ploidy = 2):
 
     Parameters
     ----------
-    ps : NumPy array
+    ps : numpy.array
         Variant frequencies (back in time)
-    Ns : NumPy array
+    Ns : numpy.array
         Effective population sizes
     long_ibd : float
         cM length threshold
@@ -1192,104 +1194,6 @@ def probability_ibd(ps, Ns, long_ibd = 2, ploidy = 2):
         FRp = FRp + log(hp) + log(dp) - Cp * (gstar + 1)
 
     return partialp + exp(FRp)
-
-# simulators for ibd segments
-
-# def simulate_ibd_independent(n, Ne, long_ibd=2, ploidy=2):
-#     """Simulator for independent ibd segment lengths about monomorphic, neutral site
-
-#     Parameters
-#     ----------
-#     n : int
-#         Sample size (individuals)
-#     Ne : dict
-#         Effective population sizes
-#     long_ibd : float
-#         cM length threshold
-#     ploidy : int
-#         1 for haploid or 2 for diploid
-
-#     Returns
-#     -------
-#     tuple (NumPy arrays)
-#         ibd lengths + coalescent times
-#     """
-#     Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),2000)
-#     n = int(n) * ploidy
-#     m = n * (n - 1) / 2
-#     ps = extend_vector(np.array([1.0]),1.0,max(Ne.keys()))
-#     Ns = np.array(list(Ne.values()))
-#     mass = probability_quasi_geometric(ps, Ns, ploidy)
-#     geom = simulate_quasi_geometric(m, mass)
-#     geom = geom[geom != np.Inf]
-#     ell = simulate_erlang_segments(geom)
-#     geom = geom[ell >= long_ibd]
-#     ell = ell[ell >= long_ibd]
-#     return ell, geom
-
-# def simulate_ibd_isweep_independent(n, s, p0, Ne, long_ibd=2, random_walk=True, one_step_model='a', tau0=0, sv=-0.01, ploidy=2):
-#     """Simulator for independent ibd segment lengths in recent sweep scenario
-
-#     Parameters
-#     ----------
-#     n : int
-#         Sample size (individuals)
-#     s : float
-#         Selection coefficient
-#     p0 : float
-#         Variant frequency at generation 0
-#     Ne : dict
-#         Effective population sizes
-#     long_ibd : float
-#         cM length threshold
-#     random_walk : bool
-#         True for random walk
-#     one_step_model : str
-#         'm', 'a', 'd', or 'r'
-#     tau0 : int
-#         Generation when neutrality begins
-#     sv: float
-#         Allele frequency of standing variation
-#         (Default -0.01 will assume de novo sweep)
-#     ploidy : int
-#         1 for haploid or 2 for diploid
-
-#     Returns
-#     -------
-#     tuple (NumPy arrays)
-#         (all, selected, non-selected) ibd lengths + (all, selected, non-selected) coalescent times
-#     """
-
-#     assert ploidy in [1,2]
-#     assert p0 >= 0
-#     assert p0 <= 1
-#     assert sv < 1
-#     if p0 == 0 or p0 == 1:
-#         out = simulate_ibd_independent(n, Ne, long_ibd, ploidy)
-#         return (out[0], np.array([]), np.array([]), out[1], np.array([]), np.array([]))
-#     Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),2000)
-#     ps, Ns, xs = walk_variant_backward(s, p0, Ne, random_walk, one_step_model, tau0, sv, ploidy)
-#     n = int(n) * ploidy
-#     n1 = floor(n * p0)
-#     n0 = floor(n * (1-p0))
-#     m1 = n1 * (n1 - 1) / 2
-#     m0 = n0 * (n0 - 1) / 2
-#     mass1 = probability_quasi_geometric(ps, Ns, ploidy)
-#     mass0 = probability_quasi_geometric(1-ps, Ns, ploidy)
-#     geom1 = simulate_quasi_geometric(m1, mass1)
-#     geom0 = simulate_quasi_geometric(m0, mass0)
-#     geom1 = geom1[geom1 != np.Inf]
-#     geom0 = geom0[geom0 != np.Inf]
-#     ell1 = simulate_erlang_segments(geom1)
-#     ell0 = simulate_erlang_segments(geom0)
-#     geom1 = geom1[ell1 >= long_ibd]
-#     geom0 = geom0[ell0 >= long_ibd]
-#     ell1 = ell1[ell1 >= long_ibd]
-#     ell0 = ell0[ell0 >= long_ibd]
-#     ell = np.concatenate((ell1, ell0))
-#     geom = np.concatenate((geom1, geom0))
-
-#     return ell, ell1, ell0, geom, geom1, geom0
 
 def probability_ibd_isweep(s, p0, Ne, long_ibd = 2, one_step_model = 'a', tau0 = 0, sv=-0.01, ploidy = 2):
     '''Approximate probability of ibd given a sweep model

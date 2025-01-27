@@ -59,11 +59,11 @@ def chi2_labeled_isweep(s, p0, Ne, n, obs1, obs0, ab, one_step_model = 'a', tau0
         Effective population sizes
     n : int
         Pairs sample size
-    obs1 : array-like
+    obs1 : numpy.array
         Observed counts for ibd segment bins (labeled 1)
-    obs0 : array-like
+    obs0 : numpy.array
         Observed counts for ibd segment bins (labeled 0)
-    ab : array-like
+    ab : numpy.array
         Increasing floats in centiMorgans
     one_step_model : str
         'm', 'a', 'd', or 'r'
@@ -115,9 +115,9 @@ def chi2_isweep(s, p0, Ne, n, obs, ab, one_step_model = 'a', tau0 = 0, sv=-0.01,
         Effective population sizes
     n : int
         Pairs sample size
-    obs : array-like
+    obs : numpy.array
         Observed counts for ibd segment bins (unlabeled)
-    ab : array-like
+    ab : numpy.array
         Increasing floats in centiMorgans
     one_step_model : str
         'm', 'a', 'd', or 'r'
@@ -156,7 +156,7 @@ def bootstrap_standard(val, boot, alpha1 = 0.025, alpha2 = 0.975):
     ----------
     val : float
         Parameter estimate
-    boot : array-like
+    boot : numpy.array
         Bootstraps
     alpha1 : float
         Percentile
@@ -182,7 +182,7 @@ def bootstrap_standard_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
     ----------
     val : float
         Parameter estimate
-    boot : array-like
+    boot : numpy.array
         Bootstraps
     alpha1 : float
         Percentile
@@ -209,7 +209,7 @@ def bootstrap_percentile_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
     ----------
     val : float
         Parameter estimate
-    boot : array-like
+    boot : numpy.array
         Bootstraps
     alpha1 : float
         Percentile
@@ -236,7 +236,7 @@ def bootstrap_percentile(val, boot, alpha1 = 0.025, alpha2 = 0.975):
     ----------
     val : float
         Parameter estimate
-    boot : array-like
+    boot : numpy.array
         Bootstraps
     alpha1 : float
         Percentile
@@ -254,39 +254,6 @@ def bootstrap_percentile(val, boot, alpha1 = 0.025, alpha2 = 0.975):
     vm = np.quantile(boot, 0.5)
 
     return (vl, vm, vu)
-
-# def bootstrap_efron_bc(val, boot, alpha1 = 0.025, alpha2 = 0.975):
-#     '''Implements Efron's interval estimator (w/ bias-correction)
-
-#     Parameters
-#     ----------
-#     val : float
-#         Parameter estimate
-#     boot : array-like
-#         Bootstraps
-#     alpha1 : float
-#         Percentile
-#     alpha2 : float
-#         Percentile
-
-#     Returns
-#     -------
-#     tuple
-#         (lower, middle, upper) interval estimator
-#     '''
-
-#     prop = sum(boot > val) / len(boot)
-#     z0 = norm.ppf(1 - prop)
-#     za = norm.ppf(alpha1)
-#     zb = norm.ppf(alpha2)
-#     ql = norm.cdf(2 * z0 + za)
-#     qu = norm.cdf(2 * z0 + zb)
-#     qm = norm.cdf(2 * z0)
-#     vl = np.quantile(boot, ql)
-#     vu = np.quantile(boot, qu)
-#     vm = np.quantile(boot, qm)
-
-#     return (vl, vm, vu)
 
 ##### time to event #####
 
@@ -416,9 +383,9 @@ def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model 
         Variant frequency
     B : int
         Number of bootstraps
-    boots : array-like
+    boots : numpy.array
         NumPy array of bootstraps for selection coefficient
-    bootp : array-like
+    bootp : numpy.array
         NumPy array of bootstraps for variant frequency
     Ne : dict
         Effective population sizes
@@ -436,7 +403,7 @@ def bootstrap_freq(maf, B, boots, bootp, Ne, random_walk = True, one_step_model 
 
     Returns
     -------
-    array-like
+    numpy.array
         NumPy array of bootstraps for variant frequency generation time
     '''
 

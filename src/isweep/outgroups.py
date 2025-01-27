@@ -13,7 +13,8 @@ def make_ibd_graph(ibd_segments):
 
     Returns
     -------
-    networkx Graph object
+    networkx.Graph
+        Graph w/ edges if haplotypes have a detectable IBD segment
     '''
     ibdgraph=nx.Graph()
     edgelist=[]
@@ -27,7 +28,7 @@ def diameter_communities(graph, K=3, max_communities=np.inf):
 
     Parameters
     ----------
-    graph : networkx Graph class object
+    graph : networkx.Graph
     K : int
         Default is max diameter 2*3
     max_communities : int
@@ -105,6 +106,7 @@ def largest_community(communities):
     Parameters
     ----------
     list
+        Haplotype/sample IDs in the largest community
     '''
     return list(communities[0])
 
@@ -113,9 +115,9 @@ def outlier_communities(communities, scalar=5):
 
     Parameters
     ----------
-    communities : list of sets
+    communities : list
     scalar : float
-        Multiplier of numpy .std()
+        Multiplier of numpy.std()
 
     Returns
     -------
