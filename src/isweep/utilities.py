@@ -36,7 +36,7 @@ def bin_ibd_segments(ell, ab):
 
     Returns
     -------
-    NumPy array
+    numpy.array
         Observed counts for ibd segment bins
     """
 
@@ -63,7 +63,7 @@ def big_format_distribution(distr, counts):
 
     Returns
     -------
-    array-like
+    numpy.array
         Adds copies of realization if multiplicity > 1
     '''
     nobs = sum(counts)

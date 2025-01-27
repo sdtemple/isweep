@@ -8,8 +8,8 @@ API
 .. autofunction:: isweep.coalescent.simulate_ibd_constant
 .. autofunction:: isweep.coalescent.simulate_ibd_isweep
 .. autofunction:: isweep.coalescent.simulate_ibd_isweep_tv
-.. autofunction:: isweep.coalescent.probability_ibd
-.. autofunction:: isweep.coalescent.probability_ibd_isweep
+autofunction:: isweep.coalescent.probability_ibd
+autofunction:: isweep.coalescent.probability_ibd_isweep
 .. autofunction:: isweep.coalescent.walk_variant_backward
 .. autofunction:: isweep.coalescent.walk_variant_forward
 .. autofunction:: isweep.coalescent.walk_variant_backward_tv

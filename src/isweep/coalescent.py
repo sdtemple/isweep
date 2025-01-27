@@ -1251,7 +1251,7 @@ def simulate_ibd_constant(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_d
     ----------
     n : int
         Sample size (individuals)
-    Ne : numeric
+    Ne : int
         Constant effective population size
     long_ibd, short_ibd : float
         cM length threshold
