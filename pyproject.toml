@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "isweep"
 version = "1.0.3"
 authors = [
-  { name="Seth D. Temple", email="sdtemple@uw.edu" },
+  { name="Seth D. Temple", email="sethtem@umich.edu" },
 ]
 description = "Methods for selective sweep inference"
 readme = "README.md"
