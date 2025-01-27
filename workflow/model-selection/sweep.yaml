@@ -35,11 +35,14 @@ fixed:
     # initiat focal location
     max_spacing: '25000' # max position spacing in location initializing
     num_in_quantile_sum: '10' # num percentiles to sum over in location initializing
+    # Temple, Waples, and Browning paper says this buffer was 150 kb (3d).
+    # That was a typo. The buffer was 1500 kb in that paper's analyses.
+    # For the future, we will use 1 Mb == 1000 kb.
     base_pair_buffer: '1000000'
     # estimating allele frequency
     window_size: '250000' # window size and step
     window_step: '50000'
-    haplotype_size: '500000' # haplotype position size and step
+    haplotype_size: '250000' # haplotype position size and step
     haplotype_step: '50000'
     frequency_size: '0.100' # haplotype frequency size and step
     frequency_step: '0.025'
