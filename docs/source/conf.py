@@ -24,9 +24,11 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
+napoleon_google_docstring = False     # Turn on numpydoc strings
 napoleon_numpy_docstring = True     # Turn on numpydoc strings
 
-modules = ['isweep']
+# modules = ['isweep']
+autodoc_mock_imports = ['isweep']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -45,3 +47,5 @@ epub_show_urls = 'footnote'
 
 numfig = True
 autosectionlabel_prefix_document = True
+
+highlight_language = 'python'
