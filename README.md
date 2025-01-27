@@ -66,6 +66,8 @@ mamba env create -f isweep-environment.yml
 bash get-software.sh 
 ```
 
+You can test the workflows with our <a href="https://zenodo.org/records/14744019">small Zenodo repository</a>.
+
 ## Picture of selection scan
 ---
 

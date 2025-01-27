@@ -13,7 +13,7 @@ wget https://faculty.washington.edu/browning/flare.jar
 
 # renaming some jar filesd .
 mv ibdne.23Apr20.ae9.jar ibdne.jar
-mv beagle.22Jul22.46e.jar beagle.jar
+mv beagle.17Dec24.224.jar beagle.jar
 
 chmod 755 *.jar
 
