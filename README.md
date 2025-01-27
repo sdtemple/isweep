@@ -18,7 +18,6 @@ Please file an Issue on GitHub for troubleshooting.
 Contact sethtem@umich.edu for support specific to your analysis, e.g., analyses of non-human genetic data.  
 
 ## The input data is:
----
 
 - Whole genome sequences
   - Probably at least > 500 diploids
@@ -28,8 +27,9 @@ Contact sethtem@umich.edu for support specific to your analysis, e.g., analyses 
     - Columns are chromosome, rsID, cM, bp 
 - Access to cluster computing
 
+`workflow/phasing-ancestry` provides support for phasing and selecting an ancestry cohort.
+
 ## Primary pipelines:
----
 
 The main workflows, `workflow/scan-selection` and `workflow/model-selection` do:
 
@@ -49,7 +49,6 @@ You modify the relevant YAML files, which define the method parameters. You shou
 Step 1 may be standalone, depending on the analysis. (You may not care to model putative sweeps (Steps 2-6).)
 
 ## Installation
----
 
 To install the dependencies and our package:
 
@@ -69,7 +68,6 @@ bash get-software.sh
 You can test the workflows with our <a href="https://zenodo.org/records/14744019">small Zenodo repository</a>.
 
 ## Picture of selection scan
----
 
 The flow chart below shows the steps ("rules") in the selection scan pipeline.
 

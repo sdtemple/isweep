@@ -148,12 +148,12 @@ You can also look at the sample haplotype IDs in the ``hit*/outlier*.phenotype.t
 
    I tested that ``Snakefile-case-roi.smk`` runs smoothly, but not if it works well at its task in a simulation study.
 
-.. _pre-processing-data:
+.. _phasing-and-ancestry:
 
-Pre-processing data
+Phasing and ancestry
 ##############
 
-This ``worfklow/prepare`` provides support for automated haplotype phasing (`Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_), local ancestry inference (`Flare <https://github.com/browning-lab/flare>`_), and kinship inference (`IBDkin <https://github.com/YingZhou001/IBDkin>`_).
+This ``worfklow/phasing-ancestry`` provides support for automated haplotype phasing (`Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_), local ancestry inference (`Flare <https://github.com/browning-lab/flare>`_), and kinship inference (`IBDkin <https://github.com/YingZhou001/IBDkin>`_).
 
 The main command is 
 
@@ -171,9 +171,9 @@ The Snakefiles are:
 The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are written exactly as the parameters in `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_, `Flare <https://github.com/browning-lab/flare>`_, or `hap-ibd <https://github.com/browning-lab/hap-ibd>`_. Other parameters define file locations. The remaining parameters are:
 
 * ``rename-chrs-map-adx``, ``rename-chrs-map-ref``: harmonizes 9 vs chr9 in VCF CHROM column with genetic map. Files are in ``rename-chrs/``. The ``num-chrnum.txt`` means 9 is in the VCF column, but chr9 is in the genetic map column.   
-* ``change:files:ref-panel-map``: tab-separated, headerless file with reference sample ID (column 1) and reference panel label (column 2)
+* ``ref-panel-map``: tab-separated, headerless file with reference sample ID (column 1) and reference panel label (column 2)
 * ``keep-samples``: the sample IDs to phase, LAI, and IBD infer, which may be a subset of a larger consortium dataset
-* ``change:bcftools-parameters:c-min-mac``: minimum minor allele count, where 1 and 2 are incredibly difficult to phase
+* ``bcftools-parameters:c-min-mac``: minimum minor allele count, where 1 and 2 are incredibly difficult to phase
 
 We strongly recommend against setting ``flare-parameter:probs`` equal to ``true``, which may create enormous file sizes and require a lot of RAM.
 
@@ -234,7 +234,7 @@ You should run the selection scan with cluster resources.
 
 .. note::
 
-   You are strongly encouraged to test out the workflows if your data exceeds 500 samples.
+   You are encouraged to test out the workflows if you have >= 500 samples.
 
 .. _ploidy-extension:
 

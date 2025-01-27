@@ -13,7 +13,7 @@ Documentation
 * :ref:`selection-scan`: detects selected loci with rigorous multiple testing thresholds
 * :ref:`modeling-hard-sweeps`: estimates location, allele frequency, and selection coefficient of sweep
 * :ref:`case-control-scan`: detects loci where IBD rates differ between binary cases and controls
-* :ref:`pre-processing-data`: supports haplotype phasing, local ancestry, and kinship inference
+* :ref:`phasing-and-ancestry`: supports haplotype phasing, local ancestry, and kinship inference
 
 Each automated workflow has a dedicated page under :doc:`usage`. The general way to run these methods is:
 
@@ -50,6 +50,8 @@ The main requirements are a tab-separated genetic recombination map and enough s
 * Samples with a similar ancestry
 * No close relatives
 * Recombining autosomes
+
+If you don't already have your data phased or cohort selected, we support :ref:`phasing-and-ancestry` with another workflow.
 
 In humans, more than 1000 is enough samples, but more than 3000 samples is recommended. 
 
@@ -127,7 +129,7 @@ The software `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html
 * ``workflow/scan-selection``: hap-ibd and ibd-ends
 * ``workflow/scan-case-control``: hap-ibd and ibd-ends
 * ``workflow/model-selection``: hap-ibd
-* ``workflow/prepare``: Beagle, flare, and hap-ibd
+* ``workflow/phasing-ancestry``: Beagle, flare, and hap-ibd
 
 
 Contents
