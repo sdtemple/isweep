@@ -17,4 +17,4 @@ from .favoredalleles import *
 from .utilities import *
 from .inference import *
 from .coalescent import *
-# from .slow import *
+from .slow import *
