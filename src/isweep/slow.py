@@ -149,7 +149,7 @@ def wf_pairwise_compare(node1, node2, cutoff1, cutoff2):
     return _num_tracts, node1, node2
 
 def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
-    '''ibd segments from a coalescent
+    '''ibd segments from a wright fisher process (slower but exact)
 
     Parameters
     ----------
@@ -157,7 +157,9 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
         Haploid sample size
     Ne : dict
         Effective population sizes
-    min_span : float
+    ibd_min_span : float
+        cM length threshold
+    ibs_min_span : float
         cM length threshold
 
     Returns
@@ -212,8 +214,8 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
 
     return numTracts, maxIbdGroup
 
-def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 0.5, random = True, model = 'm', tau0 = 0, ploidy = 2):
-    '''ibd segments from a coalescent with selection
+def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, random = True, model = 'm', tau0 = 0, ploidy = 2):
+    '''ibd segments from a wright fisher process with selection (slower but exact)
 
     Parameters
     ----------
@@ -225,7 +227,9 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 0.5, r
         Variant frequency at generation 0
     Ne : dict
         Effective population sizes
-    min_span : float
+    ibd_min_span : float
+        cM length threshold
+    ibs_min_span : float
         cM length threshold
     random : bool
         True for random walk

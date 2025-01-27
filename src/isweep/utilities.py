@@ -29,9 +29,9 @@ def bin_ibd_segments(ell, ab):
 
     Parameters
     ----------
-    ell : array-like
+    ell : numpy.array
         ibd segments
-    ab : array-like
+    ab : numpy.array
         Increasing floats in centiMorgans
 
     Returns

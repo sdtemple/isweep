@@ -1,8 +1,14 @@
 API
 ===
 
+Here are the main functions a user might consider. I intend the users to import all functions with ``from isweep import *``. I ordered the functions according to their importance in estimating selection coefficients. Some of the parameters with types ``numpy.array`` can accept type ``list``. There are some non-essential functions not listed; for example, functions in the ``isweep.utilities`` module to create complex `*.ne` files. "Behind the hood", object-oriented programming (Class objects) and dynamic programming help simulate the IBD of haplotypes with a fast algorithm. 
+
 .. autosummary::
    :toctree: generated
+
+
+Functions
+===
 
 .. autofunction:: isweep.inference.read_ibd_file
 .. autofunction:: isweep.utilities.bin_ibd_segments
