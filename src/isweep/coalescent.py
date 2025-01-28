@@ -563,8 +563,8 @@ from numpy.random import exponential as Exp
 class DirectedPaths:
 
     def __init__(self, _id, _pairwise_output):
-        self._left_length = np.Inf
-        self._right_length = np.Inf
+        self._left_length = np.inf
+        self._right_length = np.inf
         self._num_leaves = 1
         self._leading_leaf = _id
         self._pairwise_output = _pairwise_output
@@ -1051,11 +1051,11 @@ def simulate_quasi_geometric(n, mass):
     Returns
     -------
     numpy.array
-        Coalescent generation times; np.Inf for P(G > g) for some large g
+        Coalescent generation times; np.inf for P(G > g) for some large g
     """
 
     n = int(float(n))
-    time = np.array([np.Inf] + [i for i in range(1, len(mass))])
+    time = np.array([np.inf] + [i for i in range(1, len(mass))])
     coal = np.random.choice(time, size = n, p = mass)
 
     return coal
@@ -1076,7 +1076,7 @@ def simulate_erlang_segments(geom):
         Independent ibd segment lengths
     """
 
-    geom = geom[geom != np.Inf]
+    geom = geom[geom != np.inf]
     m = len(geom)
     left = np.random.exponential(scale = 50 / geom, size = m)
     right = np.random.exponential(scale = 50 / geom, size = m)
@@ -1183,7 +1183,7 @@ def probability_ibd(ps, Ns, long_ibd = 2, ploidy = 2):
 
     # approximate coalescent
     if dnm1[-1] >= 0: # check this
-        FRp = - np.Inf
+        FRp = - np.inf
     else:
         hp = (p0 ** 2) * cp1[-1] * (1 - dnm1[-1])
         dp = 1 / ploidy / Ns[-1] / ps[-1]

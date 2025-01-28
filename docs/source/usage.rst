@@ -276,6 +276,7 @@ Potential errors
 * SLURM jobs may fail at the Beagle or ibd-ends steps because of RAM. Re-run with more resources.
 * Make sure your VCF files are tab-indexed (``tabix -fp vcf [...]``)
 * You are not in the ``mamba activate isweep`` Python environment. (Failure b/c you don't have some package.)
+* You have too old a version of numpy (np.Inf versus np.inf).
 * A locus fails at the ``rule first_rank`` in ``workflow/model-selection`` because no excess IBD sharing group exists
 * Sometimes the `Browning Lab software <https://github.com/browning-lab/>`_ (JAR files) on GitHub gets corrupted. Ask Brian to recompile it, or recompile it yourself.
 * Genetic maps have a header or are not tab-separated. Four column (PLINK style) genetics maps should be tab-separated and headerless. 
