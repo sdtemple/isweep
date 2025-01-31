@@ -43,7 +43,7 @@ rule ibdends: # ibd-ends.jar
         vcf=vcffolder + '/' + vcfpre + '{num}' + vcfsuf,
         mapfile='{cohort}/maps/chr{num}.map',
         ibd='{cohort}/ibdsegs/hapibd/chr{num}.ibd.gz',
-        subsample='{cohort}/excludesamples.txt',
+        excludesamples='{cohort}/excludesamples.txt',
     output:
         ibd='{cohort}/ibdsegs/ibdends/chr{num}.ibd.gz',
     params:
