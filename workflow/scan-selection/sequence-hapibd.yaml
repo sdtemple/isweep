@@ -1,0 +1,82 @@
+# Change these parameters, which mostly
+# concern the location of files.
+change:
+
+  # Where data is to be output
+  # and where existing data are
+  files:
+    # folder for analysis
+    study: '/path-to-study/sequence-data'
+    # the yaml file with scan analysis options
+    yaml: 'sequence-hapibd.yaml'
+    # lowest chromosome number
+    chromosome_low: '1'
+    # highest chromosome numbers
+    chromosome_high: '22'
+    # single column in text file of chromosome numbers to exclude
+    # the default is no file
+    chromosome_exclude: ''
+    # these are phased vcfs
+    vcfs: '/path-to-phased-vcfs'
+    vcf_prefix: 'chr'
+    vcf_suffix: '.vcf.gz'
+    # these are genetic maps
+    genetic_maps: '/path-to-genetic-maps/decode.2019.b38'
+    map_prefix: 'decode2019.chrchr'
+    map_suffix: '.GRCh38.map'
+    # single column in text file of samples to analyze
+    subsample: '/path-to-subsample/inferred.ancestry.txt'
+
+  # 2 if diploid, 1 if not diploid
+  # See instructions for how to handle non-diploidy
+  ploidy: '2'
+
+  # Main method parameters
+  isweep:
+    step_size_cm: '0.05' # in cM (step size)
+    scan_cutoff: '2.0' # in cM (the detection threshold)
+    confidence_level: '0.05'
+    num_sims: '500' # simulations to derive OU threshold
+    # with 0, simulation approach will give Z score of -100
+  
+  xmx_mem: '240' # heap memory in Gb for intensive jobs
+
+  ibd_ends:
+    # do a test run on 1 chromosome to set this
+    error_rate: '1.5e-4'
+    random_seed: '-99999'
+
+# We recommend against adjusting these parameters.
+fixed:
+
+  # Candidate identity-by-descent segments
+  # serving as input data to ibd-ends
+  hap_ibd_candidate:
+    # min-seed
+    min_seed: '1.0'
+    # min-extend
+    min_extend: '0.2'
+    # min-output
+    min_output: '2.0'
+    # minimum minor allele frequency
+    min_minor_allele_frequency: '0.01'
+
+  ibd_ends:
+    # quantiles (comma separated) from endpoint posterior
+    quantiles: '0.5'
+    # num samples from endpoint posterior
+    num_posterior_samples: '0'
+    # minimum minor allele frequency
+    min_minor_allele_frequency: '0.001'
+
+  isweep:
+    # scanning parameters
+    chromosome_size_cutoff: '10.0' # chromosomes must be this or more cM long
+    cm_gap: '0.5' # cM gap when concatenating regions of excess IBD
+    outlier_cutoff: '4.0' # sigma scalar to remove telomeres
+    covered_cm_region: '0.5' # excess ibd rate must extend this long in cM
+    small_cm_region: '2.0' # region is extended w/ buffer if too small
+    mega_base_buffer: '2' # mb buffer if cm not long enough
+    auto_covariance_length: '4.' # in cM, how much data to learn autocovariance
+    # estimating selection coefficient
+    mle_cutoff: '3.0' # ibd cM cutoff
