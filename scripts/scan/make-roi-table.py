@@ -167,7 +167,7 @@ def main():
     if args.sweep > 0:
         finacol = ['NAME'] + initcol + ['MODEL', 'ALPHA']
         roitab['MODEL'] = ['a' for _ in range(1, nrow+1)]
-        roitab['ALPHA'] = [0.95 for _ in range(1, nrow+1)]
+        roitab['INTERVALCOVERAGE'] = [0.95 for _ in range(1, nrow+1)]
     elif args.sweep <= 0:
         finacol = ['NAME'] + initcol
     roitab = roitab[finacol]
