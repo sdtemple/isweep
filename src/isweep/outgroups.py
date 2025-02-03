@@ -111,7 +111,7 @@ def largest_community(communities):
     return list(communities[0])
 
 def outlier_communities(communities, scalar=5):
-    '''Compute sum of # nodes in outlier big communities
+    '''Combine outlier (or single largest) excess IBD cluster
 
     Parameters
     ----------
