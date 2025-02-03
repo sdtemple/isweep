@@ -165,7 +165,7 @@ def main():
     nrow = roitab.shape[0]
     roitab['NAME'] = [f'hit{i}' for i in range(1, nrow+1)]
     if args.sweep > 0:
-        finacol = ['NAME'] + initcol + ['MODEL', 'ALPHA']
+        finacol = ['NAME'] + initcol + ['MODEL', 'INTERVALCOVERAGE']
         roitab['MODEL'] = ['a' for _ in range(1, nrow+1)]
         roitab['INTERVALCOVERAGE'] = [0.95 for _ in range(1, nrow+1)]
     elif args.sweep <= 0:
