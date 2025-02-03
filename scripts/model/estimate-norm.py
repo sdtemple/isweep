@@ -66,10 +66,10 @@ def main():
     )
     
     parser.add_argument(
-        '--alpha', 
+        '--interval_coverage', 
         type=float,
-        default=0.05, 
-        help="(default: 0.05) Significance level for confidence intervals."
+        default=0.95, 
+        help="(default: 0.95) Expected coverage for confidence intervals."
     )
     
     parser.add_argument(
@@ -89,7 +89,7 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
     
-    alpha = args.alpha
+    alpha = args.interval_coverage
     alpha1 = (1 - alpha) / 2
     alpha2 = 1 - alpha1
     inhs = [args.model]

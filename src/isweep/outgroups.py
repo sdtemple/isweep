@@ -124,12 +124,18 @@ def outlier_communities(communities, scalar=5):
     list
         IDs for haploids in outlier communities
     '''
+    communities2 = deepcopy(communities)
+    communities2 = sorted(communities2, key=len, reverse=True)
     community_sizes = [len(community) for community in communities]
     community_sizes = np.array(community_sizes)
     cutoff = community_sizes.mean() + community_sizes.std() * scalar
-    oindices = (community_sizes > cutoff).nonzero()
+    oindices = (community_sizes >= cutoff).nonzero()
     outliers = set()
     for i in oindices[0]:
         community = communities[i]
         outliers = community.union(outliers)
-    return list(outliers)
+    outliers = list(outliers)
+    if len(outliers) == 0:
+        return communities2[0]
+    else:
+        return outliers

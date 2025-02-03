@@ -54,7 +54,7 @@ assert uncertainty_type in ['norm','perc']
 
 # Read the region of interest file
 tablein = pd.read_csv(f"{folder}/{roi}", sep='\t')
-tablein = tablein[['NAME', 'CHROM', maxstat, 'ALPHA']]
+tablein = tablein[['NAME', 'CHROM', maxstat, 'INTERVALCOVERAGE']]
 nms = list(tablein['NAME'])
 
 countibd = []

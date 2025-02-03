@@ -5,6 +5,7 @@
 import argparse
 import numpy as np
 from isweep import *
+from copy import deepcopy
 
 def main():
     # Set up argparse
@@ -72,17 +73,29 @@ def main():
         -------
         None
         '''
+        communities2 = deepcopy(communities)
+        communities2 = sorted(communities2, key=len, reverse=True) 
         community_sizes = [len(community) for community in communities]
         community_sizes = np.array(community_sizes)
         cutoff = community_sizes.mean() + community_sizes.std() * scalar
         idx = 1
         for community in communities:
-            if len(community) > cutoff:
+            if len(community) >= cutoff:
                 with open(f"{folderout}/outlier{idx}.txt", 'w') as f:
                     for haplo in community:
                         f.write(haplo)
                         f.write('\n')
                 idx += 1
+        if idx == 1:
+            with open(f"{folderout}/outlier{idx}.txt", 'w') as f:
+                for haplo in communities2[0]:
+                    f.write(haplo)
+                    f.write('\n')
+        with open(f"{folderout}/communities.csv",'w') as f:
+            for community in communities2:
+                for haplo in community[:-1]:
+                    f.write(haplo); f.write(',')
+                f.write(haplo); f.write('\n')
 
     # Saving
     write_outliers(communities, args.output_folder, scalar)

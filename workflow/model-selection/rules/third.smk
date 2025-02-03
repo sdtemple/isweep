@@ -120,7 +120,7 @@ rule third_hap_infer_norm:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        intcov=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
         python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
@@ -130,7 +130,7 @@ rule third_hap_infer_norm:
             --sample_size {params.n} \
             --Ne_est {input.longNe} \
             --model ${{model}} \
-            --alpha ${{alpha}} \
+            --interval_coverage ${{intcov}} \
             --ploidy {params.ploidy} \
         """
 
@@ -152,7 +152,7 @@ rule third_hap_infer_perc:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        intcov=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
         python ../../scripts/model/estimate-perc.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
@@ -162,7 +162,7 @@ rule third_hap_infer_perc:
             --sample_size {params.n} \
             --Ne_est {input.longNe} \
             --model ${{model}} \
-            --alpha ${{alpha}} \
+            --interval_coverage ${{intcov}} \
             --ploidy {params.ploidy} \
         """
 
@@ -276,7 +276,7 @@ rule third_snp_infer_norm:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        intcov=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
         python ../../scripts/model/estimate-norm.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
@@ -286,7 +286,7 @@ rule third_snp_infer_norm:
             --sample_size {params.n} \
             --Ne_est {input.longNe} \
             --model ${{model}} \
-            --alpha ${{alpha}} \
+            --interval_coverage ${{intcov}} \
             --ploidy {params.ploidy} \
         """
 
@@ -308,7 +308,7 @@ rule third_snp_infer_perc:
         ibdest=$(zcat {input.long} | wc -l)
         freqest=$(python ../../scripts/utilities/lines.py {input.freq} 2 2)
         model=$(python ../../scripts/utilities/lines.py {input.loci} 6 2)
-        alpha=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
+        intcov=$(python ../../scripts/utilities/lines.py {input.loci} 7 2)
         python ../../scripts/model/estimate-perc.py \
             --output_file {output.fileout} \
             --ibd_count ${{ibdest}} \
@@ -318,7 +318,7 @@ rule third_snp_infer_perc:
             --sample_size {params.n} \
             --Ne_est {input.longNe} \
             --model ${{model}} \
-            --alpha ${{alpha}} \
+            --interval_coverage ${{intcov}} \
             --ploidy {params.ploidy} \
         """
 

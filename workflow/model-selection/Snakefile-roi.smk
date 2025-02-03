@@ -33,7 +33,7 @@ for j in range(J):
 	f.write('MODEL\t')
 	f.write(str(row.MODEL))
 	f.write('\n')
-	f.write('ALPHA\t')
+	f.write('INTERVALCOVERAGE\t')
 	f.write(str(float(row.ALPHA)))
 	f.close()
 sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
