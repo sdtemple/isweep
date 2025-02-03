@@ -75,6 +75,7 @@ def main():
         '''
         communities2 = deepcopy(communities)
         communities2 = sorted(communities2, key=len, reverse=True) 
+        communities2 = [list(c) for c in communities2]
         community_sizes = [len(community) for community in communities]
         community_sizes = np.array(community_sizes)
         cutoff = community_sizes.mean() + community_sizes.std() * scalar
