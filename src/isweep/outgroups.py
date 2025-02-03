@@ -136,6 +136,6 @@ def outlier_communities(communities, scalar=5):
         outliers = community.union(outliers)
     outliers = list(outliers)
     if len(outliers) == 0:
-        return communities2[0]
+        return list(communities2[0])
     else:
         return outliers
