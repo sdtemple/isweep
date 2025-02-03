@@ -77,7 +77,7 @@ rule format_ibdends: # reformatting
         '''
         zcat {input.bigibd} | \
             tail -n +2 | \
-            cut -f 1-5,10,11,12 | \
+            cut -f 1-8 | \
             gzip > {output.cutibd}
         '''
 
