@@ -189,7 +189,9 @@ for chromosome in range(st, en + 1):
 
     except:
         # this should not happen
-        print('here')
+        # this can happen when chromosome is too small
+        # i.e. filtered out of the analysis
+        print('Exception in chromosome ' + str(chromosome))
         pass
     
 final_goodbyes = np.array(final_goodbyes)

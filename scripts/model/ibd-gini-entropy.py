@@ -58,6 +58,10 @@ with open(fileout, 'w') as f:
         len(propnodes),
         gini,
     ]
+    for j in range(len(statistics)):
+        # scenario in which there is no IBD
+        if numnodes <= 0:
+            statistics[j] = -99999.
     for statistic in statistics[:-1]:
         f.write(f"{statistic}\t")
     f.write(f"{statistics[-1]}\n")

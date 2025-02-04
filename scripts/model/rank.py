@@ -4,6 +4,7 @@
 
 import argparse
 import numpy as np
+from copy import deepcopy
 from isweep import *
 
 def main():
@@ -93,10 +94,17 @@ def main():
     pos = tup[0]
     freq1, freq0, freqm = putative_allele_frequencies(tup[1], tup[2], tup[3])
     table = format_allele_table(pos, freq1, freq0, freqm)
-    table['ZDELTA'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
-    table.sort_values(['ZDELTA'], inplace=True, ascending=False)
     table = table[table['AAF'] >= Q1]
     table = table[table['AAF'] <= Q2]
+    if len(communities) == 0:
+        # scenario in which there is no IBD
+        table['AAF0'] = table['AAF']
+        table['AAF1'] = table['AAF']
+        table['DELTA'] = 0.
+        table['DELTAPRIME'] = 0.
+        table['ZDELTA'] = 0.
+    table['ZDELTA'] = table['DELTA'] / np.sqrt(table['AAF'] * (1 - table['AAF']))
+    table.sort_values(['ZDELTA'], inplace=True, ascending=False)
     table.reset_index(inplace=True, drop=True)
     table.to_csv(args.output_file, sep='\t', index=False)
 

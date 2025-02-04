@@ -45,27 +45,35 @@ def main():
 
     # Implementing the code for outlier detection in rank.py
     segs = read_ibd_file(args.input_ibd_file, header=0, include_length=0)
-    graph = make_ibd_graph(segs)
-    connected = [list(community) for community in nx.connected_components(graph)]
-    connected = sorted(connected,key=len,reverse=True)
-
-    K = floor(args.diameter / 2)
-    dia = sorted(diameter_communities(graph,K=3),key=len,reverse=True)
-    dia = [list(community) for community in dia]
-
     connected_file = args.output_connected_file
-    with open(connected_file,'w') as f:
-        for community in connected:
-            for c in community[:-1]:
-                f.write(str(c)); f.write(str(','))
-            f.write(str(community[-1])); f.write('\n')
-
     diameter_file = args.output_diameter_file
-    with open(diameter_file,'w') as f:
-        for community in dia:
-            for c in community[:-1]:
-                f.write(str(c)); f.write(str(','))
-            f.write(str(community[-1])); f.write('\n')
+
+    if len(segs) > 0:
+
+        graph = make_ibd_graph(segs)
+        connected = [list(community) for community in nx.connected_components(graph)]
+        connected = sorted(connected,key=len,reverse=True)
+
+        K = floor(args.diameter / 2)
+        dia = sorted(diameter_communities(graph,K=3),key=len,reverse=True)
+        dia = [list(community) for community in dia]
+
+        with open(connected_file,'w') as f:
+            for community in connected:
+                for c in community[:-1]:
+                    f.write(str(c)); f.write(str(','))
+                f.write(str(community[-1])); f.write('\n')
+
+        with open(diameter_file,'w') as f:
+            for community in dia:
+                for c in community[:-1]:
+                    f.write(str(c)); f.write(str(','))
+                f.write(str(community[-1])); f.write('\n')
+
+    else:
+        # when there is no IBD
+        f = open(connected_file,'w'); f.close()
+        g = open(diameter_file,'w'); g.close()
 
     return None
 
