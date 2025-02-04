@@ -55,7 +55,7 @@ if __name__ == "__main__":
     parser.add_argument('--lower_bound', type=float, default=0., help='Lower bound of filter range [a, b)')
     parser.add_argument('--upper_bound', type=float, default=2., help='Upper bound of filter range [a, b)')
     parser.add_argument('--complement', type=int, default=1, help='Complement filter range: (-inf, a) and [b, inf]')
-    parser.add_argument('--comment', type=str, default='I', help='Character denoting lines to skip')
+    parser.add_argument('--comment', type=str, default='', help='Character denoting lines to skip')
     parser.add_argument('--gzipped', type=int, default=1, help='Is the file gzipped? 0 = No, 1 = Yes')
     parser.add_argument('--splitter', type=str, default='\t', help='Character to split lines on')
     parser.add_argument('--chunksize', type=int, default=10000000, help='Number of lines per process')

@@ -32,7 +32,7 @@ parser.add_argument('--complement',
                     )
 parser.add_argument('--comment',
                     type=str,
-                    default='I',
+                    default='',
                     help='Character denoting lines to skip'
                     )
 parser.add_argument('--gzipped',
