@@ -188,7 +188,7 @@ All of the IBD clusters are in the files ``communities.csv``. Each cluster is a 
 
 .. note::
 
-   If ``NUM_OUTLIER_GROUPS`` is more than a few, ``GINI_IMPURITY`` exceeds 0.6, or ``PROP_IN_OUTLIER_GROUP`` is less than 0.10, the significant locus may not be the result of a hard sweep 
+   If ``NUM_OUTLIER_GROUPS`` is more than a few, ``GINI_IMPURITY`` exceeds 0.6, or ``PROP_IN_OUTLIER_GROUP`` is less than 0.10, the significant locus may not be the result of a hard sweep. The ``outliers.py`` method has been modified to call the largest cluster the excess IBD group if no cluster satisfies the heuristic. This behavior could explain a small ``PROP_IN_OUTLIER_GROUP`` value. This behavior may also identify haplotypes from one sweep where there may be multiple sweeps. 
 
 Description of columns in ``second.ranks.tsv.gz`` files:
 
@@ -364,14 +364,16 @@ Other considerations
 * You can use ``scripts/plotting/plot-sweep.py`` to make figures like those in Temple, Waples, and Browning (2024). The file assumes you use Gaussian-based intervals (``scripts/model/estimate-norm.py``).
 * Parameters for Mb buffer, window and haplotype sizes and steps in ``sequence.yaml`` and ``sweep.yaml`` are based on 1 cM ~~ 1 Mb. You may want to scale these accordingly if your species has a very different recombination rate.
 
-The Temple and Thompson conditions, under which the scan is asymptotically valid, are:
+.. note::
 
-1. Sample size squared large relative to population size times cM length threshold (n^2 = o(Nw))
-2. Scaled population size large relative to sample size (Nw = o(n))
+   The Temple and Thompson conditions, under which the scan is asymptotically valid, are:
 
-The Gaussian model is often reasonable whenever sample size and scaled population size are large, even if the above conditions don't hold.
+   1. Sample size squared large relative to population size times cM length threshold (n^2 = o(Nw))
+   2. Scaled population size large relative to sample size (Nw = o(n))
 
-There is a generalization of the main Temple and Thompson CLT for flexible demographic scenarios, i.e., large recent effective population sizes. 
+   The Gaussian model is often reasonable whenever sample size and scaled population size are large, even if the above conditions don't hold.
+
+   There is a generalization of the main Temple and Thompson CLT for flexible demographic scenarios, i.e., large recent effective population sizes. 
 
 Potential errors
 ##############
