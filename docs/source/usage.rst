@@ -62,7 +62,7 @@ The main selection scan figure is:
    :align: center
    :width: 600px
 
-   
+
 |
 |
 
@@ -199,6 +199,14 @@ Description of columns in ``second.ranks.tsv.gz`` files:
 * ``ZDELTA``: this value is ``AAF1`` minus ``AAF0`` divided by square root ``AAF`` times one minus ``AAF``
   
 You can use the values in this table and the notebook ``scripts/model/telltale-v2.ipynb`` to make plots like below. The decay of intermediate frequencies is good evidence of a sweep.
+
+.. image:: images/telltale-sweep.png
+   :align: center
+   :width: 600px
+
+   
+|
+|
 
 
 .. _case-control-scan:
@@ -415,17 +423,9 @@ If the mamba command does not work,
 Visualizing the workflows
 ##############
 
-These are the rule graphs made by snakemake in the order: selection scan, case-control scan, phasing and local ancestry inference.
+These are the rule graphs made by snakemake. The first plot is the selection scan. The second plot is phasing and local ancestry inference.
 
 .. image:: images/scan-selection-rulegraph.png
-   :align: center
-   :width: 600px
-
-|
-|
-
-
-.. image:: images/scan-case-control-rulegraph.png
    :align: center
    :width: 600px
 
