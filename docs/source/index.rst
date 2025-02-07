@@ -138,6 +138,8 @@ Contents
 .. toctree::
 
    usage
+   visualizing
+   misc
 
 API
 --------
