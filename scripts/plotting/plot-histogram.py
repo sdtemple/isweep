@@ -56,6 +56,12 @@ def main():
         default="COUNT",
         help="(default: COUNT) Statistic to plot."
     )
+
+    parser.add_argument('--outlier_cutoff', 
+                        type=float, 
+                        default=100, 
+                        help='(default: 1000) Scalar for the initial outlier removal'
+    )
     
     parser.add_argument(
         '--title', 
@@ -125,11 +131,15 @@ def main():
 
     # read and process input
     statistic = args.statistic
+    outlier_cutoff = args.outlier_cutoff
     chrom = args.chrom
     table = pd.read_csv(args.input_file,sep='\t')
     subtable = table[(table[args.chrom] >= args.chr_low) & 
                      (table[args.chrom] <= args.chr_high)] # control which chromosomes
     y = subtable[statistic]
+    mu = y.mean()
+    sig = y.std()
+    y = y[abs(y) < (mu + sig * outlier_cutoff)]
     z = (y - y.mean()) / y.std() # normalize
 
     plt.figure(figsize=(args.width, args.height))
