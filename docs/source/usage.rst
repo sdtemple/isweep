@@ -293,10 +293,10 @@ The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are wr
 
 .. _publication-ready-figures:
 
-Publication-read Figures
+Publication-ready Figures
 ##############
 
-Here, I provide some examples terminal commands to make publication-ready figures. The pipelines make some initial plots, but you may want to modify labels and colors. Many of the terminal options are the options in the `matplotlib` library.
+Here, I provide some examples terminal commands to make publication-ready figures. The pipelines make some initial plots, but you may want to modify labels and colors. Many of the terminal options are the options in the Python ``matplotlib`` library.
 
 This script makes figures for selection scans.
 
@@ -324,11 +324,11 @@ This script makes figures for selection scans.
 
 .. note::
 
-   If `--num_sims` is 0, no simulation-based threshold will be plotted. Any value of `--num_sims` greater than 0 will plot the simulation-based threshold in `scan.modified.ibd.tsv`.
+   If ``--num_sims`` is 0, no simulation-based threshold will be plotted. Any value of ``--num_sims`` greater than 0 will plot the simulation-based threshold in ``scan.modified.ibd.tsv``.
 
 .. note::
 
-   You could use this script, or `scripts/plotting/plot-scan.py` as a general use plotter. However, you would need be careful with the `--sample_size` and `--statistic` parameter. For instance, you could augment the `scan.case.ibd.tsv` file with a simulation-based threshold.
+   You could use this script, or ``scripts/plotting/plot-scan.py`` as a general use plotter. However, you would need be careful with the ``--sample_size`` and ``--statistic`` parameter. For instance, you could augment the `scan.case.ibd.tsv` file with a simulation-based threshold.
 
 This script makes figures for IBD mapping / case-control scans.
 
@@ -365,7 +365,11 @@ This script plots the empirical distribution of IBD rates of IBD rate difference
 
 .. note::
 
-   We reuse this plotter for the case-control scan, changing `--statistic` to `ZDIFFZ`.
+   We reuse this plotter for the case-control scan, changing ``--statistic`` to ``ZDIFFZ``.
+
+.. note::
+
+   The ``--outlier_cutoff`` option, in normally-distributed quantiles, is used to remove outliers before standardizing.
 
 This script plots autocovariance by genetic distance.
 
@@ -386,11 +390,11 @@ This script plots autocovariance by genetic distance.
 
 .. note::
 
-   If your `--input_analytical_file` is `fwer.analytical.case.tsv`, you may use `estimated-theta0:` or `estimated-theta1:` to plot results for case and control sample sets. You must also modify the `input_autocov_file` parameter.
+   If your ``--input_analytical_file`` is ``fwer.analytical.case.tsv``, you may use ``estimated-theta0:`` or ``estimated-theta1:`` to plot results for case and control sample sets. You must also modify the `input_autocov_file` parameter.
 
 .. note::
 
-   We reuse this plotter for the case-control scan, changing the `--input_autocov_file` and `--input_analytical_file`.
+   We reuse this plotter for the case-control scan, changing the ``--input_autocov_file`` and ``--input_analytical_file``.
 
 
 This script makes figures for sweep modeling.
@@ -418,17 +422,17 @@ This script makes figures for sweep modeling.
 
 The parameters are:
 
-   - `--s` estimate of selection coefficient
-   - `--su` the upper bound of selection coefficient confidence interval
-   - `--z` this corresponds to to the quantile of a N(0,1), e.g. 1.96 for 95 percent confidence intervals
-   - `--p` estimate of sweeping allele frequency
-   - `--Ne` file with estimates of population effective sizes
-   - `--standing_variation` positive selection stops once this allele frequency is reached
-   - `--genetic_model` a for additive, m for multiplicative, d for dominance, r for recessive
-   - `--nboot` number of Wright-Fisher simulations with selection
-   - `--upper_quantile` and `--lower_quantile` concern the sweep frequency intervals
-   - `--xaxis_length` is the number of generations
+   - ``--s`` estimate of selection coefficient
+   - ``--su`` the upper bound of selection coefficient confidence interval
+   - ``--z`` this corresponds to to the quantile of a N(0,1), e.g. 1.96 for 95 percent confidence intervals
+   - ``--p`` estimate of sweeping allele frequency
+   - ``--Ne`` file with estimates of population effective sizes
+   - ``--standing_variation`` positive selection stops once this allele frequency is reached
+   - ``--genetic_model`` a for additive, m for multiplicative, d for dominance, r for recessive
+   - ``--nboot`` number of Wright-Fisher simulations with selection
+   - ``--upper_quantile`` and ``--lower_quantile`` concern the sweep frequency intervals
+   - ``--xaxis_length`` is the number of generations
 
 .. note::
 
-   You should get these parameters from `summary.hap.norm.tsv` or `summary.snp.norm.tsv` files. The plotter assumes normally-distributed confidence interval, which is only reasonable when Temple and Thompson conditions hold.
+   You should get these parameters from ``summary.hap.norm.tsv`` or ``summary.snp.norm.tsv`` files. The plotter assumes normally-distributed confidence interval, which is only reasonable when Temple and Thompson conditions hold.
