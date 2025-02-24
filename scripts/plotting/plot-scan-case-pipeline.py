@@ -46,7 +46,7 @@ def main():
     parser.add_argument(
         '--statistic',
         type=str,
-        default="ZDIFF",
+        default="ZDIFFZ",
         help="(default: ZDIFFZ) Statistic to plot."
     )
     

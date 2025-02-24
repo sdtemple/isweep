@@ -290,3 +290,145 @@ The YAML example file is ``phasing-and-lai.yaml``. Most of the parameters are wr
 .. note::
 
    You can use ``run-ibdkin.sh`` (with `IBDkin <https://github.com/YingZhou001/IBDkin>`_), ``high-kinship.py``, and ``keep-one-family-member.py`` in ``scripts/pre-processing/`` to filter out close relatives, say kinship >= 0.125. These scripts are not documented, so I recommend copy and paste into an LLM and ask it what these do.
+
+.. _publication-ready-figures:
+
+Publication-read Figures
+##############
+
+Here, I provide some examples terminal commands to make publication-ready figures. The pipelines make some initial plots, but you may want to modify labels and colors. Many of the terminal options are the options in the `matplotlib` library.
+
+This script makes figures for selection scans.
+
+.. code-block:: shell
+
+   python scripts/plotting/plot-scan-pipeline.py \
+      --input_file scan.modified.ibd.tsv \
+      --output_prefix scan \
+      --sample_size 13778 \
+      --ploidy 2 \
+      --heuristic_cutoff 4. \
+      --num_sims 500 \
+      --chr_low 1 \
+      --chr_high 22 \
+      --statistic COUNT \
+      --title "TOPMed European ancestry" \
+      --xlabel "Base pair along autosomes" \
+      --ylabel "IBD rate" \
+      --rotation 90 \
+      --yupp 2e-4 \
+      --alpha 0.25 \
+      --fontsize 14 \
+      --width 12 \
+      --height 4
+
+.. note::
+
+   If `--num_sims` is 0, no simulation-based threshold will be plotted. Any value of `--num_sims` greater than 0 will plot the simulation-based threshold in `scan.modified.ibd.tsv`.
+
+.. note::
+
+   You could use this script, or `scripts/plotting/plot-scan.py` as a general use plotter. However, you would need be careful with the `--sample_size` and `--statistic` parameter. For instance, you could augment the `scan.case.ibd.tsv` file with a simulation-based threshold.
+
+This script makes figures for IBD mapping / case-control scans.
+
+.. code-block:: shell
+
+   python scripts/plotting/plot-scan-case-pipeline.py \
+      --input_file scan.case.ibd.tsv \
+      --output_prefix scan.case \
+      --chr_low 1 \
+      --chr_high 22 \
+      --statistic ZDIFFZ \
+      --title "ADSP European ancestry" \
+      --xlabel "Base pair along autosomes" \
+      --ylabel "Standardized IBD rate difference" \
+      --rotation 90 \
+      --yupp 8. \
+      --alpha 0.25 \
+      --fontsize 14 \
+      --width 12 \
+      --height 4
+
+This script plots the empirical distribution of IBD rates of IBD rate differences.
+
+.. code-block:: shell
+
+   python scripts/plotting/plot-histogram.py \
+      --input_file scan.modified.ibd.tsv \
+      --output_file histogram.png \
+      --chr_low 1 \
+      --chr_high 22 \
+      --chrom CHROM \
+      --statistic COUNT \
+      --outlier_cutoff 1000
+
+.. note::
+
+   We reuse this plotter for the case-control scan, changing `--statistic` to `ZDIFFZ`.
+
+This script plots autocovariance by genetic distance.
+
+.. code-block:: shell
+
+   python scripts/plotting/plot-autocovariance.py \
+      --input_autocov_file fwer.autocovariance.tsv \
+      --input_analytical_file fwer.analytical.tsv \
+      --output_prefix autocovariance \
+      --theta_type estimated-theta: \
+      --title "TOPMed European ancestry" \
+      --xlabel "Genetic distance (cM)" \
+      --ylabel "Autocovariance" \
+      --yupp 1.5 \
+      --color tab:blue \
+      --width 6.4 \
+      --height 4.8
+
+.. note::
+
+   If your `--input_analytical_file` is `fwer.analytical.case.tsv`, you may use `estimated-theta0:` or `estimated-theta1:` to plot results for case and control sample sets. You must also modify the `input_autocov_file` parameter.
+
+.. note::
+
+   We reuse this plotter for the case-control scan, changing the `--input_autocov_file` and `--input_analytical_file`.
+
+
+This script makes figures for sweep modeling.
+
+.. code-block:: shell
+
+   python scripts/plotting/plot-sweep.py \
+      --output_file sweep.LCT.png \
+      --s 0.03 \
+      --su 0.04 \
+      --z \
+      --p 0.70 \
+      --Ne ibdne.ne \
+      --standing_variation -0.01 \
+      --genetic_model a \
+      --ploidy 2 \
+      --nboot 1000 \
+      --upper_quantile 0.99 \
+      --lower_quantile 0.01 \
+      --xaxis_length 150 \
+      --line_color tab:blue \
+      --font_size 14 \
+      --alpha 0.25 \
+      --title "LCT gene"
+
+The parameters are:
+
+   - `--s` estimate of selection coefficient
+   - `--su` the upper bound of selection coefficient confidence interval
+   - `--z` this corresponds to to the quantile of a N(0,1), e.g. 1.96 for 95 percent confidence intervals
+   - `--p` estimate of sweeping allele frequency
+   - `--Ne` file with estimates of population effective sizes
+   - `--standing_variation` positive selection stops once this allele frequency is reached
+   - `--genetic_model` a for additive, m for multiplicative, d for dominance, r for recessive
+   - `--nboot` number of Wright-Fisher simulations with selection
+   - `--upper_quantile` and `--lower_quantile` concern the sweep frequency intervals
+   - `--xaxis_length` is the number of generations
+
+.. note::
+
+   You should get these parameters from `summary.hap.norm.tsv` or `summary.snp.norm.tsv` files. The plotter assumes normally-distributed confidence interval, which is only reasonable when Temple and Thompson conditions hold.
