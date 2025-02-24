@@ -328,7 +328,7 @@ This script makes figures for selection scans.
 
 .. note::
 
-   You could use this script, or ``scripts/plotting/plot-scan.py`` as a general use plotter. However, you would need be careful with the ``--sample_size`` and ``--statistic`` parameter. For instance, you could augment the `scan.case.ibd.tsv` file with a simulation-based threshold.
+   You could use this script, or ``scripts/plotting/plot-scan.py`` as a general use plotter. However, you would need be careful with the ``--sample_size`` and ``--statistic`` parameter. For instance, you could augment the ``scan.case.ibd.tsv`` file with a simulation-based threshold.
 
 This script makes figures for IBD mapping / case-control scans.
 
@@ -390,7 +390,7 @@ This script plots autocovariance by genetic distance.
 
 .. note::
 
-   If your ``--input_analytical_file`` is ``fwer.analytical.case.tsv``, you may use ``estimated-theta0:`` or ``estimated-theta1:`` to plot results for case and control sample sets. You must also modify the `input_autocov_file` parameter.
+   If your ``--input_analytical_file`` is ``fwer.analytical.case.tsv``, you may use ``estimated-theta0:`` or ``estimated-theta1:`` to plot results for case and control sample sets. You must also modify the ``input_autocov_file`` parameter.
 
 .. note::
 
