@@ -103,7 +103,7 @@ def main():
     n = args.sample_size
     ploidy = args.ploidy
     m = ploidy * n
-    N = m * (m - 1) / 2 - m
+    N = m * (m - 1) / 2 - n
     p_est = args.p_est
     numTracts = int(float(args.ibd_count))
 
