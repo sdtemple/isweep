@@ -85,7 +85,7 @@ For instance:
    # calculate denominator
    ploidy=2
    msamples=ploidy*nsamples
-   N=msamples*(msamples-1)/2-msamples
+   N=msamples*(msamples-1)/2-nsamples
    # simulate data
    out=simulate_ibd_isweep(
     nsamples,
