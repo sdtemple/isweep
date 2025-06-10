@@ -23,12 +23,6 @@ Here are the main functions a user might consider. I intend the users to import 
 
 .. autofunction:: isweep.coalescent.simulate_ibd_isweep_tv
 
-.. autofunction:: isweep.slow.simulate_ibd_wf
-
-.. autofunction:: isweep.slow.simulate_ibd_isweep_wf
-
-.. autofunction:: isweep.coalescent.wright_fisher
-
 .. autofunction:: isweep.coalescent.basic_coalescent
 
 .. autofunction:: isweep.coalescent.varying_Ne_coalescent

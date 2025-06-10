@@ -437,6 +437,7 @@ def binomial_pmf_leq1(k, Nei, ploidy=2):
 
 def wright_fisher(n, Ne, ploidy = 2, to_tmrca=True):
     '''Simulate times in Wright Fisher model with varying population size
+    (Assumes that all coalescences are pairwise, i.e., no multiple mergers )
     (After last generation in Ne, assume constant size
     and apply scaled basic_coalescent)
 
@@ -489,7 +490,7 @@ def wright_fisher(n, Ne, ploidy = 2, to_tmrca=True):
             gentimes[cuml:] = finish
     return gentimes[gentimes > 0]
 
-def simulate_coalgen(n, Ne, ploidy, binom_cut=0.01, to_tmrca=True):
+def simulate_coalgen(n, Ne, ploidy, binom_cut=0.01, to_tmrca=True, wf_approx=False):
     '''Simulate times in varying size population with large sample.
     Use binomial walk, Wright Fisher process, and the coalescent.
 
@@ -500,10 +501,12 @@ def simulate_coalgen(n, Ne, ploidy, binom_cut=0.01, to_tmrca=True):
     Ne : dict
         Effective population sizes
     ploidy : int
-    to_tmrca : bool
-        Go to TMRCA
     binom_cut : float
         Threshold to conduct binomial update [P(X <= 1) <= \alpha]
+    to_tmrca : bool
+        Go to TMRCA
+    wf_approx : bool
+        Use Binomial approximation for early WF process (default False)
 
     Returns
     -------
@@ -512,39 +515,49 @@ def simulate_coalgen(n, Ne, ploidy, binom_cut=0.01, to_tmrca=True):
     '''
 
     assert n > 1
-    assert binom_cut > 0
-    assert binom_cut < 1
     n = int(float(n))
-    j = n
-    Taus = np.zeros(n-1)
-    itr = min(Ne.keys()) + 1
-    k = 0
-    try: # while loop ends, i.e. condition to switch from binomial walk achieved
 
-        # binomial walk process
-        while binomial_pmf_leq1(j, Ne[itr], ploidy) <= binom_cut:
-            # i is binomial count
-            # j is nodes in wf process
-            # k is index iterating up
-            i = binomial_step(j, Ne[itr], ploidy)
-            j -= i
-            if j > 1:
-                itr += 1
-                Taus[k:(k+i)] = itr
-                k += i
-            else:
-                itr += 1
-                Taus[k:] = itr
-        Taus = Taus[Taus>0]
+    # use the Binomial approximation for WF process
+    # at the early steps of process
+    if wf_approx:
 
-        # wright fisher / coalescent process
-        # wright fisher runs a basic coalescent at end of Ne dictionary
-        sNe = {k:v for k,v in Ne.items() if k >= itr}
-        Etas = wright_fisher(j, sNe, ploidy, to_tmrca)
-        Taus = np.concatenate((Taus,Etas))
+        assert binom_cut > 0
+        assert binom_cut < 1
+        j = n
+        Taus = np.zeros(n-1)
+        itr = min(Ne.keys()) + 1
+        k = 0
 
-    except KeyError: # while loop does not end, i.e. reach end of defined Ne
-        Taus = Taus[Taus>0]
+        try: # while loop ends, i.e. condition to switch from binomial walk achieved
+
+            # binomial walk process
+            while binomial_pmf_leq1(j, Ne[itr], ploidy) <= binom_cut:
+                # i is binomial count
+                # j is nodes in wf process
+                # k is index iterating up
+                i = binomial_step(j, Ne[itr], ploidy)
+                j -= i
+                if j > 1:
+                    itr += 1
+                    Taus[k:(k+i)] = itr
+                    k += i
+                else:
+                    itr += 1
+                    Taus[k:] = itr
+            Taus = Taus[Taus>0]
+
+            # wright fisher / coalescent process
+            # wright fisher runs a basic coalescent at end of Ne dictionary
+            sNe = {k:v for k,v in Ne.items() if k >= itr}
+            Etas = wright_fisher(j, sNe, ploidy, to_tmrca)
+            Taus = np.concatenate((Taus,Etas))
+
+        except KeyError: # while loop does not end, i.e. reach end of defined Ne
+            Taus = Taus[Taus>0]
+
+    # do not use the Binomial approximation
+    else:
+        Taus = wright_fisher(n, Ne, ploidy, to_tmrca)
 
     return Taus
 
@@ -562,9 +575,9 @@ from numpy.random import exponential as Exp
 
 class DirectedPaths:
 
-    def __init__(self, _id, _pairwise_output):
-        self._left_length = np.inf
-        self._right_length = np.inf
+    def __init__(self, _id, _pairwise_output, _left_length, _right_length):
+        self._left_length = _left_length
+        self._right_length = _right_length
         self._num_leaves = 1
         self._leading_leaf = _id
         self._pairwise_output = _pairwise_output
@@ -579,11 +592,11 @@ class DirectedPaths:
 
 class Node:
 
-    def __init__(self, _id, _time, _pairwise_output):
+    def __init__(self, _id, _time, _pairwise_output, _left_length, _right_length):
         self._id = _id
         self._time = _time
         if _time <= 0:
-            self._paths_list = [DirectedPaths(_id, _pairwise_output)]
+            self._paths_list = [DirectedPaths(_id, _pairwise_output, _left_length, _right_length)]
             self._num_leaves = 1
         else:
             self._paths_list = []
@@ -600,21 +613,15 @@ class Node:
         self._num_tracts += node._num_tracts
         return None
 
-    def add_incoming_edge(self, scale, scales=True):
-        if scales: # for multiple compare
+    def add_incoming_edge(self, scale):
+        if scale != 0:
+            scale = 1 / scale
             _left_length = Exp(scale=scale, size=1)[0]
             _right_length = Exp(scale=scale, size=1)[0]
             for paths in self._paths_list:
                 paths.add_edge(_left_length, _right_length)
-        else: # for pair compare
-            if scale != 0:
-                scale = 1 / scale
-                _left_length = Exp(scale=scale, size=1)[0]
-                _right_length = Exp(scale=scale, size=1)[0]
-                for paths in self._paths_list:
-                    paths.add_edge(_left_length, _right_length)
-            else:
-                pass
+        else:
+            pass
         return None
 
     def merge(self):
@@ -650,10 +657,10 @@ class Node:
     def pair_coalesce(self, node1, node2, cutoff1, cutoff2, subgraph_id=2, record_dist=True, pairwise_output=True):
         deltas = [self._time - node1._time, self._time - node2._time]
         rates = [delta / 100 for delta in deltas]
-        node1.add_incoming_edge(rates[0], scales=False)
+        node1.add_incoming_edge(rates[0])
         node1.prune_paths(cutoff2)
         node1.merge()
-        node2.add_incoming_edge(rates[1], scales=False)
+        node2.add_incoming_edge(rates[1])
         node2.prune_paths(cutoff2)
         node2.merge()
         _num_tracts, n1, n2 = pairwise_compare(node1, node2, cutoff1, cutoff2, self._time, subgraph_id, record_dist, pairwise_output)
@@ -743,7 +750,12 @@ def two_randint(n):
         y = randint(0,n)
     return sorted([x,y])
 
-def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True, pairwise_output=True):
+def simulate_ibd(n, Ne, 
+                 long_ibd=2.0, short_ibd=1.0, ploidy=2, 
+                 record_dist=True, pairwise_output=True,
+                 left_length=np.inf, right_length=np.inf,
+                 wf_approx=False
+                 ):
     '''ibd segments from a coalescent
 
     Parameters
@@ -762,6 +774,12 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
         To save tract length and coalescent time distributions or not to (default True)
     pairwise_output : bool
         To save pairwise segments or not to (default True)
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
+    wf_approx : bool
+        Use Binomial approximation for early WF process (default False)
 
     Returns
     -------
@@ -787,17 +805,17 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
 
     # initalize
     m = ploidy*n
-    interiors = [Node(i, 0, pairwise_output) for i in range(m)]
+    interiors = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(m)]
     itr = m
 
     # simulate times
     Ne=cut_Ne(to_max_Ne(fill_Ne(Ne),500),2000)
-    times = simulate_coalgen(m, Ne, ploidy, to_tmrca=True)
+    times = simulate_coalgen(m, Ne, ploidy, to_tmrca=True, wf_approx=False)
 
     indxs = [i for i in range(m)]
     for t in times:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -822,7 +840,14 @@ def simulate_ibd(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True,
             tuple(pairwise_segments)
            )
 
-def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=True, one_step_model='a', tau0=0, sv=-0.01, ploidy=2, record_dist=True, pairwise_output=True):
+def simulate_ibd_isweep(n, s, p0, Ne, 
+                        long_ibd=2.0, short_ibd=1.0, 
+                        random_walk=True, one_step_model='a', 
+                        tau0=0, sv=-0.01, ploidy=2, 
+                        record_dist=True, pairwise_output=True,
+                        left_length=np.inf, right_length=np.inf,
+                        wf_approx=False
+                        ):
     '''ibd segments from a coalescent with selection
 
     Parameters
@@ -852,6 +877,12 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
         To save tract length and coalescent time distributions or not to (default True)
     pairwise_output : bool
         To save pairwise segments or not to (default True)
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
+    wf_approx : bool
+        Use Binomial approximation for early WF process (default False)
 
     Returns
     -------
@@ -895,7 +926,10 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
                            short_ibd,
                            ploidy,
                            record_dist, 
-                           pairwise_output
+                           pairwise_output,
+                           left_length,
+                           right_length,
+                           wf_approx
                           )
         # numpy-ify
         return (out,
@@ -919,9 +953,9 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
     N0 = {i:N0[i] for i in range(len(N0))}
 
     # arrival times
-    times1 = simulate_coalgen(n1, N1, ploidy, to_tmrca=False)
-    interiors1 = [Node(i, 0, pairwise_output) for i in range(n1)]
-    interiors0 = [Node(i, 0, pairwise_output) for i in range(n1,n1+n0)]
+    times1 = simulate_coalgen(n1, N1, ploidy, to_tmrca=False, wf_approx=False)
+    interiors1 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1)]
+    interiors0 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1,n1+n0)]
 
     # pairwise comparisons pop 1
     m = n1
@@ -929,7 +963,7 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
     itr = n1 + n0
     for t in times1:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -948,12 +982,12 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
     maxt1=max([node._time for node in interiors1])
     N00 = {key:val for key,val in N0.items() if key <= maxt1}
     N01 = {key:val for key,val in N0.items() if key > maxt1}
-    times0 = simulate_coalgen(n0, N00, ploidy, to_tmrca=False)
+    times0 = simulate_coalgen(n0, N00, ploidy, to_tmrca=False, wf_approx=False)
     m = n0
     indxs = [i for i in range(m)]
     for t in times0:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -977,10 +1011,10 @@ def simulate_ibd_isweep(n, s, p0, Ne, long_ibd=2.0, short_ibd=1.0, random_walk=T
     m = len(interiors)
     indxs = [i for i in range(m)]
     if len(N01.keys()) > 0:
-        times2 = simulate_coalgen(m, N01, ploidy, to_tmrca=True)
+        times2 = simulate_coalgen(m, N01, ploidy, to_tmrca=True, wf_approx=False)
         for t in times2:
             m -= 1
-            new_node = Node(itr, t, pairwise_output)
+            new_node = Node(itr, t, pairwise_output, left_length, right_length)
             sindx = sorted(two_randint(m))
             s1 = sindx[0]
             s2 = sindx[1]
@@ -1244,7 +1278,12 @@ def probability_ibd_isweep(s, p0, Ne, long_ibd = 2, one_step_model = 'a', tau0 =
 
 ### for asymptotic tests ###
 
-def simulate_ibd_constant(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_dist=True, pairwise_output=True):
+def simulate_ibd_constant(n, Ne, 
+                          long_ibd=2.0, short_ibd=1.0, 
+                          ploidy=2, 
+                          record_dist=True, pairwise_output=True,
+                          left_length=np.inf, right_length=np.inf
+                          ):
     '''ibd segments from a coalescent w/ constant Ne
 
     Parameters
@@ -1261,6 +1300,10 @@ def simulate_ibd_constant(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_d
         To save tract length and coalescent time distributions or not to (default True)
     pairwise_output : bool
         To save pairwise segments or not to (default True)
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
 
     Returns
     -------
@@ -1286,7 +1329,7 @@ def simulate_ibd_constant(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_d
 
     # initalize
     m = ploidy*n
-    interiors = [Node(i, 0, pairwise_output) for i in range(m)]
+    interiors = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(m)]
     itr = m
 
     # this is the simple change
@@ -1296,7 +1339,7 @@ def simulate_ibd_constant(n, Ne, long_ibd=2.0, short_ibd=1.0, ploidy=2, record_d
     indxs = [i for i in range(m)]
     for t in times:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -1561,7 +1604,9 @@ def simulate_ibd_isweep_tv(n,
                            random_walk=True, 
                            ploidy=2, 
                            record_dist=True, 
-                           pairwise_output=True
+                           pairwise_output=True,
+                           left_length=np.inf, right_length=np.inf,
+                           wf_approx=False
                            ):
     '''ibd segments from a coalescent with selection
 
@@ -1591,6 +1636,12 @@ def simulate_ibd_isweep_tv(n,
         To save tract length and coalescent time distributions or not to (default True)
     pairwise_output : bool
         To save pairwise segments or not to (default True)
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
+    wf_approx : bool
+        Use Binomial approximation for early WF process (default False)
 
     Returns
     -------
@@ -1630,7 +1681,10 @@ def simulate_ibd_isweep_tv(n,
                            short_ibd,
                            ploidy,
                            record_dist, 
-                           pairwise_output
+                           pairwise_output,
+                           left_length,
+                           right_length,
+                           wf_approx
                           )
         # numpy-ify
         return (out,
@@ -1654,9 +1708,9 @@ def simulate_ibd_isweep_tv(n,
     N0 = {i:N0[i] for i in range(len(N0))}
 
     # arrival times
-    times1 = simulate_coalgen(n1, N1, ploidy, to_tmrca=False)
-    interiors1 = [Node(i, 0, pairwise_output) for i in range(n1)]
-    interiors0 = [Node(i, 0, pairwise_output) for i in range(n1,n1+n0)]
+    times1 = simulate_coalgen(n1, N1, ploidy, to_tmrca=False, wf_approx=False)
+    interiors1 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1)]
+    interiors0 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1,n1+n0)]
 
     # pairwise comparisons pop 1
     m = n1
@@ -1664,7 +1718,7 @@ def simulate_ibd_isweep_tv(n,
     itr = n1 + n0
     for t in times1:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -1683,12 +1737,12 @@ def simulate_ibd_isweep_tv(n,
     maxt1=max([node._time for node in interiors1])
     N00 = {key:val for key,val in N0.items() if key <= maxt1}
     N01 = {key:val for key,val in N0.items() if key > maxt1}
-    times0 = simulate_coalgen(n0, N00, ploidy, to_tmrca=False)
+    times0 = simulate_coalgen(n0, N00, ploidy, to_tmrca=False, wf_approx=False)
     m = n0
     indxs = [i for i in range(m)]
     for t in times0:
         m -= 1
-        new_node = Node(itr, t, pairwise_output)
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
         sindx = sorted(two_randint(m))
         s1 = sindx[0]
         s2 = sindx[1]
@@ -1712,10 +1766,10 @@ def simulate_ibd_isweep_tv(n,
     m = len(interiors)
     indxs = [i for i in range(m)]
     if len(N01.keys()) > 0:
-        times2 = simulate_coalgen(m, N01, ploidy, to_tmrca=True)
+        times2 = simulate_coalgen(m, N01, ploidy, to_tmrca=True, wf_approx=False)
         for t in times2:
             m -= 1
-            new_node = Node(itr, t, pairwise_output)
+            new_node = Node(itr, t, pairwise_output, left_length, right_length)
             sindx = sorted(two_randint(m))
             s1 = sindx[0]
             s2 = sindx[1]

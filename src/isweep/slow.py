@@ -28,9 +28,9 @@ def two_randint(n):
 
 class WfDirectedPaths:
 
-    def __init__(self, _id):
-        self._left_length = np.inf
-        self._right_length = np.inf
+    def __init__(self, _id, _left_length, _right_length):
+        self._left_length = _left_length
+        self._right_length = _right_length
         self._num_leaves = 1
         self._leading_leaf = _id
         return None
@@ -42,11 +42,11 @@ class WfDirectedPaths:
 
 class WfNode:
 
-    def __init__(self, _id, _time):
+    def __init__(self, _id, _time, _left_length, _right_length):
         self._id = _id
         self._time = _time
         if _time <= 0:
-            self._paths_list = [WfDirectedPaths(_id)]
+            self._paths_list = [WfDirectedPaths(_id, _left_length, _right_length)]
             self._num_leaves = 1
         else:
             self._paths_list = []
@@ -150,7 +150,10 @@ def wf_pairwise_compare(node1, node2, cutoff1, cutoff2):
                     _num_tracts += density
     return _num_tracts, node1, node2
 
-def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
+def simulate_ibd_wf(n, Ne, 
+                    ibd_min_span=2.0, ibs_min_span=1.0,
+                    left_length=np.inf, right_length=np.inf
+                    ):
     '''ibd segments from a wright fisher process (slower but exact)
 
     Parameters
@@ -163,11 +166,15 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
         cM length threshold
     ibs_min_span : float
         cM length threshold
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
 
     Returns
     -------
-    list
-        Objects of Node class
+    tuple
+        (Number of detected IBD segments, Size of largest IBD cluster)
     '''
 
     # initialize graph network
@@ -176,7 +183,7 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
 
     # initalize
     n = int(float(n))
-    interiors = [WfNode(i, 0) for i in range(n)]
+    interiors = [WfNode(i, 0, left_length, right_length) for i in range(n)]
     itr = n
     timer = 1
     end = max(Ne.keys())
@@ -196,7 +203,7 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
         for merge in events:
             # incoporate incoming node data into next level interior node
             itr += 1
-            new_node = WfNode(itr, timer)
+            new_node = WfNode(itr, timer, left_length, right_length)
             nodes = []
             for i in merge:
                 nodes.append(interiors[i])
@@ -216,7 +223,11 @@ def simulate_ibd_wf(n, Ne, ibd_min_span=2.0, ibs_min_span=1.0):
 
     return numTracts, maxIbdGroup
 
-def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, random = True, model = 'm', tau0 = 0, ploidy = 2):
+def simulate_ibd_isweep_wf(n, s, p0, Ne, 
+                           ibd_min_span = 2, ibs_min_span = 1.0, 
+                           random = True, model = 'm', tau0 = 0, ploidy = 2,
+                           left_length=np.inf, right_length=np.inf
+                           ):
     '''ibd segments from a wright fisher process with selection (slower but exact)
 
     Parameters
@@ -241,11 +252,15 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
         Generation when neutrality begins
     ploidy : int
         Assume diploid
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
 
     Returns
     -------
-    int
-        Count of ibd segments
+    tuple
+        (Number of detected IBD segments, Size of largest IBD cluster, Number of detected IBD segments with different alleles)
     '''
 
     # local function
@@ -297,7 +312,7 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
     timer = 1
     end = max(N1.keys())
     itr = n1
-    interiors1 = [WfNode(i, 0) for i in range(n1)]
+    interiors1 = [WfNode(i, 0, left_length, right_length) for i in range(n1)]
     while timer <= end:
         # record coalescent events
         size = N1[timer]
@@ -314,7 +329,7 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
         for merge in events:
             # incoporate incoming node data into next level interior node
             itr += 1
-            new_node = WfNode(itr, timer)
+            new_node = WfNode(itr, timer, left_length, right_length)
             nodes = []
             for i in merge:
                 nodes.append(interiors1[i])
@@ -334,7 +349,7 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
     # population 0
     timer = 1
     itr += 1
-    interiors0 = [WfNode(i, 0) for i in range(itr, itr + n0)]
+    interiors0 = [WfNode(i, 0, left_length, right_length) for i in range(itr, itr + n0)]
     itr += n0
     while timer <= end:
         # record coalescent events
@@ -352,7 +367,7 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
         for merge in events:
             # incoporate incoming node data into next level interior node
             itr += 1
-            new_node = WfNode(itr, timer)
+            new_node = WfNode(itr, timer, left_length, right_length)
             nodes = []
             for i in merge:
                 nodes.append(interiors0[i])
@@ -389,7 +404,7 @@ def simulate_ibd_isweep_wf(n, s, p0, Ne, ibd_min_span = 2, ibs_min_span = 1.0, r
         for merge in events:
             # incoporate incoming node data into next level interior node
             itr += 1
-            new_node = WfNode(itr, timer)
+            new_node = WfNode(itr, timer, left_length, right_length)
             nodes = []
             for i in merge:
                 nodes.append(interiors[i])

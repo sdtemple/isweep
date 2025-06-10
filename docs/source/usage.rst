@@ -137,7 +137,7 @@ The recipe YAML file to modify is ``sweep.yaml``. There is a hierarchy of ``chan
 
 The main command is 
 
-.. code-bloack:: shell
+.. code-block:: shell
 
    nohup snakemake -s Snakefile-roi.smk [...] --cluster "sbatch [...]" --jobs XX --configfile sweep.yaml
 
