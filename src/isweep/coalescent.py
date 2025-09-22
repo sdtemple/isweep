@@ -1791,3 +1791,178 @@ def simulate_ibd_isweep_tv(n,
             tuple(pairwise_segments)
            )
 
+def simulate_ibd_split(n, q, split_gen, Ne, 
+                        long_ibd=2.0, short_ibd=1.0, ploidy=2, 
+                        record_dist=True, pairwise_output=True,
+                        left_length=np.inf, right_length=np.inf,
+                        wf_approx=False
+                        ):
+    '''ibd segments from a coalescent with selection
+
+    Parameters
+    ----------
+    n : int
+        Sample size (individuals)
+    q : float
+        Split proportion
+    split_gen : int
+        Time ago of the population split 
+    Ne : dict
+        Effective population sizes
+    long_ibd, short_ibd : float
+        cM length threshold
+    ploidy : int
+        1 for haploid or 2 for diploid
+    record_dist : bool
+        To save tract length and coalescent time distributions or not to (default True)
+    pairwise_output : bool
+        To save pairwise segments or not to (default True)
+    left_length : float
+        Distance to the left chromosome end (default numpy.inf)
+    right_length : float
+        Distance to the right chromosome end (default numpy.inf)
+    wf_approx : bool
+        Use Binomial approximation for early WF process (default False)
+
+    Returns
+    -------
+    tuple(s)
+        (all, first admix allele, second admix allele) then pairwise segments
+        Each tuple is (number of tracts, group sizes, length distr., time distr., count distr.)
+    '''
+
+    p0 = q
+    assert ploidy in [1,2]
+    assert long_ibd > 0
+    assert short_ibd > 0
+    assert long_ibd >= short_ibd
+    assert p0 <= 1
+    assert p0 >= 0
+    split_gen = int(float(split_gen))
+
+    global H, H1, H0, ldist, ldist1, ldist0, tdist1, tdist0, tdist, ddist1, ddist0, ddist
+    global pairwise_segments
+    pairwise_segments = []
+    H1 = nx.Graph()
+    H0 = nx.Graph()
+    ldist1 = []
+    ldist0 = []
+    tdist1 = []
+    tdist0 = []
+    ddist1 = []
+    ddist0 = []
+
+    # renaming
+    p = p0
+    Ne = cut_Ne(to_max_Ne(fill_Ne(Ne),500),2000)
+
+    # should p0 be fixed
+    if (p0 == 0) or (p0 == 1):
+        out = simulate_ibd(n, Ne,
+                           long_ibd, 
+                           short_ibd,
+                           ploidy,
+                           record_dist, 
+                           pairwise_output,
+                           left_length,
+                           right_length,
+                           wf_approx
+                          )
+        # numpy-ify
+        return (out,
+                (np.nan,np.array([]),np.array([]),np.array([]),np.array([])),
+                (np.nan,np.array([]),np.array([]),np.array([]),np.array([])),
+                tuple(pairwise_segments)
+               )
+
+    # calculating structured demographies
+    n = int(float(n))
+    n = n * ploidy
+    G = max(Ne.keys())
+    n1 = floor(n * p0)
+    n0 = n - n1
+    N1 = {i:floor(Ne[i]*p0) for i in range(split_gen)}
+    N00 = {i:(Ne[i]-N1[i]) for i in range(split_gen)}
+    N01 = {i:Ne[i] for i in range(split_gen, G+1)}
+
+    # arrival times
+    times1 = simulate_coalgen(n1, N1, ploidy, to_tmrca=False, wf_approx=False)
+    interiors1 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1)]
+    interiors0 = [Node(i, 0, pairwise_output, left_length, right_length) for i in range(n1,n1+n0)]
+
+    # pairwise comparisons pop 1
+    m = n1
+    indxs = [i for i in range(m)]
+    itr = n1 + n0
+    for t in times1:
+        m -= 1
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
+        sindx = sorted(two_randint(m))
+        s1 = sindx[0]
+        s2 = sindx[1]
+        new_node.pair_coalesce(interiors1[s1], interiors1[s2], long_ibd, short_ibd, 1, record_dist, pairwise_output)
+        interiors1.append(new_node)
+        interiors1.pop(s1)
+        interiors1.pop(s2-1)
+        indxs.pop(s1)
+        indxs.pop(s2-1)
+        indxs.append(itr)
+        itr += 1
+    numTracts1 = sum([node._num_tracts for node in interiors1])
+    ibdGroupSizes1 = sorted([len(c) for c in nx.connected_components(H1)],reverse=True)
+
+    # pairwise comparisons p0
+    maxt1=max([node._time for node in interiors1])
+    times0 = simulate_coalgen(n0, N00, ploidy, to_tmrca=False, wf_approx=False)
+    m = n0
+    indxs = [i for i in range(m)]
+    for t in times0:
+        m -= 1
+        new_node = Node(itr, t, pairwise_output, left_length, right_length)
+        sindx = sorted(two_randint(m))
+        s1 = sindx[0]
+        s2 = sindx[1]
+        new_node.pair_coalesce(interiors0[s1], interiors0[s2], long_ibd, short_ibd, 0, record_dist, pairwise_output)
+        interiors0.append(new_node)
+        interiors0.pop(s1)
+        interiors0.pop(s2-1)
+        indxs.pop(s1)
+        indxs.pop(s2-1)
+        indxs.append(itr)
+        itr += 1
+    numTracts0 = sum([node._num_tracts for node in interiors0])
+    ibdGroupSizes0 = sorted([len(c) for c in nx.connected_components(H0)],reverse=True)
+
+    # arrival times, pairwise comparisons to TMRCA
+    H = nx.compose(H1,H0)
+    ldist = [*ldist1, *ldist0]
+    tdist = [*tdist1, *tdist0]
+    ddist = [*ddist1, *ddist0]
+    interiors = interiors1 + interiors0
+    m = len(interiors)
+    indxs = [i for i in range(m)]
+    if len(N01.keys()) > 0:
+        times2 = simulate_coalgen(m, N01, ploidy, to_tmrca=True, wf_approx=False)
+        for t in times2:
+            m -= 1
+            new_node = Node(itr, t, pairwise_output, left_length, right_length)
+            sindx = sorted(two_randint(m))
+            s1 = sindx[0]
+            s2 = sindx[1]
+            new_node.pair_coalesce(interiors[s1], interiors[s2], long_ibd, short_ibd, 2, record_dist, pairwise_output)
+            interiors.append(new_node)
+            interiors.pop(s1)
+            interiors.pop(s2-1)
+            indxs.pop(s1)
+            indxs.pop(s2-1)
+            indxs.append(itr)
+            itr += 1
+    numTracts = sum([node._num_tracts for node in interiors])
+    ibdGroupSizes = sorted([len(c) for c in nx.connected_components(H)],reverse=True)
+
+    # numpy-ify
+    return ((numTracts,np.array(ibdGroupSizes),np.array(ldist),np.array(tdist),np.array(ddist)),
+            (numTracts1,np.array(ibdGroupSizes1),np.array(ldist1),np.array(tdist1),np.array(ddist1)),
+            (numTracts0,np.array(ibdGroupSizes0),np.array(ldist0),np.array(tdist0),np.array(ddist0)),
+            tuple(pairwise_segments)
+           )

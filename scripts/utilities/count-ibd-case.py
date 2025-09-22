@@ -84,7 +84,6 @@ with open(casefile) as f:
 for table in pd.read_csv(input_file, sep='\t', chunksize=chunksize):
 
     # Input and formatting
-    table = pd.read_csv(input_file, sep='\t')
     columns = list(table.columns)
     encol = columns[end]
     stcol = columns[start]
