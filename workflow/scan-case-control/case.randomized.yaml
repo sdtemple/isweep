@@ -1,0 +1,48 @@
+# Change these parameters, which mostly
+# concern the location of files.
+change:
+
+  # Where data is to be output
+  # and where existing data are
+  files:
+    # folder for analysis
+    study: '/path-to-study/sequence-data'
+    # the yaml file with scan analysis options
+    yaml: 'this-file.yaml'
+    # lowest chromosome number
+    chromosome_low: '1'
+    # highest chromosome numbers
+    chromosome_high: '22'
+    # Tab-separated file
+    # First column is sample IDs
+    # Second column is binary phenotype
+    cases: 'phenotypes.txt'
+
+  xmx_mem: '60'
+
+  # Main method parameters
+  isweep:
+    # Warning: this parameter should be the same
+    # as you used in the selection scan.
+    step_size_cm: '0.05' # in cM (step size)
+    # Warning: this parameter should be the same
+    # as you used in the selection scan.
+    scan_cutoff: '2.0'
+    confidence_level: '0.05'
+    num_sims: '500' # simulations to derive OU threshold
+    num_randomized: '200' # number of randomizations of case/control
+
+# We recommend against adjusting these parameters.
+fixed:
+
+  isweep:
+    # scanning parameters
+    cm_gap: '0.5' # cM gap when concatenating regions of excess IBD
+    outlier_cutoff: '4.0' # sigma scalar to remove telomeres
+    covered_cm_region: '0.25' # excess ibd rate must extend this long in cM
+    small_cm_region: '2.0' # region is extended w/ buffer if too small
+    mega_base_buffer: '2' # mb buffer if cm not long enough
+    auto_covariance_length: '4.' # in cM, how much data to learn autocovariance
+
+
+
