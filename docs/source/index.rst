@@ -122,7 +122,7 @@ This software and its methods are the basis of six publications.
 * `Central limit theorems <https://www.biorxiv.org/content/10.1101/2024.06.05.597656v2>`_
 * `Thesis on recent positive selection <https://www.proquest.com/docview/3105584569>`_
 * `Multiple testing in selection scan <https://www.biorxiv.org/content/10.1101/2025.01.29.635528v1>`_
-* TBD (Multiple testing in case-control scan)
+* `Multiple testing in case-control scan <https://www.biorxiv.org/content/10.1101/2025.07.03.663057v1>`_
 
 The software `Beagle <https://faculty.washington.edu/browning/beagle/beagle.html>`_, `ibd-ends <https://github.com/browning-lab/ibd-ends/>`_, `hap-ibd <https://github.com/browning-lab/hap-ibd>`_, and `flare <https://github.com/browning-lab/flare>`_ are also used and should be cited.
 
