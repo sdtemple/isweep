@@ -223,7 +223,7 @@ rule randomization_method:
     input:
         [macro+'/ibdsegs/ibdends/scan/chr'+str(i)+'.ibd.gz' for i in chroms2],
     output:
-        sims=macro+'/fwer.randomized.ibd.tsv',
+        sims=macro+'/fwer.randomized.case.txt',
         scan=macro+'/scan.randomized.ibd.tsv',
     params:
        chrlow=str(chrlow),
