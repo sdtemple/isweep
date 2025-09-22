@@ -241,7 +241,7 @@ rule randomization_method:
         """
         python ../../scripts/scan/scan-randomized.py \
             --output_scan_file {output.scan} \
-            --output_sims_file {params.sims} \
+            --output_sims_file {output.sims} \
             --num_randomizations {params.numrand} \
             --input_case_file {params.cases} \
             --input_map_prefix {params.pre2}\
