@@ -203,7 +203,7 @@ for _ in range(num_randomizations):
     shuffle(sample_ids)
     casedict = dict()
     for line in range(sample_num):
-        casedict[sample_ids[line]] = pheno[line]
+        casedict[str(sample_ids[line])] = pheno[line]
 
     copied_data = deepcopy(copy_data)
     final_goodbyes = []
@@ -236,7 +236,6 @@ for _ in range(num_randomizations):
                 ind2col = columns[ind2]
                 chunk[ind1col] = chunk[ind1col].astype(str)
                 chunk[ind2col] = chunk[ind2col].astype(str)
-                # print(chunk.head())
 
                 # Map case status to individuals
                 chunk['case1'] = chunk[ind1col].map(casedict)
@@ -331,12 +330,6 @@ for _ in range(num_randomizations):
                 # difference process
                 xs1 = xs[seq1-1]  # Adjusting index to 0-based for Python
                 xs2 = xs[seq2-1]
-                # control process
-                us1 = zs0[seq1-1]  # Adjusting index to 0-based for Python
-                us2 = zs0[seq2-1]
-                # case process
-                vs1 = zs1[seq1-1]  # Adjusting index to 0-based for Python
-                vs2 = zs1[seq2-1]
                 ln = len(xs1)
                 # ignore the outliers
                 bools = [ys1[x]<upper1 
@@ -355,10 +348,6 @@ for _ in range(num_randomizations):
                         ]
                 xs1 = xs1[bools]
                 xs2 = xs2[bools]
-                us1 = us1[bools]
-                us2 = us2[bools]
-                vs1 = vs1[bools]
-                vs2 = vs2[bools]
                 # calculate the covariance
                 covs.append(np.cov(xs1, xs2)[0, 1])
                 byes.append(bye)
