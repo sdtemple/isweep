@@ -33,14 +33,14 @@ def main():
         '--sample_size', 
         type=int,
         required=True, 
-        help="Sample size. Try 1 if not dividing by a count variable."
+        help="Sample size."
     )
 
     parser.add_argument(
         '--ploidy', 
         type=int,
         default=2, 
-        help="(default: 2) Ploidy number"
+        help="(default: 2) Ploidy number. Try 3 if not dividing by a count variable"
     )
 
     parser.add_argument(
