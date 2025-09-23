@@ -248,7 +248,7 @@ The outputs have the same nomenclature as in the selection scan workflow, but ``
 
 .. note::
 
-   The randomization test is not a valid way to get the genome-wide significance threshold if there are true positive signals or loci under strong selection. You can identify confounding in the output `scan.randomized.ibd.tsv` file if there are loci significant in many runs of randomized phenotypes. 
+   The randomization test is not a valid way to get the genome-wide significance threshold if there are true positive signals or loci under strong selection. You can identify confounding in the output ``scan.randomized.ibd.tsv`` file if there are loci significant in many runs of randomized phenotypes. 
 
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
