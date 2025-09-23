@@ -246,6 +246,10 @@ The outputs have the same nomenclature as in the selection scan workflow, but ``
 
    There is a version with a randomization test using ``Snakefile-case-randomized.smk`` and ``case.randomized.yaml`` as the template YAML containing a parameter ``num_randomized``. This could be computationally intensive in enormous human biobanks.
 
+.. note::
+
+   The randomization test is not a valid way to get the genome-wide significance threshold if there are true positive signals or loci under strong selection. You can identify confounding in the output `scan.randomized.ibd.tsv` file if there are loci significant in many runs of randomized phenotypes. 
+
 You can try to detect clusters of cases or controls with excess IBD sharing GW significant loci using ``Snakefile-case-roi.smk`` and the template ``--configfile case.roi.yaml``. 
 
 The output to this feature will be a tab-separated file with sample haplotype IDs, their binary phenotype, and indicators if they are in excess IBD sharing groups (``matrix.outlier.phenotypes.tsv`` for each hit). An example of this file is ``design.sorted.tsv``. You could perform regression analyses on these dataframes. Scripts ``scripts/utilities/fake-phenotypes-*.py`` can be used for testing and evaluating confounding from strong recent selection.
