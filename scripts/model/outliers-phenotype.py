@@ -92,12 +92,13 @@ def main():
         communities2 = deepcopy(communities)
         communities2 = sorted(communities2, key=len, reverse=True) 
         communities2 = [list(c) for c in communities2]
-        community_sizes = [len(community) for community in communities]
+        community_sizes = [len(community) for community in communities2]
         community_sizes = np.array(community_sizes)
         try:
             cutoff = community_sizes.mean() + community_sizes.std() * scalar
             idx = 1
-            for community in communities:
+            for community in communities2:
+                # write all outlier communities
                 if len(community) >= cutoff:
                     with open(f"{folderout}/outlier{idx}.phenotype.tsv", 'w') as f:
                         for haplo in community:
@@ -106,6 +107,7 @@ def main():
                             f.write(str(phen[haplo[:-2]]))
                             f.write('\n')
                     idx += 1
+            # write the largest community if there are no outliers
             if idx == 1:
                 with open(f"{folderout}/outlier{idx}.phenotype.tsv", 'w') as f:
                     for haplo in communities2[0]:
@@ -113,6 +115,7 @@ def main():
                         f.write('\t')
                         f.write(str(phen[haplo[:-2]]))
                         f.write('\n')
+            # write out all the groups no matter if outlier or not
             with open(f"{folderout}/communities.phenotype.csv",'w') as f:
                 for community in communities2:
                     for haplo in community[:-1]:

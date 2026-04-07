@@ -17,14 +17,6 @@ mlecut=str(config['fixed']['isweep']['mle_cutoff'])
 nbootnorm=str(config['fixed']['isweep']['num_bootstraps_normal'])
 nbootperc=str(config['fixed']['isweep']['num_bootstraps_percentile'])
 
-# sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
-# J = sims.shape[0]
-# for j in range(J):
-# 	row = sims.iloc[j]
-# 	if not os.path.exists(macro+'/'+str(row.NAME)):
-# 		os.mkdir(macro+'/'+str(row.NAME))
-# sims['FOLDER'] = [(macro +'/'+str(sims.iloc[j].NAME)).strip() for j in range(J)]
-
 # extend Ne(t)
 rule third_Ne:
     input:

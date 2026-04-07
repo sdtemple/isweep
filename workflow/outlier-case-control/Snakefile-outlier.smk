@@ -12,9 +12,13 @@ folder_name = macro
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 if not os.path.exists(macro+'/'+micro):
-    shutil.copy(micro,macro+'/'+micro)
+    # for if the ROI are not already in existing folder
+    shutil.copy(micro,macro+'/roi.outlier.tsv')
+else:
+    # if ROI file already exists in the existing folder
+    shutil.copy(macro+'/'+micro,macro+'/roi.outlier.tsv')
 
-sims = pd.read_csv(macro+'/'+micro, sep='\t', header=0)
+sims = pd.read_csv(macro+'/roi.outlier.tsv', sep='\t', header=0)
 J = sims.shape[0]
 for j in range(J):
 	row = sims.iloc[j]
@@ -59,7 +63,7 @@ for i in range(low,high+1):
         shutil.copy(source_file, destination_file)
 
 cases=str(config['change']['files']['cases'])
-file_name = macro + '/phenotypes.txt'
+file_name = macro + '/phenotypes.roi.txt'
 shutil.copy(cases, file_name)
 
 localrules: all
@@ -81,11 +85,14 @@ rule all:
 
 # some inputs, string managements, count sample size
 subsamplefile=cases
-cohort=str(config['change']['files']['study'])
 samplesize=0
+g = open(macro+'/subsample.roi.txt','w')
 with open(subsamplefile,'r') as f:
     for line in f:
         samplesize+=1
+        item = line.strip().split('\t')[0]
+        g.write(str(item)); g.write('\n')
+g.close()
 ploidy=int(float(config['change']['ploidy']))
 maf3=float(config['fixed']['hap_ibd']['min_minor_allele_frequency'])
 mac3=int(ploidy*samplesize*maf3)
@@ -94,7 +101,7 @@ mac3=int(ploidy*samplesize*maf3)
 rule first_region: # focus vcf on region of interest
     input:
         locus='{cohort}/{hit}/locus.case.txt',
-        subsample="{cohort}/subsample.txt",
+        subsample="{cohort}/subsample.roi.txt",
     output:
         subvcf='{cohort}/{hit}/narrowing.case.vcf.gz',
     params:

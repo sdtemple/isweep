@@ -45,7 +45,8 @@ numnodes = np.array(numnodes)
 propnodes = numnodes / sum(numnodes)
 entropy = -sum(propnodes * np.log10(propnodes))
 gini = 1 - sum(propnodes * propnodes)
-print(entropy)
+print(f'Entropy (log10): {entropy}')
+print(f'Gini impurity: {gini}')
 
 # write statistics
 with open(fileout, 'w') as f:
@@ -60,7 +61,7 @@ with open(fileout, 'w') as f:
     ]
     for j in range(len(statistics)):
         # scenario in which there is no IBD
-        if numnodes <= 0:
+        if numnode <= 0:
             statistics[j] = -99999.
     for statistic in statistics[:-1]:
         f.write(f"{statistic}\t")
