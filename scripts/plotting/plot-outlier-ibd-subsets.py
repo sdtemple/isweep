@@ -134,6 +134,22 @@ def main():
         if table.shape[0] == 0:
             continue
 
+        pheno_counts_text = ''
+        if all(col in table.columns for col in ['IND1', 'IND2', 'PHENO1', 'PHENO2']):
+            individuals = pd.concat(
+                [
+                    table[['IND1', 'PHENO1']].rename({'IND1': 'IND', 'PHENO1': 'PHENO'}, axis=1),
+                    table[['IND2', 'PHENO2']].rename({'IND2': 'IND', 'PHENO2': 'PHENO'}, axis=1),
+                ],
+                ignore_index=True,
+            )
+            individuals = individuals.drop_duplicates(subset=['IND'])
+            counts = individuals['PHENO'].value_counts(dropna=False)
+            lines = ['Phenotype']
+            for k, v in counts.items():
+                lines.append(f'{k}: {int(v)}')
+            pheno_counts_text = '\n'.join(lines)
+
         chrom_values = pd.unique(table['CHROM'].dropna())
         if len(chrom_values) != 1:
             raise ValueError(
@@ -145,15 +161,6 @@ def main():
         n = min(args.sample_size, table.shape[0])
         sampled = table.sample(n=n, replace=False, random_state=args.random_seed).copy()
         sampled.reset_index(drop=True, inplace=True)
-
-        pheno_counts_text = ''
-        if ('PHENO1' in sampled.columns) and ('PHENO2' in sampled.columns):
-            all_phenos = pd.concat([sampled['PHENO1'], sampled['PHENO2']], ignore_index=True)
-            counts = all_phenos.value_counts(dropna=False)
-            lines = ['Phenotype']
-            for k, v in counts.items():
-                lines.append(f'{k}: {int(v)}')
-            pheno_counts_text = '\n'.join(lines)
 
         left_min = float(sampled['LEFT'].min())
         right_max = float(sampled['RIGHT'].max())
