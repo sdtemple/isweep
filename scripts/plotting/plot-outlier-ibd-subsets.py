@@ -159,6 +159,7 @@ def main():
         chrom = str(chrom_values[0])
 
         n = min(args.sample_size, table.shape[0])
+        total_segments = int(table.shape[0])
         sampled = table.sample(n=n, replace=False, random_state=args.random_seed).copy()
         sampled.reset_index(drop=True, inplace=True)
 
@@ -180,7 +181,10 @@ def main():
             linewidth=args.segment_linewidth,
         )
         plt.axvline(center, color='tab:red', linestyle='--', linewidth=1.25)
-        plt.title(f'Outlier {idx} (n={n} sampled)', fontsize=args.label_fontsize)
+        plt.title(
+            f'Outlier {idx} ({n} sampled out of {total_segments} segments)',
+            fontsize=args.label_fontsize,
+        )
         plt.xlabel(f'Chromosome {chrom}', fontsize=args.label_fontsize)
         plt.ylabel('Haplotype pairs', fontsize=args.label_fontsize)
         plt.yticks([])
