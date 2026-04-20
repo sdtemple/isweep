@@ -145,10 +145,12 @@ def main():
             )
             individuals = individuals.drop_duplicates(subset=['IND'])
             counts = individuals['PHENO'].value_counts(dropna=False)
-            lines = ['Phenotype']
-            for k, v in counts.items():
-                lines.append(f'{k}: {int(v)}')
-            pheno_counts_text = '\n'.join(lines)
+            # Only draw the phenotype box when there are relatively few categories.
+            if counts.shape[0] < 10:
+                lines = ['Phenotype']
+                for k, v in counts.items():
+                    lines.append(f'{k}: {int(v)}')
+                pheno_counts_text = '\n'.join(lines)
 
         chrom_values = pd.unique(table['CHROM'].dropna())
         if len(chrom_values) != 1:
