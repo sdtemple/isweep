@@ -73,6 +73,7 @@ localrules: all
 rule all:
 	input:
 		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/matrix.outlier.phenotypes.tsv' for j in range(J)],
+		[(macro +'/'+str(sims.iloc[j].NAME)).strip()+'/outlier.ibd.summary.tsv' for j in range(J)],
 	output:
 		yaml=macro+'/arguments.outliers.yaml',
 	params:
@@ -199,6 +200,22 @@ rule outlier:
             --output_folder {wildcards.cohort}/{wildcards.hit} \
             --graph_diameter {params.diameter} \
             --group_cutoff {params.rulesigma}
+        """
+
+rule outlier_ibd_summary:
+    input:
+        short='{cohort}/{hit}/narrowing.filt.case.ibd.gz',
+        out1='{cohort}/{hit}/outlier1.phenotype.tsv',
+    output:
+        summary='{cohort}/{hit}/outlier.ibd.summary.tsv',
+    shell:
+        """
+        python ../../scripts/model/outlier-ibd-stats.py \
+            --input_ibd_file {input.short} \
+            --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --input_outlier_suffix .phenotype.tsv \
+            --first_index 1 \
+            --output_file {output.summary}
         """
 
 rule design:
