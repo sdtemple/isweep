@@ -202,10 +202,50 @@ rule outlier:
             --group_cutoff {params.rulesigma}
         """
 
+rule outlier_ibd_files:
+    input:
+        short='{cohort}/{hit}/narrowing.filt.case.ibd.gz',
+        out1='{cohort}/{hit}/outlier1.phenotype.tsv',
+    output:
+        out1_ibd='{cohort}/{hit}/outlier1.ibd.gz',
+    params:
+        cases=cases,
+    shell:
+        """
+        python ../../scripts/model/outlier-ibd-subsets.py \
+            --input_ibd_file {input.short} \
+            --input_outlier_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --input_outlier_suffix .phenotype.tsv \
+            --first_index 1 \
+            --input_phenotype_file {params.cases} \
+            --output_ibd_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --output_suffix_file .ibd.gz
+        """
+
+rule outlier_ibd_plots:
+    input:
+        out1_ibd='{cohort}/{hit}/outlier1.ibd.gz',
+        locus='{cohort}/{hit}/locus.case.txt',
+    output:
+        out1_plot='{cohort}/{hit}/outlier1.ibd.png',
+    shell:
+        """
+        python ../../scripts/plotting/plot-outlier-ibd-subsets.py \
+            --input_ibd_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --input_ibd_suffix .ibd.gz \
+            --first_index 1 \
+            --output_plot_prefix {wildcards.cohort}/{wildcards.hit}/outlier \
+            --output_plot_suffix .ibd.png \
+            --input_locus_file {input.locus} \
+            --sample_size 50
+        """
+
 rule outlier_ibd_summary:
     input:
         short='{cohort}/{hit}/narrowing.filt.case.ibd.gz',
         out1='{cohort}/{hit}/outlier1.phenotype.tsv',
+        ibd_done='{cohort}/{hit}/outlier1.ibd.gz',
+        plot_done='{cohort}/{hit}/outlier1.ibd.png',
     output:
         summary='{cohort}/{hit}/outlier.ibd.summary.tsv',
     shell:
@@ -221,6 +261,8 @@ rule outlier_ibd_summary:
 rule design:
     input:
         short='{cohort}/{hit}/outlier1.phenotype.tsv',
+        ibd_done='{cohort}/{hit}/outlier1.ibd.gz',
+        plot_done='{cohort}/{hit}/outlier1.ibd.png',
     output:
         out1='{cohort}/{hit}/matrix.outlier.phenotypes.tsv',
         out2='{cohort}/{hit}/matrix.outlier.phenotypes.sorted.tsv',
